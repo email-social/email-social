@@ -31,7 +31,7 @@
     "@types/mailparser": "3.4.6",
     "@types/node": "22.20.4",
     "mailparser": "3.9.31",
-    "playwright-core": "1.63.0",
+    "playwright-core": "1.56.1",
     "typescript": "7.0.2",
     "vite": "8.3.1",
     "vitest": "5.0.2"
