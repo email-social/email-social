@@ -20,6 +20,7 @@ Email Social turns an ordinary e-mail mailbox into a chat-like client. Everythin
 8. **Dependencies:** Node 22 LTS, TypeScript, Vitest. Keep the dependency list short and permissively licensed (MIT/Apache-2.0/BSD/ISC); no GPL/AGPL; no packages abandoned for more than 3 years. Lockfile committed.
 9. **Compatibility first:** follow RFC 5322 (message format), RFC 2045–2049 (MIME), RFC 3501/9051 (IMAP), RFC 5321 (SMTP), RFC 8098 (MDN) where they apply. Cite the section in a comment when the code relies on one.
 10. **Language:** code, comments, docs and UI in English. The spec excerpt in `spec/` is partly Czech; Task 3 translates it.
+11. **Budget.** Before using the Workflow tool, state the agent count in the plan; at most one workflow per task and never more than 6 agents. Stop if a task passes 40% of the remaining budget.
 
 ## How to work
 - Start each task by reading its file in `tasks/`, then the relevant spec section, then existing code. Write a short plan as the PR description.
