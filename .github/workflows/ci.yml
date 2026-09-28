@@ -23,5 +23,11 @@ jobs:
       - run: npm test
       - run: npm run build
       - name: Install Chromium for the browser smoke test
-        run: npx playwright-core install --with-deps chromium
+        # Install with the playwright CLI of exactly the playwright-core
+        # version the smoke test uses, so the Chromium revision it
+        # downloads is the one playwright-core launches.
+        working-directory: packages/es-core
+        run: |
+          PLAYWRIGHT_VERSION=$(node -p "require('playwright-core/package.json').version")
+          npx --yes "playwright@${PLAYWRIGHT_VERSION}" install --with-deps chromium
       - run: npm run test:browser
