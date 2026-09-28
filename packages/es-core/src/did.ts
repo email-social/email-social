@@ -10,9 +10,10 @@
  * - <local-identifier> is one or more DID Core idchar characters
  *   (ALPHA / DIGIT / "." / "-" / "_" / pct-encoded), no ":".
  *
- * DIDs are compared as strings (W3C DID Core §3.1), so only the canonical
- * form is valid: an upper-case domain makes a DID invalid instead of being a
- * second spelling of the same identifier.
+ * The syntax follows W3C DID Core §3.1 (lowercase method name, idchar in
+ * the method-specific id). Only the canonical form is valid, so DIDs can be
+ * compared as plain strings: an upper-case domain makes a DID invalid
+ * instead of being a second spelling of the same identifier.
  */
 
 import { canonicalAddress, splitAddress } from "./headers/canonical.js";
