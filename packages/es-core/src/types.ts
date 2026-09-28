@@ -51,6 +51,12 @@ export interface EsEmailMeta {
   subject: string | null;
   inReplyTo: string | null;
   references: string[];
+  /**
+   * Lowercase hex SHA-256 of the UTF-8 text (with "\n" line endings), written
+   * instead of `text` when the text is longer than ES_TEXT_MAX_BYTES; null
+   * otherwise. It ties the record to the text/plain body of the message.
+   */
+  textSha256: string | null;
 }
 
 /** A direct message: the parsed `es.social.post` record (spec 2.3.1, direct-message subset). */
@@ -58,7 +64,12 @@ export interface EsPostPart {
   $type: "es.social.post";
   /** Author DID (`did:es:…`, metadata only), or null when absent or malformed. */
   author: string | null;
-  text: string;
+  /**
+   * The message text, or null when the sender left it out because it is
+   * longer than ES_TEXT_MAX_BYTES (then `email.textSha256` is set and the
+   * text is only in the text/plain part, i.e. `EsMessage.text`).
+   */
+  text: string | null;
   /** Canonical sending address. */
   via: string;
   /** RFC 3339 timestamp as written by the sender. */
@@ -181,4 +192,11 @@ export interface SerializeOptions {
   date: Date | string;
   /** The new message's Message-ID, in angle brackets: "<left@right>". */
   messageId: string;
+  /**
+   * Whether to attach the ES part (default true). False writes a plain
+   * single-part text/plain message, e.g. for a recipient who has never sent
+   * an ES part; the ES fields of EsOutgoing (requestReceipts, author) are then
+   * not sent. Receipts ignore it: they always carry their ES part.
+   */
+  includeEsPart?: boolean;
 }

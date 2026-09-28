@@ -57,7 +57,8 @@
         "messageId": "<es-vector-1@mail.example.com>",
         "subject": "Lunch on Friday?",
         "inReplyTo": null,
-        "references": []
+        "references": [],
+        "textSha256": null
       },
       "requestReceipts": [
         "delivered",

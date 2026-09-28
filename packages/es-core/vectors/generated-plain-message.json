@@ -1,0 +1,58 @@
+{
+  "description": "A message written by es-core with includeEsPart: false: a single text/plain part, no ES part, for recipients that have never sent one.",
+  "source": "generated",
+  "input": {
+    "kind": "message",
+    "outgoing": {
+      "from": {
+        "name": "Alice Example",
+        "address": "alice@example.com"
+      },
+      "to": [
+        {
+          "name": "Carol",
+          "address": "carol@example.net"
+        }
+      ],
+      "subject": "Lunch on Friday?",
+      "text": "Hi Carol,\n\nlunch on Friday at noon? Café Élysée.",
+      "es": {
+        "requestReceipts": [
+          "read"
+        ]
+      }
+    },
+    "options": {
+      "date": "2026-03-02T09:01:00Z",
+      "messageId": "<es-vector-6@mail.example.com>",
+      "includeEsPart": false
+    }
+  },
+  "raw": "Date: Mon, 2 Mar 2026 09:01:00 +0000\r\nFrom: Alice Example <alice@example.com>\r\nTo: Carol <carol@example.net>\r\nSubject: Lunch on Friday?\r\nMessage-ID: <es-vector-6@mail.example.com>\r\nMIME-Version: 1.0\r\nContent-Type: text/plain; charset=utf-8\r\nContent-Transfer-Encoding: quoted-printable\r\n\r\nHi Carol,\r\n\r\nlunch on Friday at noon? Caf=C3=A9 =C3=89lys=C3=A9e.=\r\n",
+  "expected": {
+    "id": "<es-vector-6@mail.example.com>",
+    "from": {
+      "name": "Alice Example",
+      "address": "alice@example.com"
+    },
+    "to": [
+      {
+        "name": "Carol",
+        "address": "carol@example.net"
+      }
+    ],
+    "cc": [],
+    "replyTo": [],
+    "date": "2026-03-02T09:01:00.000Z",
+    "subject": "Lunch on Friday?",
+    "text": "Hi Carol,\n\nlunch on Friday at noon? Café Élysée.",
+    "textSource": "plain",
+    "es": null,
+    "attachments": [],
+    "refs": {
+      "messageId": "<es-vector-6@mail.example.com>",
+      "inReplyTo": [],
+      "references": []
+    }
+  }
+}

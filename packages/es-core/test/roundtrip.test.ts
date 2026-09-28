@@ -1,3 +1,4 @@
+import { createHash } from "node:crypto";
 import { describe, expect, it } from "vitest";
 import { parseMessage } from "../src/parse.js";
 import { replyTargetOf, serializeMessage, serializeReceipt } from "../src/serialize.js";
@@ -52,6 +53,7 @@ describe(`round trip: serialise → parse (20 cases, seed ${ROUND_TRIP_SEED})`, 
         subject: expectedSubject(out),
         inReplyTo: parent?.messageId ?? null,
         references,
+        textSha256: null,
       },
       requestReceipts: (["delivered", "read"] as const).filter((k) => out.es?.requestReceipts?.includes(k)),
     };
@@ -70,6 +72,40 @@ describe(`round trip: serialise → parse (20 cases, seed ${ROUND_TRIP_SEED})`, 
     expect(reply.refs.references[reply.refs.references.length - 1]).toBe(first.id);
     expect(reply.subject).toBe(/^re:/i.test(first.subject) ? first.subject : ("Re: " + first.subject).trim());
   });
+});
+
+describe("round trip: long and plain messages", () => {
+  const long = ("Dlouhá zpráva: řádek s textem, který se opakuje. 👋\n").repeat(400); // about 21 kB
+
+  it("a 20 kB message comes back whole; the ES record carries its SHA-256 instead of the text", () => {
+    expect(new TextEncoder().encode(long).length).toBeGreaterThan(20_000);
+    const parsed = parseMessage(
+      serializeMessage(
+        { from: { name: "Jana", address: "jana@example.net" }, to: [{ name: "", address: "bob@example.org" }], text: long },
+        { date: "2026-03-02T09:00:00Z", messageId: "<long-1@mail.example.net>" },
+      ),
+    );
+    expect(parsed.text).toBe(long);
+    expect(parsed.es).toMatchObject({
+      $type: "es.social.post",
+      text: null,
+      via: "jana@example.net",
+      email: { messageId: "<long-1@mail.example.net>", textSha256: createHash("sha256").update(long, "utf8").digest("hex") },
+    });
+  });
+
+  it.each(cases.slice(0, 5).map((c, i) => [i, c] as const))(
+    "case %i without the ES part gives back text, participants and subject, and es is null",
+    (_, { out, options }) => {
+      const parsed = parseMessage(serializeMessage(out, { ...options, includeEsPart: false }));
+      expect(parsed.text).toBe(expectedText(out));
+      expect(parsed.subject).toBe(expectedSubject(out));
+      expect(parsed.from).toEqual(expectedAddress(out.from));
+      expect(parsed.to).toEqual(out.to.map(expectedAddress));
+      expect(parsed.es).toBeNull();
+      expect(parsed.attachments).toEqual([]);
+    },
+  );
 });
 
 describe("round trip: receipts", () => {

@@ -765,7 +765,7 @@ const CASES: Record<string, Case> = {
         text: "Hello Email.Social!\n\nThis is a test message.",
         via: "user@example.com",
         createdAt: "2024-10-10T12:00:00.000Z",
-        email: { messageId: ID.esDraft, subject: "Hello Email.Social!", inReplyTo: null, references: [] },
+        email: { messageId: ID.esDraft, subject: "Hello Email.Social!", inReplyTo: null, references: [], textSha256: null },
         requestReceipts: [],
       },
       attachments: [],

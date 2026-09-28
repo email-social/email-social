@@ -5,8 +5,9 @@
  *
  *   { "$type": "es.social.post",
  *     "author": "did:es:…",                      (optional, metadata only)
- *     "value": { "text", "via", "createdAt",      (required)
- *                "email": { "messageId", "subject", "inReplyTo", "references" },
+ *     "value": { "text", "via", "createdAt",      (required; see below for "text")
+ *                "email": { "messageId", "subject", "inReplyTo", "references",
+ *                           "textSha256" },
  *                "requestReceipts": ["delivered", "read"] } }
  *
  *   { "$type": "es.social.receipt",
@@ -20,6 +21,11 @@
  * `author`; `uri`, `cid` and `signature` are not produced and are ignored when
  * present. `requestReceipts` and the receipt record are additions: the draft
  * has no receipts.
+ *
+ * A text longer than ES_TEXT_MAX_BYTES is not put in the record (the lexicon
+ * limit); the full text is always in the message's text/plain part. Such a
+ * record leaves `text` out and carries `email.textSha256`, the lowercase hex
+ * SHA-256 of the UTF-8 text, so a reader can tie it to that body.
  *
  * Parsing is liberal (unknown fields are ignored, malformed optional fields
  * are dropped); a record missing a required field is rejected as a whole.
@@ -85,11 +91,14 @@ function readReceiptKinds(value: unknown): ReceiptKind[] {
 }
 
 function readEmailMeta(value: unknown): EsEmailMeta {
-  const meta: EsEmailMeta = { messageId: null, subject: null, inReplyTo: null, references: [] };
+  const meta: EsEmailMeta = { messageId: null, subject: null, inReplyTo: null, references: [], textSha256: null };
   if (!isObject(value)) return meta;
   if (typeof value.messageId === "string") meta.messageId = normalizeMessageId(value.messageId);
   if (typeof value.subject === "string") meta.subject = value.subject;
   if (typeof value.inReplyTo === "string") meta.inReplyTo = normalizeMessageId(value.inReplyTo);
+  if (typeof value.textSha256 === "string" && /^[0-9a-f]{64}$/i.test(value.textSha256)) {
+    meta.textSha256 = value.textSha256.toLowerCase();
+  }
   if (Array.isArray(value.references)) {
     for (const ref of value.references) {
       const id = typeof ref === "string" ? normalizeMessageId(ref) : null;
@@ -119,14 +128,18 @@ export function parseEsJson(json: string): EsPart | null {
   if (via === null || createdAt === null) return null;
 
   if (root.$type === ES_POST_TYPE) {
-    if (typeof value.text !== "string") return null;
+    const email = readEmailMeta(value.email);
+    // `text` is required unless the sender left a long text out and gave its hash instead.
+    const text = typeof value.text === "string" ? value.text : null;
+    const omitted = (value.text === undefined || value.text === null) && email.textSha256 !== null;
+    if (text === null && !omitted) return null;
     const post: EsPostPart = {
       $type: ES_POST_TYPE,
       author,
-      text: value.text,
+      text,
       via,
       createdAt,
-      email: readEmailMeta(value.email),
+      email,
       requestReceipts: readReceiptKinds(value.requestReceipts),
     };
     return post;
@@ -146,12 +159,16 @@ export function esPartToWire(part: EsPart): Record<string, unknown> {
   const wire: Record<string, unknown> = { $type: part.$type };
   if (part.author !== null) wire.author = part.author;
   if (part.$type === ES_POST_TYPE) {
-    const value: Record<string, unknown> = { text: part.text, via: part.via, createdAt: part.createdAt };
+    const value: Record<string, unknown> = {};
+    if (part.text !== null) value.text = part.text;
+    value.via = part.via;
+    value.createdAt = part.createdAt;
     const email: Record<string, unknown> = {};
     if (part.email.messageId !== null) email.messageId = part.email.messageId;
     if (part.email.subject !== null) email.subject = part.email.subject;
     if (part.email.inReplyTo !== null) email.inReplyTo = part.email.inReplyTo;
     if (part.email.references.length > 0) email.references = [...part.email.references];
+    if (part.email.textSha256 !== null) email.textSha256 = part.email.textSha256;
     if (Object.keys(email).length > 0) value.email = email;
     if (part.requestReceipts.length > 0) value.requestReceipts = readReceiptKinds(part.requestReceipts);
     wire.value = value;

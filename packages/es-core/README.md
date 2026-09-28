@@ -13,7 +13,7 @@ is attached after it in `multipart/mixed`, so any mail client shows the text.
 
 ```ts
 parseMessage(raw: string | Uint8Array): EsMessage                     // never throws; strings are read as UTF-8
-serializeMessage(out: EsOutgoing, { date, messageId }): string        // CRLF, 7-bit; text/plain first, then the ES part
+serializeMessage(out: EsOutgoing, { date, messageId, includeEsPart? }): string  // CRLF, 7-bit; text/plain first, then the ES part
 serializeReceipt(receipt: EsOutgoingReceipt, { date, messageId }): string  // a "delivered" or "read" receipt
 replyTargetOf(parent: EsMessage): ReplyTarget                         // In-Reply-To/References/subject for a reply
 threadMessages(messages: EsMessage[]): Conversation[]                 // same conversations for any input order

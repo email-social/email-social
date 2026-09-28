@@ -10,7 +10,13 @@ const post: EsPostPart = {
   text: "Ahoj, jak se máš? 👋",
   via: "alice@example.com",
   createdAt: "2026-03-01T10:15:00.000Z",
-  email: { messageId: "<m1@example.com>", subject: "Oběd", inReplyTo: "<m0@example.com>", references: ["<m0@example.com>"] },
+  email: {
+    messageId: "<m1@example.com>",
+    subject: "Oběd",
+    inReplyTo: "<m0@example.com>",
+    references: ["<m0@example.com>"],
+    textSha256: null,
+  },
   requestReceipts: ["delivered", "read"],
 };
 
@@ -23,7 +29,7 @@ describe("ES part JSON", () => {
     const minimal: EsPostPart = {
       ...post,
       author: null,
-      email: { messageId: null, subject: null, inReplyTo: null, references: [] },
+      email: { messageId: null, subject: null, inReplyTo: null, references: [], textSha256: null },
       requestReceipts: [],
     };
     expect(formatEsJson(minimal)).toBe(
@@ -65,7 +71,13 @@ describe("ES part JSON", () => {
       text: "Hello Email.Social!\n\nThis is a test message.",
       via: "user@example.com",
       createdAt: "2024-10-10T12:00:00.000Z",
-      email: { messageId: "<unique-id@mail.example.com>", subject: "Hello Email.Social!", inReplyTo: null, references: [] },
+      email: {
+        messageId: "<unique-id@mail.example.com>",
+        subject: "Hello Email.Social!",
+        inReplyTo: null,
+        references: [],
+        textSha256: null,
+      },
       requestReceipts: [],
     });
   });
@@ -109,6 +121,40 @@ describe("ES part JSON", () => {
       email: { messageId: null, references: ["<a@example.com>", "<b@example.com>"] },
       requestReceipts: ["read"],
     });
+  });
+
+  it("reads a post that leaves out a long text and carries its SHA-256 instead", () => {
+    const hash = "a".repeat(64);
+    const value = { via: "a@example.com", createdAt: "2026-01-01T00:00:00Z", email: { textSha256: hash } };
+    for (const record of [
+      { $type: "es.social.post", value },
+      { $type: "es.social.post", value: { ...value, text: null } },
+    ]) {
+      expect(parseEsJson(JSON.stringify(record))).toMatchObject({ text: null, email: { textSha256: hash } });
+    }
+    // Upper-case hex is read in canonical lower case.
+    expect(
+      parseEsJson(JSON.stringify({ $type: "es.social.post", value: { ...value, email: { textSha256: hash.toUpperCase() } } })),
+    ).toMatchObject({ text: null, email: { textSha256: hash } });
+  });
+
+  it("rejects a post with neither text nor a valid textSha256", () => {
+    const value = { via: "a@example.com", createdAt: "2026-01-01T00:00:00Z" };
+    for (const email of [undefined, {}, { textSha256: "abc" }, { textSha256: "g".repeat(64) }, { textSha256: 5 }]) {
+      expect(parseEsJson(JSON.stringify({ $type: "es.social.post", value: { ...value, email } })), JSON.stringify(email)).toBeNull();
+    }
+  });
+
+  it("writes a post without text as a record with email.textSha256 and no text field", () => {
+    const long: EsPostPart = {
+      ...post,
+      text: null,
+      email: { ...post.email, textSha256: "0".repeat(64) },
+    };
+    const wire = JSON.parse(formatEsJson(long)) as { value: Record<string, unknown> };
+    expect(wire.value).not.toHaveProperty("text");
+    expect(wire.value.email).toMatchObject({ textSha256: "0".repeat(64) });
+    expect(parseEsJson(formatEsJson(long))).toEqual(long);
   });
 
   it("recognises the ES media types, including the draft's", () => {

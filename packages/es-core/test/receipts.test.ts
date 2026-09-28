@@ -235,3 +235,12 @@ describe("replyTargetOf", () => {
     expect(header(raw, "References")).toBe("<a@example.com> <b@example.com> <c@example.com>");
   });
 });
+
+describe("serializeReceipt: includeEsPart", () => {
+  it("keeps the ES part in a receipt even when includeEsPart is false", () => {
+    const receipt: EsOutgoingReceipt = { kind: "read", from: BOB, to: ALICE, original: ORIGINAL };
+    const raw = serializeReceipt(receipt, { ...OPTIONS, includeEsPart: false });
+    expect(raw).toBe(serializeReceipt(receipt, OPTIONS));
+    expect(esOf(raw)).toMatchObject({ $type: "es.social.receipt", value: { kind: "read" } });
+  });
+});

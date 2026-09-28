@@ -49,6 +49,13 @@ const edgeCases: EsOutgoing[] = [
     subject: "=?utf-8?q?not_encoded?=",
     text: "=?utf-8?q?not_encoded?=\n=20 =3D literal equals signs ==\nFrom the start\n.\n..\n",
   },
+  {
+    // Over ES_TEXT_MAX_BYTES: the whole text still goes in text/plain.
+    from: { name: "Jana", address: "jana@example.net" },
+    to: [{ name: "Bob", address: "bob@example.org" }],
+    subject: "Dlouhá zpráva",
+    text: ("Dlouhá zpráva: řádek s textem, který se opakuje. 👋\n").repeat(400),
+  },
 ];
 
 describe("mailparser reads what es-core writes", () => {
@@ -75,6 +82,16 @@ describe("mailparser reads what es-core writes", () => {
     expectMailparserText(mail, ours.text);
     expect(ours.subject).toBe(subjectOf(mail));
   });
+
+  it.each(cases.map((c, i) => [i, c] as const))(
+    "generated case %i without the ES part: same text and subject, no attachment",
+    async (_, { out, options }) => {
+      const mail = await mailparser(serializeMessage(out, { ...options, includeEsPart: false }));
+      expectMailparserText(mail, expectedText(out));
+      expect(subjectOf(mail)).toBe(expectedSubject(out));
+      expect(mail.attachments).toEqual([]);
+    },
+  );
 
   it.each(["delivered", "read"] as const)("a %s receipt: same text and subject as es-core reads", async (kind) => {
     const raw = serializeReceipt(

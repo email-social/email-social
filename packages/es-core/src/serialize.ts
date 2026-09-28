@@ -8,6 +8,11 @@
  *   └── application/vnd.email-social.message+json
  *                                         the ES record, base64, as a named attachment
  *
+ * With `includeEsPart: false` a message is a single text/plain part and
+ * nothing else. The text/plain part always holds the whole text; a text
+ * longer than ES_TEXT_MAX_BYTES is left out of the ES record, which then
+ * carries its SHA-256 (see es/schema.ts).
+ *
  * Output uses CRLF line endings and 7-bit ASCII only, so it passes any SMTP
  * server unchanged (RFC 5321 §2.4, no 8BITMIME or SMTPUTF8 needed). Nothing
  * here reads a clock or a random source: the date and Message-ID come from
@@ -250,8 +255,8 @@ function headerLines(e: Envelope): string[] {
  * quoted-printable, which cannot contain "=_" and so never the boundary
  * (RFC 2045 §6.7, note on multipart boundaries).
  */
-function fitsSevenBit(text: string, boundary: string): boolean {
-  if (!/^[\t\n\x20-\x7e]*$/.test(text) || text.includes(boundary)) return false;
+function fitsSevenBit(text: string, boundary: string | null): boolean {
+  if (!/^[\t\n\x20-\x7e]*$/.test(text) || (boundary !== null && text.includes(boundary))) return false;
   return text
     .split("\n")
     .every(
@@ -291,12 +296,52 @@ function assemble(envelope: Envelope, text: string, es: EsPart): string {
 }
 
 /**
+ * Makes quoted-printable text end with a line break without changing what it
+ * decodes to: a final soft line break "=" CRLF (RFC 2045 §6.7 rule 5). A body
+ * that does not end with CRLF gets one added by SMTP or mbox storage, which
+ * would add a "\n" to the text. Lines stay within 76 characters.
+ */
+function endWithSoftBreak(qp: string): string {
+  if (qp === "" || qp.endsWith(CRLF)) return qp;
+  const lastBreak = qp.lastIndexOf(CRLF);
+  const start = lastBreak < 0 ? 0 : lastBreak + CRLF.length;
+  const head = qp.slice(0, start);
+  const last = qp.slice(start);
+  if (last.length < MAX_7BIT_LINE) return qp + "=" + CRLF;
+  // Split the last line before 75 characters, never inside an "=XX" triplet.
+  let cut = 0;
+  for (const token of last.match(/=[0-9A-F]{2}|[^=]/g) ?? []) {
+    if (cut + token.length > MAX_7BIT_LINE - 1) break;
+    cut += token.length;
+  }
+  return head + last.slice(0, cut) + "=" + CRLF + last.slice(cut) + "=" + CRLF;
+}
+
+/** A single-part text/plain message (RFC 2045 §5, RFC 2046 §4.1): no multipart, no ES part. */
+function assemblePlain(envelope: Envelope, text: string): string {
+  const sevenBit = (text === "" || text.endsWith("\n")) && fitsSevenBit(text, null);
+  const body = sevenBit ? text.replace(/\n/g, CRLF) : endWithSoftBreak(qpEncodeText(text));
+  const lines = [
+    ...headerLines(envelope),
+    "MIME-Version: 1.0",
+    "Content-Type: text/plain; charset=utf-8",
+    "Content-Transfer-Encoding: " + (sevenBit ? "7bit" : "quoted-printable"),
+    "",
+    body,
+  ];
+  return lines.join(CRLF);
+}
+
+/**
  * Serialises a message as raw RFC 5322 text: a multipart/mixed message whose
  * first part is the text as text/plain and whose second part is the ES post
- * record. Replies get In-Reply-To and References so every client threads them.
+ * record, or, with `options.includeEsPart === false`, a single text/plain
+ * part. Replies get In-Reply-To and References so every client threads them.
+ * The text/plain part always holds the whole text; a text over
+ * ES_TEXT_MAX_BYTES (UTF-8) is replaced in the ES record by its SHA-256.
  *
  * Throws TypeError for an invalid Message-ID, date, address, did:es author or
- * a message without recipients, and RangeError for text over 10000 UTF-8 bytes.
+ * a message without recipients.
  */
 export function serializeMessage(out: EsOutgoing, options: SerializeOptions): string {
   const messageId = checkMessageId(options.messageId);
@@ -307,10 +352,8 @@ export function serializeMessage(out: EsOutgoing, options: SerializeOptions): st
   if (to.length + cc.length === 0) throw new TypeError("A message needs at least one recipient in to or cc");
   const author = checkAuthor(out.es?.author);
   const text = normalizeText(out.text);
-  const textBytes = utf8Encode(text).length;
-  if (textBytes > ES_TEXT_MAX_BYTES) {
-    throw new RangeError(`Text is ${textBytes} UTF-8 bytes; the limit is ${ES_TEXT_MAX_BYTES}`);
-  }
+  // The lexicon limit (spec 2.3.1) applies to the record only, never to the e-mail.
+  const textInRecord = utf8Encode(text).length <= ES_TEXT_MAX_BYTES;
 
   const parent = out.inReplyTo;
   const inReplyTo = parent === undefined ? null : checkParentId(parent.messageId);
@@ -322,7 +365,7 @@ export function serializeMessage(out: EsOutgoing, options: SerializeOptions): st
   const post: EsPostPart = {
     $type: ES_POST_TYPE,
     author,
-    text,
+    text: textInRecord ? text : null,
     via: from.address,
     createdAt: date.toISOString(),
     email: {
@@ -330,11 +373,12 @@ export function serializeMessage(out: EsOutgoing, options: SerializeOptions): st
       subject: utf8Encode(subject).length > ES_SUBJECT_MAX_BYTES ? null : subject,
       inReplyTo,
       references,
+      textSha256: textInRecord ? null : sha256Hex(text),
     },
     requestReceipts: normalizeReceiptKinds(out.es?.requestReceipts),
   };
   const envelope: Envelope = { date, messageId, from, to, cc, subject, inReplyTo, references, autoSubmitted: false };
-  return assemble(envelope, text, post);
+  return options.includeEsPart === false ? assemblePlain(envelope, text) : assemble(envelope, text, post);
 }
 
 function receiptText(kind: ReceiptKind, subject: string, messageId: string, from: string, date: string): string {
@@ -349,6 +393,7 @@ function receiptText(kind: ReceiptKind, subject: string, messageId: string, from
  * message: a short English text for any client, and an es.social.receipt
  * record. It answers the original (In-Reply-To, References) so it lands in
  * the same thread everywhere, and carries "Auto-Submitted: auto-replied".
+ * A receipt always carries its ES part; `options.includeEsPart` is ignored.
  */
 export function serializeReceipt(r: EsOutgoingReceipt, options: SerializeOptions): string {
   const kind = RECEIPT_KINDS.find((k) => k === r.kind);

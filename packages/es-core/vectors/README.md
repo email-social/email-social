@@ -40,7 +40,9 @@ then be reviewed like any code change.
     `textSource` says `"plain"`, `"html"` or `"none"`;
   - `es`: the ES part record, or `null` when there is none or it does not
     belong to the message (its `via` is not the From address, or its
-    `email.messageId` is not the Message-ID);
+    `email.messageId` is not the Message-ID); a post's `text` is `null` when
+    the sender left a text over 10000 UTF-8 bytes out of the record, and
+    `email.textSha256` then holds the hex SHA-256 of the body text;
   - `attachments`: metadata of every other leaf part (`filename`,
     `contentType`, `disposition`, decoded `size`, `contentId`, IMAP `partId`);
   - `refs`: `messageId`, and every msg-id of `In-Reply-To` and `References`.

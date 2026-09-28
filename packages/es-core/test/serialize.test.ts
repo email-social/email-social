@@ -638,10 +638,25 @@ describe("serializeMessage: input validation", () => {
     expect(parseAddressList(inspect(raw).header("To")!)).toEqual([{ name: "", address: '"bob smith"@example.org' }]);
   });
 
-  it("rejects text over 10000 UTF-8 bytes with a RangeError", () => {
-    expect(() => serializeMessage(outgoing({ text: "ž".repeat(5000) }), OPTIONS)).not.toThrow();
-    expect(() => serializeMessage(outgoing({ text: "ž".repeat(5000) + "a" }), OPTIONS)).toThrow(RangeError);
-    expect(() => serializeMessage(outgoing({ text: "a".repeat(10001) }), OPTIONS)).toThrow(RangeError);
+  it("keeps a text of exactly 10000 UTF-8 bytes in the ES record", () => {
+    const text = "ž".repeat(5000);
+    const raw = serializeMessage(outgoing({ text }), OPTIONS);
+    expect(esValue(raw).text).toBe(text);
+    expect(esValue(raw).email).not.toHaveProperty("textSha256");
+  });
+
+  it.each([
+    ["10001 bytes of Czech text", "ž".repeat(5000) + "a"],
+    ["a 20 kB message", ("Dlouhá zpráva, řádek s textem. ".repeat(3) + "\n").repeat(200)],
+  ])("sends %s whole as text/plain and leaves it out of the ES record, with its SHA-256", (_name, text) => {
+    const raw = serializeMessage(outgoing({ text }), OPTIONS);
+    expect(textOf(inspect(raw).parts[0]!)).toBe(text);
+    const value = esValue(raw);
+    expect(value).not.toHaveProperty("text");
+    expect(value.via).toBe("alice@example.com");
+    expect((value.email as Record<string, unknown>).textSha256).toBe(
+      createHash("sha256").update(text, "utf8").digest("hex"),
+    );
   });
 
   it.each([
@@ -716,5 +731,55 @@ describe("serializeMessage: read by an independent parser (mailparser)", () => {
       ["application/vnd.email-social.message+json", "email-social.json", "attachment"],
     ]);
     expect(parsed.html).toBe(false);
+  });
+});
+
+describe("serializeMessage: includeEsPart", () => {
+  it("writes the ES part by default and when includeEsPart is true", () => {
+    const byDefault = serializeMessage(outgoing(), OPTIONS);
+    expect(serializeMessage(outgoing(), { ...OPTIONS, includeEsPart: true })).toBe(byDefault);
+    expect(inspect(byDefault).parts).toHaveLength(2);
+  });
+
+  it.each([
+    ["ASCII text ending in a newline", "Hi Bob.\n"],
+    ["ASCII text without a final newline", "ok"],
+    ["Czech text with a long line", "Ahoj, " + "ž".repeat(300)],
+    ["an empty text", ""],
+    ["a last line of exactly 76 characters", "x".repeat(76)],
+    ["a last line of 75 characters", "x".repeat(75)],
+    ["a last line ending in an encoded character at column 76", "x".repeat(73) + "ž"],
+  ])("writes a plain single-part text/plain message without the ES part when false (%s)", async (_name, text) => {
+    const raw = serializeMessage(outgoing({ text }), { ...OPTIONS, includeEsPart: false });
+    const { header, body } = splitHeaderBody(new TextEncoder().encode(raw));
+    const fields = parseHeaderFields(header);
+    expect(getHeader(fields, "Content-Type")).toBe("text/plain; charset=utf-8");
+    expect(getHeader(fields, "MIME-Version")).toBe("1.0");
+    expect(raw).not.toContain("multipart");
+    expect(raw).not.toContain("email-social");
+    expect(raw).toMatch(/^[\t\r\n\x20-\x7e]*$/);
+    expect(raw.endsWith("\r\n")).toBe(true);
+    // RFC 2045 §6.7 rule 5: encoded lines, soft line breaks included, are at most 76 characters.
+    for (const line of new TextDecoder().decode(body).split("\r\n")) expect(line.length).toBeLessThanOrEqual(76);
+    const cte = getHeader(fields, "Content-Transfer-Encoding");
+    const decoded = cte === "quoted-printable" ? qpDecode(body) : body;
+    expect(new TextDecoder().decode(decoded).replace(/\r\n/g, "\n")).toBe(text);
+
+    const mail = await simpleParser(raw);
+    expect(mail.attachments).toEqual([]);
+    // mailparser reads an empty body as undefined or "\n" (see compat-mailparser.test.ts).
+    if (text === "") expect(["", "\n"]).toContain(mail.text ?? "");
+    else expect(mail.text).toBe(text);
+    expect(mail.subject).toBe("Hello");
+  });
+
+  it("keeps the other headers of a plain message identical to the ES message", () => {
+    const withEs = serializeMessage(outgoing({ inReplyTo: { messageId: "<p@example.org>" } }), OPTIONS);
+    const plain = serializeMessage(outgoing({ inReplyTo: { messageId: "<p@example.org>" } }), {
+      ...OPTIONS,
+      includeEsPart: false,
+    });
+    const upToMime = (raw: string): string => raw.slice(0, raw.indexOf("MIME-Version:"));
+    expect(upToMime(plain)).toBe(upToMime(withEs));
   });
 });

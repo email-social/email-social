@@ -219,11 +219,11 @@ Quotations from the draft are translated from Czech where the draft is in Czech.
     - Replies that quote earlier messages exceed 10000 bytes. In UTF-8, Czech letters take 1–2 bytes each and emoji take 4.
 - **es-core does:**
   - It counts string limits in UTF-8 bytes (`ES_TEXT_MAX_BYTES` = 10000, `ES_SUBJECT_MAX_BYTES` = 500).
-  - The serializer refuses text over 10000 bytes with a `RangeError`.
+  - The limit applies to the ES record only, never to the e-mail. A text over 10000 bytes goes whole into the `text/plain` part; the record then leaves `text` out and carries `email.textSha256`, the lowercase hex SHA-256 of the UTF-8 text, so a reader can tie the record to the body. This makes `text` optional in that one case, although §2.3.1 lists it as required (D18).
   - When a subject exceeds 500 bytes, it writes `email.subject: null`. The `Subject` header still carries the whole subject.
   - The parser does not enforce these limits.
   - It reads `via` as an address containing `@`, with the domain lowercased.
-- **Covered by:** `test/serialize.test.ts`, `test/es-schema.test.ts`.
+- **Covered by:** `test/serialize.test.ts`, `test/es-schema.test.ts`, `test/roundtrip.test.ts` and `test/compat-mailparser.test.ts` (a 20 kB message), `vectors/generated-long-message.json`.
 
 ### D15. Receipts are missing from the draft, and uneven in real mail
 
@@ -266,7 +266,8 @@ Quotations from the draft are translated from Czech where the draft is in Czech.
     - `text/plain; charset=utf-8`, encoded as 7bit or quoted-printable (D3), with no `Content-Disposition`.
     - The ES part: base64, `Content-Disposition: attachment; filename="email-social.json"`.
   - The boundary is `=_es_` plus 24 hex digits of SHA-256 over the Message-ID, so it is deterministic. `=_` cannot occur in quoted-printable or base64 output (RFC 2045 §6.7).
-  - The text in the two parts is identical. The only change is that `\r\n` and lone `\r` become `\n`.
+  - The text in the two parts is identical. The only change is that `\r\n` and lone `\r` become `\n`. A text over 10000 bytes is only in the `text/plain` part (D14).
+  - With `includeEsPart: false` the message is a single `text/plain` part without an ES part, for recipients who have never sent one; such a message never shows an `email-social.json` attachment. A text without a final line break is then written as quoted-printable ending in a soft line break (RFC 2045 §6.7 rule 5), so the body ends with CRLF and still decodes to the exact text. Receipts always carry their ES part.
   - Receipts use the same layout.
 - **Why:**
   - Rule 1 of CLAUDE.md: the plain text must be what every client shows.
@@ -287,7 +288,7 @@ Quotations from the draft are translated from Czech where the draft is in Czech.
     - The same CID string appears for different records in §2.2, §2.4 and §4.1, so it is a placeholder rather than a computed value.
 - **es-core does:**
   - It writes the envelope as `$type`, an optional `author` and `value`.
-  - `value` holds `text`, `via` and `createdAt` (all required, as in §2.3.1), `email { messageId, subject, inReplyTo, references }`, and `requestReceipts` (D19).
+  - `value` holds `text`, `via` and `createdAt` (required, as in §2.3.1, except that a text over 10000 bytes is left out, D14), `email { messageId, subject, inReplyTo, references, textSha256 }`, and `requestReceipts` (D19).
   - When reading, it follows §4.1 (the lexicon record sits inside `value`). It ignores unknown fields, drops malformed optional fields, and rejects a record that lacks a required field. Flat records in the §2.4 form are not accepted.
 - **Why:**
   - `uri` and `cid` need a repository and DAG-CBOR/multiformats libraries, and this repository has neither.

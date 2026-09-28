@@ -73,6 +73,35 @@ const GENERATED: Record<string, { description: string; input: GeneratedInput }> 
       options: { date: "2026-03-02T10:30:00Z", messageId: "<es-vector-2@mail.example.net>" },
     },
   },
+  "generated-long-message.json": {
+    description:
+      "A 20 kB message written by es-core: the whole text is in text/plain; the ES record leaves text out and carries email.textSha256 (hex SHA-256 of the UTF-8 text).",
+    input: {
+      kind: "message",
+      outgoing: {
+        from: { name: "Jana Nováková", address: "jana@example.net" },
+        to: [{ name: "Alice Example", address: "alice@example.com" }],
+        subject: "Zápis z porady",
+        text: Array.from({ length: 290 }, (_, i) => `${i + 1}. Bod porady: příliš žluťoučký kůň úpěl ďábelské ódy.\n`).join(""),
+      },
+      options: { date: "2026-03-02T11:00:00Z", messageId: "<es-vector-5@mail.example.net>" },
+    },
+  },
+  "generated-plain-message.json": {
+    description:
+      "A message written by es-core with includeEsPart: false: a single text/plain part, no ES part, for recipients that have never sent one.",
+    input: {
+      kind: "message",
+      outgoing: {
+        from: { name: "Alice Example", address: "alice@example.com" },
+        to: [{ name: "Carol", address: "carol@example.net" }],
+        subject: "Lunch on Friday?",
+        text: "Hi Carol,\n\nlunch on Friday at noon? Café Élysée.",
+        es: { requestReceipts: ["read"] },
+      },
+      options: { date: "2026-03-02T09:01:00Z", messageId: "<es-vector-6@mail.example.com>", includeEsPart: false },
+    },
+  },
   "generated-receipt-delivered.json": {
     description: "A Delivered receipt (es.social.receipt, kind delivered) answering the first generated message.",
     input: {
@@ -163,6 +192,11 @@ const files = readdirSync(VECTORS_DIR)
 const vectors = files.map((f) => [f, JSON.parse(readFileSync(VECTORS_DIR + f, "utf8")) as Vector] as const);
 
 describe("test vectors (vectors/*.json)", () => {
+  it("covers a message over the ES text limit (20 kB)", () => {
+    const long = GENERATED["generated-long-message.json"]!.input;
+    expect(long.kind === "message" && new TextEncoder().encode(long.outgoing.text).length).toBeGreaterThan(20_000);
+  });
+
   it("has one vector per fixture plus the generated ones, and nothing else", () => {
     expect(files).toEqual([...listFixtures().map(vectorName), ...Object.keys(GENERATED)].sort());
   });
