@@ -1,0 +1,81 @@
+Return-Path: <dev-list-bounces@lists.example.org>
+Received: from lists.example.org (lists.example.org [192.0.2.80])
+	by mx.example.com (Postfix) with ESMTP id 7C2D1E0F3A
+	for <alice@example.com>; Fri, 13 Mar 2026 11:48:30 +0100 (CET)
+From: =?utf-8?Q?Martin_Hor=C3=A1k?= <martin.horak@example.net>
+Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3774.600.62\))
+Date: Fri, 13 Mar 2026 11:48:22 +0100
+References: <6f1d2c3b-4a5e-4f6d-9c8b-7a6e5d4c3b2a@example.org>
+To: dev-list@lists.example.org
+In-Reply-To: <6f1d2c3b-4a5e-4f6d-9c8b-7a6e5d4c3b2a@example.org>
+Message-Id: <C3A1E5F7-9B2D-4C6E-8A0F-1B3D5F7A9C2E@example.net>
+X-Mailer: Apple Mail (2.3774.600.62)
+Subject: [dev-list] Re: Release plan
+X-BeenThere: dev-list@lists.example.org
+X-Mailman-Version: 2.1.39
+Precedence: list
+List-Id: Development of the example project <dev-list.lists.example.org>
+List-Unsubscribe: <https://lists.example.org/mailman/options/dev-list>,
+ <mailto:dev-list-request@lists.example.org?subject=unsubscribe>
+List-Archive: <https://lists.example.org/pipermail/dev-list/>
+List-Post: <mailto:dev-list@lists.example.org>
+List-Help: <mailto:dev-list-request@lists.example.org?subject=help>
+List-Subscribe: <https://lists.example.org/mailman/listinfo/dev-list>,
+ <mailto:dev-list-request@lists.example.org?subject=subscribe>
+Content-Type: multipart/mixed; boundary="===============4265789137540932190=="
+Errors-To: dev-list-bounces@lists.example.org
+Sender: "dev-list" <dev-list-bounces@lists.example.org>
+
+--===============4265789137540932190==
+Content-Type: multipart/alternative;
+	boundary="Apple-Mail=_0B2D4F6A-8C1E-4A3B-9D5F-7E9A1C3E5B7D"
+
+
+--Apple-Mail=_0B2D4F6A-8C1E-4A3B-9D5F-7E9A1C3E5B7D
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain;
+	charset=utf-8
+
+Sounds good to me. One note: the Czech translation update needs about a wee=
+k, so could we keep the string freeze on 18 March?
+
+Martin Hor=C3=A1k
+
+> On 12. 3. 2026, at 16:20, Karel Holub <karel@example.org> wrote:
+>=20
+> Proposed schedule:
+> - feature freeze on 20 March
+> - release candidate on 27 March
+> - final release on 3 April
+>=20
+> Objections?
+
+--Apple-Mail=_0B2D4F6A-8C1E-4A3B-9D5F-7E9A1C3E5B7D
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/html;
+	charset=utf-8
+
+<html><head><meta http-equiv=3D"content-type" content=3D"text/html; charset=
+=3Dutf-8"></head><body style=3D"overflow-wrap: break-word; -webkit-nbsp-mod=
+e: space; line-break: after-white-space;">Sounds good to me. One note: the =
+Czech translation update needs about a week, so could we keep the string fr=
+eeze on 18 March?<div><br></div><div>Martin Hor=C3=A1k<br><div><br><blockqu=
+ote type=3D"cite"><div>On 12. 3. 2026, at 16:20, Karel Holub &lt;karel@exam=
+ple.org&gt; wrote:</div><br><div><div>Proposed schedule:<br>- feature freez=
+e on 20 March<br>- release candidate on 27 March<br>- final release on 3 Ap=
+ril<br><br>Objections?<br></div></div></blockquote></div><br></div></body><=
+/html>
+--Apple-Mail=_0B2D4F6A-8C1E-4A3B-9D5F-7E9A1C3E5B7D--
+
+--===============4265789137540932190==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+dev-list mailing list
+dev-list@lists.example.org
+https://lists.example.org/mailman/listinfo/dev-list
+
+--===============4265789137540932190==--

@@ -1,0 +1,35 @@
+Return-Path: <ondrej@host.example.com>
+Received: from host.example.com (host.example.com [198.51.100.23])
+	by mx.example.org (Postfix) with ESMTPS id 5A1B2C3D4E
+	for <karel@example.org>; Mon,  2 Mar 2026 10:30:02 +0100 (CET)
+Date: Mon, 2 Mar 2026 10:30:00 +0100
+From: =?iso-8859-2?Q?Ond=F8ej_Bene=B9?= <ondrej@host.example.com>
+To: Karel Holub <karel@example.org>
+Subject: Re: =?iso-8859-2?Q?Z=E1lohov=E1n=ED?= serveru
+Message-ID: <20260302093000.GA12345@host.example.com>
+Mail-Followup-To: Karel Holub <karel@example.org>,
+	=?iso-8859-2?Q?Ond=F8ej_Bene=B9?= <ondrej@host.example.com>
+References: <20260301174512.GB4411@example.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-2
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20260301174512.GB4411@example.org>
+User-Agent: Mutt/2.2.13 (2024-03-09)
+
+On Sun, Mar 01, 2026 at 06:45:12PM +0100, Karel Holub wrote:
+> Ahoj Ondøeji,
+> 
+> zálohy na novém serveru bì¾í, ale rotace starých snapshotù zatím
+> nefunguje. Mù¾e¹ se na to podívat?
+
+Ahoj Karle,
+
+podívám se na to dnes odpoledne. Nejspí¹ je ¹patnì nastavená cesta
+v cronu, skript hledá snapshoty ve starém adresáøi.
+
+Díky za upozornìní,
+Ondøej
+
+-- 
+Ondøej Bene¹

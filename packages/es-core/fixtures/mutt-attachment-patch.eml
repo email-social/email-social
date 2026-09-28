@@ -1,0 +1,54 @@
+Date: Wed, 11 Mar 2026 22:14:05 +0100
+From: =?iso-8859-2?Q?Ond=F8ej_Bene=B9?= <ondrej@host.example.com>
+To: Karel Holub <karel@example.org>
+Subject: Patch for the snapshot rotation
+Message-ID: <20260311211405.GA23456@host.example.com>
+MIME-Version: 1.0
+Content-Type: multipart/mixed; boundary="Qx7mB2vQ9c/Z4tR1"
+Content-Disposition: inline
+User-Agent: Mutt/2.2.13 (2024-03-09)
+
+
+--Qx7mB2vQ9c/Z4tR1
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+
+Hi Karel,
+
+the attached patch fixes the rotation: the script compared the snapshot
+age with ">" instead of ">=", so the oldest snapshot was never removed.
+
+Tested on the staging box, three rotations in a row.
+
+Ondrej
+
+--Qx7mB2vQ9c/Z4tR1
+Content-Type: text/x-diff; charset=us-ascii
+Content-Disposition: attachment; filename="0001-rotate-remove-oldest-snapshot.patch"
+
+From 3c9e1f2a7b4d5e6f8091a2b3c4d5e6f708192a3b Mon Sep 17 00:00:00 2001
+From: Ondrej Benes <ondrej@host.example.com>
+Date: Wed, 11 Mar 2026 22:05:41 +0100
+Subject: [PATCH] rotate: remove the oldest snapshot
+
+---
+ rotate.sh | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/rotate.sh b/rotate.sh
+index 4b1c2d3..9e8f7a6 100755
+--- a/rotate.sh
++++ b/rotate.sh
+@@ -12,7 +12,7 @@ KEEP=14
+ 
+ for snap in "$SNAPDIR"/*; do
+     age=$(( (now - $(stat -c %Y "$snap")) / 86400 ))
+-    if [ "$age" -gt "$KEEP" ]; then
++    if [ "$age" -ge "$KEEP" ]; then
+         rm -rf -- "$snap"
+     fi
+ done
+-- 
+2.43.0
+
+--Qx7mB2vQ9c/Z4tR1--

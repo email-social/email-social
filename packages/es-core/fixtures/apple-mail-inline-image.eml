@@ -1,0 +1,41 @@
+From: Daniel Brooks <daniel@example.com>
+Content-Type: multipart/mixed;
+	boundary="Apple-Mail=_9D1E2F3A-4B5C-4D6E-8F70-81A2B3C4D5E6"
+Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3774.600.62\))
+Subject: Photo from Saturday
+Message-Id: <E2B4C6D8-0A1C-4E3F-9B5D-7F8A9C0D1E2F@example.com>
+Date: Sat, 7 Mar 2026 19:05:31 +0000
+To: Emma Clarke <emma@example.net>
+X-Mailer: Apple Mail (2.3774.600.62)
+
+
+--Apple-Mail=_9D1E2F3A-4B5C-4D6E-8F70-81A2B3C4D5E6
+Content-Transfer-Encoding: 7bit
+Content-Type: text/plain;
+	charset=us-ascii
+
+Hi Emma,
+
+here is the view from the top:
+--Apple-Mail=_9D1E2F3A-4B5C-4D6E-8F70-81A2B3C4D5E6
+Content-Disposition: inline;
+	filename=IMG_0412.jpeg
+Content-Type: image/jpeg;
+	x-unix-mode=0644;
+	name="IMG_0412.jpeg"
+Content-Id: <5A1B2C3D-4E5F-4A6B-8C7D-9E0F1A2B3C4D>
+Content-Transfer-Encoding: base64
+
+/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEB
+AQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQH/wAALCAABAAEBAREA/8QAFAABAAAAAAAA
+AAAAAAAAAAAAAP/EABQQAQAAAAAAAAAAAAAAAAAAAAD/2gAIAQEAAD8AP//Z
+--Apple-Mail=_9D1E2F3A-4B5C-4D6E-8F70-81A2B3C4D5E6
+Content-Transfer-Encoding: 7bit
+Content-Type: text/plain;
+	charset=us-ascii
+
+
+Worth the climb. See you on Monday.
+
+Daniel
+--Apple-Mail=_9D1E2F3A-4B5C-4D6E-8F70-81A2B3C4D5E6--

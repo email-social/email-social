@@ -1,0 +1,53 @@
+MIME-Version: 1.0
+From: Bob Svoboda <bob@example.org>
+Date: Tue, 10 Mar 2026 14:22:03 +0100
+Message-ID: <CAH7x9kP8sT2vW4yZ6bD0fH3jL5nQ7rU9wA1cE3gI5kM7oQ9sU@mail.example.com>
+Subject: =?UTF-8?B?TsOhdnJoIHNtbG91dnk=?=
+To: =?UTF-8?Q?Alice_Dvo=C5=99=C3=A1kov=C3=A1?= <alice@example.com>
+Content-Type: multipart/mixed; boundary="000000000000b1c2d3e4f5061728"
+
+--000000000000b1c2d3e4f5061728
+Content-Type: multipart/alternative; boundary="000000000000b1c2d3e4f5061726"
+
+--000000000000b1c2d3e4f5061726
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+
+Ahoj Alice,
+
+v p=C5=99=C3=ADloze pos=C3=ADl=C3=A1m n=C3=A1vrh smlouvy. Pod=C3=ADvej se p=
+ros=C3=ADm hlavn=C4=9B na =C4=8Dl=C3=A1nek 4 (term=C3=ADny pln=C4=9Bn=C3=AD=
+).
+
+D=C3=ADky,
+Bob
+
+--000000000000b1c2d3e4f5061726
+Content-Type: text/html; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+
+<div dir=3D"ltr"><div>Ahoj Alice,</div><div><br></div><div>v p=C5=99=C3=ADl=
+oze pos=C3=ADl=C3=A1m n=C3=A1vrh smlouvy. Pod=C3=ADvej se pros=C3=ADm hlavn=
+=C4=9B na =C4=8Dl=C3=A1nek 4 (term=C3=ADny pln=C4=9Bn=C3=AD).</div><div><br=
+></div><div>D=C3=ADky,</div><div>Bob</div></div>
+
+--000000000000b1c2d3e4f5061726--
+--000000000000b1c2d3e4f5061728
+Content-Type: application/pdf; name="=?UTF-8?B?TsOhdnJoIHNtbG91dnkgMjAyNi5wZGY=?="
+Content-Disposition: attachment; filename="=?UTF-8?B?TsOhdnJoIHNtbG91dnkgMjAyNi5wZGY=?="
+Content-Transfer-Encoding: base64
+Content-ID: <f_mm4k2x1a0>
+X-Attachment-Id: f_mm4k2x1a0
+
+JVBERi0xLjQKJeLjz9MKMSAwIG9iago8PCAvVHlwZSAvQ2F0YWxvZyAvUGFnZXMgMiAwIFIgPj4K
+ZW5kb2JqCjIgMCBvYmoKPDwgL1R5cGUgL1BhZ2VzIC9LaWRzIFszIDAgUl0gL0NvdW50IDEgPj4K
+ZW5kb2JqCjMgMCBvYmoKPDwgL1R5cGUgL1BhZ2UgL1BhcmVudCAyIDAgUiAvTWVkaWFCb3ggWzAg
+MCA1OTUgODQyXSAvQ29udGVudHMgNCAwIFIgL1Jlc291cmNlcyA8PCAvRm9udCA8PCAvRjEgNSAw
+IFIgPj4gPj4gPj4KZW5kb2JqCjQgMCBvYmoKPDwgL0xlbmd0aCA1NyA+PgpzdHJlYW0KQlQgL0Yx
+IDE4IFRmIDcyIDc3MCBUZCAoTmF2cmggc21sb3V2eSAtIHZlcnplIDIwMjYpIFRqIEVUCmVuZHN0
+cmVhbQplbmRvYmoKNSAwIG9iago8PCAvVHlwZSAvRm9udCAvU3VidHlwZSAvVHlwZTEgL0Jhc2VG
+b250IC9IZWx2ZXRpY2EgPj4KZW5kb2JqCnhyZWYKMCA2CjAwMDAwMDAwMDAgNjU1MzUgZiAKMDAw
+MDAwMDAxNSAwMDAwMCBuIAowMDAwMDAwMDY0IDAwMDAwIG4gCjAwMDAwMDAxMjEgMDAwMDAgbiAK
+MDAwMDAwMDI0NyAwMDAwMCBuIAowMDAwMDAwMzU0IDAwMDAwIG4gCnRyYWlsZXIKPDwgL1NpemUg
+NiAvUm9vdCAxIDAgUiA+PgpzdGFydHhyZWYKNDI0CiUlRU9GCg==
+--000000000000b1c2d3e4f5061728--

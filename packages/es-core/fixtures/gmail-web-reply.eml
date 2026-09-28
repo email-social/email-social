@@ -1,0 +1,64 @@
+Return-Path: <bob@example.org>
+Received: by mail-ej1-f41.example.com with SMTP id a640c23a62f3a-ab7d2c1e0f8so1234567866b.2
+        for <alice@example.com>; Mon, 02 Mar 2026 02:02:19 -0800 (PST)
+MIME-Version: 1.0
+References: <3f2a9c1e-6b4d-4e8a-9f1c-2d7e5b8a0c34@example.com>
+In-Reply-To: <3f2a9c1e-6b4d-4e8a-9f1c-2d7e5b8a0c34@example.com>
+From: Bob Svoboda <bob@example.org>
+Date: Mon, 2 Mar 2026 11:02:17 +0100
+Message-ID: <CAH7x9kN4q2Lr8vT6YpW3mZs1bQ5dF0gJ+uE_aK8cR2xV9nB7eQ=w@mail.example.com>
+Subject: =?UTF-8?B?UmU6IE9ixJtkIHYgcMOhdGVr?=
+To: =?UTF-8?Q?Alice_Dvo=C5=99=C3=A1kov=C3=A1?= <alice@example.com>
+Cc: =?UTF-8?Q?Jana_Nov=C3=A1kov=C3=A1?= <jana@example.net>
+Content-Type: multipart/alternative; boundary="0000000000004b7e2a0612a1c3d4"
+
+--0000000000004b7e2a0612a1c3d4
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+
+Ahoj Alice,
+
+v p=C3=A1tek m=C5=AF=C5=BEu, 12:30 je super. Zarezervuju st=C5=AFl pro t=C5=
+=99i.
+
+Bob
+
+On Mon, Mar 2, 2026 at 10:15=E2=80=AFAM Alice Dvo=C5=99=C3=A1kov=C3=A1 <ali=
+ce@example.com> wrote:
+
+> Ahoj Bobe,
+>
+> nechce=C5=A1 v p=C3=A1tek zaj=C3=ADt na ob=C4=9Bd? Myslela jsem, =C5=BEe =
+bychom mohli zkusit to nov=C3=A9 bistro na rohu u n=C3=A1dra=C5=BE=C3=AD, p=
+r=C3=BD tam maj=C3=AD v=C3=BDborn=C3=A9 poledn=C3=AD menu a nen=C3=AD tam t=
+akov=C3=A1 fronta jako jinde.
+>
+> Jana u=C5=BE =C5=99=C3=ADkala, =C5=BEe by =C5=A1la taky. Hod=C3=AD se ti =
+12:30?
+>
+> Alice
+>
+> --
+> Alice Dvo=C5=99=C3=A1kov=C3=A1
+> Example s.r.o.
+
+--0000000000004b7e2a0612a1c3d4
+Content-Type: text/html; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+
+<div dir=3D"ltr"><div>Ahoj Alice,</div><div><br></div><div>v p=C3=A1tek m=
+=C5=AF=C5=BEu, 12:30 je super. Zarezervuju st=C5=AFl pro t=C5=99i.</div><di=
+v><br></div><div>Bob</div></div><br><div class=3D"gmail_quote gmail_quote_c=
+ontainer"><div dir=3D"ltr" class=3D"gmail_attr">On Mon, Mar 2, 2026 at 10:1=
+5=E2=80=AFAM Alice Dvo=C5=99=C3=A1kov=C3=A1 &lt;<a href=3D"mailto:alice@exa=
+mple.com">alice@example.com</a>&gt; wrote:<br></div><blockquote class=3D"gm=
+ail_quote" style=3D"margin:0px 0px 0px 0.8ex;border-left:1px solid rgb(204,=
+204,204);padding-left:1ex">Ahoj Bobe,<br><br>nechce=C5=A1 v p=C3=A1tek zaj=
+=C3=ADt na ob=C4=9Bd? Myslela jsem, =C5=BEe bychom mohli zkusit to nov=C3=
+=A9 bistro na rohu u n=C3=A1dra=C5=BE=C3=AD, pr=C3=BD tam maj=C3=AD v=C3=BD=
+born=C3=A9 poledn=C3=AD menu a nen=C3=AD tam takov=C3=A1 fronta jako jinde.=
+<br><br>Jana u=C5=BE =C5=99=C3=ADkala, =C5=BEe by =C5=A1la taky. Hod=C3=AD =
+se ti 12:30?<br><br>Alice<br><br>-- <br>Alice Dvo=C5=99=C3=A1kov=C3=A1<br>E=
+xample s.r.o.<br><br></blockquote></div>
+
+--0000000000004b7e2a0612a1c3d4--
