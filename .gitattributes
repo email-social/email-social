@@ -1,0 +1,3 @@
+# Raw e-mail fixtures are byte-exact test inputs (CRLF, 8-bit charsets):
+# never convert line endings or re-encode them.
+*.eml -text
