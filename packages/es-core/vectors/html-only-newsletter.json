@@ -1,0 +1,31 @@
+{
+  "description": "bulk newsletter sender: text/html only, base64 UTF-8, with <title>, <style>, a comment, <br>, <p>, <ul><li>, &amp;, &nbsp;, &#8211;; List-Unsubscribe and List-Unsubscribe-Post (RFC 8058)",
+  "source": "fixtures/html-only-newsletter.eml",
+  "raw": "Return-Path: <bounce-7f3a2c@news.example.org>\r\nReceived: from out.news.example.org (out.news.example.org [203.0.113.77])\r\n\tby mx.example.com (Postfix) with ESMTPS id 4R3aB9c1Dz2\r\n\tfor <alice@example.com>; Thu, 12 Mar 2026 06:00:02 +0000 (UTC)\r\nFrom: Example Garden Club <news@news.example.org>\r\nTo: alice@example.com\r\nSubject: March news from the garden club\r\nDate: Thu, 12 Mar 2026 06:00:00 +0000\r\nMessage-ID: <0100018e2f4a7b3c-9d1e5f20-4a6b-4c8d-9e0f-1a2b3c4d5e6f-000000@email.example.org>\r\nList-Unsubscribe: <https://news.example.org/u/abc123>,\r\n <mailto:unsubscribe@news.example.org?subject=abc123>\r\nList-Unsubscribe-Post: List-Unsubscribe=One-Click\r\nPrecedence: bulk\r\nMIME-Version: 1.0\r\nContent-Type: text/html; charset=UTF-8\r\nContent-Transfer-Encoding: base64\r\n\r\nPCFET0NUWVBFIGh0bWw+CjxodG1sIGxhbmc9ImVuIj4KPGhlYWQ+CjxtZXRhIGNoYXJzZXQ9InV0\r\nZi04Ij4KPHRpdGxlPkV4YW1wbGUgR2FyZGVuIENsdWIgJiM4MjExOyBNYXJjaCBuZXdzPC90aXRs\r\nZT4KPHN0eWxlIHR5cGU9InRleHQvY3NzIj4KICBib2R5IHsgZm9udC1mYW1pbHk6IEFyaWFsLCBz\r\nYW5zLXNlcmlmOyBjb2xvcjogIzIyMjIyMjsgfQogIC5mb290ZXIgeyBjb2xvcjogIzg4ODg4ODsg\r\nZm9udC1zaXplOiAxMnB4OyB9Cjwvc3R5bGU+CjwvaGVhZD4KPGJvZHk+CjwhLS0gcHJlaGVhZGVy\r\nOiBzZWVkIHN3YXAsIHBydW5pbmcgd29ya3Nob3AgLS0+CjxoMT5NYXJjaCBuZXdzPC9oMT4KPHA+\r\nSGVsbG8gZ2FyZGVuZXJzLDxicj5zcHJpbmcgaXMgYWxtb3N0IGhlcmUgJmFtcDsgdGhlIHNlZWQg\r\nc3dhcCBpcyBiYWNrLjwvcD4KPHVsPgo8bGk+U2VlZCBzd2FwOiBTYXR1cmRheSAxNCBNYXJjaCwg\r\nMTA6MDAmbmJzcDsmIzgyMTE7Jm5ic3A7MTI6MDA8L2xpPgo8bGk+UHJ1bmluZyB3b3Jrc2hvcDog\r\nU3VuZGF5IDIyIE1hcmNoPC9saT4KPC91bD4KPHA+U2VlIHlvdSB0aGVyZSE8L3A+CjxwIGNsYXNz\r\nPSJmb290ZXIiPllvdSByZWNlaXZlIHRoaXMgYmVjYXVzZSB5b3Ugam9pbmVkIHRoZSBFeGFtcGxl\r\nIEdhcmRlbiBDbHViLjxicj5VbnN1YnNjcmliZTogaHR0cHM6Ly9uZXdzLmV4YW1wbGUub3JnL3Uv\r\nYWJjMTIzPC9wPgo8L2JvZHk+CjwvaHRtbD4K\r\n",
+  "expected": {
+    "id": "<0100018e2f4a7b3c-9d1e5f20-4a6b-4c8d-9e0f-1a2b3c4d5e6f-000000@email.example.org>",
+    "from": {
+      "name": "Example Garden Club",
+      "address": "news@news.example.org"
+    },
+    "to": [
+      {
+        "name": "",
+        "address": "alice@example.com"
+      }
+    ],
+    "cc": [],
+    "replyTo": [],
+    "date": "2026-03-12T06:00:00.000Z",
+    "subject": "March news from the garden club",
+    "text": "March news\n\nHello gardeners,\nspring is almost here & the seed swap is back.\n\n- Seed swap: Saturday 14 March, 10:00 – 12:00\n- Pruning workshop: Sunday 22 March\n\nSee you there!\n\nYou receive this because you joined the Example Garden Club.\nUnsubscribe: https://news.example.org/u/abc123",
+    "textSource": "html",
+    "es": null,
+    "attachments": [],
+    "refs": {
+      "messageId": "<0100018e2f4a7b3c-9d1e5f20-4a6b-4c8d-9e0f-1a2b3c4d5e6f-000000@email.example.org>",
+      "inReplyTo": [],
+      "references": []
+    }
+  }
+}

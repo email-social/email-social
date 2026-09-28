@@ -1,0 +1,36 @@
+{
+  "description": "Apple Mail on macOS, French: multipart/alternative with QP UTF-8; Mime-Version: 1.0 (Mac OS X Mail 16.0 \\(3774.600.62\\)); X-Mailer: Apple Mail (2.3774.600.62); <UUID@example.org> Message-ID; empty preamble line",
+  "source": "fixtures/apple-mail-fr-original.eml",
+  "raw": "From: =?utf-8?Q?Camille_Lef=C3=A8vre?= <camille@example.org>\r\nContent-Type: multipart/alternative;\r\n\tboundary=\"Apple-Mail=_5B2C8E4A-7D1F-4C3B-9A6E-0F1D2C3B4A59\"\r\nMime-Version: 1.0 (Mac OS X Mail 16.0 \\(3774.600.62\\))\r\nSubject: =?utf-8?Q?R=C3=A9union_de_lundi?=\r\nMessage-Id: <4E7A9C2B-1D3F-4B6A-8E5C-9F0A1B2C3D4E@example.org>\r\nDate: Wed, 4 Mar 2026 17:42:09 +0100\r\nTo: Julien Moreau <julien@example.org>\r\nCc: =?utf-8?Q?Am=C3=A9lie_Rousseau?= <amelie@example.org>\r\nX-Mailer: Apple Mail (2.3774.600.62)\r\n\r\n\r\n--Apple-Mail=_5B2C8E4A-7D1F-4C3B-9A6E-0F1D2C3B4A59\r\nContent-Transfer-Encoding: quoted-printable\r\nContent-Type: text/plain;\r\n\tcharset=utf-8\r\n\r\nBonjour =C3=A0 tous,\r\n\r\nLa r=C3=A9union de lundi est d=C3=A9plac=C3=A9e =C3=A0 14 h 30, salle B. Me=\r\nrci de pr=C3=A9parer vos points pour l=E2=80=99ordre du jour.\r\n\r\nBonne soir=C3=A9e,\r\nCamille\r\n\r\n--Apple-Mail=_5B2C8E4A-7D1F-4C3B-9A6E-0F1D2C3B4A59\r\nContent-Transfer-Encoding: quoted-printable\r\nContent-Type: text/html;\r\n\tcharset=utf-8\r\n\r\n<html><head><meta http-equiv=3D\"content-type\" content=3D\"text/html; charset=\r\n=3Dutf-8\"></head><body style=3D\"overflow-wrap: break-word; -webkit-nbsp-mod=\r\ne: space; line-break: after-white-space;\">Bonjour =C3=A0 tous,<div><br></di=\r\nv><div>La r=C3=A9union de lundi est d=C3=A9plac=C3=A9e =C3=A0 14 h 30, sall=\r\ne B. Merci de pr=C3=A9parer vos points pour l=E2=80=99ordre du jour.</div><=\r\ndiv><br></div><div>Bonne soir=C3=A9e,</div><div>Camille</div></body></html>\r\n--Apple-Mail=_5B2C8E4A-7D1F-4C3B-9A6E-0F1D2C3B4A59--\r\n",
+  "expected": {
+    "id": "<4E7A9C2B-1D3F-4B6A-8E5C-9F0A1B2C3D4E@example.org>",
+    "from": {
+      "name": "Camille Lefèvre",
+      "address": "camille@example.org"
+    },
+    "to": [
+      {
+        "name": "Julien Moreau",
+        "address": "julien@example.org"
+      }
+    ],
+    "cc": [
+      {
+        "name": "Amélie Rousseau",
+        "address": "amelie@example.org"
+      }
+    ],
+    "replyTo": [],
+    "date": "2026-03-04T16:42:09.000Z",
+    "subject": "Réunion de lundi",
+    "text": "Bonjour à tous,\n\nLa réunion de lundi est déplacée à 14 h 30, salle B. Merci de préparer vos points pour l’ordre du jour.\n\nBonne soirée,\nCamille\n",
+    "textSource": "plain",
+    "es": null,
+    "attachments": [],
+    "refs": {
+      "messageId": "<4E7A9C2B-1D3F-4B6A-8E5C-9F0A1B2C3D4E@example.org>",
+      "inReplyTo": [],
+      "references": []
+    }
+  }
+}

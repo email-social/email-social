@@ -1,0 +1,74 @@
+{
+  "description": "A new message written by es-core: text/plain first, then the ES part (es.social.post) in multipart/mixed.",
+  "source": "generated",
+  "input": {
+    "kind": "message",
+    "outgoing": {
+      "from": {
+        "name": "Alice Example",
+        "address": "alice@example.com"
+      },
+      "to": [
+        {
+          "name": "Bob",
+          "address": "bob@example.org"
+        }
+      ],
+      "subject": "Lunch on Friday?",
+      "text": "Hi Bob,\n\nlunch on Friday at noon?\n\nAlice\n",
+      "es": {
+        "requestReceipts": [
+          "delivered",
+          "read"
+        ]
+      }
+    },
+    "options": {
+      "date": "2026-03-02T09:00:00Z",
+      "messageId": "<es-vector-1@mail.example.com>"
+    }
+  },
+  "raw": "Date: Mon, 2 Mar 2026 09:00:00 +0000\r\nFrom: Alice Example <alice@example.com>\r\nTo: Bob <bob@example.org>\r\nSubject: Lunch on Friday?\r\nMessage-ID: <es-vector-1@mail.example.com>\r\nMIME-Version: 1.0\r\nContent-Type: multipart/mixed; boundary=\"=_es_1f080237138058f2b84d746d\"\r\n\r\nThis is a multi-part message in MIME format.\r\n\r\n--=_es_1f080237138058f2b84d746d\r\nContent-Type: text/plain; charset=utf-8\r\nContent-Transfer-Encoding: 7bit\r\n\r\nHi Bob,\r\n\r\nlunch on Friday at noon?\r\n\r\nAlice\r\n\r\n--=_es_1f080237138058f2b84d746d\r\nContent-Type: application/vnd.email-social.message+json\r\nContent-Transfer-Encoding: base64\r\nContent-Disposition: attachment; filename=\"email-social.json\"\r\n\r\newogICIkdHlwZSI6ICJlcy5zb2NpYWwucG9zdCIsCiAgInZhbHVlIjogewogICAgInRleHQiOiAi\r\nSGkgQm9iLFxuXG5sdW5jaCBvbiBGcmlkYXkgYXQgbm9vbj9cblxuQWxpY2VcbiIsCiAgICAidmlh\r\nIjogImFsaWNlQGV4YW1wbGUuY29tIiwKICAgICJjcmVhdGVkQXQiOiAiMjAyNi0wMy0wMlQwOTow\r\nMDowMC4wMDBaIiwKICAgICJlbWFpbCI6IHsKICAgICAgIm1lc3NhZ2VJZCI6ICI8ZXMtdmVjdG9y\r\nLTFAbWFpbC5leGFtcGxlLmNvbT4iLAogICAgICAic3ViamVjdCI6ICJMdW5jaCBvbiBGcmlkYXk/\r\nIgogICAgfSwKICAgICJyZXF1ZXN0UmVjZWlwdHMiOiBbCiAgICAgICJkZWxpdmVyZWQiLAogICAg\r\nICAicmVhZCIKICAgIF0KICB9Cn0K\r\n--=_es_1f080237138058f2b84d746d--\r\n",
+  "expected": {
+    "id": "<es-vector-1@mail.example.com>",
+    "from": {
+      "name": "Alice Example",
+      "address": "alice@example.com"
+    },
+    "to": [
+      {
+        "name": "Bob",
+        "address": "bob@example.org"
+      }
+    ],
+    "cc": [],
+    "replyTo": [],
+    "date": "2026-03-02T09:00:00.000Z",
+    "subject": "Lunch on Friday?",
+    "text": "Hi Bob,\n\nlunch on Friday at noon?\n\nAlice\n",
+    "textSource": "plain",
+    "es": {
+      "$type": "es.social.post",
+      "author": null,
+      "text": "Hi Bob,\n\nlunch on Friday at noon?\n\nAlice\n",
+      "via": "alice@example.com",
+      "createdAt": "2026-03-02T09:00:00.000Z",
+      "email": {
+        "messageId": "<es-vector-1@mail.example.com>",
+        "subject": "Lunch on Friday?",
+        "inReplyTo": null,
+        "references": []
+      },
+      "requestReceipts": [
+        "delivered",
+        "read"
+      ]
+    },
+    "attachments": [],
+    "refs": {
+      "messageId": "<es-vector-1@mail.example.com>",
+      "inReplyTo": [],
+      "references": []
+    }
+  }
+}

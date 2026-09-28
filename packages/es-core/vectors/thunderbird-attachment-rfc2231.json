@@ -1,0 +1,40 @@
+{
+  "description": "Thunderbird 128, message with a spreadsheet: non-ASCII filename as RFC 2231 continuations (filename*0*=UTF-8''…; filename*1*=…) and as RFC 2047 words in name; flowed text with a space-stuffed From  line (RFC 3676 §4.4)",
+  "source": "fixtures/thunderbird-attachment-rfc2231.eml",
+  "raw": "Content-Type: multipart/mixed; boundary=\"------------q7XgK2mB9vRt4LcN8pWz3sYd\"\r\nMessage-ID: <7d4e2b91-3c5a-4f8e-a0b6-5e1c9d2f8a73@example.com>\r\nDate: Tue, 10 Mar 2026 16:40:18 +0100\r\nMIME-Version: 1.0\r\nUser-Agent: Mozilla Thunderbird\r\nContent-Language: en-US\r\nTo: Daniel Brooks <daniel@example.com>\r\nFrom: =?UTF-8?Q?Alice_Dvo=C5=99=C3=A1kov=C3=A1?= <alice@example.com>\r\nSubject: Spring budget overview\r\n\r\nThis is a multi-part message in MIME format.\r\n--------------q7XgK2mB9vRt4LcN8pWz3sYd\r\nContent-Type: text/plain; charset=UTF-8; format=flowed\r\nContent-Transfer-Encoding: 7bit\r\n\r\nHi Daniel,\r\n\r\nattached is the spring budget overview (the file name is in Czech, sorry \r\nabout that).\r\n From Monday on, please send new expenses to the finance team directly.\r\n\r\nThanks,\r\nAlice\r\n\r\n--------------q7XgK2mB9vRt4LcN8pWz3sYd\r\nContent-Type: application/vnd.oasis.opendocument.spreadsheet;\r\n name=\"=?UTF-8?B?Um96cG/EjWV0IG5hIGphcm8gMjAyNiDigJMg?=\r\n =?UTF-8?B?cMWZZWhsZWQgdsO9ZGFqxa8ub2Rz?=\"\r\nContent-Disposition: attachment;\r\n filename*0*=UTF-8''Rozpo%C4%8Det%20na%20jaro%202026%20%E2%80%93;\r\n filename*1*=%20p%C5%99ehled%20v%C3%BDdaj%C5%AF.ods\r\nContent-Transfer-Encoding: base64\r\n\r\nUEsDBBQAAAAAAMCEalyFbDmKLgAAAC4AAAAIAAAAbWltZXR5cGVhcHBsaWNhdGlvbi92bmQub2Fz\r\naXMub3BlbmRvY3VtZW50LnNwcmVhZHNoZWV0UEsDBBQAAAAAAMCEalzDSPiSdwEAAHcBAAAVAAAA\r\nTUVUQS1JTkYvbWFuaWZlc3QueG1sPD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgi\r\nPz4KPG1hbmlmZXN0Om1hbmlmZXN0IHhtbG5zOm1hbmlmZXN0PSJ1cm46b2FzaXM6bmFtZXM6dGM6\r\nb3BlbmRvY3VtZW50OnhtbG5zOm1hbmlmZXN0OjEuMCIgbWFuaWZlc3Q6dmVyc2lvbj0iMS4yIj4K\r\nIDxtYW5pZmVzdDpmaWxlLWVudHJ5IG1hbmlmZXN0OmZ1bGwtcGF0aD0iLyIgbWFuaWZlc3Q6bWVk\r\naWEtdHlwZT0iYXBwbGljYXRpb24vdm5kLm9hc2lzLm9wZW5kb2N1bWVudC5zcHJlYWRzaGVldCIv\r\nPgogPG1hbmlmZXN0OmZpbGUtZW50cnkgbWFuaWZlc3Q6ZnVsbC1wYXRoPSJjb250ZW50LnhtbCIg\r\nbWFuaWZlc3Q6bWVkaWEtdHlwZT0idGV4dC94bWwiLz4KPC9tYW5pZmVzdDptYW5pZmVzdD4KUEsD\r\nBBQAAAAAAMCEalyjPOn41wIAANcCAAALAAAAY29udGVudC54bWw8P3htbCB2ZXJzaW9uPSIxLjAi\r\nIGVuY29kaW5nPSJVVEYtOCI/Pgo8b2ZmaWNlOmRvY3VtZW50LWNvbnRlbnQgeG1sbnM6b2ZmaWNl\r\nPSJ1cm46b2FzaXM6bmFtZXM6dGM6b3BlbmRvY3VtZW50OnhtbG5zOm9mZmljZToxLjAiIHhtbG5z\r\nOnRhYmxlPSJ1cm46b2FzaXM6bmFtZXM6dGM6b3BlbmRvY3VtZW50OnhtbG5zOnRhYmxlOjEuMCIg\r\neG1sbnM6dGV4dD0idXJuOm9hc2lzOm5hbWVzOnRjOm9wZW5kb2N1bWVudDp4bWxuczp0ZXh0OjEu\r\nMCIgb2ZmaWNlOnZlcnNpb249IjEuMiI+PG9mZmljZTpib2R5PjxvZmZpY2U6c3ByZWFkc2hlZXQ+\r\nPHRhYmxlOnRhYmxlIHRhYmxlOm5hbWU9IlJvenBvxI1ldCI+PHRhYmxlOnRhYmxlLXJvdz48dGFi\r\nbGU6dGFibGUtY2VsbD48dGV4dDpwPlBvbG/FvmthPC90ZXh0OnA+PC90YWJsZTp0YWJsZS1jZWxs\r\nPjx0YWJsZTp0YWJsZS1jZWxsPjx0ZXh0OnA+xIzDoXN0a2E8L3RleHQ6cD48L3RhYmxlOnRhYmxl\r\nLWNlbGw+PC90YWJsZTp0YWJsZS1yb3c+PHRhYmxlOnRhYmxlLXJvdz48dGFibGU6dGFibGUtY2Vs\r\nbD48dGV4dDpwPk9zaXZvPC90ZXh0OnA+PC90YWJsZTp0YWJsZS1jZWxsPjx0YWJsZTp0YWJsZS1j\r\nZWxsPjx0ZXh0OnA+MTIwMDwvdGV4dDpwPjwvdGFibGU6dGFibGUtY2VsbD48L3RhYmxlOnRhYmxl\r\nLXJvdz48L3RhYmxlOnRhYmxlPjwvb2ZmaWNlOnNwcmVhZHNoZWV0Pjwvb2ZmaWNlOmJvZHk+PC9v\r\nZmZpY2U6ZG9jdW1lbnQtY29udGVudD4KUEsBAhQAFAAAAAAAwIRqXIVsOYouAAAALgAAAAgAAAAA\r\nAAAAAAAAAIABAAAAAG1pbWV0eXBlUEsBAhQAFAAAAAAAwIRqXMNI+JJ3AQAAdwEAABUAAAAAAAAA\r\nAAAAAIABVAAAAE1FVEEtSU5GL21hbmlmZXN0LnhtbFBLAQIUABQAAAAAAMCEalyjPOn41wIAANcC\r\nAAALAAAAAAAAAAAAAACAAf4BAABjb250ZW50LnhtbFBLBQYAAAAAAwADALIAAAD+BAAAAAA=\r\n\r\n--------------q7XgK2mB9vRt4LcN8pWz3sYd--\r\n",
+  "expected": {
+    "id": "<7d4e2b91-3c5a-4f8e-a0b6-5e1c9d2f8a73@example.com>",
+    "from": {
+      "name": "Alice Dvořáková",
+      "address": "alice@example.com"
+    },
+    "to": [
+      {
+        "name": "Daniel Brooks",
+        "address": "daniel@example.com"
+      }
+    ],
+    "cc": [],
+    "replyTo": [],
+    "date": "2026-03-10T15:40:18.000Z",
+    "subject": "Spring budget overview",
+    "text": "Hi Daniel,\n\nattached is the spring budget overview (the file name is in Czech, sorry about that).\nFrom Monday on, please send new expenses to the finance team directly.\n\nThanks,\nAlice\n",
+    "textSource": "plain",
+    "es": null,
+    "attachments": [
+      {
+        "filename": "Rozpočet na jaro 2026 – přehled výdajů.ods",
+        "contentType": "application/vnd.oasis.opendocument.spreadsheet",
+        "disposition": "attachment",
+        "size": 1478,
+        "contentId": null,
+        "partId": "2"
+      }
+    ],
+    "refs": {
+      "messageId": "<7d4e2b91-3c5a-4f8e-a0b6-5e1c9d2f8a73@example.com>",
+      "inReplyTo": [],
+      "references": []
+    }
+  }
+}

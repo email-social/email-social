@@ -1,0 +1,40 @@
+{
+  "description": "Gmail web, new message with a PDF: multipart/mixed { multipart/alternative { plain, html }, application/pdf }; filename=\"=?UTF-8?B?…?=\" (RFC 2047 inside quotes, Gmail style); Content-ID + X-Attachment-Id",
+  "source": "fixtures/gmail-web-attachment.eml",
+  "raw": "MIME-Version: 1.0\r\nFrom: Bob Svoboda <bob@example.org>\r\nDate: Tue, 10 Mar 2026 14:22:03 +0100\r\nMessage-ID: <CAH7x9kP8sT2vW4yZ6bD0fH3jL5nQ7rU9wA1cE3gI5kM7oQ9sU@mail.example.com>\r\nSubject: =?UTF-8?B?TsOhdnJoIHNtbG91dnk=?=\r\nTo: =?UTF-8?Q?Alice_Dvo=C5=99=C3=A1kov=C3=A1?= <alice@example.com>\r\nContent-Type: multipart/mixed; boundary=\"000000000000b1c2d3e4f5061728\"\r\n\r\n--000000000000b1c2d3e4f5061728\r\nContent-Type: multipart/alternative; boundary=\"000000000000b1c2d3e4f5061726\"\r\n\r\n--000000000000b1c2d3e4f5061726\r\nContent-Type: text/plain; charset=\"UTF-8\"\r\nContent-Transfer-Encoding: quoted-printable\r\n\r\nAhoj Alice,\r\n\r\nv p=C5=99=C3=ADloze pos=C3=ADl=C3=A1m n=C3=A1vrh smlouvy. Pod=C3=ADvej se p=\r\nros=C3=ADm hlavn=C4=9B na =C4=8Dl=C3=A1nek 4 (term=C3=ADny pln=C4=9Bn=C3=AD=\r\n).\r\n\r\nD=C3=ADky,\r\nBob\r\n\r\n--000000000000b1c2d3e4f5061726\r\nContent-Type: text/html; charset=\"UTF-8\"\r\nContent-Transfer-Encoding: quoted-printable\r\n\r\n<div dir=3D\"ltr\"><div>Ahoj Alice,</div><div><br></div><div>v p=C5=99=C3=ADl=\r\noze pos=C3=ADl=C3=A1m n=C3=A1vrh smlouvy. Pod=C3=ADvej se pros=C3=ADm hlavn=\r\n=C4=9B na =C4=8Dl=C3=A1nek 4 (term=C3=ADny pln=C4=9Bn=C3=AD).</div><div><br=\r\n></div><div>D=C3=ADky,</div><div>Bob</div></div>\r\n\r\n--000000000000b1c2d3e4f5061726--\r\n--000000000000b1c2d3e4f5061728\r\nContent-Type: application/pdf; name=\"=?UTF-8?B?TsOhdnJoIHNtbG91dnkgMjAyNi5wZGY=?=\"\r\nContent-Disposition: attachment; filename=\"=?UTF-8?B?TsOhdnJoIHNtbG91dnkgMjAyNi5wZGY=?=\"\r\nContent-Transfer-Encoding: base64\r\nContent-ID: <f_mm4k2x1a0>\r\nX-Attachment-Id: f_mm4k2x1a0\r\n\r\nJVBERi0xLjQKJeLjz9MKMSAwIG9iago8PCAvVHlwZSAvQ2F0YWxvZyAvUGFnZXMgMiAwIFIgPj4K\r\nZW5kb2JqCjIgMCBvYmoKPDwgL1R5cGUgL1BhZ2VzIC9LaWRzIFszIDAgUl0gL0NvdW50IDEgPj4K\r\nZW5kb2JqCjMgMCBvYmoKPDwgL1R5cGUgL1BhZ2UgL1BhcmVudCAyIDAgUiAvTWVkaWFCb3ggWzAg\r\nMCA1OTUgODQyXSAvQ29udGVudHMgNCAwIFIgL1Jlc291cmNlcyA8PCAvRm9udCA8PCAvRjEgNSAw\r\nIFIgPj4gPj4gPj4KZW5kb2JqCjQgMCBvYmoKPDwgL0xlbmd0aCA1NyA+PgpzdHJlYW0KQlQgL0Yx\r\nIDE4IFRmIDcyIDc3MCBUZCAoTmF2cmggc21sb3V2eSAtIHZlcnplIDIwMjYpIFRqIEVUCmVuZHN0\r\ncmVhbQplbmRvYmoKNSAwIG9iago8PCAvVHlwZSAvRm9udCAvU3VidHlwZSAvVHlwZTEgL0Jhc2VG\r\nb250IC9IZWx2ZXRpY2EgPj4KZW5kb2JqCnhyZWYKMCA2CjAwMDAwMDAwMDAgNjU1MzUgZiAKMDAw\r\nMDAwMDAxNSAwMDAwMCBuIAowMDAwMDAwMDY0IDAwMDAwIG4gCjAwMDAwMDAxMjEgMDAwMDAgbiAK\r\nMDAwMDAwMDI0NyAwMDAwMCBuIAowMDAwMDAwMzU0IDAwMDAwIG4gCnRyYWlsZXIKPDwgL1NpemUg\r\nNiAvUm9vdCAxIDAgUiA+PgpzdGFydHhyZWYKNDI0CiUlRU9GCg==\r\n--000000000000b1c2d3e4f5061728--\r\n",
+  "expected": {
+    "id": "<CAH7x9kP8sT2vW4yZ6bD0fH3jL5nQ7rU9wA1cE3gI5kM7oQ9sU@mail.example.com>",
+    "from": {
+      "name": "Bob Svoboda",
+      "address": "bob@example.org"
+    },
+    "to": [
+      {
+        "name": "Alice Dvořáková",
+        "address": "alice@example.com"
+      }
+    ],
+    "cc": [],
+    "replyTo": [],
+    "date": "2026-03-10T13:22:03.000Z",
+    "subject": "Návrh smlouvy",
+    "text": "Ahoj Alice,\n\nv příloze posílám návrh smlouvy. Podívej se prosím hlavně na článek 4 (termíny plnění).\n\nDíky,\nBob\n",
+    "textSource": "plain",
+    "es": null,
+    "attachments": [
+      {
+        "filename": "Návrh smlouvy 2026.pdf",
+        "contentType": "application/pdf",
+        "disposition": "attachment",
+        "size": 607,
+        "contentId": "<f_mm4k2x1a0>",
+        "partId": "2"
+      }
+    ],
+    "refs": {
+      "messageId": "<CAH7x9kP8sT2vW4yZ6bD0fH3jL5nQ7rU9wA1cE3gI5kM7oQ9sU@mail.example.com>",
+      "inReplyTo": [],
+      "references": []
+    }
+  }
+}

@@ -1,0 +1,31 @@
+{
+  "description": "Outlook with Exchange, French: TR :  forward to another new person, QP UTF-8, French forward header block (De :, Envoyé :, À :, Cc :, Objet :)",
+  "source": "fixtures/outlook-fr-forward.eml",
+  "raw": "From: =?utf-8?Q?Am=C3=A9lie_Rousseau?= <amelie@example.org>\r\nTo: Hugo Petit <hugo@example.com>\r\nSubject: =?utf-8?Q?TR_:_R=C3=A9union_de_lundi?=\r\nThread-Topic: =?utf-8?Q?R=C3=A9union_de_lundi?=\r\nThread-Index: AZf4SV8wnqYes/E8KUGl2RCUnPCcTQ==\r\nDate: Thu, 5 Mar 2026 09:20:44 +0000\r\nMessage-ID: <PR3P192MB07415C2A8E1B4D6F9A0C3E5B7D9F1A3C5@PR3P192MB0741.EURP192.PROD.OUTLOOK.example.com>\r\nAccept-Language: fr-FR, en-US\r\nContent-Language: fr-FR\r\nX-MS-Has-Attach:\r\nX-MS-TNEF-Correlator:\r\nContent-Type: multipart/alternative;\r\n\tboundary=\"_000_PR3P192MB07415C2A8E1B4D6F9A0C3E5B7D9F1A3C5PR3P192MB0741EURP_\"\r\nMIME-Version: 1.0\r\n\r\n--_000_PR3P192MB07415C2A8E1B4D6F9A0C3E5B7D9F1A3C5PR3P192MB0741EURP_\r\nContent-Type: text/plain; charset=\"utf-8\"\r\nContent-Transfer-Encoding: quoted-printable\r\n\r\nBonjour Hugo,\r\n\r\nPour info, voir ci-dessous.\r\n\r\nAm=C3=A9lie\r\n\r\nDe : Camille Lef=C3=A8vre <camille@example.org>=20\r\nEnvoy=C3=A9 : mercredi 4 mars 2026 17:42\r\n=C3=80 : Julien Moreau <julien@example.org>\r\nCc : Am=C3=A9lie Rousseau <amelie@example.org>\r\nObjet : R=C3=A9union de lundi\r\n\r\nBonjour =C3=A0 tous,\r\n\r\nLa r=C3=A9union de lundi est d=C3=A9plac=C3=A9e =C3=A0 14 h 30, salle B. Me=\r\nrci de pr=C3=A9parer vos points pour l=E2=80=99ordre du jour.\r\n\r\nBonne soir=C3=A9e,\r\nCamille\r\n\r\n--_000_PR3P192MB07415C2A8E1B4D6F9A0C3E5B7D9F1A3C5PR3P192MB0741EURP_\r\nContent-Type: text/html; charset=\"utf-8\"\r\nContent-Transfer-Encoding: quoted-printable\r\n\r\n<html xmlns:o=3D\"urn:schemas-microsoft-com:office:office\">\r\n<head><meta http-equiv=3D\"Content-Type\" content=3D\"text/html; charset=3Dutf=\r\n-8\"></head>\r\n<body lang=3D\"FR\" style=3D\"word-wrap:break-word\">\r\n<div class=3D\"WordSection1\">\r\n<p class=3D\"MsoNormal\">Bonjour Hugo,<o:p></o:p></p>\r\n<p class=3D\"MsoNormal\">Pour info, voir ci-dessous.<o:p></o:p></p>\r\n<p class=3D\"MsoNormal\">Am=C3=A9lie<o:p></o:p></p>\r\n<div style=3D\"border:none;border-top:solid #E1E1E1 1.0pt;padding:3.0pt 0cm =\r\n0cm 0cm\">\r\n<p class=3D\"MsoNormal\"><b>De&nbsp;:</b> Camille Lef=C3=A8vre &lt;camille@ex=\r\nample.org&gt; <br>\r\n<b>Envoy=C3=A9&nbsp;:</b> mercredi 4 mars 2026 17:42<br>\r\n<b>=C3=80&nbsp;:</b> Julien Moreau &lt;julien@example.org&gt;<br>\r\n<b>Cc&nbsp;:</b> Am=C3=A9lie Rousseau &lt;amelie@example.org&gt;<br>\r\n<b>Objet&nbsp;:</b> R=C3=A9union de lundi<o:p></o:p></p>\r\n</div>\r\n<p class=3D\"MsoNormal\">Bonjour =C3=A0 tous, [...]<o:p></o:p></p>\r\n</div>\r\n</body>\r\n</html>\r\n\r\n--_000_PR3P192MB07415C2A8E1B4D6F9A0C3E5B7D9F1A3C5PR3P192MB0741EURP_--\r\n",
+  "expected": {
+    "id": "<PR3P192MB07415C2A8E1B4D6F9A0C3E5B7D9F1A3C5@PR3P192MB0741.EURP192.PROD.OUTLOOK.example.com>",
+    "from": {
+      "name": "Amélie Rousseau",
+      "address": "amelie@example.org"
+    },
+    "to": [
+      {
+        "name": "Hugo Petit",
+        "address": "hugo@example.com"
+      }
+    ],
+    "cc": [],
+    "replyTo": [],
+    "date": "2026-03-05T09:20:44.000Z",
+    "subject": "TR : Réunion de lundi",
+    "text": "Bonjour Hugo,\n\nPour info, voir ci-dessous.\n\nAmélie\n\nDe : Camille Lefèvre <camille@example.org> \nEnvoyé : mercredi 4 mars 2026 17:42\nÀ : Julien Moreau <julien@example.org>\nCc : Amélie Rousseau <amelie@example.org>\nObjet : Réunion de lundi\n\nBonjour à tous,\n\nLa réunion de lundi est déplacée à 14 h 30, salle B. Merci de préparer vos points pour l’ordre du jour.\n\nBonne soirée,\nCamille\n",
+    "textSource": "plain",
+    "es": null,
+    "attachments": [],
+    "refs": {
+      "messageId": "<PR3P192MB07415C2A8E1B4D6F9A0C3E5B7D9F1A3C5@PR3P192MB0741.EURP192.PROD.OUTLOOK.example.com>",
+      "inReplyTo": [],
+      "references": []
+    }
+  }
+}

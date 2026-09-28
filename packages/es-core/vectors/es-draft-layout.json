@@ -1,0 +1,44 @@
+{
+  "description": "the layout of spec chapter 4.1: multipart/alternative with text/plain, text/html and application/vnd.es.social+json; version=2.0 holding the draft record envelope (uri, cid, signature ignored); a Date and a matching Message-ID were added",
+  "source": "fixtures/es-draft-layout.eml",
+  "raw": "From: user@example.com\r\nTo: recipient@example.org\r\nSubject: Hello Email.Social!\r\nDate: Thu, 10 Oct 2024 12:00:00 +0000\r\nMessage-ID: <unique-id@mail.example.com>\r\nMIME-Version: 1.0\r\nContent-Type: multipart/alternative; boundary=\"es-boundary\"\r\n\r\n--es-boundary\r\nContent-Type: text/plain; charset=utf-8\r\n\r\nHello Email.Social!\r\n\r\nThis is a test message.\r\n\r\n--es-boundary\r\nContent-Type: text/html; charset=utf-8\r\n\r\n<html>\r\n  <body>\r\n    <p>Hello Email.Social!</p>\r\n    <p>This is a test message.</p>\r\n  </body>\r\n</html>\r\n\r\n--es-boundary\r\nContent-Type: application/vnd.es.social+json; version=2.0\r\nContent-Disposition: inline; filename=\"es-data.json\"\r\n\r\n{\r\n  \"$type\": \"es.social.post\",\r\n  \"uri\": \"at://did:es:mail.example.com:abc123/es.social.post/3k2a4b5c6d\",\r\n  \"cid\": \"bafyreihxr2je5dnp6oq3y3za4xqw27qpg7kvr3rmso7fmxjkybqpwv6lt4\",\r\n  \"value\": {\r\n    \"text\": \"Hello Email.Social!\\n\\nThis is a test message.\",\r\n    \"createdAt\": \"2024-10-10T12:00:00.000Z\",\r\n    \"via\": \"user@example.com\",\r\n    \"email\": {\r\n      \"messageId\": \"<unique-id@mail.example.com>\",\r\n      \"subject\": \"Hello Email.Social!\"\r\n    }\r\n  },\r\n  \"author\": \"did:es:mail.example.com:abc123\",\r\n  \"signature\": {\r\n    \"type\": \"ES256K\",\r\n    \"created\": \"2024-10-10T12:00:00Z\",\r\n    \"verificationMethod\": \"did:es:mail.example.com:abc123#key-1\",\r\n    \"signatureValue\": \"...\"\r\n  }\r\n}\r\n\r\n--es-boundary--\r\n",
+  "expected": {
+    "id": "<unique-id@mail.example.com>",
+    "from": {
+      "name": "",
+      "address": "user@example.com"
+    },
+    "to": [
+      {
+        "name": "",
+        "address": "recipient@example.org"
+      }
+    ],
+    "cc": [],
+    "replyTo": [],
+    "date": "2024-10-10T12:00:00.000Z",
+    "subject": "Hello Email.Social!",
+    "text": "Hello Email.Social!\n\nThis is a test message.\n",
+    "textSource": "plain",
+    "es": {
+      "$type": "es.social.post",
+      "author": "did:es:mail.example.com:abc123",
+      "text": "Hello Email.Social!\n\nThis is a test message.",
+      "via": "user@example.com",
+      "createdAt": "2024-10-10T12:00:00.000Z",
+      "email": {
+        "messageId": "<unique-id@mail.example.com>",
+        "subject": "Hello Email.Social!",
+        "inReplyTo": null,
+        "references": []
+      },
+      "requestReceipts": []
+    },
+    "attachments": [],
+    "refs": {
+      "messageId": "<unique-id@mail.example.com>",
+      "inReplyTo": [],
+      "references": []
+    }
+  }
+}
