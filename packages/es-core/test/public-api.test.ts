@@ -22,6 +22,7 @@ describe("public API (src/index.ts)", () => {
       "canonicalAddress",
       "deriveContacts",
       "deriveDid",
+      "extractPart",
       "formatDid",
       "isValidDid",
       "normalizeSubject",

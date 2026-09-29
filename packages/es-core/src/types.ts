@@ -94,6 +94,16 @@ export interface EsReceiptPart {
 /** The structured ES part of a message. */
 export type EsPart = EsPostPart | EsReceiptPart;
 
+/** The decoded content of one MIME leaf part (see `extractPart`). */
+export interface EsPartContent {
+  /** Lowercased media type, as in EsAttachment.contentType. */
+  contentType: string;
+  /** As in EsAttachment.filename. */
+  filename: string | null;
+  /** The content with its Content-Transfer-Encoding removed. */
+  bytes: Uint8Array;
+}
+
 /** Where `EsMessage.text` came from. */
 export type TextSource = "plain" | "html" | "none";
 

@@ -13,6 +13,7 @@ is attached after it in `multipart/mixed`, so any mail client shows the text.
 
 ```ts
 parseMessage(raw: string | Uint8Array): EsMessage                     // never throws; strings are read as UTF-8
+extractPart(raw, partId): EsPartContent | null                        // decoded bytes of one attachment (EsAttachment.partId)
 serializeMessage(out: EsOutgoing, { date, messageId, includeEsPart? }): string  // CRLF, 7-bit; text/plain first, then the ES part
 serializeReceipt(receipt: EsOutgoingReceipt, { date, messageId }): string  // a "delivered" or "read" receipt
 replyTargetOf(parent: EsMessage): ReplyTarget                         // In-Reply-To/References/subject for a reply
@@ -23,7 +24,7 @@ canonicalAddress(address): string                                     // lowerca
 deriveDid(address) · formatDid(domain, localId) · parseDid(did) · isValidDid(did)  // did:es as metadata
 ES_MEDIA_TYPE · ES_DRAFT_MEDIA_TYPE · ES_TEXT_MAX_BYTES               // ES part media types, text limit (10000 B)
 // Types (src/types.ts): EsMessage, EsAddress, EsAttachment, EsRefs, EsPart (EsPostPart | EsReceiptPart),
-// Conversation, Contact, EsOutgoing, EsOutgoingReceipt, ReplyTarget, SerializeOptions, ReceiptKind
+// Conversation, Contact, EsOutgoing, EsOutgoingReceipt, ReplyTarget, SerializeOptions, ReceiptKind, EsPartContent
 ```
 
 ## Example

@@ -16,7 +16,7 @@ import { parseMessageId, parseMessageIds } from "./headers/message-id.js";
 import { decodeFlowed } from "./mime/flowed.js";
 import { htmlToText } from "./mime/html-to-text.js";
 import { decodeBody, decodedSize, normalizeContentId, parseMimeTree, type MimeNode } from "./mime/tree.js";
-import type { EsAddress, EsAttachment, EsMessage, EsPart, EsRefs, TextSource } from "./types.js";
+import type { EsAddress, EsAttachment, EsMessage, EsPart, EsPartContent, EsRefs, TextSource } from "./types.js";
 import { toBytes, utf8Decode } from "./util/bytes.js";
 import { sha256Hex } from "./util/sha256.js";
 
@@ -241,6 +241,36 @@ export function parseMessage(raw: string | Uint8Array): EsMessage {
       attachments: [],
       refs: { messageId: null, inReplyTo: [], references: [] },
     };
+  }
+}
+
+/** The leaf with IMAP part number `partId` (RFC 9051 §6.4.5); a non-multipart message is part "1". */
+function findLeaf(root: MimeNode, partId: string): MimeNode | null {
+  if (root.children.length === 0) return partId === "1" ? root : null;
+  const walk = (node: MimeNode): MimeNode | null => {
+    if (node.partId === partId) return node;
+    for (const child of node.children) {
+      const found = walk(child);
+      if (found !== null) return found;
+    }
+    return null;
+  };
+  const node = partId === "" ? null : walk(root);
+  return node !== null && node.children.length === 0 ? node : null;
+}
+
+/**
+ * The decoded content of the leaf part `partId` (the `partId` of an
+ * EsAttachment), or null when the message has no such leaf. Like
+ * parseMessage, it never throws.
+ */
+export function extractPart(raw: string | Uint8Array, partId: string): EsPartContent | null {
+  try {
+    const node = findLeaf(parseMimeTree(toBytes(raw)), partId);
+    if (node === null) return null;
+    return { contentType: node.contentType, filename: filenameOf(node), bytes: decodeBody(node) };
+  } catch {
+    return null;
   }
 }
 
