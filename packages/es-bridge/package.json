@@ -6,7 +6,7 @@
   "license": "Apache-2.0",
   "type": "module",
   "bin": {
-    "email-social": "dist/cli.js"
+    "email-social": "bin/email-social.js"
   },
   "exports": {
     ".": {
@@ -38,5 +38,9 @@
     "playwright-core": "1.56.1",
     "typescript": "7.0.2",
     "vitest": "5.0.2"
-  }
+  },
+  "files": [
+    "bin",
+    "dist"
+  ]
 }
