@@ -1,7 +1,5 @@
 import { render } from "preact";
+import { App } from "./App.js";
+import "./styles.css";
 
-function Hello() {
-  return <p>Email Social</p>;
-}
-
-render(<Hello />, document.getElementById("app")!);
+render(<App />, document.getElementById("app")!);
