@@ -1,0 +1,52 @@
+From: user@example.com
+To: recipient@example.org
+Subject: Hello Email.Social!
+Date: Thu, 10 Oct 2024 12:00:00 +0000
+Message-ID: <unique-id@mail.example.com>
+MIME-Version: 1.0
+Content-Type: multipart/alternative; boundary="es-boundary"
+
+--es-boundary
+Content-Type: text/plain; charset=utf-8
+
+Hello Email.Social!
+
+This is a test message.
+
+--es-boundary
+Content-Type: text/html; charset=utf-8
+
+<html>
+  <body>
+    <p>Hello Email.Social!</p>
+    <p>This is a test message.</p>
+  </body>
+</html>
+
+--es-boundary
+Content-Type: application/vnd.es.social+json; version=2.0
+Content-Disposition: inline; filename="es-data.json"
+
+{
+  "$type": "es.social.post",
+  "uri": "at://did:es:mail.example.com:abc123/es.social.post/3k2a4b5c6d",
+  "cid": "bafyreihxr2je5dnp6oq3y3za4xqw27qpg7kvr3rmso7fmxjkybqpwv6lt4",
+  "value": {
+    "text": "Hello Email.Social!\n\nThis is a test message.",
+    "createdAt": "2024-10-10T12:00:00.000Z",
+    "via": "user@example.com",
+    "email": {
+      "messageId": "<unique-id@mail.example.com>",
+      "subject": "Hello Email.Social!"
+    }
+  },
+  "author": "did:es:mail.example.com:abc123",
+  "signature": {
+    "type": "ES256K",
+    "created": "2024-10-10T12:00:00Z",
+    "verificationMethod": "did:es:mail.example.com:abc123#key-1",
+    "signatureValue": "..."
+  }
+}
+
+--es-boundary--

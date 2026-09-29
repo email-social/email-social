@@ -1,0 +1,40 @@
+{
+  "description": "Gmail web, reply to the message above: multipart/alternative (QP plain + HTML); whole subject as one =?UTF-8?B?…?= word; On … wrote: attribution with U+202F before \"AM\"; >  quotes; In-Reply-To and References",
+  "source": "fixtures/gmail-web-reply.eml",
+  "raw": "Return-Path: <bob@example.org>\r\nReceived: by mail-ej1-f41.example.com with SMTP id a640c23a62f3a-ab7d2c1e0f8so1234567866b.2\r\n        for <alice@example.com>; Mon, 02 Mar 2026 02:02:19 -0800 (PST)\r\nMIME-Version: 1.0\r\nReferences: <3f2a9c1e-6b4d-4e8a-9f1c-2d7e5b8a0c34@example.com>\r\nIn-Reply-To: <3f2a9c1e-6b4d-4e8a-9f1c-2d7e5b8a0c34@example.com>\r\nFrom: Bob Svoboda <bob@example.org>\r\nDate: Mon, 2 Mar 2026 11:02:17 +0100\r\nMessage-ID: <CAH7x9kN4q2Lr8vT6YpW3mZs1bQ5dF0gJ+uE_aK8cR2xV9nB7eQ=w@mail.example.com>\r\nSubject: =?UTF-8?B?UmU6IE9ixJtkIHYgcMOhdGVr?=\r\nTo: =?UTF-8?Q?Alice_Dvo=C5=99=C3=A1kov=C3=A1?= <alice@example.com>\r\nCc: =?UTF-8?Q?Jana_Nov=C3=A1kov=C3=A1?= <jana@example.net>\r\nContent-Type: multipart/alternative; boundary=\"0000000000004b7e2a0612a1c3d4\"\r\n\r\n--0000000000004b7e2a0612a1c3d4\r\nContent-Type: text/plain; charset=\"UTF-8\"\r\nContent-Transfer-Encoding: quoted-printable\r\n\r\nAhoj Alice,\r\n\r\nv p=C3=A1tek m=C5=AF=C5=BEu, 12:30 je super. Zarezervuju st=C5=AFl pro t=C5=\r\n=99i.\r\n\r\nBob\r\n\r\nOn Mon, Mar 2, 2026 at 10:15=E2=80=AFAM Alice Dvo=C5=99=C3=A1kov=C3=A1 <ali=\r\nce@example.com> wrote:\r\n\r\n> Ahoj Bobe,\r\n>\r\n> nechce=C5=A1 v p=C3=A1tek zaj=C3=ADt na ob=C4=9Bd? Myslela jsem, =C5=BEe =\r\nbychom mohli zkusit to nov=C3=A9 bistro na rohu u n=C3=A1dra=C5=BE=C3=AD, p=\r\nr=C3=BD tam maj=C3=AD v=C3=BDborn=C3=A9 poledn=C3=AD menu a nen=C3=AD tam t=\r\nakov=C3=A1 fronta jako jinde.\r\n>\r\n> Jana u=C5=BE =C5=99=C3=ADkala, =C5=BEe by =C5=A1la taky. Hod=C3=AD se ti =\r\n12:30?\r\n>\r\n> Alice\r\n>\r\n> --\r\n> Alice Dvo=C5=99=C3=A1kov=C3=A1\r\n> Example s.r.o.\r\n\r\n--0000000000004b7e2a0612a1c3d4\r\nContent-Type: text/html; charset=\"UTF-8\"\r\nContent-Transfer-Encoding: quoted-printable\r\n\r\n<div dir=3D\"ltr\"><div>Ahoj Alice,</div><div><br></div><div>v p=C3=A1tek m=\r\n=C5=AF=C5=BEu, 12:30 je super. Zarezervuju st=C5=AFl pro t=C5=99i.</div><di=\r\nv><br></div><div>Bob</div></div><br><div class=3D\"gmail_quote gmail_quote_c=\r\nontainer\"><div dir=3D\"ltr\" class=3D\"gmail_attr\">On Mon, Mar 2, 2026 at 10:1=\r\n5=E2=80=AFAM Alice Dvo=C5=99=C3=A1kov=C3=A1 &lt;<a href=3D\"mailto:alice@exa=\r\nmple.com\">alice@example.com</a>&gt; wrote:<br></div><blockquote class=3D\"gm=\r\nail_quote\" style=3D\"margin:0px 0px 0px 0.8ex;border-left:1px solid rgb(204,=\r\n204,204);padding-left:1ex\">Ahoj Bobe,<br><br>nechce=C5=A1 v p=C3=A1tek zaj=\r\n=C3=ADt na ob=C4=9Bd? Myslela jsem, =C5=BEe bychom mohli zkusit to nov=C3=\r\n=A9 bistro na rohu u n=C3=A1dra=C5=BE=C3=AD, pr=C3=BD tam maj=C3=AD v=C3=BD=\r\nborn=C3=A9 poledn=C3=AD menu a nen=C3=AD tam takov=C3=A1 fronta jako jinde.=\r\n<br><br>Jana u=C5=BE =C5=99=C3=ADkala, =C5=BEe by =C5=A1la taky. Hod=C3=AD =\r\nse ti 12:30?<br><br>Alice<br><br>-- <br>Alice Dvo=C5=99=C3=A1kov=C3=A1<br>E=\r\nxample s.r.o.<br><br></blockquote></div>\r\n\r\n--0000000000004b7e2a0612a1c3d4--\r\n",
+  "expected": {
+    "id": "<CAH7x9kN4q2Lr8vT6YpW3mZs1bQ5dF0gJ+uE_aK8cR2xV9nB7eQ=w@mail.example.com>",
+    "from": {
+      "name": "Bob Svoboda",
+      "address": "bob@example.org"
+    },
+    "to": [
+      {
+        "name": "Alice Dvořáková",
+        "address": "alice@example.com"
+      }
+    ],
+    "cc": [
+      {
+        "name": "Jana Nováková",
+        "address": "jana@example.net"
+      }
+    ],
+    "replyTo": [],
+    "date": "2026-03-02T10:02:17.000Z",
+    "subject": "Re: Oběd v pátek",
+    "text": "Ahoj Alice,\n\nv pátek můžu, 12:30 je super. Zarezervuju stůl pro tři.\n\nBob\n\nOn Mon, Mar 2, 2026 at 10:15 AM Alice Dvořáková <alice@example.com> wrote:\n\n> Ahoj Bobe,\n>\n> nechceš v pátek zajít na oběd? Myslela jsem, že bychom mohli zkusit to nové bistro na rohu u nádraží, prý tam mají výborné polední menu a není tam taková fronta jako jinde.\n>\n> Jana už říkala, že by šla taky. Hodí se ti 12:30?\n>\n> Alice\n>\n> --\n> Alice Dvořáková\n> Example s.r.o.\n",
+    "textSource": "plain",
+    "es": null,
+    "attachments": [],
+    "refs": {
+      "messageId": "<CAH7x9kN4q2Lr8vT6YpW3mZs1bQ5dF0gJ+uE_aK8cR2xV9nB7eQ=w@mail.example.com>",
+      "inReplyTo": [
+        "<3f2a9c1e-6b4d-4e8a-9f1c-2d7e5b8a0c34@example.com>"
+      ],
+      "references": [
+        "<3f2a9c1e-6b4d-4e8a-9f1c-2d7e5b8a0c34@example.com>"
+      ]
+    }
+  }
+}

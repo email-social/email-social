@@ -1,0 +1,94 @@
+{
+  "description": "A reply written by es-core: RFC 2047 names and subject, quoted-printable UTF-8 text, In-Reply-To/References, an author DID.",
+  "source": "generated",
+  "input": {
+    "kind": "message",
+    "outgoing": {
+      "from": {
+        "name": "Jana Nováková",
+        "address": "jana@example.net"
+      },
+      "to": [
+        {
+          "name": "Alice Example",
+          "address": "alice@example.com"
+        }
+      ],
+      "cc": [
+        {
+          "name": "Bob",
+          "address": "bob@example.org"
+        }
+      ],
+      "text": "Ahoj Alice,\n\nv pátek ve 12 mi to vyhovuje. Příliš žluťoučký kůň úpěl ďábelské ódy. 👍\n\nJana\n",
+      "inReplyTo": {
+        "messageId": "<es-vector-1@mail.example.com>",
+        "references": [
+          "<root-0@mail.example.com>"
+        ],
+        "subject": "Oběd v pátek?"
+      },
+      "es": {
+        "author": "did:es:example.net:0123456789abcdef0123456789abcdef"
+      }
+    },
+    "options": {
+      "date": "2026-03-02T10:30:00Z",
+      "messageId": "<es-vector-2@mail.example.net>"
+    }
+  },
+  "raw": "Date: Mon, 2 Mar 2026 10:30:00 +0000\r\nFrom: =?UTF-8?B?SmFuYSBOb3bDoWtvdsOh?= <jana@example.net>\r\nTo: Alice Example <alice@example.com>\r\nCc: Bob <bob@example.org>\r\nSubject: =?UTF-8?B?UmU6IE9ixJtkIHYgcMOhdGVrPw==?=\r\nMessage-ID: <es-vector-2@mail.example.net>\r\nIn-Reply-To: <es-vector-1@mail.example.com>\r\nReferences: <root-0@mail.example.com> <es-vector-1@mail.example.com>\r\nMIME-Version: 1.0\r\nContent-Type: multipart/mixed; boundary=\"=_es_ea38f6906c78cca026e6ec36\"\r\n\r\nThis is a multi-part message in MIME format.\r\n\r\n--=_es_ea38f6906c78cca026e6ec36\r\nContent-Type: text/plain; charset=utf-8\r\nContent-Transfer-Encoding: quoted-printable\r\n\r\nAhoj Alice,\r\n\r\nv p=C3=A1tek ve 12 mi to vyhovuje. P=C5=99=C3=ADli=C5=A1 =C5=BElu=C5=A5ou=\r\n=C4=8Dk=C3=BD k=C5=AF=C5=88 =C3=BAp=C4=9Bl =C4=8F=C3=A1belsk=C3=A9 =C3=B3dy=\r\n=2E =F0=9F=91=8D\r\n\r\nJana\r\n\r\n--=_es_ea38f6906c78cca026e6ec36\r\nContent-Type: application/vnd.email-social.message+json\r\nContent-Transfer-Encoding: base64\r\nContent-Disposition: attachment; filename=\"email-social.json\"\r\n\r\newogICIkdHlwZSI6ICJlcy5zb2NpYWwucG9zdCIsCiAgImF1dGhvciI6ICJkaWQ6ZXM6ZXhhbXBs\r\nZS5uZXQ6MDEyMzQ1Njc4OWFiY2RlZjAxMjM0NTY3ODlhYmNkZWYiLAogICJ2YWx1ZSI6IHsKICAg\r\nICJ0ZXh0IjogIkFob2ogQWxpY2UsXG5cbnYgcMOhdGVrIHZlIDEyIG1pIHRvIHZ5aG92dWplLiBQ\r\nxZnDrWxpxaEgxb5sdcWlb3XEjWvDvSBrxa/FiCDDunDEm2wgxI/DoWJlbHNrw6kgw7NkeS4g8J+R\r\njVxuXG5KYW5hXG4iLAogICAgInZpYSI6ICJqYW5hQGV4YW1wbGUubmV0IiwKICAgICJjcmVhdGVk\r\nQXQiOiAiMjAyNi0wMy0wMlQxMDozMDowMC4wMDBaIiwKICAgICJlbWFpbCI6IHsKICAgICAgIm1l\r\nc3NhZ2VJZCI6ICI8ZXMtdmVjdG9yLTJAbWFpbC5leGFtcGxlLm5ldD4iLAogICAgICAic3ViamVj\r\ndCI6ICJSZTogT2LEm2QgdiBww6F0ZWs/IiwKICAgICAgImluUmVwbHlUbyI6ICI8ZXMtdmVjdG9y\r\nLTFAbWFpbC5leGFtcGxlLmNvbT4iLAogICAgICAicmVmZXJlbmNlcyI6IFsKICAgICAgICAiPHJv\r\nb3QtMEBtYWlsLmV4YW1wbGUuY29tPiIsCiAgICAgICAgIjxlcy12ZWN0b3ItMUBtYWlsLmV4YW1w\r\nbGUuY29tPiIKICAgICAgXQogICAgfQogIH0KfQo=\r\n--=_es_ea38f6906c78cca026e6ec36--\r\n",
+  "expected": {
+    "id": "<es-vector-2@mail.example.net>",
+    "from": {
+      "name": "Jana Nováková",
+      "address": "jana@example.net"
+    },
+    "to": [
+      {
+        "name": "Alice Example",
+        "address": "alice@example.com"
+      }
+    ],
+    "cc": [
+      {
+        "name": "Bob",
+        "address": "bob@example.org"
+      }
+    ],
+    "replyTo": [],
+    "date": "2026-03-02T10:30:00.000Z",
+    "subject": "Re: Oběd v pátek?",
+    "text": "Ahoj Alice,\n\nv pátek ve 12 mi to vyhovuje. Příliš žluťoučký kůň úpěl ďábelské ódy. 👍\n\nJana\n",
+    "textSource": "plain",
+    "es": {
+      "$type": "es.social.post",
+      "author": "did:es:example.net:0123456789abcdef0123456789abcdef",
+      "text": "Ahoj Alice,\n\nv pátek ve 12 mi to vyhovuje. Příliš žluťoučký kůň úpěl ďábelské ódy. 👍\n\nJana\n",
+      "via": "jana@example.net",
+      "createdAt": "2026-03-02T10:30:00.000Z",
+      "email": {
+        "messageId": "<es-vector-2@mail.example.net>",
+        "subject": "Re: Oběd v pátek?",
+        "inReplyTo": "<es-vector-1@mail.example.com>",
+        "references": [
+          "<root-0@mail.example.com>",
+          "<es-vector-1@mail.example.com>"
+        ],
+        "textSha256": null
+      },
+      "requestReceipts": []
+    },
+    "attachments": [],
+    "refs": {
+      "messageId": "<es-vector-2@mail.example.net>",
+      "inReplyTo": [
+        "<es-vector-1@mail.example.com>"
+      ],
+      "references": [
+        "<root-0@mail.example.com>",
+        "<es-vector-1@mail.example.com>"
+      ]
+    }
+  }
+}

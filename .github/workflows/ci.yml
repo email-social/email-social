@@ -1,0 +1,33 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    name: Test (Node 22)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - run: npm ci
+      - run: npm run typecheck
+      - run: npm test
+      - run: npm run build
+      - name: Install Chromium for the browser smoke test
+        # Install with the playwright CLI of exactly the playwright-core
+        # version the smoke test uses, so the Chromium revision it
+        # downloads is the one playwright-core launches.
+        working-directory: packages/es-core
+        run: |
+          PLAYWRIGHT_VERSION=$(node -p "require('playwright-core/package.json').version")
+          npx --yes "playwright@${PLAYWRIGHT_VERSION}" install --with-deps chromium
+      - run: npm run test:browser

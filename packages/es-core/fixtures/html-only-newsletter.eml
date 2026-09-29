@@ -1,0 +1,30 @@
+Return-Path: <bounce-7f3a2c@news.example.org>
+Received: from out.news.example.org (out.news.example.org [203.0.113.77])
+	by mx.example.com (Postfix) with ESMTPS id 4R3aB9c1Dz2
+	for <alice@example.com>; Thu, 12 Mar 2026 06:00:02 +0000 (UTC)
+From: Example Garden Club <news@news.example.org>
+To: alice@example.com
+Subject: March news from the garden club
+Date: Thu, 12 Mar 2026 06:00:00 +0000
+Message-ID: <0100018e2f4a7b3c-9d1e5f20-4a6b-4c8d-9e0f-1a2b3c4d5e6f-000000@email.example.org>
+List-Unsubscribe: <https://news.example.org/u/abc123>,
+ <mailto:unsubscribe@news.example.org?subject=abc123>
+List-Unsubscribe-Post: List-Unsubscribe=One-Click
+Precedence: bulk
+MIME-Version: 1.0
+Content-Type: text/html; charset=UTF-8
+Content-Transfer-Encoding: base64
+
+PCFET0NUWVBFIGh0bWw+CjxodG1sIGxhbmc9ImVuIj4KPGhlYWQ+CjxtZXRhIGNoYXJzZXQ9InV0
+Zi04Ij4KPHRpdGxlPkV4YW1wbGUgR2FyZGVuIENsdWIgJiM4MjExOyBNYXJjaCBuZXdzPC90aXRs
+ZT4KPHN0eWxlIHR5cGU9InRleHQvY3NzIj4KICBib2R5IHsgZm9udC1mYW1pbHk6IEFyaWFsLCBz
+YW5zLXNlcmlmOyBjb2xvcjogIzIyMjIyMjsgfQogIC5mb290ZXIgeyBjb2xvcjogIzg4ODg4ODsg
+Zm9udC1zaXplOiAxMnB4OyB9Cjwvc3R5bGU+CjwvaGVhZD4KPGJvZHk+CjwhLS0gcHJlaGVhZGVy
+OiBzZWVkIHN3YXAsIHBydW5pbmcgd29ya3Nob3AgLS0+CjxoMT5NYXJjaCBuZXdzPC9oMT4KPHA+
+SGVsbG8gZ2FyZGVuZXJzLDxicj5zcHJpbmcgaXMgYWxtb3N0IGhlcmUgJmFtcDsgdGhlIHNlZWQg
+c3dhcCBpcyBiYWNrLjwvcD4KPHVsPgo8bGk+U2VlZCBzd2FwOiBTYXR1cmRheSAxNCBNYXJjaCwg
+MTA6MDAmbmJzcDsmIzgyMTE7Jm5ic3A7MTI6MDA8L2xpPgo8bGk+UHJ1bmluZyB3b3Jrc2hvcDog
+U3VuZGF5IDIyIE1hcmNoPC9saT4KPC91bD4KPHA+U2VlIHlvdSB0aGVyZSE8L3A+CjxwIGNsYXNz
+PSJmb290ZXIiPllvdSByZWNlaXZlIHRoaXMgYmVjYXVzZSB5b3Ugam9pbmVkIHRoZSBFeGFtcGxl
+IEdhcmRlbiBDbHViLjxicj5VbnN1YnNjcmliZTogaHR0cHM6Ly9uZXdzLmV4YW1wbGUub3JnL3Uv
+YWJjMTIzPC9wPgo8L2JvZHk+CjwvaHRtbD4K

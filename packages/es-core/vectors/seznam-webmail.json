@@ -1,0 +1,36 @@
+{
+  "description": "Seznam.cz webmail style: multipart/alternative, text/plain and text/html in base64 UTF-8; =?utf-8?q?Re=3A_Odp=3A_…?= (a webmail \"Re:\" on top of Outlook's \"Odp:\"); Date: … +0100 (CET); \"---------- Původní e-mail ----------\" quote header",
+  "source": "fixtures/seznam-webmail.eml",
+  "raw": "Received: from email.example.net (email.example.net [203.0.113.40])\r\n\tby mx.example.com (Postfix) with ESMTPS id 4R2kLm0Qb7z4\r\n\tfor <marie.svobodova@example.com>; Wed, 11 Mar 2026 20:14:39 +0100 (CET)\r\nFrom: =?utf-8?q?Tom=C3=A1=C5=A1_Kr=C3=A1l?= <tomas.kral@example.net>\r\nTo: =?utf-8?q?Marie_Svobodov=C3=A1?= <marie.svobodova@example.com>\r\nSubject: =?utf-8?q?Re=3A_Odp=3A_Vy=C3=BA=C4=8Dtov=C3=A1n=C3=AD_za_b=C5=99ezen?=\r\nDate: Wed, 11 Mar 2026 20:14:37 +0100 (CET)\r\nMessage-Id: <5Nt.Vkq2.7pLcY0bRmTe.1fXk9D@example.net>\r\nReferences: <5Mz.Vjx1.2aQwE4tYuIo.1fWb3C@example.net>\r\n\t<VI1PR02MB5834B6C7D8E9F0A1B2C3D4E5F6A7B8C9D@VI1PR02MB5834.eurprd02.prod.outlook.example.com>\r\nIn-Reply-To: <VI1PR02MB5834B6C7D8E9F0A1B2C3D4E5F6A7B8C9D@VI1PR02MB5834.eurprd02.prod.outlook.example.com>\r\nMime-Version: 1.0\r\nContent-Type: multipart/alternative;\r\n\tboundary=\"=_7c1e9a4d2b8f0e6a3c5d7b9f1e2a4c6d\"\r\n\r\n--=_7c1e9a4d2b8f0e6a3c5d7b9f1e2a4c6d\r\nContent-Type: text/plain; charset=utf-8\r\nContent-Transfer-Encoding: base64\r\n\r\nRG9icsO9IGRlbiwKCnBvc8OtbMOhbSBvcHJhdmVuw6kgdnnDusSNdG92w6Fuw60gemEgYsWZZXpl\r\nbiwgY2h5YsSbasOtY8OtIHBvbG/Fvmt1IGpzZW0gZG9wbG5pbC4KClMgcG96ZHJhdmVtClRvbcOh\r\nxaEgS3LDoWwKCi0tLS0tLS0tLS0gUMWvdm9kbsOtIGUtbWFpbCAtLS0tLS0tLS0tCk9kOiBNYXJp\r\nZSBTdm9ib2RvdsOhIDxtYXJpZS5zdm9ib2RvdmFAZXhhbXBsZS5jb20+CktvbXU6IFRvbcOhxaEg\r\nS3LDoWwgPHRvbWFzLmtyYWxAZXhhbXBsZS5uZXQ+CkRhdHVtOiAxMC4gMy4gMjAyNiAxNToyMjo0\r\nNwpQxZllZG3Em3Q6IE9kcDogVnnDusSNdG92w6Fuw60gemEgYsWZZXplbgoiRG9icsO9IGRlbiwK\r\nCnZlIHZ5w7rEjXRvdsOhbsOtIHphIGLFmWV6ZW4gY2h5YsOtIHBvbG/FvmthIHphIGRvcHJhdnUu\r\nIE3Fr8W+ZXRlIGhvIHByb3PDrW0gcG9zbGF0Cnpub3Z1PwoKRMSba3VqaQpNYXJpZSBTdm9ib2Rv\r\ndsOhIgo=\r\n--=_7c1e9a4d2b8f0e6a3c5d7b9f1e2a4c6d\r\nContent-Type: text/html; charset=utf-8\r\nContent-Transfer-Encoding: base64\r\n\r\nPHA+RG9icsO9IGRlbiw8L3A+PHA+cG9zw61sw6FtIG9wcmF2ZW7DqSB2ecO6xI10b3bDoW7DrSB6\r\nYSBixZllemVuLCBjaHlixJtqw61jw60gcG9sb8W+a3UganNlbSBkb3BsbmlsLjwvcD48cD5TIHBv\r\nemRyYXZlbTxicj5Ub23DocWhIEtyw6FsPC9wPjxicj48YnI+LS0tLS0tLS0tLSBQxa92b2Ruw60g\r\nZS1tYWlsIC0tLS0tLS0tLS08YnI+T2Q6IE1hcmllIFN2b2JvZG92w6EgJmx0O21hcmllLnN2b2Jv\r\nZG92YUBleGFtcGxlLmNvbSZndDs8YnI+S29tdTogVG9tw6HFoSBLcsOhbCAmbHQ7dG9tYXMua3Jh\r\nbEBleGFtcGxlLm5ldCZndDs8YnI+RGF0dW06IDEwLiAzLiAyMDI2IDE1OjIyOjQ3PGJyPlDFmWVk\r\nbcSbdDogT2RwOiBWecO6xI10b3bDoW7DrSB6YSBixZllemVuPGJyPjxibG9ja3F1b3RlIGRhdGEt\r\nZW1haWw9Im1hcmllLnN2b2JvZG92YUBleGFtcGxlLmNvbSI+RG9icsO9IGRlbiw8YnI+PGJyPnZl\r\nIHZ5w7rEjXRvdsOhbsOtIHphIGLFmWV6ZW4gY2h5YsOtIHBvbG/FvmthIHphIGRvcHJhdnUuIE3F\r\nr8W+ZXRlIGhvIHByb3PDrW0gcG9zbGF0IHpub3Z1Pzxicj48YnI+RMSba3VqaTxicj5NYXJpZSBT\r\ndm9ib2RvdsOhPC9ibG9ja3F1b3RlPg==\r\n--=_7c1e9a4d2b8f0e6a3c5d7b9f1e2a4c6d--\r\n",
+  "expected": {
+    "id": "<5Nt.Vkq2.7pLcY0bRmTe.1fXk9D@example.net>",
+    "from": {
+      "name": "Tomáš Král",
+      "address": "tomas.kral@example.net"
+    },
+    "to": [
+      {
+        "name": "Marie Svobodová",
+        "address": "marie.svobodova@example.com"
+      }
+    ],
+    "cc": [],
+    "replyTo": [],
+    "date": "2026-03-11T19:14:37.000Z",
+    "subject": "Re: Odp: Vyúčtování za březen",
+    "text": "Dobrý den,\n\nposílám opravené vyúčtování za březen, chybějící položku jsem doplnil.\n\nS pozdravem\nTomáš Král\n\n---------- Původní e-mail ----------\nOd: Marie Svobodová <marie.svobodova@example.com>\nKomu: Tomáš Král <tomas.kral@example.net>\nDatum: 10. 3. 2026 15:22:47\nPředmět: Odp: Vyúčtování za březen\n\"Dobrý den,\n\nve vyúčtování za březen chybí položka za dopravu. Můžete ho prosím poslat\nznovu?\n\nDěkuji\nMarie Svobodová\"\n",
+    "textSource": "plain",
+    "es": null,
+    "attachments": [],
+    "refs": {
+      "messageId": "<5Nt.Vkq2.7pLcY0bRmTe.1fXk9D@example.net>",
+      "inReplyTo": [
+        "<VI1PR02MB5834B6C7D8E9F0A1B2C3D4E5F6A7B8C9D@VI1PR02MB5834.eurprd02.prod.outlook.example.com>"
+      ],
+      "references": [
+        "<5Mz.Vjx1.2aQwE4tYuIo.1fWb3C@example.net>",
+        "<VI1PR02MB5834B6C7D8E9F0A1B2C3D4E5F6A7B8C9D@VI1PR02MB5834.eurprd02.prod.outlook.example.com>"
+      ]
+    }
+  }
+}

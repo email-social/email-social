@@ -1,0 +1,44 @@
+{
+  "description": "Gmail web forward of an Email Social message: the original's application/vnd.email-social.message+json part re-attached by the forward; its via (alice@example.com) and email.messageId do not belong to this message, so it is not taken as the message's ES part and is listed as an attachment; \"---------- Forwarded message ---------\" block",
+  "source": "fixtures/gmail-forward-carrying-es-part.eml",
+  "raw": "MIME-Version: 1.0\r\nReferences: <es.7f3a9c2e41b8d605@example.com>\r\nIn-Reply-To: <es.7f3a9c2e41b8d605@example.com>\r\nFrom: Bob Svoboda <bob@example.org>\r\nDate: Sat, 14 Mar 2026 09:41:12 +0100\r\nMessage-ID: <CAH7x9kQ2wE3rT4yU5iO6pA7sD8fG9hJ0kL1zX2cV3bN4mQ+w@mail.example.com>\r\nSubject: =?UTF-8?B?RndkOiBLZHkgZG9yYXrDrcWhPw==?=\r\nTo: =?UTF-8?Q?Eva_Hor=C3=A1kov=C3=A1?= <eva@example.net>\r\nContent-Type: multipart/mixed; boundary=\"000000000000c4d5e6f708192a3b\"\r\n\r\n--000000000000c4d5e6f708192a3b\r\nContent-Type: multipart/alternative; boundary=\"000000000000c4d5e6f708192a39\"\r\n\r\n--000000000000c4d5e6f708192a39\r\nContent-Type: text/plain; charset=\"UTF-8\"\r\nContent-Transfer-Encoding: quoted-printable\r\n\r\nEvo, tohle mi poslala Alice, a=C5=A5 v=C3=AD=C5=A1, kdy vyr=C3=A1=C5=BE=C3=\r\n=ADme.\r\n\r\n---------- Forwarded message ---------\r\nFrom: Alice Dvo=C5=99=C3=A1kov=C3=A1 <alice@example.com>\r\nDate: Fri, Mar 13, 2026 at 6:05=E2=80=AFPM\r\nSubject: Kdy doraz=C3=AD=C5=A1?\r\nTo: Bob Svoboda <bob@example.org>\r\n\r\n\r\nAhoj Bobe, kdy doraz=C3=AD=C5=A1 v sobotu? Sta=C4=8D=C3=AD odpov=C4=9Bd=C4=\r\n=9Bt, jestli to stihne=C5=A1 do 10:00.\r\n\r\n--000000000000c4d5e6f708192a39\r\nContent-Type: text/html; charset=\"UTF-8\"\r\nContent-Transfer-Encoding: quoted-printable\r\n\r\n<div dir=3D\"ltr\">Evo, tohle mi poslala Alice, a=C5=A5 v=C3=AD=C5=A1, kdy vy=\r\nr=C3=A1=C5=BE=C3=ADme.<br><br><div class=3D\"gmail_quote gmail_quote_contain=\r\ner\"><div dir=3D\"ltr\" class=3D\"gmail_attr\">---------- Forwarded message ----=\r\n-----<br>From: <strong class=3D\"gmail_sendername\" dir=3D\"auto\">Alice Dvo=C5=\r\n=99=C3=A1kov=C3=A1</strong> <span dir=3D\"auto\">&lt;<a href=3D\"mailto:alice@=\r\nexample.com\">alice@example.com</a>&gt;</span><br>Date: Fri, Mar 13, 2026 at=\r\n 6:05=E2=80=AFPM<br>Subject: Kdy doraz=C3=AD=C5=A1?<br>To: Bob Svoboda &lt;=\r\n<a href=3D\"mailto:bob@example.org\">bob@example.org</a>&gt;<br></div><br><br=\r\n>Ahoj Bobe, kdy doraz=C3=AD=C5=A1 v sobotu? Sta=C4=8D=C3=AD odpov=C4=9Bd=C4=\r\n=9Bt, jestli to stihne=C5=A1 do 10:00.<br>\r\n</div></div>\r\n\r\n--000000000000c4d5e6f708192a39--\r\n--000000000000c4d5e6f708192a3b\r\nContent-Type: application/vnd.email-social.message+json; name=\"email-social.json\"\r\nContent-Disposition: attachment; filename=\"email-social.json\"\r\nContent-Transfer-Encoding: base64\r\nContent-ID: <f_mm7q3b2c0>\r\nX-Attachment-Id: f_mm7q3b2c0\r\n\r\newogICIkdHlwZSI6ICJlcy5zb2NpYWwucG9zdCIsCiAgInZhbHVlIjogewogICAgInRleHQiOiAi\r\nQWhvaiBCb2JlLCBrZHkgZG9yYXrDrcWhIHYgc29ib3R1PyBTdGHEjcOtIG9kcG92xJtkxJt0LCBq\r\nZXN0bGkgdG8gc3RpaG5lxaEgZG8gMTA6MDAuXG4iLAogICAgInZpYSI6ICJhbGljZUBleGFtcGxl\r\nLmNvbSIsCiAgICAiY3JlYXRlZEF0IjogIjIwMjYtMDMtMTNUMTc6MDU6MDAuMDAwWiIsCiAgICAi\r\nZW1haWwiOiB7CiAgICAgICJtZXNzYWdlSWQiOiAiPGVzLjdmM2E5YzJlNDFiOGQ2MDVAZXhhbXBs\r\nZS5jb20+IiwKICAgICAgInN1YmplY3QiOiAiS2R5IGRvcmF6w63FoT8iCiAgICB9LAogICAgInJl\r\ncXVlc3RSZWNlaXB0cyI6IFsKICAgICAgInJlYWQiCiAgICBdCiAgfQp9Cg==\r\n--000000000000c4d5e6f708192a3b--\r\n",
+  "expected": {
+    "id": "<CAH7x9kQ2wE3rT4yU5iO6pA7sD8fG9hJ0kL1zX2cV3bN4mQ+w@mail.example.com>",
+    "from": {
+      "name": "Bob Svoboda",
+      "address": "bob@example.org"
+    },
+    "to": [
+      {
+        "name": "Eva Horáková",
+        "address": "eva@example.net"
+      }
+    ],
+    "cc": [],
+    "replyTo": [],
+    "date": "2026-03-14T08:41:12.000Z",
+    "subject": "Fwd: Kdy dorazíš?",
+    "text": "Evo, tohle mi poslala Alice, ať víš, kdy vyrážíme.\n\n---------- Forwarded message ---------\nFrom: Alice Dvořáková <alice@example.com>\nDate: Fri, Mar 13, 2026 at 6:05 PM\nSubject: Kdy dorazíš?\nTo: Bob Svoboda <bob@example.org>\n\n\nAhoj Bobe, kdy dorazíš v sobotu? Stačí odpovědět, jestli to stihneš do 10:00.\n",
+    "textSource": "plain",
+    "es": null,
+    "attachments": [
+      {
+        "filename": "email-social.json",
+        "contentType": "application/vnd.email-social.message+json",
+        "disposition": "attachment",
+        "size": 385,
+        "contentId": "<f_mm7q3b2c0>",
+        "partId": "2"
+      }
+    ],
+    "refs": {
+      "messageId": "<CAH7x9kQ2wE3rT4yU5iO6pA7sD8fG9hJ0kL1zX2cV3bN4mQ+w@mail.example.com>",
+      "inReplyTo": [
+        "<es.7f3a9c2e41b8d605@example.com>"
+      ],
+      "references": [
+        "<es.7f3a9c2e41b8d605@example.com>"
+      ]
+    }
+  }
+}

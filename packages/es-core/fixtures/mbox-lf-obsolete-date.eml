@@ -1,0 +1,18 @@
+From sender@example.org Mon Mar  2 14:30:00 2026
+Return-Path: <sender@example.org>
+Received: from mail.example.org (mail.example.org [192.0.2.25])
+	by mx.example.com (8.9.3/8.9.3) with ESMTP id JAA01234
+	for <alice@example.com>; Mon, 2 Mar 26 09:30:05 -0500
+From: sender@example.org (Old Timer)
+To: alice@example.com
+Subject: Minutes of the March meeting
+Date: Mon, 2 Mar 26 09:30:00 EST
+
+Hi all,
+
+the minutes of the March meeting are below.
+
+>From the treasurer: the budget is unchanged.
+
+Regards,
+OT

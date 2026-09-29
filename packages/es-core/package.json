@@ -1,0 +1,39 @@
+{
+  "name": "@email-social/es-core",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Email Social core: turns raw RFC 5322 messages into conversations and back. Pure TypeScript, no I/O.",
+  "license": "Apache-2.0",
+  "type": "module",
+  "sideEffects": false,
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/es-core.js"
+    }
+  },
+  "files": [
+    "dist",
+    "vectors"
+  ],
+  "engines": {
+    "node": ">=22.12.0"
+  },
+  "scripts": {
+    "test": "vitest run",
+    "typecheck": "tsc -p tsconfig.json --noEmit && tsc -p tsconfig.test.json --noEmit",
+    "build": "vite build && tsc -p tsconfig.build.json",
+    "test:browser": "vite build && vitest run --config vitest.browser.config.ts",
+    "vectors:check": "vitest run test/vectors.test.ts",
+    "vectors:update": "ES_UPDATE_VECTORS=1 vitest run test/vectors.test.ts"
+  },
+  "devDependencies": {
+    "@types/mailparser": "3.4.6",
+    "@types/node": "22.20.4",
+    "mailparser": "3.9.31",
+    "playwright-core": "1.56.1",
+    "typescript": "7.0.2",
+    "vite": "8.3.1",
+    "vitest": "5.0.2"
+  }
+}

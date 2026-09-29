@@ -1,0 +1,37 @@
+{
+  "description": "Outlook with Exchange, Czech, plain-text format: text/plain; charset=\"windows-1250\" QP with Czech letters and „“ (0x84/0x93); =?windows-1250?Q?Odp:_…?=; \"-----Původní zpráva-----\" header block (Od:, Odesláno:, Komu:, Předmět:); References whose first id is not in the corpus (phantom root)",
+  "source": "fixtures/outlook-cs-1250.eml",
+  "raw": "Received: from VI1PR02MB5834.eurprd02.prod.outlook.example.com (2001:db8:803:e5::12)\r\n by DB9PR08MB6921.eurprd08.prod.outlook.example.com with HTTPS; Wed, 4 Mar 2026\r\n 08:12:34 +0000\r\nFrom: =?windows-1250?Q?Marie_Svobodov=E1?= <marie.svobodova@example.com>\r\nTo: =?windows-1250?Q?Petr_Nov=E1k?= <petr.novak@example.org>\r\nSubject: =?windows-1250?Q?Odp:_Faktura_za_=FAnor?=\r\nThread-Topic: Faktura za =?windows-1250?Q?=FAnor?=\r\nThread-Index: AQOspo1AEFg4OY04itENUrxD0d7QY3DScXAkxxUQxzcwchdqrA==\r\nDate: Wed, 4 Mar 2026 08:12:33 +0000\r\nMessage-ID: <VI1PR02MB58341D3E5F7A9B0C2D4E6F8A0B2C4D6E8@VI1PR02MB5834.eurprd02.prod.outlook.example.com>\r\nReferences: <DB9PR08MB6921A0B1C2D3E4F5A6B7C8D9E0F1A2B3C@DB9PR08MB6921.eurprd08.prod.outlook.example.com>\r\n <VI1PR02MB58347E6D5C4B3A2918F7E6D5C4B3A2918@VI1PR02MB5834.eurprd02.prod.outlook.example.com>\r\n <DB9PR08MB69213F4E5D6C7B8A9F0E1D2C3B4A5968@DB9PR08MB6921.eurprd08.prod.outlook.example.com>\r\nIn-Reply-To: <DB9PR08MB69213F4E5D6C7B8A9F0E1D2C3B4A5968@DB9PR08MB6921.eurprd08.prod.outlook.example.com>\r\nAccept-Language: cs-CZ, en-US\r\nContent-Language: cs-CZ\r\nX-MS-Has-Attach:\r\nX-MS-TNEF-Correlator:\r\nContent-Type: text/plain; charset=\"windows-1250\"\r\nContent-Transfer-Encoding: quoted-printable\r\nMIME-Version: 1.0\r\n\r\nDobr=FD den, pane Nov=E1ku,\r\n\r\nd=ECkuji za opravenou fakturu. P=F8edala jsem ji =FA=E8t=E1rn=EC, platba od=\r\nejde nejpozd=ECji v p=E1tek 6. 3.\r\n\r\nS pozdravem\r\nMarie Svobodov=E1\r\n=DA=E8t=E1rna | Example s.r.o.\r\n\r\n-----P=F9vodn=ED zpr=E1va-----\r\nOd: Petr Nov=E1k <petr.novak@example.org>=20\r\nOdesl=E1no: =FAter=FD 3. b=F8ezna 2026 16:05\r\nKomu: Marie Svobodov=E1 <marie.svobodova@example.com>\r\nP=F8edm=ECt: RE: Faktura za =FAnor\r\n\r\nDobr=FD den,\r\n\r\nv p=F8=EDloze pos=EDl=E1m opravenou =84fakturu=93 za =FAnor, doplnil jsem I=\r\n=C8O. Pros=EDm o potvrzen=ED p=F8ijet=ED.\r\n\r\nPetr Nov=E1k\r\n",
+  "expected": {
+    "id": "<VI1PR02MB58341D3E5F7A9B0C2D4E6F8A0B2C4D6E8@VI1PR02MB5834.eurprd02.prod.outlook.example.com>",
+    "from": {
+      "name": "Marie Svobodová",
+      "address": "marie.svobodova@example.com"
+    },
+    "to": [
+      {
+        "name": "Petr Novák",
+        "address": "petr.novak@example.org"
+      }
+    ],
+    "cc": [],
+    "replyTo": [],
+    "date": "2026-03-04T08:12:33.000Z",
+    "subject": "Odp: Faktura za únor",
+    "text": "Dobrý den, pane Nováku,\n\nděkuji za opravenou fakturu. Předala jsem ji účtárně, platba odejde nejpozději v pátek 6. 3.\n\nS pozdravem\nMarie Svobodová\nÚčtárna | Example s.r.o.\n\n-----Původní zpráva-----\nOd: Petr Novák <petr.novak@example.org> \nOdesláno: úterý 3. března 2026 16:05\nKomu: Marie Svobodová <marie.svobodova@example.com>\nPředmět: RE: Faktura za únor\n\nDobrý den,\n\nv příloze posílám opravenou „fakturu“ za únor, doplnil jsem IČO. Prosím o potvrzení přijetí.\n\nPetr Novák\n",
+    "textSource": "plain",
+    "es": null,
+    "attachments": [],
+    "refs": {
+      "messageId": "<VI1PR02MB58341D3E5F7A9B0C2D4E6F8A0B2C4D6E8@VI1PR02MB5834.eurprd02.prod.outlook.example.com>",
+      "inReplyTo": [
+        "<DB9PR08MB69213F4E5D6C7B8A9F0E1D2C3B4A5968@DB9PR08MB6921.eurprd08.prod.outlook.example.com>"
+      ],
+      "references": [
+        "<DB9PR08MB6921A0B1C2D3E4F5A6B7C8D9E0F1A2B3C@DB9PR08MB6921.eurprd08.prod.outlook.example.com>",
+        "<VI1PR02MB58347E6D5C4B3A2918F7E6D5C4B3A2918@VI1PR02MB5834.eurprd02.prod.outlook.example.com>",
+        "<DB9PR08MB69213F4E5D6C7B8A9F0E1D2C3B4A5968@DB9PR08MB6921.eurprd08.prod.outlook.example.com>"
+      ]
+    }
+  }
+}

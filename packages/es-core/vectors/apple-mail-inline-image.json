@@ -1,0 +1,40 @@
+{
+  "description": "Apple Mail on macOS, plain-text message with a photo: multipart/mixed: text/plain, inline image/jpeg (Content-Disposition inline, filename, Content-Id), text/plain; the two text parts are joined",
+  "source": "fixtures/apple-mail-inline-image.eml",
+  "raw": "From: Daniel Brooks <daniel@example.com>\r\nContent-Type: multipart/mixed;\r\n\tboundary=\"Apple-Mail=_9D1E2F3A-4B5C-4D6E-8F70-81A2B3C4D5E6\"\r\nMime-Version: 1.0 (Mac OS X Mail 16.0 \\(3774.600.62\\))\r\nSubject: Photo from Saturday\r\nMessage-Id: <E2B4C6D8-0A1C-4E3F-9B5D-7F8A9C0D1E2F@example.com>\r\nDate: Sat, 7 Mar 2026 19:05:31 +0000\r\nTo: Emma Clarke <emma@example.net>\r\nX-Mailer: Apple Mail (2.3774.600.62)\r\n\r\n\r\n--Apple-Mail=_9D1E2F3A-4B5C-4D6E-8F70-81A2B3C4D5E6\r\nContent-Transfer-Encoding: 7bit\r\nContent-Type: text/plain;\r\n\tcharset=us-ascii\r\n\r\nHi Emma,\r\n\r\nhere is the view from the top:\r\n--Apple-Mail=_9D1E2F3A-4B5C-4D6E-8F70-81A2B3C4D5E6\r\nContent-Disposition: inline;\r\n\tfilename=IMG_0412.jpeg\r\nContent-Type: image/jpeg;\r\n\tx-unix-mode=0644;\r\n\tname=\"IMG_0412.jpeg\"\r\nContent-Id: <5A1B2C3D-4E5F-4A6B-8C7D-9E0F1A2B3C4D>\r\nContent-Transfer-Encoding: base64\r\n\r\n/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEB\r\nAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQH/wAALCAABAAEBAREA/8QAFAABAAAAAAAA\r\nAAAAAAAAAAAAAP/EABQQAQAAAAAAAAAAAAAAAAAAAAD/2gAIAQEAAD8AP//Z\r\n--Apple-Mail=_9D1E2F3A-4B5C-4D6E-8F70-81A2B3C4D5E6\r\nContent-Transfer-Encoding: 7bit\r\nContent-Type: text/plain;\r\n\tcharset=us-ascii\r\n\r\n\r\nWorth the climb. See you on Monday.\r\n\r\nDaniel\r\n--Apple-Mail=_9D1E2F3A-4B5C-4D6E-8F70-81A2B3C4D5E6--\r\n",
+  "expected": {
+    "id": "<E2B4C6D8-0A1C-4E3F-9B5D-7F8A9C0D1E2F@example.com>",
+    "from": {
+      "name": "Daniel Brooks",
+      "address": "daniel@example.com"
+    },
+    "to": [
+      {
+        "name": "Emma Clarke",
+        "address": "emma@example.net"
+      }
+    ],
+    "cc": [],
+    "replyTo": [],
+    "date": "2026-03-07T19:05:31.000Z",
+    "subject": "Photo from Saturday",
+    "text": "Hi Emma,\n\nhere is the view from the top:\n\nWorth the climb. See you on Monday.\n\nDaniel",
+    "textSource": "plain",
+    "es": null,
+    "attachments": [
+      {
+        "filename": "IMG_0412.jpeg",
+        "contentType": "image/jpeg",
+        "disposition": "inline",
+        "size": 159,
+        "contentId": "<5A1B2C3D-4E5F-4A6B-8C7D-9E0F1A2B3C4D>",
+        "partId": "2"
+      }
+    ],
+    "refs": {
+      "messageId": "<E2B4C6D8-0A1C-4E3F-9B5D-7F8A9C0D1E2F@example.com>",
+      "inReplyTo": [],
+      "references": []
+    }
+  }
+}

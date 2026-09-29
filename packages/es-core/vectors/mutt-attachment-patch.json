@@ -1,0 +1,40 @@
+{
+  "description": "mutt 2.2, patch attached: multipart/mixed: inline text/plain + text/x-diff with a filename (an attachment, never text); the patch contains From , --- and --  lines",
+  "source": "fixtures/mutt-attachment-patch.eml",
+  "raw": "Date: Wed, 11 Mar 2026 22:14:05 +0100\r\nFrom: =?iso-8859-2?Q?Ond=F8ej_Bene=B9?= <ondrej@host.example.com>\r\nTo: Karel Holub <karel@example.org>\r\nSubject: Patch for the snapshot rotation\r\nMessage-ID: <20260311211405.GA23456@host.example.com>\r\nMIME-Version: 1.0\r\nContent-Type: multipart/mixed; boundary=\"Qx7mB2vQ9c/Z4tR1\"\r\nContent-Disposition: inline\r\nUser-Agent: Mutt/2.2.13 (2024-03-09)\r\n\r\n\r\n--Qx7mB2vQ9c/Z4tR1\r\nContent-Type: text/plain; charset=us-ascii\r\nContent-Disposition: inline\r\n\r\nHi Karel,\r\n\r\nthe attached patch fixes the rotation: the script compared the snapshot\r\nage with \">\" instead of \">=\", so the oldest snapshot was never removed.\r\n\r\nTested on the staging box, three rotations in a row.\r\n\r\nOndrej\r\n\r\n--Qx7mB2vQ9c/Z4tR1\r\nContent-Type: text/x-diff; charset=us-ascii\r\nContent-Disposition: attachment; filename=\"0001-rotate-remove-oldest-snapshot.patch\"\r\n\r\nFrom 3c9e1f2a7b4d5e6f8091a2b3c4d5e6f708192a3b Mon Sep 17 00:00:00 2001\r\nFrom: Ondrej Benes <ondrej@host.example.com>\r\nDate: Wed, 11 Mar 2026 22:05:41 +0100\r\nSubject: [PATCH] rotate: remove the oldest snapshot\r\n\r\n---\r\n rotate.sh | 2 +-\r\n 1 file changed, 1 insertion(+), 1 deletion(-)\r\n\r\ndiff --git a/rotate.sh b/rotate.sh\r\nindex 4b1c2d3..9e8f7a6 100755\r\n--- a/rotate.sh\r\n+++ b/rotate.sh\r\n@@ -12,7 +12,7 @@ KEEP=14\r\n \r\n for snap in \"$SNAPDIR\"/*; do\r\n     age=$(( (now - $(stat -c %Y \"$snap\")) / 86400 ))\r\n-    if [ \"$age\" -gt \"$KEEP\" ]; then\r\n+    if [ \"$age\" -ge \"$KEEP\" ]; then\r\n         rm -rf -- \"$snap\"\r\n     fi\r\n done\r\n-- \r\n2.43.0\r\n\r\n--Qx7mB2vQ9c/Z4tR1--\r\n",
+  "expected": {
+    "id": "<20260311211405.GA23456@host.example.com>",
+    "from": {
+      "name": "Ondřej Beneš",
+      "address": "ondrej@host.example.com"
+    },
+    "to": [
+      {
+        "name": "Karel Holub",
+        "address": "karel@example.org"
+      }
+    ],
+    "cc": [],
+    "replyTo": [],
+    "date": "2026-03-11T21:14:05.000Z",
+    "subject": "Patch for the snapshot rotation",
+    "text": "Hi Karel,\n\nthe attached patch fixes the rotation: the script compared the snapshot\nage with \">\" instead of \">=\", so the oldest snapshot was never removed.\n\nTested on the staging box, three rotations in a row.\n\nOndrej\n",
+    "textSource": "plain",
+    "es": null,
+    "attachments": [
+      {
+        "filename": "0001-rotate-remove-oldest-snapshot.patch",
+        "contentType": "text/x-diff",
+        "disposition": "attachment",
+        "size": 636,
+        "contentId": null,
+        "partId": "2"
+      }
+    ],
+    "refs": {
+      "messageId": "<20260311211405.GA23456@host.example.com>",
+      "inReplyTo": [],
+      "references": []
+    }
+  }
+}

@@ -1,0 +1,31 @@
+{
+  "description": "Outlook with Exchange Online, German: multipart/alternative, text/plain; charset=\"iso-8859-1\" QP, Word-generated HTML; Thread-Topic, Thread-Index, empty X-MS-Has-Attach:; Content-Language: de-DE; Outlook's plain-text list layout (  *   item)",
+  "source": "fixtures/outlook-de-original.eml",
+  "raw": "Received: from AM0PR07MB6211.eurprd07.prod.outlook.example.com (2001:db8:208:1a2::15)\r\n by AM0PR07MB6212.eurprd07.prod.outlook.example.com with HTTPS; Tue, 3 Mar 2026\r\n 08:47:13 +0000\r\nFrom: Anna Becker <Anna.Becker@example.net>\r\nTo: Lukas Weber <Lukas.Weber@example.net>\r\nSubject: =?iso-8859-1?Q?Projekt=FCbersicht_Q2?=\r\nThread-Topic: =?iso-8859-1?Q?Projekt=FCbersicht_Q2?=\r\nThread-Index: AY4t6W5taGYS1gklo47M7+htEnkAUg==\r\nDate: Tue, 3 Mar 2026 08:47:12 +0000\r\nMessage-ID: <AM0PR07MB62114F2E8A1C3B5D7E9F0A2B4C6D8E0FA@AM0PR07MB6211.eurprd07.prod.outlook.example.com>\r\nAccept-Language: de-DE, en-US\r\nContent-Language: de-DE\r\nX-MS-Has-Attach:\r\nX-MS-TNEF-Correlator:\r\nx-ms-publictraffictype: Email\r\nContent-Type: multipart/alternative;\r\n\tboundary=\"_000_AM0PR07MB62114F2E8A1C3B5D7E9F0A2B4C6D8E0FAAM0PR07MB6211eurp_\"\r\nMIME-Version: 1.0\r\n\r\n--_000_AM0PR07MB62114F2E8A1C3B5D7E9F0A2B4C6D8E0FAAM0PR07MB6211eurp_\r\nContent-Type: text/plain; charset=\"iso-8859-1\"\r\nContent-Transfer-Encoding: quoted-printable\r\n\r\nHallo Lukas,\r\n\r\nanbei die Projekt=FCbersicht f=FCr das zweite Quartal:\r\n\r\n\r\n  *   Meilenstein 1: Anforderungen abgeschlossen (bis 15.04.)\r\n  *   Meilenstein 2: Prototyp f=FCr die Kundenpr=E4sentation\r\n  *   Budget: 42.000 EUR (unver=E4ndert)\r\n\r\nKannst du bis Freitag kurz dr=FCberschauen?\r\n\r\nViele Gr=FC=DFe\r\nAnna\r\n\r\nAnna Becker\r\nProjektleitung\r\nExample GmbH | Musterstra=DFe 1 | 12345 Musterstadt\r\n\r\n--_000_AM0PR07MB62114F2E8A1C3B5D7E9F0A2B4C6D8E0FAAM0PR07MB6211eurp_\r\nContent-Type: text/html; charset=\"iso-8859-1\"\r\nContent-Transfer-Encoding: quoted-printable\r\n\r\n<html xmlns:v=3D\"urn:schemas-microsoft-com:vml\" xmlns:o=3D\"urn:schemas-micr=\r\nosoft-com:office:office\" xmlns:w=3D\"urn:schemas-microsoft-com:office:word\">\r\n<head>\r\n<meta http-equiv=3D\"Content-Type\" content=3D\"text/html; charset=3Diso-8859-=\r\n1\">\r\n<meta name=3D\"Generator\" content=3D\"Microsoft Word 15 (filtered medium)\">\r\n<style><!--\r\n/* Font Definitions */\r\n@font-face\r\n\t{font-family:Aptos;}\r\np.MsoNormal, li.MsoNormal, div.MsoNormal\r\n\t{margin:0cm;\r\n\tfont-size:12.0pt;\r\n\tfont-family:\"Aptos\",sans-serif;}\r\np.MsoListParagraph, li.MsoListParagraph, div.MsoListParagraph\r\n\t{margin-top:0cm;\r\n\tmargin-right:0cm;\r\n\tmargin-bottom:0cm;\r\n\tmargin-left:36.0pt;}\r\n@page WordSection1\r\n\t{size:612.0pt 792.0pt;\r\n\tmargin:70.85pt 70.85pt 2.0cm 70.85pt;}\r\ndiv.WordSection1\r\n\t{page:WordSection1;}\r\n--></style>\r\n</head>\r\n<body lang=3D\"DE\" link=3D\"#467886\" vlink=3D\"#96607D\" style=3D\"word-wrap:bre=\r\nak-word\">\r\n<div class=3D\"WordSection1\">\r\n<p class=3D\"MsoNormal\">Hallo Lukas,<o:p></o:p></p>\r\n<p class=3D\"MsoNormal\"><o:p>&nbsp;</o:p></p>\r\n<p class=3D\"MsoNormal\">anbei die Projekt=FCbersicht f=FCr das zweite Quarta=\r\nl:<o:p></o:p></p>\r\n<ul style=3D\"margin-top:0cm\" type=3D\"disc\">\r\n<li class=3D\"MsoListParagraph\" style=3D\"margin-left:0cm\">Meilenstein 1: Anf=\r\norderungen abgeschlossen (bis 15.04.)<o:p></o:p></li>\r\n<li class=3D\"MsoListParagraph\" style=3D\"margin-left:0cm\">Meilenstein 2: Pro=\r\ntotyp f=FCr die Kundenpr=E4sentation<o:p></o:p></li>\r\n<li class=3D\"MsoListParagraph\" style=3D\"margin-left:0cm\">Budget: 42.000 EUR=\r\n (unver=E4ndert)<o:p></o:p></li>\r\n</ul>\r\n<p class=3D\"MsoNormal\"><o:p>&nbsp;</o:p></p>\r\n<p class=3D\"MsoNormal\">Kannst du bis Freitag kurz dr=FCberschauen?<o:p></o:=\r\np></p>\r\n<p class=3D\"MsoNormal\"><o:p>&nbsp;</o:p></p>\r\n<p class=3D\"MsoNormal\">Viele Gr=FC=DFe<o:p></o:p></p>\r\n<p class=3D\"MsoNormal\">Anna<o:p></o:p></p>\r\n<p class=3D\"MsoNormal\"><o:p>&nbsp;</o:p></p>\r\n<p class=3D\"MsoNormal\"><b>Anna Becker</b><o:p></o:p></p>\r\n<p class=3D\"MsoNormal\">Projektleitung<o:p></o:p></p>\r\n<p class=3D\"MsoNormal\">Example GmbH | Musterstra=DFe 1 | 12345 Musterstadt<=\r\no:p></o:p></p>\r\n</div>\r\n</body>\r\n</html>\r\n\r\n--_000_AM0PR07MB62114F2E8A1C3B5D7E9F0A2B4C6D8E0FAAM0PR07MB6211eurp_--\r\n",
+  "expected": {
+    "id": "<AM0PR07MB62114F2E8A1C3B5D7E9F0A2B4C6D8E0FA@AM0PR07MB6211.eurprd07.prod.outlook.example.com>",
+    "from": {
+      "name": "Anna Becker",
+      "address": "Anna.Becker@example.net"
+    },
+    "to": [
+      {
+        "name": "Lukas Weber",
+        "address": "Lukas.Weber@example.net"
+      }
+    ],
+    "cc": [],
+    "replyTo": [],
+    "date": "2026-03-03T08:47:12.000Z",
+    "subject": "Projektübersicht Q2",
+    "text": "Hallo Lukas,\n\nanbei die Projektübersicht für das zweite Quartal:\n\n\n  *   Meilenstein 1: Anforderungen abgeschlossen (bis 15.04.)\n  *   Meilenstein 2: Prototyp für die Kundenpräsentation\n  *   Budget: 42.000 EUR (unverändert)\n\nKannst du bis Freitag kurz drüberschauen?\n\nViele Grüße\nAnna\n\nAnna Becker\nProjektleitung\nExample GmbH | Musterstraße 1 | 12345 Musterstadt\n",
+    "textSource": "plain",
+    "es": null,
+    "attachments": [],
+    "refs": {
+      "messageId": "<AM0PR07MB62114F2E8A1C3B5D7E9F0A2B4C6D8E0FA@AM0PR07MB6211.eurprd07.prod.outlook.example.com>",
+      "inReplyTo": [],
+      "references": []
+    }
+  }
+}

@@ -1,0 +1,33 @@
+{
+  "description": "Outlook 2016 with an IMAP/SMTP account, German reply: AW: prefix; In-Reply-To and Thread-Index but no References; German quote header (Von: … Gesendet: … An: … Betreff: …) with Outlook's trailing space (=20); \"'Anna Becker'\" display name; mixed-case domain Example.NET",
+  "source": "fixtures/outlook-de-reply-in-reply-to-only.eml",
+  "raw": "Return-Path: <Lukas.Weber@example.net>\r\nReceived: from DESKTOP-7Q2M4KD (host-192-0-2-44.example.net [192.0.2.44])\r\n\tby smtp.example.net (Postfix) with ESMTPSA id 4Q8Bf05ZqLz9sWk\r\n\tfor <Anna.Becker@example.net>; Tue,  3 Mar 2026 10:31:41 +0100 (CET)\r\nFrom: \"Lukas Weber\" <Lukas.Weber@example.net>\r\nTo: \"'Anna Becker'\" <Anna.Becker@Example.NET>\r\nIn-Reply-To: <AM0PR07MB62114F2E8A1C3B5D7E9F0A2B4C6D8E0FA@AM0PR07MB6211.eurprd07.prod.outlook.example.com>\r\nSubject: =?iso-8859-1?Q?AW:_Projekt=FCbersicht_Q2?=\r\nDate: Tue, 3 Mar 2026 10:31:40 +0100\r\nMessage-ID: <001a01dcaaf1$4b2c3d10$e1847730$@example.net>\r\nMIME-Version: 1.0\r\nContent-Type: multipart/alternative;\r\n\tboundary=\"----=_NextPart_000_001B_01DCAAF1.4B2C3D10\"\r\nX-Mailer: Microsoft Outlook 16.0\r\nThread-Index: AY4t6W5taGYS1gklo47M7+htEnkAUntxdrDr\r\nContent-Language: de\r\n\r\nThis is a multipart message in MIME format.\r\n\r\n------=_NextPart_000_001B_01DCAAF1.4B2C3D10\r\nContent-Type: text/plain;\r\n\tcharset=\"iso-8859-1\"\r\nContent-Transfer-Encoding: quoted-printable\r\n\r\nHallo Anna,\r\n\r\ndanke, sieht gut aus. Zu Meilenstein 2 melde ich mich morgen noch mal.\r\n\r\nGru=DF\r\nLukas\r\n\r\nVon: Anna Becker <Anna.Becker@example.net>=20\r\nGesendet: Dienstag, 3. M=E4rz 2026 09:47\r\nAn: Lukas Weber <Lukas.Weber@example.net>\r\nBetreff: Projekt=FCbersicht Q2\r\n\r\nHallo Lukas,\r\n\r\nanbei die Projekt=FCbersicht f=FCr das zweite Quartal:\r\n\r\n\r\n  *   Meilenstein 1: Anforderungen abgeschlossen (bis 15.04.)\r\n  *   Meilenstein 2: Prototyp f=FCr die Kundenpr=E4sentation\r\n  *   Budget: 42.000 EUR (unver=E4ndert)\r\n\r\nKannst du bis Freitag kurz dr=FCberschauen?\r\n\r\nViele Gr=FC=DFe\r\nAnna\r\n\r\nAnna Becker\r\nProjektleitung\r\nExample GmbH | Musterstra=DFe 1 | 12345 Musterstadt\r\n\r\n------=_NextPart_000_001B_01DCAAF1.4B2C3D10\r\nContent-Type: text/html;\r\n\tcharset=\"iso-8859-1\"\r\nContent-Transfer-Encoding: quoted-printable\r\n\r\n<html xmlns:v=3D\"urn:schemas-microsoft-com:vml\" xmlns:o=3D\"urn:schemas-micr=\r\nosoft-com:office:office\" xmlns:w=3D\"urn:schemas-microsoft-com:office:word\">\r\n<head><meta http-equiv=3D\"Content-Type\" content=3D\"text/html; charset=3Diso=\r\n-8859-1\">\r\n<meta name=3D\"Generator\" content=3D\"Microsoft Word 15 (filtered medium)\"></=\r\nhead>\r\n<body lang=3D\"DE\" link=3D\"#0563C1\" vlink=3D\"#954F72\" style=3D\"word-wrap:bre=\r\nak-word\">\r\n<div class=3D\"WordSection1\">\r\n<p class=3D\"MsoNormal\">Hallo Anna,<o:p></o:p></p>\r\n<p class=3D\"MsoNormal\"><o:p>&nbsp;</o:p></p>\r\n<p class=3D\"MsoNormal\">danke, sieht gut aus. Zu Meilenstein 2 melde ich mic=\r\nh morgen noch mal.<o:p></o:p></p>\r\n<p class=3D\"MsoNormal\"><o:p>&nbsp;</o:p></p>\r\n<p class=3D\"MsoNormal\">Gru=DF<o:p></o:p></p>\r\n<p class=3D\"MsoNormal\">Lukas<o:p></o:p></p>\r\n<p class=3D\"MsoNormal\"><o:p>&nbsp;</o:p></p>\r\n<div style=3D\"border:none;border-top:solid #E1E1E1 1.0pt;padding:3.0pt 0cm =\r\n0cm 0cm\">\r\n<p class=3D\"MsoNormal\"><b>Von:</b> Anna Becker &lt;Anna.Becker@example.net&=\r\ngt; <br>\r\n<b>Gesendet:</b> Dienstag, 3. M=E4rz 2026 09:47<br>\r\n<b>An:</b> Lukas Weber &lt;Lukas.Weber@example.net&gt;<br>\r\n<b>Betreff:</b> Projekt=FCbersicht Q2<o:p></o:p></p>\r\n</div>\r\n<p class=3D\"MsoNormal\"><o:p>&nbsp;</o:p></p>\r\n<p class=3D\"MsoNormal\">Hallo Lukas,<o:p></o:p></p>\r\n<p class=3D\"MsoNormal\">anbei die Projekt=FCbersicht f=FCr das zweite Quarta=\r\nl: [...]<o:p></o:p></p>\r\n</div>\r\n</body>\r\n</html>\r\n\r\n------=_NextPart_000_001B_01DCAAF1.4B2C3D10--\r\n\r\n",
+  "expected": {
+    "id": "<001a01dcaaf1$4b2c3d10$e1847730$@example.net>",
+    "from": {
+      "name": "Lukas Weber",
+      "address": "Lukas.Weber@example.net"
+    },
+    "to": [
+      {
+        "name": "'Anna Becker'",
+        "address": "Anna.Becker@example.net"
+      }
+    ],
+    "cc": [],
+    "replyTo": [],
+    "date": "2026-03-03T09:31:40.000Z",
+    "subject": "AW: Projektübersicht Q2",
+    "text": "Hallo Anna,\n\ndanke, sieht gut aus. Zu Meilenstein 2 melde ich mich morgen noch mal.\n\nGruß\nLukas\n\nVon: Anna Becker <Anna.Becker@example.net> \nGesendet: Dienstag, 3. März 2026 09:47\nAn: Lukas Weber <Lukas.Weber@example.net>\nBetreff: Projektübersicht Q2\n\nHallo Lukas,\n\nanbei die Projektübersicht für das zweite Quartal:\n\n\n  *   Meilenstein 1: Anforderungen abgeschlossen (bis 15.04.)\n  *   Meilenstein 2: Prototyp für die Kundenpräsentation\n  *   Budget: 42.000 EUR (unverändert)\n\nKannst du bis Freitag kurz drüberschauen?\n\nViele Grüße\nAnna\n\nAnna Becker\nProjektleitung\nExample GmbH | Musterstraße 1 | 12345 Musterstadt\n",
+    "textSource": "plain",
+    "es": null,
+    "attachments": [],
+    "refs": {
+      "messageId": "<001a01dcaaf1$4b2c3d10$e1847730$@example.net>",
+      "inReplyTo": [
+        "<AM0PR07MB62114F2E8A1C3B5D7E9F0A2B4C6D8E0FA@AM0PR07MB6211.eurprd07.prod.outlook.example.com>"
+      ],
+      "references": []
+    }
+  }
+}

@@ -1,0 +1,30 @@
+Return-Path: <alice@example.com>
+Delivered-To: bob@example.org
+Received: from smtp.example.com (smtp.example.com [192.0.2.17])
+	by mx.example.org (Postfix) with ESMTPS id 4Q7mX12Hk9z1xYv
+	for <bob@example.org>; Mon,  2 Mar 2026 10:15:44 +0100 (CET)
+Message-ID: <3f2a9c1e-6b4d-4e8a-9f1c-2d7e5b8a0c34@example.com>
+Date: Mon, 2 Mar 2026 10:15:42 +0100
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Content-Language: cs
+To: Bob Svoboda <bob@example.org>
+Cc: =?UTF-8?Q?Jana_Nov=C3=A1kov=C3=A1?= <jana@example.net>
+From: =?UTF-8?Q?Alice_Dvo=C5=99=C3=A1kov=C3=A1?= <alice@example.com>
+Subject: =?UTF-8?Q?Ob=C4=9Bd_v_p=C3=A1tek?=
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+
+Ahoj Bobe,
+
+nechceš v pátek zajít na oběd? Myslela jsem, že bychom mohli zkusit to 
+nové bistro na rohu u nádraží, prý tam mají výborné polední menu a 
+není tam taková fronta jako jinde.
+
+Jana už říkala, že by šla taky. Hodí se ti 12:30?
+
+Alice
+
+-- 
+Alice Dvořáková
+Example s.r.o.

@@ -1,0 +1,73 @@
+# @email-social/es-core
+
+Turns raw e-mail (RFC 5322) into Email Social conversations and back: it
+parses messages, writes new ones and receipts, groups messages into chats and
+derives contacts. Pure TypeScript with no I/O and no network access; it runs
+unchanged in Node 22 and in browsers.
+
+Every message it writes is an ordinary e-mail: the text comes first as
+`text/plain`, and the structured ES part (`application/vnd.email-social.message+json`)
+is attached after it in `multipart/mixed`, so any mail client shows the text.
+
+## API
+
+```ts
+parseMessage(raw: string | Uint8Array): EsMessage                     // never throws; strings are read as UTF-8
+serializeMessage(out: EsOutgoing, { date, messageId, includeEsPart? }): string  // CRLF, 7-bit; text/plain first, then the ES part
+serializeReceipt(receipt: EsOutgoingReceipt, { date, messageId }): string  // a "delivered" or "read" receipt
+replyTargetOf(parent: EsMessage): ReplyTarget                         // In-Reply-To/References/subject for a reply
+threadMessages(messages: EsMessage[]): Conversation[]                 // same conversations for any input order
+normalizeSubject(subject): { base, isReply, isForward }               // strips Re:/Fwd:/AW:/Odp:/RE :/TR :/[list]
+deriveContacts(messages, { exclude? }): Contact[]                     // one per canonical address
+canonicalAddress(address): string                                     // lowercases the domain only
+deriveDid(address) · formatDid(domain, localId) · parseDid(did) · isValidDid(did)  // did:es as metadata
+ES_MEDIA_TYPE · ES_DRAFT_MEDIA_TYPE · ES_TEXT_MAX_BYTES               // ES part media types, text limit (10000 B)
+// Types (src/types.ts): EsMessage, EsAddress, EsAttachment, EsRefs, EsPart (EsPostPart | EsReceiptPart),
+// Conversation, Contact, EsOutgoing, EsOutgoingReceipt, ReplyTarget, SerializeOptions, ReceiptKind
+```
+
+## Example
+
+```ts
+import { parseMessage, replyTargetOf, serializeMessage, threadMessages } from "@email-social/es-core";
+
+const messages = rawMessages.map((raw) => parseMessage(raw)); // Uint8Array[] read from the mailbox
+const [latest] = threadMessages(messages);                     // conversations, most recent first
+const last = messages.find((m) => m.id === latest.messageIds.at(-1))!;
+
+const raw = serializeMessage(
+  { from: me, to: [last.from!], text: "See you on Friday!", inReplyTo: replyTargetOf(last),
+    es: { requestReceipts: ["read"] } },
+  { date: new Date(), messageId: `<${crypto.randomUUID()}@example.com>` }, // the caller supplies time and id
+);
+```
+
+## Notes
+
+- **Plain e-mail always works.** A message without an ES part is a complete
+  `EsMessage` (`es: null`). The ES part of an incoming message is used only
+  when its `via` is the From address and its `email.messageId` is the
+  Message-ID, so a part carried along by an ordinary forward is listed as an
+  attachment instead.
+- **Contacts and participants are keyed by the canonical address**: the
+  domain is lowercased, the local part is kept as written. RFC 5321 §2.4
+  lets the receiving host treat the local part as case-sensitive, so folding
+  it could merge two different mailboxes; not folding it at worst shows one
+  person twice.
+- **Deterministic.** es-core never reads the clock or generates random
+  values: the Date and Message-ID of new messages are passed in, and the same
+  input always gives the same bytes. Conversation ids are derived from the
+  root Message-ID (`conv-` + 32 hex digits of its SHA-256), not from time.
+- **Browsers.** The library uses only `Uint8Array`, `TextEncoder` and
+  `TextDecoder`; a Node `Buffer` is accepted because it is a `Uint8Array`.
+- **Test vectors** in [`vectors/`](vectors/README.md) (raw message →
+  expected `EsMessage`) are the conformance suite for other implementations;
+  the client formats they come from are described in
+  [`fixtures/README.md`](fixtures/README.md). Deviations from the draft spec
+  are listed in [`spec/DEVIATIONS.md`](../../spec/DEVIATIONS.md).
+
+Scripts: `npm test`, `npm run typecheck`, `npm run build` (Vite bundle
+`dist/es-core.js` + type declarations), `npm run test:browser` (Chromium
+smoke test of the bundle), `npm run vectors:check`, `npm run vectors:update`.
+
+Licence: Apache-2.0.

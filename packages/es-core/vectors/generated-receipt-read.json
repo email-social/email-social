@@ -1,0 +1,65 @@
+{
+  "description": "A Read receipt (es.social.receipt, kind read) answering the first generated message.",
+  "source": "generated",
+  "input": {
+    "kind": "receipt",
+    "receipt": {
+      "kind": "read",
+      "from": {
+        "name": "Bob",
+        "address": "bob@example.org"
+      },
+      "to": {
+        "name": "Alice Example",
+        "address": "alice@example.com"
+      },
+      "original": {
+        "messageId": "<es-vector-1@mail.example.com>",
+        "references": [],
+        "subject": "Lunch on Friday?"
+      }
+    },
+    "options": {
+      "date": "2026-03-02T09:12:00Z",
+      "messageId": "<es-vector-4@mail.example.org>"
+    }
+  },
+  "raw": "Date: Mon, 2 Mar 2026 09:12:00 +0000\r\nFrom: Bob <bob@example.org>\r\nTo: Alice Example <alice@example.com>\r\nSubject: Read: Lunch on Friday?\r\nMessage-ID: <es-vector-4@mail.example.org>\r\nIn-Reply-To: <es-vector-1@mail.example.com>\r\nReferences: <es-vector-1@mail.example.com>\r\nAuto-Submitted: auto-replied\r\nMIME-Version: 1.0\r\nContent-Type: multipart/mixed; boundary=\"=_es_cba2fc0d7f164dbe7664b890\"\r\n\r\nThis is a multi-part message in MIME format.\r\n\r\n--=_es_cba2fc0d7f164dbe7664b890\r\nContent-Type: text/plain; charset=utf-8\r\nContent-Transfer-Encoding: quoted-printable\r\n\r\nRead receipt: the message \"Lunch on Friday?\" (<es-vector-1@mail.example.com=\r\n>) was opened by bob@example.org on Mon, 2 Mar 2026 09:12:00 +0000.\r\n\r\n--=_es_cba2fc0d7f164dbe7664b890\r\nContent-Type: application/vnd.email-social.message+json\r\nContent-Transfer-Encoding: base64\r\nContent-Disposition: attachment; filename=\"email-social.json\"\r\n\r\newogICIkdHlwZSI6ICJlcy5zb2NpYWwucmVjZWlwdCIsCiAgInZhbHVlIjogewogICAgImtpbmQi\r\nOiAicmVhZCIsCiAgICAibWVzc2FnZUlkIjogIjxlcy12ZWN0b3ItMUBtYWlsLmV4YW1wbGUuY29t\r\nPiIsCiAgICAidmlhIjogImJvYkBleGFtcGxlLm9yZyIsCiAgICAiY3JlYXRlZEF0IjogIjIwMjYt\r\nMDMtMDJUMDk6MTI6MDAuMDAwWiIKICB9Cn0K\r\n--=_es_cba2fc0d7f164dbe7664b890--\r\n",
+  "expected": {
+    "id": "<es-vector-4@mail.example.org>",
+    "from": {
+      "name": "Bob",
+      "address": "bob@example.org"
+    },
+    "to": [
+      {
+        "name": "Alice Example",
+        "address": "alice@example.com"
+      }
+    ],
+    "cc": [],
+    "replyTo": [],
+    "date": "2026-03-02T09:12:00.000Z",
+    "subject": "Read: Lunch on Friday?",
+    "text": "Read receipt: the message \"Lunch on Friday?\" (<es-vector-1@mail.example.com>) was opened by bob@example.org on Mon, 2 Mar 2026 09:12:00 +0000.\n",
+    "textSource": "plain",
+    "es": {
+      "$type": "es.social.receipt",
+      "author": null,
+      "kind": "read",
+      "messageId": "<es-vector-1@mail.example.com>",
+      "via": "bob@example.org",
+      "createdAt": "2026-03-02T09:12:00.000Z"
+    },
+    "attachments": [],
+    "refs": {
+      "messageId": "<es-vector-4@mail.example.org>",
+      "inReplyTo": [
+        "<es-vector-1@mail.example.com>"
+      ],
+      "references": [
+        "<es-vector-1@mail.example.com>"
+      ]
+    }
+  }
+}

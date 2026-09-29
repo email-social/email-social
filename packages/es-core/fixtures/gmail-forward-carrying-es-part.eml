@@ -1,0 +1,62 @@
+MIME-Version: 1.0
+References: <es.7f3a9c2e41b8d605@example.com>
+In-Reply-To: <es.7f3a9c2e41b8d605@example.com>
+From: Bob Svoboda <bob@example.org>
+Date: Sat, 14 Mar 2026 09:41:12 +0100
+Message-ID: <CAH7x9kQ2wE3rT4yU5iO6pA7sD8fG9hJ0kL1zX2cV3bN4mQ+w@mail.example.com>
+Subject: =?UTF-8?B?RndkOiBLZHkgZG9yYXrDrcWhPw==?=
+To: =?UTF-8?Q?Eva_Hor=C3=A1kov=C3=A1?= <eva@example.net>
+Content-Type: multipart/mixed; boundary="000000000000c4d5e6f708192a3b"
+
+--000000000000c4d5e6f708192a3b
+Content-Type: multipart/alternative; boundary="000000000000c4d5e6f708192a39"
+
+--000000000000c4d5e6f708192a39
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+
+Evo, tohle mi poslala Alice, a=C5=A5 v=C3=AD=C5=A1, kdy vyr=C3=A1=C5=BE=C3=
+=ADme.
+
+---------- Forwarded message ---------
+From: Alice Dvo=C5=99=C3=A1kov=C3=A1 <alice@example.com>
+Date: Fri, Mar 13, 2026 at 6:05=E2=80=AFPM
+Subject: Kdy doraz=C3=AD=C5=A1?
+To: Bob Svoboda <bob@example.org>
+
+
+Ahoj Bobe, kdy doraz=C3=AD=C5=A1 v sobotu? Sta=C4=8D=C3=AD odpov=C4=9Bd=C4=
+=9Bt, jestli to stihne=C5=A1 do 10:00.
+
+--000000000000c4d5e6f708192a39
+Content-Type: text/html; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+
+<div dir=3D"ltr">Evo, tohle mi poslala Alice, a=C5=A5 v=C3=AD=C5=A1, kdy vy=
+r=C3=A1=C5=BE=C3=ADme.<br><br><div class=3D"gmail_quote gmail_quote_contain=
+er"><div dir=3D"ltr" class=3D"gmail_attr">---------- Forwarded message ----=
+-----<br>From: <strong class=3D"gmail_sendername" dir=3D"auto">Alice Dvo=C5=
+=99=C3=A1kov=C3=A1</strong> <span dir=3D"auto">&lt;<a href=3D"mailto:alice@=
+example.com">alice@example.com</a>&gt;</span><br>Date: Fri, Mar 13, 2026 at=
+ 6:05=E2=80=AFPM<br>Subject: Kdy doraz=C3=AD=C5=A1?<br>To: Bob Svoboda &lt;=
+<a href=3D"mailto:bob@example.org">bob@example.org</a>&gt;<br></div><br><br=
+>Ahoj Bobe, kdy doraz=C3=AD=C5=A1 v sobotu? Sta=C4=8D=C3=AD odpov=C4=9Bd=C4=
+=9Bt, jestli to stihne=C5=A1 do 10:00.<br>
+</div></div>
+
+--000000000000c4d5e6f708192a39--
+--000000000000c4d5e6f708192a3b
+Content-Type: application/vnd.email-social.message+json; name="email-social.json"
+Content-Disposition: attachment; filename="email-social.json"
+Content-Transfer-Encoding: base64
+Content-ID: <f_mm7q3b2c0>
+X-Attachment-Id: f_mm7q3b2c0
+
+ewogICIkdHlwZSI6ICJlcy5zb2NpYWwucG9zdCIsCiAgInZhbHVlIjogewogICAgInRleHQiOiAi
+QWhvaiBCb2JlLCBrZHkgZG9yYXrDrcWhIHYgc29ib3R1PyBTdGHEjcOtIG9kcG92xJtkxJt0LCBq
+ZXN0bGkgdG8gc3RpaG5lxaEgZG8gMTA6MDAuXG4iLAogICAgInZpYSI6ICJhbGljZUBleGFtcGxl
+LmNvbSIsCiAgICAiY3JlYXRlZEF0IjogIjIwMjYtMDMtMTNUMTc6MDU6MDAuMDAwWiIsCiAgICAi
+ZW1haWwiOiB7CiAgICAgICJtZXNzYWdlSWQiOiAiPGVzLjdmM2E5YzJlNDFiOGQ2MDVAZXhhbXBs
+ZS5jb20+IiwKICAgICAgInN1YmplY3QiOiAiS2R5IGRvcmF6w63FoT8iCiAgICB9LAogICAgInJl
+cXVlc3RSZWNlaXB0cyI6IFsKICAgICAgInJlYWQiCiAgICBdCiAgfQp9Cg==
+--000000000000c4d5e6f708192a3b--

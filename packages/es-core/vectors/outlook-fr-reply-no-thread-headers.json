@@ -1,0 +1,36 @@
+{
+  "description": "Outlook 2007 (French): RE :  with the French space before the colon; neither In-Reply-To nor References (only Thread-Index), so it joins the conversation of the Apple Mail original by subject and participants; charset=\"windows-1252\" QP; \"-----Message d'origine-----\" block",
+  "source": "fixtures/outlook-fr-reply-no-thread-headers.eml",
+  "raw": "Return-Path: <julien@example.org>\r\nReceived: from PC-JULIEN (host-198-51-100-61.example.org [198.51.100.61])\r\n\tby smtp.example.org with ESMTPA id 1a2b3c4d; Thu, 05 Mar 2026 08:15:28 +0100\r\nFrom: \"Julien Moreau\" <julien@example.org>\r\nTo: =?iso-8859-1?Q?Camille_Lef=E8vre?= <camille@example.org>\r\nCc: =?iso-8859-1?Q?Am=E9lie_Rousseau?= <amelie@example.org>\r\nSubject: =?iso-8859-1?Q?RE_:_R=E9union_de_lundi?=\r\nDate: Thu, 5 Mar 2026 08:15:27 +0100\r\nMessage-ID: <000601dcac5e$1a2b3c40$4e5f6a70$@example.org>\r\nMIME-Version: 1.0\r\nContent-Type: multipart/alternative;\r\n\tboundary=\"----=_NextPart_000_0007_01DCAC5E.1A2B3C40\"\r\nX-Mailer: Microsoft Office Outlook 12.0\r\nThread-Index: Acl89UaUqf8Faa0t1cd1C25noLVRtg==\r\nContent-Language: fr\r\n\r\nThis is a multi-part message in MIME format.\r\n\r\n------=_NextPart_000_0007_01DCAC5E.1A2B3C40\r\nContent-Type: text/plain;\r\n\tcharset=\"windows-1252\"\r\nContent-Transfer-Encoding: quoted-printable\r\n\r\nBonjour Camille,\r\n\r\n14 h 30 me convient. J'apporterai les chiffres du trimestre.\r\n\r\nBonne journ=E9e,\r\nJulien\r\n\r\n-----Message d'origine-----\r\nDe : Camille Lef=E8vre [mailto:camille@example.org]=20\r\nEnvoy=E9 : mercredi 4 mars 2026 17:42\r\n=C0 : Julien Moreau\r\nCc : Am=E9lie Rousseau\r\nObjet : R=E9union de lundi\r\n\r\nBonjour =E0 tous,\r\n\r\nLa r=E9union de lundi est d=E9plac=E9e =E0 14 h 30, salle B. Merci de pr=E9=\r\nparer vos points pour l=92ordre du jour.\r\n\r\nBonne soir=E9e,\r\nCamille\r\n\r\n------=_NextPart_000_0007_01DCAC5E.1A2B3C40\r\nContent-Type: text/html;\r\n\tcharset=\"windows-1252\"\r\nContent-Transfer-Encoding: quoted-printable\r\n\r\n<html xmlns:o=3D\"urn:schemas-microsoft-com:office:office\" xmlns:w=3D\"urn:sc=\r\nhemas-microsoft-com:office:word\">\r\n<head><meta http-equiv=3DContent-Type content=3D\"text/html; charset=3Dwindo=\r\nws-1252\">\r\n<meta name=3DGenerator content=3D\"Microsoft Word 12 (filtered medium)\"></he=\r\nad>\r\n<body lang=3DFR link=3Dblue vlink=3Dpurple>\r\n<div class=3DSection1>\r\n<p class=3DMsoNormal>Bonjour Camille,<o:p></o:p></p>\r\n<p class=3DMsoNormal><o:p>&nbsp;</o:p></p>\r\n<p class=3DMsoNormal>14 h 30 me convient. J'apporterai les chiffres du trim=\r\nestre.<o:p></o:p></p>\r\n<p class=3DMsoNormal><o:p>&nbsp;</o:p></p>\r\n<p class=3DMsoNormal>Bonne journ=E9e,<o:p></o:p></p>\r\n<p class=3DMsoNormal>Julien<o:p></o:p></p>\r\n<div style=3D'border:none;border-top:solid #B5C4DF 1.0pt;padding:3.0pt 0cm =\r\n0cm 0cm'>\r\n<p class=3DMsoNormal><b>De&nbsp;:</b> Camille Lef=E8vre [mailto:camille@exa=\r\nmple.org] <br>\r\n<b>Envoy=E9&nbsp;:</b> mercredi 4 mars 2026 17:42<br><b>=C0&nbsp;:</b> Juli=\r\nen Moreau<br>\r\n<b>Cc&nbsp;:</b> Am=E9lie Rousseau<br><b>Objet&nbsp;:</b> R=E9union de lund=\r\ni<o:p></o:p></p>\r\n</div>\r\n<p class=3DMsoNormal>Bonjour =E0 tous,<o:p></o:p></p>\r\n</div>\r\n</body>\r\n</html>\r\n\r\n------=_NextPart_000_0007_01DCAC5E.1A2B3C40--\r\n\r\n",
+  "expected": {
+    "id": "<000601dcac5e$1a2b3c40$4e5f6a70$@example.org>",
+    "from": {
+      "name": "Julien Moreau",
+      "address": "julien@example.org"
+    },
+    "to": [
+      {
+        "name": "Camille Lefèvre",
+        "address": "camille@example.org"
+      }
+    ],
+    "cc": [
+      {
+        "name": "Amélie Rousseau",
+        "address": "amelie@example.org"
+      }
+    ],
+    "replyTo": [],
+    "date": "2026-03-05T07:15:27.000Z",
+    "subject": "RE : Réunion de lundi",
+    "text": "Bonjour Camille,\n\n14 h 30 me convient. J'apporterai les chiffres du trimestre.\n\nBonne journée,\nJulien\n\n-----Message d'origine-----\nDe : Camille Lefèvre [mailto:camille@example.org] \nEnvoyé : mercredi 4 mars 2026 17:42\nÀ : Julien Moreau\nCc : Amélie Rousseau\nObjet : Réunion de lundi\n\nBonjour à tous,\n\nLa réunion de lundi est déplacée à 14 h 30, salle B. Merci de préparer vos points pour l’ordre du jour.\n\nBonne soirée,\nCamille\n",
+    "textSource": "plain",
+    "es": null,
+    "attachments": [],
+    "refs": {
+      "messageId": "<000601dcac5e$1a2b3c40$4e5f6a70$@example.org>",
+      "inReplyTo": [],
+      "references": []
+    }
+  }
+}

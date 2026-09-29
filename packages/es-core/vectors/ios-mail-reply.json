@@ -1,0 +1,41 @@
+{
+  "description": "iOS Mail (Czech UI), reply-all to the Gmail reply: QP UTF-8 where a soft line break splits the bytes of 👍; U+FEFF that iOS puts before quoted text; Mime-Version: 1.0 (1.0); X-Mailer: iPhone Mail (…); \"Odesláno z iPhonu\"; References to both earlier messages",
+  "source": "fixtures/ios-mail-reply.eml",
+  "raw": "Content-Type: text/plain;\r\n\tcharset=utf-8\r\nContent-Transfer-Encoding: quoted-printable\r\nFrom: =?utf-8?Q?Jana_Nov=C3=A1kov=C3=A1?= <jana@example.net>\r\nMime-Version: 1.0 (1.0)\r\nDate: Mon, 2 Mar 2026 11:20:05 +0100\r\nSubject: =?utf-8?Q?Re=3A_Ob=C4=9Bd_v_p=C3=A1tek?=\r\nMessage-Id: <8C1F4E2A-3B7D-4A9E-B5C6-D2E1F0A9B8C7@example.net>\r\nReferences: <3f2a9c1e-6b4d-4e8a-9f1c-2d7e5b8a0c34@example.com>\r\n <CAH7x9kN4q2Lr8vT6YpW3mZs1bQ5dF0gJ+uE_aK8cR2xV9nB7eQ=w@mail.example.com>\r\nCc: =?utf-8?Q?Alice_Dvo=C5=99=C3=A1kov=C3=A1?= <alice@example.com>\r\nIn-Reply-To: <CAH7x9kN4q2Lr8vT6YpW3mZs1bQ5dF0gJ+uE_aK8cR2xV9nB7eQ=w@mail.example.com>\r\nTo: Bob Svoboda <bob@example.org>\r\nX-Mailer: iPhone Mail (22D82)\r\n\r\nJasn=C4=9B, jdu taky! St=C5=AFl pro t=C5=99i je super, p=C5=99ijdu =F0=9F=\r\n=91=8D T=C4=9B=C5=A1=C3=ADm se.\r\n\r\nOdesl=C3=A1no z iPhonu\r\n\r\n> Dne 2. 3. 2026 v 11:02, Bob Svoboda <bob@example.org> napsal:\r\n>\r\n> =EF=BB=BFAhoj Alice,\r\n>\r\n> v p=C3=A1tek m=C5=AF=C5=BEu, 12:30 je super. Zarezervuju st=C5=AFl pro t=\r\n=C5=99i.\r\n>\r\n> Bob\r\n>\r\n>> On Mon, Mar 2, 2026 at 10:15=E2=80=AFAM Alice Dvo=C5=99=C3=A1kov=C3=A1 <=\r\nalice@example.com> wrote:\r\n>>\r\n>> Ahoj Bobe,\r\n>>\r\n>> nechce=C5=A1 v p=C3=A1tek zaj=C3=ADt na ob=C4=9Bd? Myslela jsem, =C5=BEe=\r\n bychom mohli zkusit to nov=C3=A9 bistro na rohu u n=C3=A1dra=C5=BE=C3=AD, =\r\npr=C3=BD tam maj=C3=AD v=C3=BDborn=C3=A9 poledn=C3=AD menu a nen=C3=AD tam =\r\ntakov=C3=A1 fronta jako jinde.\r\n>>\r\n>> Jana u=C5=BE =C5=99=C3=ADkala, =C5=BEe by =C5=A1la taky. Hod=C3=AD se ti=\r\n 12:30?\r\n>>\r\n>> Alice\r\n>>\r\n>> --\r\n>> Alice Dvo=C5=99=C3=A1kov=C3=A1\r\n>> Example s.r.o.\r\n",
+  "expected": {
+    "id": "<8C1F4E2A-3B7D-4A9E-B5C6-D2E1F0A9B8C7@example.net>",
+    "from": {
+      "name": "Jana Nováková",
+      "address": "jana@example.net"
+    },
+    "to": [
+      {
+        "name": "Bob Svoboda",
+        "address": "bob@example.org"
+      }
+    ],
+    "cc": [
+      {
+        "name": "Alice Dvořáková",
+        "address": "alice@example.com"
+      }
+    ],
+    "replyTo": [],
+    "date": "2026-03-02T10:20:05.000Z",
+    "subject": "Re: Oběd v pátek",
+    "text": "Jasně, jdu taky! Stůl pro tři je super, přijdu 👍 Těším se.\n\nOdesláno z iPhonu\n\n> Dne 2. 3. 2026 v 11:02, Bob Svoboda <bob@example.org> napsal:\n>\n> ﻿Ahoj Alice,\n>\n> v pátek můžu, 12:30 je super. Zarezervuju stůl pro tři.\n>\n> Bob\n>\n>> On Mon, Mar 2, 2026 at 10:15 AM Alice Dvořáková <alice@example.com> wrote:\n>>\n>> Ahoj Bobe,\n>>\n>> nechceš v pátek zajít na oběd? Myslela jsem, že bychom mohli zkusit to nové bistro na rohu u nádraží, prý tam mají výborné polední menu a není tam taková fronta jako jinde.\n>>\n>> Jana už říkala, že by šla taky. Hodí se ti 12:30?\n>>\n>> Alice\n>>\n>> --\n>> Alice Dvořáková\n>> Example s.r.o.\n",
+    "textSource": "plain",
+    "es": null,
+    "attachments": [],
+    "refs": {
+      "messageId": "<8C1F4E2A-3B7D-4A9E-B5C6-D2E1F0A9B8C7@example.net>",
+      "inReplyTo": [
+        "<CAH7x9kN4q2Lr8vT6YpW3mZs1bQ5dF0gJ+uE_aK8cR2xV9nB7eQ=w@mail.example.com>"
+      ],
+      "references": [
+        "<3f2a9c1e-6b4d-4e8a-9f1c-2d7e5b8a0c34@example.com>",
+        "<CAH7x9kN4q2Lr8vT6YpW3mZs1bQ5dF0gJ+uE_aK8cR2xV9nB7eQ=w@mail.example.com>"
+      ]
+    }
+  }
+}

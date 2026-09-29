@@ -1,0 +1,31 @@
+{
+  "description": "message from an old mbox archive: LF line endings; leading mbox From  envelope line; >From escaping in the body; obsolete date Mon, 2 Mar 26 09:30:00 EST (2-digit year, EST, RFC 5322 §4.3); From: address (Name) comment form; no MIME headers; no Message-ID",
+  "source": "fixtures/mbox-lf-obsolete-date.eml",
+  "raw": "From sender@example.org Mon Mar  2 14:30:00 2026\nReturn-Path: <sender@example.org>\nReceived: from mail.example.org (mail.example.org [192.0.2.25])\n\tby mx.example.com (8.9.3/8.9.3) with ESMTP id JAA01234\n\tfor <alice@example.com>; Mon, 2 Mar 26 09:30:05 -0500\nFrom: sender@example.org (Old Timer)\nTo: alice@example.com\nSubject: Minutes of the March meeting\nDate: Mon, 2 Mar 26 09:30:00 EST\n\nHi all,\n\nthe minutes of the March meeting are below.\n\n>From the treasurer: the budget is unchanged.\n\nRegards,\nOT\n",
+  "expected": {
+    "id": "sha256:13aedcc5ecf5599bb63a2d2c0d2d39d162396c0401f8005bdd2a28db7090b9c4",
+    "from": {
+      "name": "Old Timer",
+      "address": "sender@example.org"
+    },
+    "to": [
+      {
+        "name": "",
+        "address": "alice@example.com"
+      }
+    ],
+    "cc": [],
+    "replyTo": [],
+    "date": "2026-03-02T14:30:00.000Z",
+    "subject": "Minutes of the March meeting",
+    "text": "Hi all,\n\nthe minutes of the March meeting are below.\n\n>From the treasurer: the budget is unchanged.\n\nRegards,\nOT\n",
+    "textSource": "plain",
+    "es": null,
+    "attachments": [],
+    "refs": {
+      "messageId": null,
+      "inReplyTo": [],
+      "references": []
+    }
+  }
+}

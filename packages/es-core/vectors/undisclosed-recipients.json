@@ -1,0 +1,35 @@
+{
+  "description": "announcement sent with Bcc only: To: undisclosed-recipients:; (empty group, RFC 5322 §3.4); Reply-To with two mailboxes; subject in two B encoded-words split inside the UTF-8 bytes of \"ř\"",
+  "source": "fixtures/undisclosed-recipients.eml",
+  "raw": "Return-Path: <office@example.com>\r\nDelivered-To: jana@example.net\r\nReceived: from mail.example.com (mail.example.com [192.0.2.30])\r\n\tby mx.example.net (Postfix) with ESMTPS id 4R5cD1e2Fz3\r\n\tfor <jana@example.net>; Mon, 16 Mar 2026 07:30:01 +0100 (CET)\r\nFrom: =?UTF-8?Q?Kancel=C3=A1=C5=99_Example?= <office@example.com>\r\nTo: undisclosed-recipients:;\r\nReply-To: =?UTF-8?Q?Kancel=C3=A1=C5=99_Example?= <office@example.com>,\r\n helpdesk@example.com\r\nSubject: =?UTF-8?B?UGzDoW5vdmFuw6Egb2RzdMOhdmthIGUtbWFpbHUgdiBzb2JvdHUgMjEuIGLF?=\r\n =?UTF-8?B?mWV6bmE=?=\r\nDate: Mon, 16 Mar 2026 07:30:00 +0100\r\nMessage-ID: <announce-20260316-0730@example.com>\r\nMIME-Version: 1.0\r\nContent-Type: text/plain; charset=UTF-8\r\nContent-Transfer-Encoding: 8bit\r\n\r\nDobrý den,\r\n\r\nv sobotu 21. března od 8:00 do 12:00 proběhne údržba poštovního serveru. V této době nebude možné odesílat ani přijímat e-maily.\r\n\r\nDotazy prosím posílejte na helpdesk@example.com.\r\n\r\nKancelář Example\r\n",
+  "expected": {
+    "id": "<announce-20260316-0730@example.com>",
+    "from": {
+      "name": "Kancelář Example",
+      "address": "office@example.com"
+    },
+    "to": [],
+    "cc": [],
+    "replyTo": [
+      {
+        "name": "Kancelář Example",
+        "address": "office@example.com"
+      },
+      {
+        "name": "",
+        "address": "helpdesk@example.com"
+      }
+    ],
+    "date": "2026-03-16T06:30:00.000Z",
+    "subject": "Plánovaná odstávka e-mailu v sobotu 21. března",
+    "text": "Dobrý den,\n\nv sobotu 21. března od 8:00 do 12:00 proběhne údržba poštovního serveru. V této době nebude možné odesílat ani přijímat e-maily.\n\nDotazy prosím posílejte na helpdesk@example.com.\n\nKancelář Example\n",
+    "textSource": "plain",
+    "es": null,
+    "attachments": [],
+    "refs": {
+      "messageId": "<announce-20260316-0730@example.com>",
+      "inReplyTo": [],
+      "references": []
+    }
+  }
+}
