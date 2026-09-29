@@ -6,4 +6,4 @@ Email Social turns the mailbox you already have into a chat. Conversations inste
 - Library, bridge and web client: `packages/` (Apache-2.0)
 - Work items and their acceptance tests: `tasks/`
 
-Status: first slice in development (see `tasks/01-es-core.md`).
+Status: `es-core` (Task 1) and the local bridge with its web client (Task 2) are in place. To try it, see [`docs/TRY-IT.md`](docs/TRY-IT.md).

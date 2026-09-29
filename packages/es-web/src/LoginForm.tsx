@@ -35,7 +35,7 @@ export function LoginForm({ presets, keychain, error, onSubmit }: Props) {
         password: String(data.get("password") ?? ""),
         imap: custom ? { host: imapHost.trim(), port: imapPort, security: imapSecurity } : preset.imap,
         smtp: custom ? { host: smtpHost.trim(), port: smtpPort, security: smtpSecurity } : preset.smtp,
-        appendToSent: preset.appendToSent,
+        appendToSent: custom ? data.get("append-sent") === "on" : preset.appendToSent,
         remember: data.get("remember") === "on",
       });
     } finally {
@@ -107,6 +107,12 @@ export function LoginForm({ presets, keychain, error, onSubmit }: Props) {
         <summary>More</summary>
         <label for="username">Login name, if it is not the e-mail address</label>
         <input id="username" name="username" autocomplete="off" />
+        {custom ? (
+          <p class="check">
+            <input id="append-sent" name="append-sent" type="checkbox" defaultChecked />
+            <label for="append-sent">Store a copy of sent messages in the Sent folder (untick if your provider already does)</label>
+          </p>
+        ) : null}
       </details>
       <p class="check">
         <input id="remember" name="remember" type="checkbox" disabled={!keychain} aria-describedby="remember-hint" />

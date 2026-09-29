@@ -125,6 +125,16 @@ describe("sign-in form", () => {
     expect(html).toContain("keychain");
   });
 
+  it("asks for both servers, TLS or STARTTLS only, for another provider", () => {
+    const other = render(<LoginForm presets={[presets[1]!]} keychain={false} error={null} onSubmit={async () => undefined} />);
+    for (const id of ["imap-host", "imap-port", "imap-security", "smtp-host", "smtp-port", "smtp-security", "append-sent"]) {
+      expect(other, id).toContain(`for="${id}"`);
+    }
+    expect(other.match(/<option[^>]*value="(tls|starttls)"/g)).toHaveLength(4);
+    expect(other).not.toContain('value="none"');
+    expect(other).toMatch(/id="remember"[^>]*disabled/);
+  });
+
   it("shows a sign-in error as an alert", () => {
     expect(html).toMatch(/role="alert"[^>]*>[^<]*authentication failed/);
   });
