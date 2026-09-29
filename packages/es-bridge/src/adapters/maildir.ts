@@ -106,7 +106,7 @@ export class MaildirAdapter implements MailboxAdapter {
     const next = `gen-${++this.generation}`;
     this.generations.clear();
     this.generations.set(next, current);
-    return { entries, complete: known === undefined, cursor: next };
+    return { entries, complete: known === undefined ? ["inbox", "sent"] : [], cursor: next };
   }
 
   async fetchRaw(ref: MailRef): Promise<Uint8Array> {

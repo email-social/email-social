@@ -151,10 +151,8 @@ export class MailSession {
       this.store.set(key, stored);
       added.push(stored);
     }
-    if (changes.complete) {
-      for (const key of [...this.store.keys()]) {
-        if (!listed.has(key) && !key.startsWith("local:")) this.store.delete(key);
-      }
+    for (const [key, stored] of [...this.store]) {
+      if (changes.complete.includes(stored.entry.folder) && !listed.has(key) && !key.startsWith("local:")) this.store.delete(key);
     }
     // A reply sent without appending to Sent is replaced by the provider's copy once it shows up.
     for (const stored of added) {
@@ -170,7 +168,7 @@ export class MailSession {
       await this.receipt("delivered", stored);
     }
     await this.saveCache();
-    if (added.length > 0 || changes.complete) this.options.onChange?.();
+    if (added.length > 0 || changes.complete.length > 0) this.options.onChange?.();
   }
 
   private async saveCache(): Promise<void> {
@@ -392,8 +390,8 @@ export class MailSession {
     const bytes = encoder.encode(raw);
     await this.options.adapter.send(bytes, { from: this.me, to: to.map((a) => a.address) });
     let stored: Stored;
-    if (this.options.appendToSent !== false) {
-      const entry = await this.options.adapter.appendToSent(bytes);
+    const entry = this.options.appendToSent !== false ? await this.options.adapter.appendToSent(bytes) : null;
+    if (entry !== null) {
       stored = { key: keyOf(entry), entry, message: parseMessage(bytes), hasText: true };
     } else {
       const entry: MailEntry = { folder: "sent", uid: messageId, flags: [SEEN] };

@@ -44,7 +44,7 @@ describe("MaildirAdapter: a directory of .eml files per folder", () => {
     writeFileSync(join(root, "INBOX", ".email-social-flags.json"), JSON.stringify({ "b.eml": [SEEN] }));
 
     const changes = await adapter.listSince(null);
-    expect(changes.complete).toBe(true);
+    expect(changes.complete).toEqual(["inbox", "sent"]);
     expect(names(changes.entries)).toEqual(["inbox/a.eml", "inbox/b.eml", "sent/c.eml"]);
     expect(changes.entries.find((e) => e.uid === "b.eml")!.flags).toEqual([SEEN]);
     expect(changes.entries.find((e) => e.uid === "a.eml")!.flags).toEqual([]);
@@ -58,11 +58,11 @@ describe("MaildirAdapter: a directory of .eml files per folder", () => {
     const first = await adapter.listSince(null);
     writeFileSync(join(root, "INBOX", "b.eml"), RAW("b"));
     const second = await adapter.listSince(first.cursor);
-    expect(second.complete).toBe(false);
+    expect(second.complete).toEqual([]);
     expect(names(second.entries)).toEqual(["inbox/b.eml"]);
     expect((await adapter.listSince(second.cursor)).entries).toEqual([]);
     const unknown = await adapter.listSince("gen-999");
-    expect(unknown.complete).toBe(true);
+    expect(unknown.complete).toEqual(["inbox", "sent"]);
     expect(names(unknown.entries)).toEqual(["inbox/a.eml", "inbox/b.eml"]);
   });
 

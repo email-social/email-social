@@ -29,8 +29,8 @@ export const READ_SENT = "$EsRead";
 export interface MailboxChanges {
   /** Messages added since the cursor (all messages when the cursor was null or is no longer valid). */
   entries: MailEntry[];
-  /** True when `entries` is the complete content of the folders, so anything else was deleted. */
-  complete: boolean;
+  /** Folders whose `entries` are their complete content, so anything else in them was deleted. */
+  complete: FolderRole[];
   /** Pass back to listSince to get only newer messages. */
   cursor: string;
 }
@@ -50,8 +50,12 @@ export interface MailboxAdapter {
   fetchRaw(ref: MailRef): Promise<Uint8Array>;
   /** Adds flags or keywords to a message (IMAP STORE +FLAGS, RFC 9051 §6.4.6). */
   addFlags(ref: MailRef, flags: readonly string[]): Promise<void>;
-  /** Stores a copy of a sent message in the sent folder, marked \Seen. */
-  appendToSent(raw: Uint8Array): Promise<MailEntry>;
+  /**
+   * Stores a copy of a sent message in the sent folder, marked \Seen. Returns
+   * null when the stored copy's uid is not known (IMAP without UIDPLUS,
+   * RFC 4315); the copy then shows up at the next sync.
+   */
+  appendToSent(raw: Uint8Array): Promise<MailEntry | null>;
   /** Sends a message to the envelope recipients. */
   send(raw: Uint8Array, envelope: Envelope): Promise<void>;
   /** Calls `onChange` when the mailbox may have changed; returns a function that stops watching. */
