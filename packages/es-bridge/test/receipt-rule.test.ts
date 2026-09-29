@@ -3,7 +3,7 @@
  * for one gets exactly one Read receipt per message" (tasks/02), and
  * Delivered receipts follow the same rule when a message arrives.
  */
-import { mkdirSync } from "node:fs";
+import { mkdirSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 import { describe, expect, it } from "vitest";
 import { serializeMessage, type ReceiptKind } from "@email-social/es-core";
@@ -78,6 +78,18 @@ describe("receipt rule", () => {
     expect(receipts(root)).toHaveLength(before);
     expect(before).toBe(3);
     await second.close();
+  });
+
+  it("sends no Delivered receipt for a message that is already read (it arrived before; Read covers it)", async () => {
+    const root = tempDir("es-receipts-seen-");
+    for (const dir of ["INBOX", "Sent", "Outbox"]) mkdirSync(join(root, dir));
+    deliver(root, "old.eml", message(es, "<old@example.org>", "Old news", ["delivered", "read"], "2026-03-01T08:00:00Z"));
+    writeFileSync(join(root, "INBOX", ".email-social-flags.json"), JSON.stringify({ "old.eml": ["\\Seen"] }));
+    const session = await openSession(root);
+    expect(receipts(root)).toEqual([]);
+    for (const conversation of await session.conversations()) await session.markRead(conversation.id);
+    expect(receipts(root)).toEqual([["read", "<old@example.org>", "ema@example.org"]]);
+    await session.close();
   });
 
   it("sends a Delivered receipt for an ES message that arrives while running", async () => {

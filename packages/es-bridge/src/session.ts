@@ -165,6 +165,8 @@ export class MailSession {
     for (const stored of added.sort(byDate)) {
       // Without keywords the mailbox cannot record a Delivered receipt; then only new arrivals get one.
       if (initial && !this.options.adapter.keepsKeywords) continue;
+      // A message already read arrived long ago; "delivered" would be news to no one (Read covers it).
+      if (stored.entry.flags.includes(SEEN)) continue;
       await this.receipt("delivered", stored);
     }
     await this.saveCache();
