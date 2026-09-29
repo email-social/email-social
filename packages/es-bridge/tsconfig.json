@@ -1,7 +1,8 @@
 {
   "extends": "../../tsconfig.base.json",
   "compilerOptions": {
-    "lib": ["ES2023"],
+    // DOM: es-core's source (checked through "paths") uses TextDecoder types from it.
+    "lib": ["ES2023", "DOM"],
     "types": ["node"],
     "noEmit": true,
     "paths": {
