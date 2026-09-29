@@ -5,7 +5,9 @@
   "license": "Apache-2.0",
   "type": "module",
   "workspaces": [
-    "packages/*"
+    "packages/es-core",
+    "packages/es-web",
+    "packages/es-bridge"
   ],
   "engines": {
     "node": ">=22.12.0 <23"
@@ -15,6 +17,8 @@
     "typecheck": "npm run typecheck --workspaces --if-present",
     "build": "npm run build --workspaces --if-present",
     "test:browser": "npm run test:browser --workspaces --if-present",
-    "vectors:check": "npm run vectors:check --workspaces --if-present"
+    "test:e2e": "npm run test:e2e --workspaces --if-present",
+    "vectors:check": "npm run vectors:check --workspaces --if-present",
+    "start": "email-social"
   }
 }
