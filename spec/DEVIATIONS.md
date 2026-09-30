@@ -243,6 +243,25 @@ Quotations from the draft are translated from Czech where the draft is in Czech.
   - `read` corresponds to the MDN disposition `displayed`. `delivered` means that the recipient's Email Social client has fetched the message, which is neither a DSN nor an MDN.
 - **Covered by:** `test/serialize.test.ts`, `test/es-schema.test.ts` ("round-trips both receipt kinds").
 
+### D21. Ordinary replies carry the whole earlier message, quoted
+
+- **Draft says:** nothing. A post's `text` is shown as it is; the draft does not say what a client does with the quoted history that mail clients add.
+- **Reality:**
+  - Gmail, Outlook, Apple Mail, iOS Mail, Thunderbird, Seznam.cz and mutt quote the message they answer: `>` lines after an attribution line ("On … wrote:", "Dne … napsal(a):", "Am … schrieb …:", "Le … a écrit :", wrapped over two lines by Gmail), or, in Outlook, a `From:`/`Sent:`/`To:`/`Subject:` block in the user's language followed by the unprefixed original. Thunderbird and mutt put the answer below the quote; mutt users answer between quoted lines.
+  - In a chat view each message then shows the whole conversation again below it. The maintainer's first manual test with a real mailbox (tasks/02b, item 5) showed exactly that.
+  - Signatures (RFC 3676 §4.3 `-- `, often without the space) and one-line mobile signatures ("Sent from my iPhone", "Odesláno z iPhonu") follow the text.
+- **es-core does:** `splitQuoted` separates what the sender wrote now from the quoted text and the signature, without dropping a line; HTML is reduced to text with `> ` in front of lines inside `<blockquote>` (Gmail's quote container, Apple Mail's and Thunderbird's `type="cite"`). A quote between two answers stays with the answers. An Email Social post is always entirely fresh text.
+- **Covered by:** `test/split-quoted.test.ts` (26 reconstructed reply formats in `fixtures/replies/` and 11 corpus replies, a seeded property test that no line is lost), `test/html-to-text.test.ts`, the `split` field of every test vector.
+
+### D22. People write to each other under many subjects; lists and programs are not people
+
+- **Draft says:** §4.3 groups messages by threading headers and ES thread metadata.
+- **Reality:**
+  - The same two people start a new subject for every new topic, so a thread view splits one relationship into many conversations and "looks like a mail client" (tasks/02b, item 6).
+  - A mailbox also holds mailing lists (RFC 2369 `List-*`, RFC 2919 `List-Id`, `Precedence: list`), newsletters (`List-Unsubscribe`, `Precedence: bulk`) and automated mail (RFC 3834 `Auto-Submitted`, the null `Return-Path: <>` of delivery reports, no-reply senders), none of which is a conversation with a person.
+- **es-core does:** `groupByParticipants` puts every message exchanged with exactly the same set of people (From, To and Cc without the account owner) into one chat, oldest first, with each message's base subject so a client can mark subject changes; the id is derived from the sorted addresses. `classifyMessage` tells `person`, `list` and `automated` mail apart from headers only; the bridge shows lists and automated mail under "Other mail". `threadMessages` (D8) is unchanged and still threads by headers and subject.
+- **Covered by:** `test/chats.test.ts`, `test/classify.test.ts`, the `delivery` field of every test vector.
+
 ## B. Where es-core deliberately differs from the draft
 
 ### D16. Media type `application/vnd.email-social.message+json`
@@ -332,6 +351,13 @@ Quotations from the draft are translated from Czech where the draft is in Czech.
   - There is no ES server (CLAUDE.md rule 2), so the mailbox domain is the only domain available. The draft's own second example already puts a mailbox provider's domain in a DID.
   - The trade-off is that a derived DID changes when the address changes, contrary to what §1.1 intends.
 - **Covered by:** `test/did.test.ts`, including the fixed vector `deriveDid("alice@example.com")` = `did:es:example.com:ff8d9819fc0e12bf0d24892e45987e24`.
+
+### D23. Replies to people without Email Social quote what they answer
+
+- **Draft says:** nothing about quoting.
+- **es-core and the bridge do:** a reply sent from Email Social to a chat in which nobody has ever sent an ES part ends with `quoteForReply` of the message it answers: an English attribution line ("On Tue, 3 Mar 2026 at 10:15, Name <address> wrote:") and that message's fresh text as `> ` lines (at most 40). Such a reply has no ES part (D17 applies only when a recipient has sent one). A reply to someone who uses Email Social quotes nothing, since their client shows the chat.
+- **Why:** an ordinary mail client shows no chat history, so a bare answer arrives without context (tasks/02b, item 4). The quote is in the `text/plain` body, readable everywhere (rule 1), and `splitQuoted` recognises it when the reply is read back.
+- **Covered by:** `test/reply-quote.test.ts` (es-core), `test/session.test.ts` and `test-e2e/maildir.test.ts` (es-bridge).
 
 ## Sources
 

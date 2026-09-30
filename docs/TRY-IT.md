@@ -2,13 +2,14 @@
 
 Email Social runs on your computer. `email-social` starts a small local
 service on `127.0.0.1` (your own machine only) and opens a web page where your
-mailbox is shown as chats. Your messages stay in your mailbox; the only
+mailbox is shown as a messenger: one chat per person or group, whatever the
+subjects. Your messages stay in your mailbox; the only
 network connections are to your provider's IMAP server (to read) and SMTP
 server (to send).
 
 ## 1. Install and build (once)
 
-Requires Node.js 22 and git.
+Requires Node.js 22.12 or later, and git.
 
 ```sh
 git clone https://github.com/email-social/email-social.git
@@ -25,12 +26,16 @@ npx email-social --demo
 
 The terminal prints an address such as
 `http://127.0.0.1:53817/#token=…` and the browser opens it (with `--no-open`,
-open it yourself; it only works with the token). You should see 9
-conversations of a demo mailbox belonging to "Alice". The newest is with
-Karel Holub and has 3 unread messages. Opening a conversation shows your
-messages on the right and the others on the left. A reply is written into
-the demo folder printed in the terminal: `Sent/` gets your copy, `Outbox/`
-what would have been sent, and nothing goes on the network.
+open it yourself; it only works with the token). You should see 7 chats of
+a demo mailbox belonging to "Alice", and below them a collapsed "Other mail"
+with a mailing list and a newsletter. The newest chat is with Karel Holub
+and has 3 unread messages. The chat with Bob Svoboda holds four subjects,
+each marked by a small separator. Opening a chat shows your messages on the
+right and the others on the left, each with only what its sender wrote;
+"Show quoted text" reveals what their mail client quoted. A message you send
+is written into the demo folder printed in the terminal: `Sent/` gets your
+copy, `Outbox/` what would have been sent, and nothing goes on the network.
+Any `.eml` file you copy into its `INBOX/` appears within a few seconds.
 
 You can also point it at any folder of `.eml` files (for example messages
 saved from your mail client):
@@ -94,13 +99,17 @@ The page shows **Sign in to your mailbox**.
 
 | Step | Expected |
 | --- | --- |
-| Sign in | "Signing in as …", then the conversation list. A wrong password shows the server's error in red above the form, and the password is not shown anywhere. |
-| Conversation list | Your most recent conversations (at most the 500 newest messages of the inbox and of the sent folder), newest first, with names, the first line of the newest message and an unread count that matches the number of unread messages in your webmail's inbox for that conversation. |
-| Open a conversation | Bubbles in date order: your messages (from the sent folder) on the right labelled "You", the others on the left with the sender's name. The unread count drops to 0, and the messages show as read in your webmail too. HTML-only newsletters show as text with "Shown as plain text. Open original". |
+| Sign in | "Signing in as …" with a number that changes: seconds while connecting, then "Loading messages: 23 of 540". The chats appear once the newest 50 messages are in; a line at the top then shows "Loading older messages: … of …" until the rest is there. Nothing stays on "Signing in…" without a changing number. A wrong password shows the server's error in red above the form, and the password is not shown anywhere. If the server does not answer, the error and **Try again** appear within a minute. |
+| Chat list | One row per person or group (at most the 500 newest messages of the inbox and of the sent folder), newest first, with names, the first line of what was last written (no quoted text) and an unread count that matches the unread messages from those people in your webmail's inbox. Someone who wrote under several subjects is one chat. |
+| Other mail | Mailing lists, newsletters and automated senders (notifications, no-reply senders, delivery reports) are not chats: they are under the collapsed **Other mail**, read-only. |
+| Open a chat | Bubbles in date order: your messages (from the sent folder) on the right labelled "You", the others on the left with the sender's name. Each bubble shows only what its sender wrote; **Show quoted text** and **Show signature** reveal the rest. A small separator shows each subject. The unread count drops to 0, and the messages show as read in your webmail too. HTML-only mail shows as text with "Shown as plain text. Open original". |
 | Attachments | Listed under the message by file name. Clicking downloads the file; "Open original" downloads the `.eml`. |
-| Reply | Type in the box at the bottom and press Send (or Ctrl+Enter). The reply appears on the right. The recipient gets an ordinary e-mail whose text is readable in any client. If the recipient has never sent you an Email Social message, it is plain text only, with no attachment. |
-| Sent folder | Exactly one copy of the reply in your webmail's Sent folder. For Gmail, Gmail stores it; for others, Email Social does. If you see two copies with a generic provider, sign in again with **More → Store a copy of sent messages** unticked, and note it in the result. |
-| New mail | Send yourself a message from another account: it appears within a few seconds (IMAP IDLE) with an unread count. |
+| Reply | Type in the box at the bottom and press Send (or Ctrl+Enter). The reply appears on the right with only your text. The recipient gets an ordinary e-mail whose text is readable in any client. If the recipient has never sent you an Email Social message, it is plain text only, with no attachment, and the message you answered is quoted below your text ("On … wrote:" and "> " lines), so they can see what you are answering. |
+| New chat | **New chat**, type a name (suggestions come from your contacts) or any address and press Enter, optionally a subject, then the text. Without a subject, the first line of the text (at most 60 characters) is used. The chat appears in the list; the recipient gets an ordinary e-mail. Several recipients make a group. |
+| Contact page | Click a sender's name: names seen, address, first and last message, number of messages, the chat, attachments exchanged (download links) and groups you share. |
+| Sent folder | Exactly one copy of each message in your webmail's Sent folder. For Gmail, Gmail stores it; for others, Email Social does. If you see two copies with a generic provider, sign in again with **More → Store a copy of sent messages** unticked, and note it in the result. |
+| New mail | Send yourself a message from another account while the page is open: it appears without reloading, usually within seconds (IMAP IDLE) and at most within a minute, with an unread count. Reloading the page shows it too. A message you send from your webmail appears in the chat as yours within a minute. |
+| Connection lost | Turn off the network for a minute while the page is open: the top line says "Reconnecting…"; after the network is back it disappears and new mail shows up again. |
 | Remember on this device | Sign out, sign in again with the box ticked, stop `email-social` (Ctrl+C) and start it again: it signs in by itself. "Sign out and forget this device" removes the stored password from the keychain. On a system without a keychain the box cannot be ticked. |
 | Network | Optional: while it runs, `lsof -i -P -n \| grep node` (macOS/Linux) lists connections only to your IMAP and SMTP servers and the local `127.0.0.1` port. |
 
@@ -108,14 +117,25 @@ The page shows **Sign in to your mailbox**.
 
 With two accounts that both run Email Social (A and B):
 
-1. A replies in a conversation where B has already sent an Email Social
-   message. The copy in A's Sent folder has an `email-social.json`
-   attachment after the text.
+1. A replies in a chat where B has already sent an Email Social message.
+   The copy in A's Sent folder has an `email-social.json` attachment after
+   the text, and no quoted text (B's Email Social shows the chat).
 2. When B's Email Social receives it, A's message shows **Delivered**. When B
-   opens the conversation, it shows **Read**. Each is sent once per message,
-   and never to someone writing from an ordinary mail client.
+   opens the chat, it shows **Read**. Each is sent once per message, and
+   never to someone writing from an ordinary mail client.
 
 ## Results (filled in by the maintainer)
+
+Task 2b rerun (messenger model), to be filled in; the Task 2 table is kept
+below it for comparison.
+
+| Provider | Date | Sign-in progress | Chat per person | Other mail | Fresh text only | Reply quotes (plain) | New chat | Contact page | New mail live | Reconnecting | Notes |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| Gmail (app password) | | | | | | | | | | | |
+| Seznam.cz | | | | | | | | | | | |
+| Generic IMAP (provider: …) | | | | | | | | | | | |
+
+Task 2 (first run):
 
 | Provider | Date | Sign-in | List and unread | Bubbles | Reply received | Sent copy once | New mail | Remember | Notes |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
