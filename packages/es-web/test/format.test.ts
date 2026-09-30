@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { formatFull, formatSize, formatWhen, statusLabel, unreadLabel, withToken } from "../src/format.js";
+import { formatFull, formatSize, formatWhen, parseRecipient, statusLabel, unreadLabel, withToken } from "../src/format.js";
 
 describe("formatting", () => {
   it("formats sizes", () => {
@@ -27,5 +27,14 @@ describe("formatting", () => {
   it("adds the session token to download paths", () => {
     expect(withToken("/api/messages/a/original", "t+k")).toBe("/api/messages/a/original?token=t%2Bk");
     expect(withToken("/x?y=1", "t")).toBe("/x?y=1&token=t");
+  });
+
+  it("reads a recipient typed as an address or picked as 'Name <address>'", () => {
+    expect(parseRecipient(" zuzana@example.net ")).toBe("zuzana@example.net");
+    expect(parseRecipient("Karel Holub <karel@example.org>")).toBe("karel@example.org");
+    expect(parseRecipient("Karel Holub")).toBeNull();
+    expect(parseRecipient("karel@")).toBeNull();
+    expect(parseRecipient("a b@example.org")).toBeNull();
+    expect(parseRecipient("")).toBeNull();
   });
 });

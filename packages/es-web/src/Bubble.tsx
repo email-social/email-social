@@ -7,24 +7,46 @@ interface Props {
   token: string;
   /** In a group every bubble names its sender; in a two-person chat only the side does. */
   group: boolean;
+  /** Opens the contact page of an address. */
+  onPerson: (address: string) => void;
   now?: Date;
 }
 
 /**
  * One message. Own messages are on the right and labelled "You"; the
- * others are on the left with the sender's name. The text is shown as text
- * (never as HTML), with its line breaks.
+ * others are on the left with the sender's name (a button to their page).
+ * Only what the sender wrote is shown; quoted earlier messages and the
+ * signature are behind "Show quoted text" and "Show signature". Text is
+ * shown as text (never as HTML), with its line breaks.
  */
-export function Bubble({ message, token, group, now = new Date() }: Props) {
+export function Bubble({ message, token, group, onPerson, now = new Date() }: Props) {
   const side = message.mine ? "right" : "left";
-  const sender = message.mine ? "You" : (message.from?.name ?? "Unknown sender");
+  const nothingNew = message.fresh === "";
   return (
     <li class={`bubble ${message.mine ? "mine" : "theirs"}`} data-side={side}>
       <p class={group || !message.mine ? "who" : "who sr-only"}>
-        <span>{sender}</span>
+        {message.mine || message.from === null ? (
+          <span>{message.mine ? "You" : "Unknown sender"}</span>
+        ) : (
+          <button type="button" class="person" data-address={message.from.address} onClick={() => onPerson(message.from!.address)}>
+            {message.from.name}
+          </button>
+        )}
         {message.from !== null && !message.mine ? <VerificationBadgeSlot address={message.from.address} /> : null}
       </p>
-      {message.text !== "" ? <p class="text">{message.text}</p> : <p class="text empty-text">(no text)</p>}
+      {!nothingNew ? <p class="text">{message.fresh}</p> : message.quoted === "" && message.signature === "" ? <p class="text empty-text">(no text)</p> : null}
+      {message.quoted !== "" ? (
+        <details class="quoted" open={nothingNew || undefined}>
+          <summary>Show quoted text</summary>
+          <p class="text">{message.quoted}</p>
+        </details>
+      ) : null}
+      {message.signature !== "" ? (
+        <details class="signature" open={(nothingNew && message.quoted === "") || undefined}>
+          <summary>Show signature</summary>
+          <p class="text">{message.signature}</p>
+        </details>
+      ) : null}
       {message.textSource === "html" ? (
         <p class="note">
           Shown as plain text. <a href={withToken(message.originalPath, token)} download>Open original</a>

@@ -1,18 +1,18 @@
-import type { ConversationSummary } from "@email-social/es-bridge/api";
+import type { ChatSummary } from "@email-social/es-bridge/api";
 import { formatFull, formatWhen, unreadLabel } from "./format.js";
 
 interface Props {
-  conversations: readonly ConversationSummary[];
+  chats: readonly ChatSummary[];
   selected: string | null;
   onSelect: (id: string) => void;
   now: Date;
 }
 
-/** Moves focus between conversation buttons with the arrow keys (Home/End to the ends). */
-function onKeyDown(event: KeyboardEvent): void {
+/** Moves focus between the buttons of a list with the arrow keys (Home/End to the ends). */
+export function listKeys(event: KeyboardEvent): void {
   const target = event.target as HTMLElement | null;
   if (target?.tagName !== "BUTTON") return;
-  const buttons = [...(target.closest("ul")?.querySelectorAll<HTMLButtonElement>("button") ?? [])];
+  const buttons = [...(target.closest("ul")?.querySelectorAll<HTMLButtonElement>(":scope > li > button") ?? [])];
   const index = buttons.indexOf(target as HTMLButtonElement);
   const next =
     event.key === "ArrowDown" ? buttons[index + 1] : event.key === "ArrowUp" ? buttons[index - 1] : event.key === "Home" ? buttons[0] : event.key === "End" ? buttons[buttons.length - 1] : undefined;
@@ -22,15 +22,16 @@ function onKeyDown(event: KeyboardEvent): void {
   }
 }
 
-export function ConversationList({ conversations, selected, onSelect, now }: Props) {
-  if (conversations.length === 0) return <p class="empty">No conversations yet.</p>;
+/** One row per person or group, newest first: name, time, unread count and the last line. */
+export function ChatList({ chats, selected, onSelect, now }: Props) {
+  if (chats.length === 0) return <p class="empty">No chats yet. Start one with “New chat”.</p>;
   return (
-    <ul class="conversations" aria-label="Conversations" onKeyDown={onKeyDown}>
-      {conversations.map((c) => (
+    <ul class="chats" aria-label="Chats" onKeyDown={listKeys}>
+      {chats.map((c) => (
         <li key={c.id}>
           <button
             type="button"
-            class={c.unread > 0 ? "conversation unread" : "conversation"}
+            class={c.unread > 0 ? "chat-row unread" : "chat-row"}
             aria-current={c.id === selected ? "true" : undefined}
             data-id={c.id}
             onClick={() => onSelect(c.id)}
@@ -42,9 +43,9 @@ export function ConversationList({ conversations, selected, onSelect, now }: Pro
               </time>
             </span>
             <span class="row">
-              <span class="subject">
+              <span class="last-line">
                 {c.group ? <span class="group-label">Group of {c.participants.length + 1} · </span> : null}
-                {c.subject === "" ? "(no subject)" : c.subject}
+                {c.lastFromMe ? `You: ${c.lastLine}` : c.lastLine}
               </span>
               {c.unread > 0 ? (
                 <>
@@ -53,7 +54,6 @@ export function ConversationList({ conversations, selected, onSelect, now }: Pro
                 </>
               ) : null}
             </span>
-            <span class="last-line">{c.lastFromMe ? `You: ${c.lastLine}` : c.lastLine}</span>
           </button>
         </li>
       ))}

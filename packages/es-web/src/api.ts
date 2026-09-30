@@ -44,8 +44,11 @@ export function createApi(token: string) {
     return response.status === 204 ? (undefined as T) : ((await response.json()) as T);
   }
 
-  /** Calls `onEvent` for every server event; reconnects after a lost connection. */
-  function events(onEvent: (event: { type: string }) => void): () => void {
+  /**
+   * Calls `onEvent` for every server event and `onConnection` when the
+   * connection to the bridge is lost or back; reconnects with growing pauses.
+   */
+  function events(onEvent: (event: { type: string }) => void, onConnection: (connected: boolean) => void = () => undefined): () => void {
     let socket: WebSocket | null = null;
     let stopped = false;
     let delay = 500;
@@ -53,6 +56,9 @@ export function createApi(token: string) {
       socket = new WebSocket(`ws://${location.host}/api/events?token=${encodeURIComponent(token)}`);
       socket.onopen = () => {
         delay = 500;
+        onConnection(true);
+        // Whatever happened while the page was away: ask again.
+        onEvent({ type: "session" });
         onEvent({ type: "changed" });
       };
       socket.onmessage = (message) => {
@@ -64,6 +70,7 @@ export function createApi(token: string) {
       };
       socket.onclose = () => {
         if (stopped) return;
+        onConnection(false);
         setTimeout(connect, delay);
         delay = Math.min(delay * 2, 10_000);
       };

@@ -44,3 +44,14 @@ export function statusLabel(status: "sent" | "delivered" | "read" | null): strin
 export function withToken(path: string, token: string): string {
   return `${path}${path.includes("?") ? "&" : "?"}token=${encodeURIComponent(token)}`;
 }
+
+/**
+ * The address in what was typed into the recipient field: "Name <address>"
+ * (as suggested from contacts) or a bare address; null when it is not one.
+ */
+export function parseRecipient(input: string): string | null {
+  const text = input.trim();
+  const bracketed = /<([^<>]+)>\s*$/.exec(text);
+  const address = (bracketed === null ? text : bracketed[1]!).trim();
+  return /^[^@\s<>(),;:"\\[\]]+@[A-Za-z0-9-]+(?:\.[A-Za-z0-9-]+)+$/.test(address) ? address : null;
+}

@@ -7,10 +7,12 @@ interface Props {
   keychain: boolean;
   error: string | null;
   onSubmit: (request: LoginRequest) => Promise<void>;
+  /** Repeats the last sign-in (offered after an error, when the bridge still has the settings). */
+  onRetry?: () => void;
 }
 
 /** Sign-in to the user's own mailbox: IMAP to read, SMTP to send. */
-export function LoginForm({ presets, keychain, error, onSubmit }: Props) {
+export function LoginForm({ presets, keychain, error, onSubmit, onRetry }: Props) {
   const [presetId, setPresetId] = useState(presets[0]?.id ?? "other");
   const preset = presets.find((p) => p.id === presetId) ?? presets[0]!;
   const [imapHost, setImapHost] = useState("");
@@ -78,6 +80,14 @@ export function LoginForm({ presets, keychain, error, onSubmit }: Props) {
       {error !== null ? (
         <p class="error" role="alert">
           {error}
+          {onRetry !== undefined ? (
+            <>
+              {" "}
+              <button type="button" class="retry" onClick={onRetry}>
+                Try again
+              </button>
+            </>
+          ) : null}
         </p>
       ) : null}
       <label for="provider">Provider</label>

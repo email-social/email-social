@@ -3,6 +3,7 @@ import { useEffect, useMemo, useState } from "preact/hooks";
 import { ApiError, createApi, takeToken } from "./api.js";
 import { LoginForm } from "./LoginForm.js";
 import { MailView } from "./MailView.js";
+import { SigningIn } from "./Status.js";
 
 export function App() {
   const token = useMemo(takeToken, []);
@@ -10,6 +11,8 @@ export function App() {
   const [info, setInfo] = useState<SessionInfo | null>(null);
   const [problem, setProblem] = useState<string | null>(null);
   const [tick, setTick] = useState(0);
+  const [connected, setConnected] = useState(true);
+  const [seconds, setSeconds] = useState(0);
 
   const load = async (): Promise<void> => {
     if (api === null) return;
@@ -17,18 +20,35 @@ export function App() {
       setInfo(await api.call<SessionInfo>("/api/session"));
       setProblem(null);
     } catch (e) {
-      setProblem(e instanceof ApiError && e.status === 401 ? "This page needs the address printed by email-social (it contains the access token)." : String(e));
+      if (e instanceof ApiError && e.status === 401) setProblem("This page needs the address printed by email-social (it contains the access token).");
+      // Anything else means the bridge is not reachable right now; the event connection says "Reconnecting…".
     }
   };
 
   useEffect(() => {
     if (api === null) return;
     void load();
-    return api.events((event) => {
-      if (event.type === "session") void load();
-      else setTick((t) => t + 1);
-    });
+    return api.events(
+      (event) => {
+        if (event.type === "session") void load();
+        else setTick((t) => t + 1);
+      },
+      (up) => {
+        setConnected(up);
+        // After a reload or a lost connection, look for new mail at once.
+        if (up) void api.call("/api/sync", { method: "POST", body: {} }).catch(() => undefined);
+      },
+    );
   }, [api]);
+
+  // While signing in, a counter of seconds for the steps that have no count of their own.
+  const step = info?.state === "connecting" ? info.progress.step : null;
+  useEffect(() => {
+    setSeconds(0);
+    if (step === null) return;
+    const timer = setInterval(() => setSeconds((s) => s + 1), 1000);
+    return () => clearInterval(timer);
+  }, [step]);
 
   if (api === null) {
     return (
@@ -46,30 +66,51 @@ export function App() {
       </main>
     );
   }
-  if (info === null) return <main class="notice"><p>Loading…</p></main>;
-  if (info.state === "connecting") {
+  if (info === null) {
     return (
       <main class="notice">
-        <p role="status">Signing in as {info.address}…</p>
+        <p role="status">{connected ? "Loading…" : "Reconnecting…"}</p>
       </main>
     );
   }
+  if (info.state === "connecting") return <SigningIn address={info.address} progress={info.progress} seconds={seconds} />;
   if (info.state === "signed-out") {
     const signIn = async (request: LoginRequest): Promise<void> => {
       try {
         setInfo(await api.call<SessionInfo>("/api/login", { method: "POST", body: request }));
-      } catch (e) {
-        setInfo({ ...info, error: e instanceof Error ? e.message : String(e) });
+      } catch {
+        await load();
       }
+    };
+    const retry = (): void => {
+      void api
+        .call<SessionInfo>("/api/retry", { method: "POST", body: {} })
+        .then(setInfo)
+        .catch(() => load());
     };
     return (
       <main class="notice">
-        <LoginForm presets={info.presets} keychain={info.keychain} error={info.error} onSubmit={signIn} />
+        <LoginForm presets={info.presets} keychain={info.keychain} error={info.error} onSubmit={signIn} {...(info.canRetry && info.error !== null ? { onRetry: retry } : {})} />
       </main>
     );
   }
   const signOut = async (forget: boolean): Promise<void> => {
     setInfo(await api.call<SessionInfo>("/api/logout", { method: "POST", body: { forget } }));
   };
-  return <MailView api={api} account={info.account} mode={info.mode} tick={tick} remembered={info.remembered} onSignOut={signOut} />;
+  const retry = (): void => {
+    void api.call("/api/retry", { method: "POST", body: {} }).then(load, load);
+  };
+  return (
+    <MailView
+      api={api}
+      account={info.account}
+      mode={info.mode}
+      tick={tick}
+      remembered={info.remembered}
+      sync={info.sync}
+      connected={connected}
+      onRetry={retry}
+      onSignOut={signOut}
+    />
+  );
 }

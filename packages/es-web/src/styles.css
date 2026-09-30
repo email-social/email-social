@@ -2,7 +2,7 @@
  * Colours are defined once here; test/contrast.test.ts checks that every
  * text/background pair meets WCAG 2.2 AA (4.5:1) and the focus ring 3:1.
  * State is never shown by colour alone: unread has a number and bold text,
- * the open conversation a border, own messages the right side and "You".
+ * the open chat a border, own messages the right side and "You".
  */
 :root {
   --bg: #ffffff;
@@ -64,7 +64,10 @@ button {
 }
 
 button[type="submit"],
-.sign-out button {
+.sign-out button,
+.new-chat-button,
+.actions button,
+.retry {
   background: var(--accent);
   color: var(--accent-text);
   border: 0;
@@ -186,14 +189,14 @@ button:disabled {
   padding: 1rem;
 }
 
-/* Conversation list */
-.conversations {
+/* Chat list */
+.chats {
   list-style: none;
   margin: 0;
   padding: 0;
 }
 
-.conversation {
+.chat-row {
   display: block;
   width: 100%;
   text-align: left;
@@ -205,45 +208,44 @@ button:disabled {
   padding: 0.6rem 0.8rem;
 }
 
-.conversation[aria-current="true"] {
+.chat-row[aria-current="true"] {
   background: var(--selected-bg);
   border-left-color: var(--accent);
 }
 
-.conversation .row {
+.chat-row .row {
   display: flex;
   justify-content: space-between;
   gap: 0.5rem;
 }
 
-.conversation .title {
+.chat-row .title {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
 
-.conversation.unread .title,
-.conversation.unread .last-line {
+.chat-row.unread .title,
+.chat-row.unread .last-line {
   font-weight: 700;
 }
 
-.conversation time {
+.chat-row time {
   white-space: nowrap;
   flex-shrink: 0;
 }
 
-.conversation time,
-.conversation .subject,
-.conversation .last-line {
+.chat-row time,
+.chat-row .last-line {
   color: var(--muted);
   font-size: 0.9rem;
 }
 
-.conversation.unread .last-line {
+.chat-row.unread .last-line {
   color: var(--text);
 }
 
-.conversation .last-line {
+.chat-row .last-line {
   display: block;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -380,4 +382,178 @@ button:disabled {
 .composer .status {
   grid-column: 1 / -1;
   margin: 0;
+}
+
+.list-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  padding: 0.6rem 0.8rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.list-head h1 {
+  margin: 0;
+  font-size: 1.1rem;
+}
+
+/* Other mail: collapsed below the chats */
+.other-mail {
+  border-top: 1px solid var(--border);
+}
+
+.other-mail summary {
+  padding: 0.6rem 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.other-mail .hint {
+  padding: 0 0.8rem;
+}
+
+/* Status after sign-in */
+.status-bar {
+  border-bottom: 1px solid var(--border);
+  padding: 0.3rem 1rem;
+  background: var(--panel);
+}
+
+.status-bar p {
+  margin: 0.2rem 0;
+}
+
+.status-line {
+  color: var(--text);
+}
+
+progress {
+  vertical-align: middle;
+}
+
+/* Names that open a contact page */
+button.person {
+  background: none;
+  border: 0;
+  padding: 0;
+  font: inherit;
+  font-weight: inherit;
+  color: inherit;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+/* Subject separators in a chat */
+.subject-separator {
+  align-self: center;
+  max-width: 90%;
+}
+
+.subject-separator h3 {
+  margin: 0.4rem 0 0;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--muted);
+  text-align: center;
+}
+
+/* Quoted text and signatures, collapsed */
+.bubble details {
+  margin-top: 0.3rem;
+  font-size: 0.9rem;
+}
+
+.bubble details summary {
+  cursor: pointer;
+  color: var(--muted);
+}
+
+.bubble.mine details summary {
+  color: var(--mine-muted);
+}
+
+/* New chat and contact pages */
+.new-chat,
+.contact-body {
+  padding: 0.6rem 1rem;
+  overflow-y: auto;
+}
+
+.new-chat h2 {
+  margin: 0 0 0.5rem;
+  font-size: 1.15rem;
+}
+
+.new-chat label {
+  display: block;
+  font-weight: 600;
+  margin-top: 0.8rem;
+}
+
+.new-chat input,
+.new-chat textarea {
+  width: 100%;
+  padding: 0.45rem;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  font: inherit;
+}
+
+.recipients {
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin: 0.3rem 0;
+  padding: 0;
+}
+
+.recipients li {
+  background: var(--selected-bg);
+  border-radius: 999px;
+  padding: 0.1rem 0.3rem 0.1rem 0.7rem;
+}
+
+.recipients button {
+  background: none;
+  border: 0;
+  margin-left: 0.2rem;
+}
+
+button.secondary {
+  background: var(--bg);
+  color: var(--accent);
+  border: 1px solid var(--accent);
+  border-radius: 6px;
+  padding: 0.45rem 1rem;
+}
+
+.contact {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.facts {
+  display: grid;
+  grid-template-columns: max-content 1fr;
+  gap: 0.2rem 1rem;
+}
+
+.facts dt {
+  font-weight: 600;
+}
+
+.facts dd {
+  margin: 0;
+}
+
+.contact-body h3 {
+  font-size: 1rem;
+  margin: 1rem 0 0.3rem;
+}
+
+.groups {
+  padding-left: 1.1rem;
 }
