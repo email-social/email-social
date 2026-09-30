@@ -40,5 +40,10 @@
       "precedence": null,
       "returnPath": null
     }
+  },
+  "split": {
+    "fresh": "Dobrý den, pane Nováku,\n\nděkuji za opravenou fakturu. Předala jsem ji účtárně, platba odejde nejpozději v pátek 6. 3.\n\nS pozdravem\nMarie Svobodová\nÚčtárna | Example s.r.o.",
+    "quoted": "-----Původní zpráva-----\nOd: Petr Novák <petr.novak@example.org> \nOdesláno: úterý 3. března 2026 16:05\nKomu: Marie Svobodová <marie.svobodova@example.com>\nPředmět: RE: Faktura za únor\n\nDobrý den,\n\nv příloze posílám opravenou „fakturu“ za únor, doplnil jsem IČO. Prosím o potvrzení přijetí.\n\nPetr Novák",
+    "signature": ""
   }
 }

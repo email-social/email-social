@@ -1,0 +1,47 @@
+{
+  "description": "iOS Mail, German: Von meinem iPhone gesendet; > Am 03.03.2026 um 10:15 schrieb … :",
+  "source": "fixtures/replies/ios-mail-de.eml",
+  "raw": "Content-Type: text/plain;\r\n\tcharset=utf-8\r\nContent-Transfer-Encoding: quoted-printable\r\nFrom: Anna Becker <anna.becker@example.net>\r\nMime-Version: 1.0 (1.0)\r\nSubject: =?utf-8?Q?Re=3A_Projekt=C3=BCbersicht?=\r\nDate: Tue, 3 Mar 2026 10:25:10 +0100\r\nMessage-Id: <B2C3D4E5-F6A7-489A-9BCD-EF0123456789@example.net>\r\nReferences: <CAKx4mS9xY4aB3dP5rT7vJ0lN2fH8iU1wG4eC6mO8qS0uW2yA@mail.example.com>\r\nIn-Reply-To: <CAKx4mS9xY4aB3dP5rT7vJ0lN2fH8iU1wG4eC6mO8qS0uW2yA@mail.example.com>\r\nTo: =?utf-8?Q?Alice_Dvo=C5=99=C3=A1kov=C3=A1?= <alice@example.com>\r\nX-Mailer: iPhone Mail (22E240)\r\n\r\nBis Donnerstag!\r\n\r\nVon meinem iPhone gesendet\r\n\r\n> Am 03.03.2026 um 10:15 schrieb Alice Dvo=C5=99=C3=A1kov=C3=A1 <alice@exam=\r\nple.com>:\r\n>\r\n> =EF=BB=BFHallo Anna,\r\n>\r\n> kannst du mir die Projekt=C3=BCbersicht bis Freitag schicken?\r\n>\r\n> Viele Gr=C3=BC=C3=9Fe\r\n> Alice\r\n\r\n",
+  "expected": {
+    "id": "<B2C3D4E5-F6A7-489A-9BCD-EF0123456789@example.net>",
+    "from": {
+      "name": "Anna Becker",
+      "address": "anna.becker@example.net"
+    },
+    "to": [
+      {
+        "name": "Alice Dvořáková",
+        "address": "alice@example.com"
+      }
+    ],
+    "cc": [],
+    "replyTo": [],
+    "date": "2026-03-03T09:25:10.000Z",
+    "subject": "Re: Projektübersicht",
+    "text": "Bis Donnerstag!\n\nVon meinem iPhone gesendet\n\n> Am 03.03.2026 um 10:15 schrieb Alice Dvořáková <alice@example.com>:\n>\n> ﻿Hallo Anna,\n>\n> kannst du mir die Projektübersicht bis Freitag schicken?\n>\n> Viele Grüße\n> Alice\n\n",
+    "textSource": "plain",
+    "es": null,
+    "attachments": [],
+    "refs": {
+      "messageId": "<B2C3D4E5-F6A7-489A-9BCD-EF0123456789@example.net>",
+      "inReplyTo": [
+        "<CAKx4mS9xY4aB3dP5rT7vJ0lN2fH8iU1wG4eC6mO8qS0uW2yA@mail.example.com>"
+      ],
+      "references": [
+        "<CAKx4mS9xY4aB3dP5rT7vJ0lN2fH8iU1wG4eC6mO8qS0uW2yA@mail.example.com>"
+      ]
+    },
+    "delivery": {
+      "listHeaders": [],
+      "listId": null,
+      "autoSubmitted": null,
+      "precedence": null,
+      "returnPath": null
+    }
+  },
+  "split": {
+    "fresh": "Bis Donnerstag!",
+    "quoted": "> Am 03.03.2026 um 10:15 schrieb Alice Dvořáková <alice@example.com>:\n>\n> ﻿Hallo Anna,\n>\n> kannst du mir die Projektübersicht bis Freitag schicken?\n>\n> Viele Grüße\n> Alice",
+    "signature": "Von meinem iPhone gesendet"
+  }
+}

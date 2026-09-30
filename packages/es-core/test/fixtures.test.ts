@@ -10,7 +10,7 @@ import { createHash } from "node:crypto";
 import { describe, expect, it } from "vitest";
 import { parseMessage } from "../src/parse.js";
 import type { EsAddress, EsDelivery, EsMessage } from "../src/types.js";
-import { listFixtures, readFixture } from "./helpers/fixtures.js";
+import { listAllFixtures, listFixtures, readFixture } from "./helpers/fixtures.js";
 
 const lines = (...parts: string[]): string => parts.join("\n");
 const NNBSP = " "; // Gmail writes U+202F before AM/PM in its attribution lines.
@@ -912,7 +912,7 @@ describe("fixture corpus", () => {
     const hostname = /\b((?:[a-z0-9-]+\.)+(?:com|net|org|cz|de|fr|uk|io|eu|info|biz|gov|edu|co|us|me))\b/gi;
     const mailDomain = /@([a-z0-9-]+(?:\.[a-z0-9-]+)+)/gi;
     const allowed = /(?:^|\.)example\.(?:com|net|org)$/i;
-    for (const name of listFixtures()) {
+    for (const name of listAllFixtures()) {
       // Quoted-printable soft line breaks may split a domain; join them before looking.
       const text = latin1(readFixture(name)).replace(/=\r?\n/g, "");
       for (const m of text.matchAll(hostname)) expect(m[1], `${name}: ${m[1]}`).toMatch(allowed);
@@ -922,7 +922,7 @@ describe("fixture corpus", () => {
 
   it("uses only documentation IPv4 ranges (RFC 5737) in Received fields", () => {
     const quad = /\b(\d{1,3})\.(\d{1,3})\.(\d{1,3})\.(\d{1,3})\b/g;
-    for (const name of listFixtures()) {
+    for (const name of listAllFixtures()) {
       for (const m of latin1(readFixture(name)).matchAll(quad)) {
         const octets = m.slice(1, 5).map(Number);
         if (octets.some((o) => o > 255)) continue; // a version number such as 2.3774.600.62
@@ -932,7 +932,7 @@ describe("fixture corpus", () => {
   });
 
   it("keeps wire line endings: CRLF everywhere except the deliberate LF (mbox) fixture", () => {
-    for (const name of listFixtures()) {
+    for (const name of listAllFixtures()) {
       const text = latin1(readFixture(name));
       const lf = (text.match(/\n/g) ?? []).length;
       const crlf = (text.match(/\r\n/g) ?? []).length;
@@ -948,7 +948,7 @@ describe("fixture corpus", () => {
   });
 
   it("keeps every line within the RFC 5322 §2.1.1 limit of 998 characters", () => {
-    for (const name of listFixtures()) {
+    for (const name of listAllFixtures()) {
       for (const line of latin1(readFixture(name)).split(/\r?\n/)) expect(line.length, name).toBeLessThanOrEqual(998);
     }
   });
@@ -963,7 +963,7 @@ describe("fixture corpus", () => {
 // ---------------------------------------------------------------- parsing
 
 describe("parseMessage on the fixture corpus", () => {
-  it.each(listFixtures())("parses %s without throwing", (name) => {
+  it.each(listAllFixtures())("parses %s without throwing", (name) => {
     expect(() => parseMessage(readFixture(name))).not.toThrow();
   });
 

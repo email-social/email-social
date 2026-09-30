@@ -43,5 +43,10 @@
       "precedence": null,
       "returnPath": "bob@example.org"
     }
+  },
+  "split": {
+    "fresh": "Ahoj Alice,\n\nv pátek můžu, 12:30 je super. Zarezervuju stůl pro tři.\n\nBob",
+    "quoted": "On Mon, Mar 2, 2026 at 10:15 AM Alice Dvořáková <alice@example.com> wrote:\n\n> Ahoj Bobe,\n>\n> nechceš v pátek zajít na oběd? Myslela jsem, že bychom mohli zkusit to nové bistro na rohu u nádraží, prý tam mají výborné polední menu a není tam taková fronta jako jinde.\n>\n> Jana už říkala, že by šla taky. Hodí se ti 12:30?\n>\n> Alice\n>\n> --\n> Alice Dvořáková\n> Example s.r.o.",
+    "signature": ""
   }
 }

@@ -68,5 +68,10 @@
       "precedence": null,
       "returnPath": null
     }
+  },
+  "split": {
+    "fresh": "Delivery receipt: the message \"Lunch on Friday?\" (<es-vector-1@mail.example.com>) was received by the Email Social client of bob@example.org on Mon, 2 Mar 2026 09:00:05 +0000.",
+    "quoted": "",
+    "signature": ""
   }
 }

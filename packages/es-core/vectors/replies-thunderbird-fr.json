@@ -1,0 +1,47 @@
+{
+  "description": "Thunderbird, French: Le 03/03/2026 à 10:15, Name a écrit :, answer below",
+  "source": "fixtures/replies/thunderbird-fr.eml",
+  "raw": "Message-ID: <0a3b5c7e-9d1f-4b3a-85e7-a9b1d3f5b7c9@example.org>\r\nDate: Tue, 3 Mar 2026 12:03:55 +0100\r\nMIME-Version: 1.0\r\nUser-Agent: Mozilla Thunderbird\r\nContent-Language: fr\r\nTo: =?UTF-8?Q?Alice_Dvo=C5=99=C3=A1kov=C3=A1?= <alice@example.com>\r\nFrom: =?UTF-8?Q?Camille_Lef=C3=A8vre?= <camille@example.org>\r\nSubject: Re: Compte rendu\r\nReferences: <CAKx4mT0yZ5bC4eQ6sU8wK1mO3gI9jV2xH5fD7nP9rT1vX3zB@mail.example.com>\r\nIn-Reply-To: <CAKx4mT0yZ5bC4eQ6sU8wK1mO3gI9jV2xH5fD7nP9rT1vX3zB@mail.example.com>\r\nContent-Type: text/plain; charset=UTF-8; format=flowed\r\nContent-Transfer-Encoding: 8bit\r\n\r\nLe 03/03/2026 à 10:15, Alice Dvořáková a écrit :\r\n> Bonjour Camille,\r\n>\r\n> peux-tu m'envoyer le compte rendu de la réunion ?\r\n>\r\n> Merci,\r\n> Alice\r\n\r\nBonjour Alice,\r\n\r\nje te l'envoie ce soir.\r\n\r\nCamille\r\n\r\n",
+  "expected": {
+    "id": "<0a3b5c7e-9d1f-4b3a-85e7-a9b1d3f5b7c9@example.org>",
+    "from": {
+      "name": "Camille Lefèvre",
+      "address": "camille@example.org"
+    },
+    "to": [
+      {
+        "name": "Alice Dvořáková",
+        "address": "alice@example.com"
+      }
+    ],
+    "cc": [],
+    "replyTo": [],
+    "date": "2026-03-03T11:03:55.000Z",
+    "subject": "Re: Compte rendu",
+    "text": "Le 03/03/2026 à 10:15, Alice Dvořáková a écrit :\n> Bonjour Camille,\n>\n> peux-tu m'envoyer le compte rendu de la réunion ?\n>\n> Merci,\n> Alice\n\nBonjour Alice,\n\nje te l'envoie ce soir.\n\nCamille\n\n",
+    "textSource": "plain",
+    "es": null,
+    "attachments": [],
+    "refs": {
+      "messageId": "<0a3b5c7e-9d1f-4b3a-85e7-a9b1d3f5b7c9@example.org>",
+      "inReplyTo": [
+        "<CAKx4mT0yZ5bC4eQ6sU8wK1mO3gI9jV2xH5fD7nP9rT1vX3zB@mail.example.com>"
+      ],
+      "references": [
+        "<CAKx4mT0yZ5bC4eQ6sU8wK1mO3gI9jV2xH5fD7nP9rT1vX3zB@mail.example.com>"
+      ]
+    },
+    "delivery": {
+      "listHeaders": [],
+      "listId": null,
+      "autoSubmitted": null,
+      "precedence": null,
+      "returnPath": null
+    }
+  },
+  "split": {
+    "fresh": "Bonjour Alice,\n\nje te l'envoie ce soir.\n\nCamille",
+    "quoted": "Le 03/03/2026 à 10:15, Alice Dvořáková a écrit :\n> Bonjour Camille,\n>\n> peux-tu m'envoyer le compte rendu de la réunion ?\n>\n> Merci,\n> Alice",
+    "signature": ""
+  }
+}

@@ -5,6 +5,7 @@ export { serializeMessage, serializeReceipt, replyTargetOf } from "./serialize.j
 export { threadMessages } from "./threading/thread.js";
 export { groupByParticipants } from "./chats.js";
 export { classifyMessage } from "./classify.js";
+export { splitQuoted } from "./quotes.js";
 export type { GroupOptions } from "./chats.js";
 export { normalizeSubject } from "./threading/subject.js";
 export type { NormalizedSubject } from "./threading/subject.js";

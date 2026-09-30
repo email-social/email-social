@@ -1,0 +1,47 @@
+{
+  "description": "Gmail web, HTML part only: gmail_signature_prefix/gmail_signature, the gmail_quote container with gmail_attr and <blockquote class=\"gmail_quote\">",
+  "source": "fixtures/replies/gmail-quote-html-only.eml",
+  "raw": "MIME-Version: 1.0\r\nReferences: <CAKx4mQ7vW2yZ1bN3pR5tH8jL0dF6gS9uE2cA4kM6oQ8sU0wY@mail.example.com>\r\nIn-Reply-To: <CAKx4mQ7vW2yZ1bN3pR5tH8jL0dF6gS9uE2cA4kM6oQ8sU0wY@mail.example.com>\r\nFrom: Bob Svoboda <bob@example.org>\r\nDate: Tue, 3 Mar 2026 16:45:30 +0100\r\nMessage-ID: <CAH7x9kX8yZ0bC2eF4hJ7lN9pR1tV3xZ5bG8iK0mO2qS4uW6yE@mail.example.com>\r\nSubject: Re: Contract draft\r\nTo: =?UTF-8?Q?Alice_Dvo=C5=99=C3=A1kov=C3=A1?= <alice@example.com>\r\nContent-Type: text/html; charset=\"UTF-8\"\r\nContent-Transfer-Encoding: quoted-printable\r\n\r\n<div dir=3D\"ltr\"><div>Thanks, the draft is ready.</div><div><br></div><div>=\r\nBob</div><br clear=3D\"all\"><div><br></div><span class=3D\"gmail_signature_pr=\r\nefix\">-- </span><br><div dir=3D\"ltr\" class=3D\"gmail_signature\" data-smartma=\r\nil=3D\"gmail_signature\"><div dir=3D\"ltr\">Bob Svoboda<div>Example s.r.o.</div=\r\n></div></div></div><br><div class=3D\"gmail_quote gmail_quote_container\"><di=\r\nv dir=3D\"ltr\" class=3D\"gmail_attr\">On Tue, Mar 3, 2026 at 10:15=E2=80=AFAM =\r\nAlice Dvo=C5=99=C3=A1kov=C3=A1 &lt;<a href=3D\"mailto:alice@example.com\">ali=\r\nce@example.com</a>&gt; wrote:<br></div><blockquote class=3D\"gmail_quote\" st=\r\nyle=3D\"margin:0px 0px 0px 0.8ex;border-left:1px solid rgb(204,204,204);padd=\r\ning-left:1ex\"><div dir=3D\"ltr\">Hi Bob,<br><br>could you send me the contrac=\r\nt draft by Friday?<br><br>Thanks,<br>Alice</div></blockquote></div>\r\n\r\n",
+  "expected": {
+    "id": "<CAH7x9kX8yZ0bC2eF4hJ7lN9pR1tV3xZ5bG8iK0mO2qS4uW6yE@mail.example.com>",
+    "from": {
+      "name": "Bob Svoboda",
+      "address": "bob@example.org"
+    },
+    "to": [
+      {
+        "name": "Alice Dvořáková",
+        "address": "alice@example.com"
+      }
+    ],
+    "cc": [],
+    "replyTo": [],
+    "date": "2026-03-03T15:45:30.000Z",
+    "subject": "Re: Contract draft",
+    "text": "Thanks, the draft is ready.\n\nBob\n\n--\nBob Svoboda\nExample s.r.o.\n\nOn Tue, Mar 3, 2026 at 10:15 AM Alice Dvořáková <alice@example.com> wrote:\n> Hi Bob,\n>\n> could you send me the contract draft by Friday?\n>\n> Thanks,\n> Alice",
+    "textSource": "html",
+    "es": null,
+    "attachments": [],
+    "refs": {
+      "messageId": "<CAH7x9kX8yZ0bC2eF4hJ7lN9pR1tV3xZ5bG8iK0mO2qS4uW6yE@mail.example.com>",
+      "inReplyTo": [
+        "<CAKx4mQ7vW2yZ1bN3pR5tH8jL0dF6gS9uE2cA4kM6oQ8sU0wY@mail.example.com>"
+      ],
+      "references": [
+        "<CAKx4mQ7vW2yZ1bN3pR5tH8jL0dF6gS9uE2cA4kM6oQ8sU0wY@mail.example.com>"
+      ]
+    },
+    "delivery": {
+      "listHeaders": [],
+      "listId": null,
+      "autoSubmitted": null,
+      "precedence": null,
+      "returnPath": null
+    }
+  },
+  "split": {
+    "fresh": "Thanks, the draft is ready.\n\nBob",
+    "quoted": "On Tue, Mar 3, 2026 at 10:15 AM Alice Dvořáková <alice@example.com> wrote:\n> Hi Bob,\n>\n> could you send me the contract draft by Friday?\n>\n> Thanks,\n> Alice",
+    "signature": "--\nBob Svoboda\nExample s.r.o."
+  }
+}

@@ -17,7 +17,8 @@ then be reviewed like any code change.
   "raw": "the message, when its bytes are valid UTF-8",
   "rawBase64": "the message bytes in base64, otherwise (exactly one of raw / rawBase64)",
   "input": { "kind": "message" | "receipt", "...": "only for generated vectors, see below" },
-  "expected": { "...": "EsMessage" }
+  "expected": { "...": "EsMessage" },
+  "split": { "fresh": "…", "quoted": "…", "signature": "…" }
 }
 ```
 
@@ -51,6 +52,16 @@ then be reviewed like any code change.
     `List-Id` identifier, the `Auto-Submitted` keyword (RFC 3834) and the
     `Precedence` value (lowercased, without comments or parameters), and the
     `Return-Path` address (`""` for `<>`), each `null` when absent.
+- **`split`** is `splitQuoted(expected)`: the text the sender wrote in
+  this message (`fresh`), the earlier messages their client quoted
+  (`quoted`: `>` lines with their attribution, an Outlook header block or a
+  forward/original-message separator and everything after it) and the
+  signature (from the `-- ` delimiter, or a mobile one-liner such as "Sent
+  from my iPhone"). Each part has the blank lines at its edges removed; runs
+  of one part separated by another part are joined with a blank line. Every
+  non-blank line of `text` is in exactly one part. The
+  `replies-*.json` vectors (from `fixtures/replies/`) exist for this field:
+  one reply per client format.
 - **Generated vectors** (`source: "generated"`) were written by es-core's
   serializer from `input` with a fixed date and Message-ID. A conforming
   writer need not produce the same bytes, but a conforming parser must read

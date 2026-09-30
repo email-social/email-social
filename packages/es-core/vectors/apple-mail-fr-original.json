@@ -39,5 +39,10 @@
       "precedence": null,
       "returnPath": null
     }
+  },
+  "split": {
+    "fresh": "Bonjour à tous,\n\nLa réunion de lundi est déplacée à 14 h 30, salle B. Merci de préparer vos points pour l’ordre du jour.\n\nBonne soirée,\nCamille",
+    "quoted": "",
+    "signature": ""
   }
 }

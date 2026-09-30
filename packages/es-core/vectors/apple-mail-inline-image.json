@@ -43,5 +43,10 @@
       "precedence": null,
       "returnPath": null
     }
+  },
+  "split": {
+    "fresh": "Hi Emma,\n\nhere is the view from the top:\n\nWorth the climb. See you on Monday.\n\nDaniel",
+    "quoted": "",
+    "signature": ""
   }
 }

@@ -45,5 +45,10 @@
       "precedence": "list",
       "returnPath": "dev-list-bounces@lists.example.org"
     }
+  },
+  "split": {
+    "fresh": "Sounds good to me. One note: the Czech translation update needs about a week, so could we keep the string freeze on 18 March?\n\nMartin Horák",
+    "quoted": "> On 12. 3. 2026, at 16:20, Karel Holub <karel@example.org> wrote:\n> \n> Proposed schedule:\n> - feature freeze on 20 March\n> - release candidate on 27 March\n> - final release on 3 April\n> \n> Objections?",
+    "signature": "_______________________________________________\ndev-list mailing list\ndev-list@lists.example.org\nhttps://lists.example.org/mailman/listinfo/dev-list"
   }
 }

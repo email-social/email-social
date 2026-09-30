@@ -20,11 +20,12 @@ replyTargetOf(parent: EsMessage): ReplyTarget                         // In-Repl
 threadMessages(messages: EsMessage[]): Conversation[]                 // threads by references and subject, any input order
 groupByParticipants(messages, { self }): Chat[]                        // one chat per set of other people, any subjects
 classifyMessage(message): "person" | "list" | "automated"              // from List-*, Auto-Submitted, Precedence, Return-Path, no-reply
+splitQuoted(message): { fresh, quoted, signature }                     // what the sender wrote now; every line kept in one part
 normalizeSubject(subject): { base, isReply, isForward } · canonicalAddress(address)  // strips Re:/AW:/Odp:/[list] · lowercases the domain
 deriveContacts(messages, { exclude? }): Contact[] · deriveDid(address) · formatDid · parseDid · isValidDid  // contacts; did:es as metadata
 ES_MEDIA_TYPE · ES_DRAFT_MEDIA_TYPE · ES_TEXT_MAX_BYTES               // ES part media types, text limit (10000 B)
 // Types (src/types.ts): EsMessage, EsAddress, EsAttachment, EsRefs, EsDelivery, EsPart (EsPostPart | EsReceiptPart), Conversation,
-// Chat, ChatEntry, MessageKind, Contact, EsOutgoing, EsOutgoingReceipt, ReplyTarget, SerializeOptions, ReceiptKind, EsPartContent
+// Chat, ChatEntry, MessageKind, QuotedSplit, Contact, EsOutgoing, EsOutgoingReceipt, ReplyTarget, SerializeOptions, ReceiptKind, EsPartContent
 ```
 
 ## Example

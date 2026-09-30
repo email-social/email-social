@@ -1,0 +1,47 @@
+{
+  "description": "Apple Mail on macOS, Czech: > Dne 3. 3. 2026 v 10:15, … napsal(a):; „“ quotes in the answer",
+  "source": "fixtures/replies/apple-mail-cs.eml",
+  "raw": "Content-Type: multipart/alternative;\r\n\tboundary=\"Apple-Mail=_6C8E0A2B-4D6F-4B8C-8E0A-3B5D7F9B1C3E\"\r\nMime-Version: 1.0 (Mac OS X Mail 16.0 \\(3826.400.131.1.6\\))\r\nSubject: =?utf-8?Q?Re=3A_Fotky_z_v=C3=BDletu?=\r\nFrom: Karel Holub <karel@example.org>\r\nIn-Reply-To: <CAKx4mR8wX3zA2cO4qS6uI9kM1eG7hT0vF3dB5lN7pR9tV1xZ@mail.example.com>\r\nDate: Tue, 3 Mar 2026 13:10:44 +0100\r\nMessage-Id: <6C8E0A2B-4D6F-4B8C-8E0A-3B5D7F9B1C3E@example.org>\r\nReferences: <CAKx4mR8wX3zA2cO4qS6uI9kM1eG7hT0vF3dB5lN7pR9tV1xZ@mail.example.com>\r\nTo: =?utf-8?Q?Alice_Dvo=C5=99=C3=A1kov=C3=A1?= <alice@example.com>\r\nX-Mailer: Apple Mail (2.3826.400.131.1.6)\r\n\r\n\r\n--Apple-Mail=_6C8E0A2B-4D6F-4B8C-8E0A-3B5D7F9B1C3E\r\nContent-Transfer-Encoding: quoted-printable\r\nContent-Type: text/plain;\r\n\tcharset=utf-8\r\n\r\nAhoj Alice,\r\n\r\nfotky jsou v albu =E2=80=9EV=C3=BDlet 2026=E2=80=9C.\r\n\r\nKarel\r\n\r\n> Dne 3. 3. 2026 v 10:15, Alice Dvo=C5=99=C3=A1kov=C3=A1 <alice@example.com=\r\n> napsal(a):\r\n>=20\r\n> Ahoj Karle,\r\n>=20\r\n> po=C5=A1le=C5=A1 mi pros=C3=ADm fotky z v=C3=BDletu? Chci je d=C3=A1t do =\r\nalba.\r\n>=20\r\n> D=C3=ADky,\r\n> Alice\r\n\r\n\r\n--Apple-Mail=_6C8E0A2B-4D6F-4B8C-8E0A-3B5D7F9B1C3E\r\nContent-Transfer-Encoding: quoted-printable\r\nContent-Type: text/html;\r\n\tcharset=utf-8\r\n\r\n<html><head><meta http-equiv=3D\"content-type\" content=3D\"text/html; charset=\r\n=3Dutf-8\"></head><body style=3D\"overflow-wrap: break-word; -webkit-nbsp-mod=\r\ne: space; line-break: after-white-space;\"><div>Ahoj Alice,</div><div><br></=\r\ndiv><div>fotky jsou v albu =E2=80=9EV=C3=BDlet 2026=E2=80=9C.</div><div><br=\r\n></div><div>Karel</div><div><br><blockquote type=3D\"cite\"><div>Dne 3. 3. 20=\r\n26 v 10:15, Alice Dvo=C5=99=C3=A1kov=C3=A1 &lt;alice@example.com&gt; napsal=\r\n(a):</div><br class=3D\"Apple-interchange-newline\"><div><div>Ahoj Karle,<br>=\r\n<br>po=C5=A1le=C5=A1 mi pros=C3=ADm fotky z v=C3=BDletu? Chci je d=C3=A1t d=\r\no alba.<br><br>D=C3=ADky,<br>Alice</div></div></blockquote></div><br></body=\r\n></html>\r\n--Apple-Mail=_6C8E0A2B-4D6F-4B8C-8E0A-3B5D7F9B1C3E--\r\n",
+  "expected": {
+    "id": "<6C8E0A2B-4D6F-4B8C-8E0A-3B5D7F9B1C3E@example.org>",
+    "from": {
+      "name": "Karel Holub",
+      "address": "karel@example.org"
+    },
+    "to": [
+      {
+        "name": "Alice Dvořáková",
+        "address": "alice@example.com"
+      }
+    ],
+    "cc": [],
+    "replyTo": [],
+    "date": "2026-03-03T12:10:44.000Z",
+    "subject": "Re: Fotky z výletu",
+    "text": "Ahoj Alice,\n\nfotky jsou v albu „Výlet 2026“.\n\nKarel\n\n> Dne 3. 3. 2026 v 10:15, Alice Dvořáková <alice@example.com> napsal(a):\n> \n> Ahoj Karle,\n> \n> pošleš mi prosím fotky z výletu? Chci je dát do alba.\n> \n> Díky,\n> Alice\n\n",
+    "textSource": "plain",
+    "es": null,
+    "attachments": [],
+    "refs": {
+      "messageId": "<6C8E0A2B-4D6F-4B8C-8E0A-3B5D7F9B1C3E@example.org>",
+      "inReplyTo": [
+        "<CAKx4mR8wX3zA2cO4qS6uI9kM1eG7hT0vF3dB5lN7pR9tV1xZ@mail.example.com>"
+      ],
+      "references": [
+        "<CAKx4mR8wX3zA2cO4qS6uI9kM1eG7hT0vF3dB5lN7pR9tV1xZ@mail.example.com>"
+      ]
+    },
+    "delivery": {
+      "listHeaders": [],
+      "listId": null,
+      "autoSubmitted": null,
+      "precedence": null,
+      "returnPath": null
+    }
+  },
+  "split": {
+    "fresh": "Ahoj Alice,\n\nfotky jsou v albu „Výlet 2026“.\n\nKarel",
+    "quoted": "> Dne 3. 3. 2026 v 10:15, Alice Dvořáková <alice@example.com> napsal(a):\n> \n> Ahoj Karle,\n> \n> pošleš mi prosím fotky z výletu? Chci je dát do alba.\n> \n> Díky,\n> Alice",
+    "signature": ""
+  }
+}

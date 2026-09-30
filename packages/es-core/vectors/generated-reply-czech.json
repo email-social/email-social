@@ -97,5 +97,10 @@
       "precedence": null,
       "returnPath": null
     }
+  },
+  "split": {
+    "fresh": "Ahoj Alice,\n\nv pátek ve 12 mi to vyhovuje. Příliš žluťoučký kůň úpěl ďábelské ódy. 👍\n\nJana",
+    "quoted": "",
+    "signature": ""
   }
 }

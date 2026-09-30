@@ -36,5 +36,10 @@
       "precedence": "bulk",
       "returnPath": "bounce-7f3a2c@news.example.org"
     }
+  },
+  "split": {
+    "fresh": "March news\n\nHello gardeners,\nspring is almost here & the seed swap is back.\n\n- Seed swap: Saturday 14 March, 10:00 – 12:00\n- Pruning workshop: Sunday 22 March\n\nSee you there!\n\nYou receive this because you joined the Example Garden Club.\nUnsubscribe: https://news.example.org/u/abc123",
+    "quoted": "",
+    "signature": ""
   }
 }

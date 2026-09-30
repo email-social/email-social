@@ -38,5 +38,10 @@
       "precedence": null,
       "returnPath": "ondrej@host.example.com"
     }
+  },
+  "split": {
+    "fresh": "Ahoj Karle,\n\npodívám se na to dnes odpoledne. Nejspíš je špatně nastavená cesta\nv cronu, skript hledá snapshoty ve starém adresáři.\n\nDíky za upozornění,\nOndřej",
+    "quoted": "On Sun, Mar 01, 2026 at 06:45:12PM +0100, Karel Holub wrote:\n> Ahoj Ondřeji,\n> \n> zálohy na novém serveru běží, ale rotace starých snapshotů zatím\n> nefunguje. Můžeš se na to podívat?",
+    "signature": "-- \nOndřej Beneš"
   }
 }

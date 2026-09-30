@@ -61,5 +61,10 @@
       "precedence": null,
       "returnPath": null
     }
+  },
+  "split": {
+    "fresh": "Hi Carol,\n\nlunch on Friday at noon? Café Élysée.",
+    "quoted": "",
+    "signature": ""
   }
 }

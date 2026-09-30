@@ -1,0 +1,47 @@
+{
+  "description": "Outlook on the web / new Outlook: a line of 32 underscores directly above the header block",
+  "source": "fixtures/replies/outlook-web.eml",
+  "raw": "From: Julien Moreau <julien@example.org>\r\nTo: =?UTF-8?Q?Alice_Dvo=C5=99=C3=A1kov=C3=A1?= <alice@example.com>\r\nSubject: Re: Meeting notes\r\nThread-Topic: Meeting notes\r\nThread-Index: AQHcqvE5b2m3ZkRHSUqL0mN3oPq8Rw==\r\nDate: Tue, 3 Mar 2026 10:52:40 +0000\r\nMessage-ID: <PAXPR02MB7412B9C0D1E2F3A4B5C6D7E8F9A0B1C2D@PAXPR02MB7412B9C0D1E2F3A4B5C6D7E8F9A0B1C2D.eurprd02.prod.outlook.example.com>\r\nReferences: <CAKx4mU1zA6cD5fR7tV9xL2nP4hJ0kW3yI6gE8oQ0sU2wY4aC@mail.example.com>\r\nIn-Reply-To: <CAKx4mU1zA6cD5fR7tV9xL2nP4hJ0kW3yI6gE8oQ0sU2wY4aC@mail.example.com>\r\nAccept-Language: en-US, en-US\r\nContent-Language: en-US\r\nX-MS-Has-Attach:\r\nX-MS-TNEF-Correlator:\r\nContent-Type: multipart/alternative;\r\n\tboundary=\"_000_PAXPR02MB7412B9C0D1E2F3A4B5C6D7E8F9A0B_\"\r\nMIME-Version: 1.0\r\n\r\n--_000_PAXPR02MB7412B9C0D1E2F3A4B5C6D7E8F9A0B_\r\nContent-Type: text/plain; charset=\"utf-8\"\r\nContent-Transfer-Encoding: quoted-printable\r\n\r\nHi Alice,\r\n\r\nsure, Thursday is fine.\r\n\r\nJulien\r\n________________________________\r\nFrom: Alice Dvo=C5=99=C3=A1kov=C3=A1 <alice@example.com>\r\nSent: Tuesday, March 3, 2026 10:15\r\nTo: Julien Moreau <julien@example.org>\r\nSubject: Meeting notes\r\n\r\nHi Julien,\r\n\r\ncan we move the meeting notes review to Thursday?\r\n\r\nAlice\r\n\r\n\r\n--_000_PAXPR02MB7412B9C0D1E2F3A4B5C6D7E8F9A0B_\r\nContent-Type: text/html; charset=\"utf-8\"\r\nContent-Transfer-Encoding: quoted-printable\r\n\r\n<html>\r\n<head>\r\n<meta http-equiv=3D\"Content-Type\" content=3D\"text/html; charset=3Dutf-8\">\r\n<style type=3D\"text/css\" style=3D\"display:none;\"> P {margin-top:0;margin-bo=\r\nttom:0;} </style>\r\n</head>\r\n<body dir=3D\"ltr\">\r\n<div class=3D\"elementToProof\" style=3D\"font-family: Aptos, Aptos_EmbeddedFo=\r\nnt, Aptos_MSFontService, Calibri, Helvetica, sans-serif; font-size: 12pt; c=\r\nolor: rgb(0, 0, 0);\">Hi Alice,</div>\r\n<div class=3D\"elementToProof\" style=3D\"font-family: Aptos, Aptos_EmbeddedFo=\r\nnt, Aptos_MSFontService, Calibri, Helvetica, sans-serif; font-size: 12pt; c=\r\nolor: rgb(0, 0, 0);\"><br></div>\r\n<div class=3D\"elementToProof\" style=3D\"font-family: Aptos, Aptos_EmbeddedFo=\r\nnt, Aptos_MSFontService, Calibri, Helvetica, sans-serif; font-size: 12pt; c=\r\nolor: rgb(0, 0, 0);\">sure, Thursday is fine.</div>\r\n<div class=3D\"elementToProof\" style=3D\"font-family: Aptos, Aptos_EmbeddedFo=\r\nnt, Aptos_MSFontService, Calibri, Helvetica, sans-serif; font-size: 12pt; c=\r\nolor: rgb(0, 0, 0);\"><br></div>\r\n<div class=3D\"elementToProof\" style=3D\"font-family: Aptos, Aptos_EmbeddedFo=\r\nnt, Aptos_MSFontService, Calibri, Helvetica, sans-serif; font-size: 12pt; c=\r\nolor: rgb(0, 0, 0);\">Julien</div>\r\n<div id=3D\"appendonsend\"></div>\r\n<hr style=3D\"display:inline-block;width:98%\" tabindex=3D\"-1\">\r\n<div id=3D\"divRplyFwdMsg\" dir=3D\"ltr\"><font face=3D\"Calibri, sans-serif\" st=\r\nyle=3D\"font-size:11pt\" color=3D\"#000000\"><b>From:</b> Alice Dvo=C5=99=C3=A1=\r\nkov=C3=A1 &lt;alice@example.com&gt;<br>=0D\r\n<b>Sent:</b> Tuesday, March 3, 2026 10:15<br>=0D\r\n<b>To:</b> Julien Moreau &lt;julien@example.org&gt;<br>=0D\r\n<b>Subject:</b> Meeting notes</font>\r\n<div>&nbsp;</div>\r\n</div>\r\n<div class=3D\"BodyFragment\"><font size=3D\"2\"><span style=3D\"font-size:11pt;=\r\n\">\r\n<div class=3D\"PlainText\">Hi Julien,<br>\r\n<br>\r\ncan we move the meeting notes review to Thursday?<br>\r\n<br>\r\nAlice</div>\r\n</span></font></div>\r\n</body>\r\n</html>\r\n\r\n\r\n--_000_PAXPR02MB7412B9C0D1E2F3A4B5C6D7E8F9A0B_--\r\n",
+  "expected": {
+    "id": "<PAXPR02MB7412B9C0D1E2F3A4B5C6D7E8F9A0B1C2D@PAXPR02MB7412B9C0D1E2F3A4B5C6D7E8F9A0B1C2D.eurprd02.prod.outlook.example.com>",
+    "from": {
+      "name": "Julien Moreau",
+      "address": "julien@example.org"
+    },
+    "to": [
+      {
+        "name": "Alice Dvořáková",
+        "address": "alice@example.com"
+      }
+    ],
+    "cc": [],
+    "replyTo": [],
+    "date": "2026-03-03T10:52:40.000Z",
+    "subject": "Re: Meeting notes",
+    "text": "Hi Alice,\n\nsure, Thursday is fine.\n\nJulien\n________________________________\nFrom: Alice Dvořáková <alice@example.com>\nSent: Tuesday, March 3, 2026 10:15\nTo: Julien Moreau <julien@example.org>\nSubject: Meeting notes\n\nHi Julien,\n\ncan we move the meeting notes review to Thursday?\n\nAlice\n\n",
+    "textSource": "plain",
+    "es": null,
+    "attachments": [],
+    "refs": {
+      "messageId": "<PAXPR02MB7412B9C0D1E2F3A4B5C6D7E8F9A0B1C2D@PAXPR02MB7412B9C0D1E2F3A4B5C6D7E8F9A0B1C2D.eurprd02.prod.outlook.example.com>",
+      "inReplyTo": [
+        "<CAKx4mU1zA6cD5fR7tV9xL2nP4hJ0kW3yI6gE8oQ0sU2wY4aC@mail.example.com>"
+      ],
+      "references": [
+        "<CAKx4mU1zA6cD5fR7tV9xL2nP4hJ0kW3yI6gE8oQ0sU2wY4aC@mail.example.com>"
+      ]
+    },
+    "delivery": {
+      "listHeaders": [],
+      "listId": null,
+      "autoSubmitted": null,
+      "precedence": null,
+      "returnPath": null
+    }
+  },
+  "split": {
+    "fresh": "Hi Alice,\n\nsure, Thursday is fine.\n\nJulien",
+    "quoted": "________________________________\nFrom: Alice Dvořáková <alice@example.com>\nSent: Tuesday, March 3, 2026 10:15\nTo: Julien Moreau <julien@example.org>\nSubject: Meeting notes\n\nHi Julien,\n\ncan we move the meeting notes review to Thursday?\n\nAlice",
+    "signature": ""
+  }
+}

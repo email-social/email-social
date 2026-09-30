@@ -34,5 +34,10 @@
       "precedence": null,
       "returnPath": null
     }
+  },
+  "split": {
+    "fresh": "Bonjour Hugo,\n\nPour info, voir ci-dessous.\n\nAmélie",
+    "quoted": "De : Camille Lefèvre <camille@example.org> \nEnvoyé : mercredi 4 mars 2026 17:42\nÀ : Julien Moreau <julien@example.org>\nCc : Amélie Rousseau <amelie@example.org>\nObjet : Réunion de lundi\n\nBonjour à tous,\n\nLa réunion de lundi est déplacée à 14 h 30, salle B. Merci de préparer vos points pour l’ordre du jour.\n\nBonne soirée,\nCamille",
+    "signature": ""
   }
 }

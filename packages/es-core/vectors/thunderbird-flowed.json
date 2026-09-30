@@ -39,5 +39,10 @@
       "precedence": null,
       "returnPath": "alice@example.com"
     }
+  },
+  "split": {
+    "fresh": "Ahoj Bobe,\n\nnechceš v pátek zajít na oběd? Myslela jsem, že bychom mohli zkusit to nové bistro na rohu u nádraží, prý tam mají výborné polední menu a není tam taková fronta jako jinde.\n\nJana už říkala, že by šla taky. Hodí se ti 12:30?\n\nAlice",
+    "quoted": "",
+    "signature": "-- \nAlice Dvořáková\nExample s.r.o."
   }
 }

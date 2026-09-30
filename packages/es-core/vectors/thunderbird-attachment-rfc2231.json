@@ -43,5 +43,10 @@
       "precedence": null,
       "returnPath": null
     }
+  },
+  "split": {
+    "fresh": "Hi Daniel,\n\nattached is the spring budget overview (the file name is in Czech, sorry about that).\nFrom Monday on, please send new expenses to the finance team directly.\n\nThanks,\nAlice",
+    "quoted": "",
+    "signature": ""
   }
 }

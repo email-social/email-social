@@ -1,0 +1,50 @@
+MIME-Version: 1.0
+References: <CAKx4mS9xY4aB3dP5rT7vJ0lN2fH8iU1wG4eC6mO8qS0uW2yA@mail.example.com>
+In-Reply-To: <CAKx4mS9xY4aB3dP5rT7vJ0lN2fH8iU1wG4eC6mO8qS0uW2yA@mail.example.com>
+From: Anna Becker <anna.becker@example.net>
+Date: Tue, 3 Mar 2026 13:05:44 +0100
+Message-ID: <CAH7x9kT4uV6xY8aB0dF3hJ5lN7pR9tV1xC4eG6iK8mO0qS2uE@mail.example.com>
+Subject: =?UTF-8?B?UmU6IFByb2pla3TDvGJlcnNpY2h0?=
+To: =?UTF-8?Q?Alice_Dvo=C5=99=C3=A1kov=C3=A1?= <alice@example.com>
+Content-Type: multipart/alternative; boundary="000000000000ca79468ab0df3579"
+
+--000000000000ca79468ab0df3579
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+
+Hallo Alice,
+
+die =C3=9Cbersicht kommt am Donnerstag, ich muss noch zwei Zahlen pr=C3=BCf=
+en.
+
+Viele Gr=C3=BC=C3=9Fe
+Anna
+
+Am Di., 3. M=C3=A4rz 2026 um 10:15 Uhr schrieb Alice Dvo=C5=99=C3=A1kov=C3=
+=A1 <
+alice@example.com>:
+
+> Hallo Anna,
+>
+> kannst du mir die Projekt=C3=BCbersicht bis Freitag schicken?
+>
+> Viele Gr=C3=BC=C3=9Fe
+> Alice
+
+
+--000000000000ca79468ab0df3579
+Content-Type: text/html; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+
+<div dir=3D"ltr"><div>Hallo Alice,</div><div><br></div><div>die =C3=9Cbersi=
+cht kommt am Donnerstag, ich muss noch zwei Zahlen pr=C3=BCfen.</div><div><=
+br></div><div>Viele Gr=C3=BC=C3=9Fe</div><div>Anna</div></div><br><div clas=
+s=3D"gmail_quote gmail_quote_container"><div dir=3D"ltr" class=3D"gmail_att=
+r">Am Di., 3. M=C3=A4rz 2026 um 10:15 Uhr schrieb Alice Dvo=C5=99=C3=A1kov=
+=C3=A1 &lt;<a href=3D"mailto:alice@example.com">alice@example.com</a>&gt;:<=
+br></div><blockquote class=3D"gmail_quote" style=3D"margin:0px 0px 0px 0.8e=
+x;border-left:1px solid rgb(204,204,204);padding-left:1ex"><div dir=3D"ltr"=
+>Hallo Anna,<br><br>kannst du mir die Projekt=C3=BCbersicht bis Freitag sch=
+icken?<br><br>Viele Gr=C3=BC=C3=9Fe<br>Alice</div></blockquote></div>
+
+--000000000000ca79468ab0df3579--

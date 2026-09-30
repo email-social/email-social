@@ -163,6 +163,16 @@ export interface Conversation {
   lastDate: string | null;
 }
 
+/** A message's text split by `splitQuoted`; every line of the text is in exactly one part. */
+export interface QuotedSplit {
+  /** What the sender wrote in this message (blank lines at the edges removed). */
+  fresh: string;
+  /** Earlier messages quoted by the sender's client: ">" lines with their attribution, Outlook header blocks and what follows. */
+  quoted: string;
+  /** The signature, from its "-- " delimiter, or a mobile client's one-line signature. */
+  signature: string;
+}
+
 /** Who a message comes from (see `classifyMessage`). */
 export type MessageKind = "person" | "list" | "automated";
 

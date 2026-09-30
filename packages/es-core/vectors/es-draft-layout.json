@@ -48,5 +48,10 @@
       "precedence": null,
       "returnPath": null
     }
+  },
+  "split": {
+    "fresh": "Hello Email.Social!\n\nThis is a test message.",
+    "quoted": "",
+    "signature": ""
   }
 }

@@ -39,5 +39,10 @@
       "precedence": null,
       "returnPath": null
     }
+  },
+  "split": {
+    "fresh": "Dobrý den,\n\nposílám opravené vyúčtování za březen, chybějící položku jsem doplnil.\n\nS pozdravem\nTomáš Král",
+    "quoted": "---------- Původní e-mail ----------\nOd: Marie Svobodová <marie.svobodova@example.com>\nKomu: Tomáš Král <tomas.kral@example.net>\nDatum: 10. 3. 2026 15:22:47\nPředmět: Odp: Vyúčtování za březen\n\"Dobrý den,\n\nve vyúčtování za březen chybí položka za dopravu. Můžete ho prosím poslat\nznovu?\n\nDěkuji\nMarie Svobodová\"",
+    "signature": ""
   }
 }

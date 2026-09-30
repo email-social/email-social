@@ -33,6 +33,7 @@ describe("public API (src/index.ts)", () => {
       "replyTargetOf",
       "serializeMessage",
       "serializeReceipt",
+      "splitQuoted",
       "threadMessages",
     ]);
     expect(ES_MEDIA_TYPE).toBe("application/vnd.email-social.message+json");

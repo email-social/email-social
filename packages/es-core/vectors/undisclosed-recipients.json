@@ -38,5 +38,10 @@
       "precedence": null,
       "returnPath": "office@example.com"
     }
+  },
+  "split": {
+    "fresh": "Dobrý den,\n\nv sobotu 21. března od 8:00 do 12:00 proběhne údržba poštovního serveru. V této době nebude možné odesílat ani přijímat e-maily.\n\nDotazy prosím posílejte na helpdesk@example.com.\n\nKancelář Example",
+    "quoted": "",
+    "signature": ""
   }
 }

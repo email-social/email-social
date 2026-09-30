@@ -54,6 +54,51 @@ whole corpus threaded into conversations).
 | `gmail-forward-carrying-es-part.eml` | Gmail web forward of an Email Social message | the original's `application/vnd.email-social.message+json` part re-attached by the forward; its `via` (alice@example.com) and `email.messageId` do not belong to this message, so it is not taken as the message's ES part and is listed as an attachment; "---------- Forwarded message ---------" block | Gmail forwards keep In-Reply-To and References of the forwarded message |
 | `undisclosed-recipients.eml` | announcement sent with Bcc only | `To: undisclosed-recipients:;` (empty group, RFC 5322 §3.4); `Reply-To` with two mailboxes; subject in two B encoded-words split inside the UTF-8 bytes of "ř" | Older Postfix versions add this `To:` when a message has no recipient headers; decoders such as mailparser join adjacent encoded-words before decoding because such splits occur |
 
+## Reply formats (`replies/`)
+
+How ordinary clients quote the message they answer, one reply per format, for
+`splitQuoted` (expected `fresh` text in `test/split-quoted.test.ts`). The
+quoted original is always a message from Alice; the replies come from
+invented people. The same rules as above apply (reconstructed, example
+domains only, CRLF, byte-exact). The replies in the corpus above
+(`gmail-web-reply`, `ios-mail-reply`, `outlook-*`, `apple-mail-fr-forward`,
+`seznam-webmail`, `mutt-iso-8859-2`, `mailing-list-footer`,
+`gmail-forward-carrying-es-part`) are tested the same way.
+
+"HTML only" files carry the client's HTML part without a text/plain
+alternative, as Thunderbird sends with *Send Format: Only HTML* and Exchange
+with a remote domain set to HTML-only MIME; they test the HTML path
+(`<blockquote>` lines become `> ` lines).
+
+| File | Client / format reconstructed | What it exercises | Provenance note |
+| --- | --- | --- | --- |
+| `replies/gmail-web-en.eml` | Gmail web, English UI | answer above the quote; `On … AM Name <address>` / `wrote:` attribution wrapped onto two lines; `> ` quote | Gmail wraps long attribution lines in its text/plain part |
+| `replies/gmail-web-cs.eml` | Gmail web, Czech UI | Czech attribution `út 3. 3. 2026 v 10:15 odesílatel … napsal:`, wrapped | Czech Gmail's attribution starts with the weekday |
+| `replies/gmail-web-de.eml` | Gmail web, German UI | `Am Di., 3. März 2026 um 10:15 Uhr schrieb Name <` / `address>:` (name after the verb, wrapped inside the address) | German Gmail word order |
+| `replies/gmail-web-fr.eml` | Gmail web, French UI | `Le mar. 3 mars 2026 à 10:15, Name <address> a` / `écrit :` with the French space before the colon | French Gmail attribution |
+| `replies/gmail-app-en.eml` | Gmail app for Android | one-line answer; `On Tue, 3 Mar 2026, 10:15 Name, <address> wrote:` | the app's attribution has a comma after the name |
+| `replies/gmail-web-signature.eml` | Gmail web with a signature | `-- ` signature above the quote (Gmail puts the signature before the quoted text) | text/plain as Gmail generates it |
+| `replies/gmail-quote-html-only.eml` | Gmail web, HTML part only | `gmail_signature_prefix`/`gmail_signature`, the `gmail_quote` container with `gmail_attr` and `<blockquote class="gmail_quote">` | Gmail's current class names |
+| `replies/outlook-desktop-en.eml` | Outlook (Microsoft 365), English | header block `From:`/`Sent:`/`To:`/`Subject:` without prefix, original not quoted; trailing space after the From address | text/plain alternative Outlook writes for an HTML reply |
+| `replies/outlook-desktop-en-plain.eml` | Outlook, plain-text message format | `-----Original Message-----` above the header block | Outlook's plain-text reply layout |
+| `replies/outlook-desktop-cs.eml` | Outlook (Microsoft 365), Czech | `Od:`/`Odesláno:`/`Komu:`/`Předmět:`; `Odp:` subject | Czech Outlook labels |
+| `replies/outlook-desktop-de.eml` | Outlook (Microsoft 365), German | `Von:`/`Gesendet:`/`An:`/`Cc:`/`Betreff:`; `AW:` subject | German Outlook labels |
+| `replies/outlook-desktop-fr.eml` | Outlook (Microsoft 365), French | `De :`/`Envoyé :`/`À :`/`Objet :` with spaces before the colons; `RE :` subject | French Outlook labels |
+| `replies/outlook-desktop-html-only.eml` | Outlook (Microsoft 365), HTML part only | Word HTML: the `border-top` divider `<div>` and `<b>From:</b>` labels, `<o:p>&nbsp;</o:p>` paragraphs | Word's filtered HTML without the Microsoft namespace URLs |
+| `replies/outlook-web.eml` | Outlook on the web / new Outlook | a line of 32 underscores directly above the header block | text/plain alternative of Outlook on the web |
+| `replies/outlook-web-html-only.eml` | Outlook on the web, HTML part only | `elementToProof` divs, `<div id="appendonsend">`, `<hr>`, `<div id="divRplyFwdMsg">` with bold labels | Outlook on the web's element ids |
+| `replies/outlook-ios.eml` | Outlook for iOS | one-word answer, `Get Outlook for iOS` mobile signature, underscore divider | the app appends its signature line above the divider |
+| `replies/apple-mail-en.eml` | Apple Mail on macOS, English | the attribution is inside the quote (`> On 3 Mar 2026, at 10:15, … wrote:`); empty quote lines are `> ` | Apple Mail's plain-text alternative |
+| `replies/apple-mail-cs.eml` | Apple Mail on macOS, Czech | `> Dne 3. 3. 2026 v 10:15, … napsal(a):`; „“ quotes in the answer | Czech Apple Mail attribution |
+| `replies/ios-mail-en.eml` | iOS Mail, English | text/plain only; `Sent from my iPhone`; U+FEFF before the quoted text | as `ios-mail-reply.eml` in English |
+| `replies/ios-mail-de.eml` | iOS Mail, German | `Von meinem iPhone gesendet`; `> Am 03.03.2026 um 10:15 schrieb … :` | German iOS strings |
+| `replies/thunderbird-en.eml` | Thunderbird, English | answer below the quote (Thunderbird's default); `On 3/3/26 10:15, Name wrote:`; format=flowed; `-- ` signature | Thunderbird's default attribution |
+| `replies/thunderbird-cs.eml` | Thunderbird, Czech | `Dne 03. 03. 26 v 10:15 Name napsal(a):`, answer below | Czech Thunderbird attribution |
+| `replies/thunderbird-fr.eml` | Thunderbird, French | `Le 03/03/2026 à 10:15, Name a écrit :`, answer below | French Thunderbird attribution |
+| `replies/thunderbird-html-only-de.eml` | Thunderbird, German, HTML only | `moz-cite-prefix` (wrapped), `<blockquote type="cite" cite="mid:…">`, answer below, `<pre class="moz-signature">` | Thunderbird's HTML reply markup |
+| `replies/mutt-interleaved.eml` | mutt 2.2 | answers interleaved with the quoted questions; `-- ` signature | mutt's default attribution `On %d, %n wrote:` |
+| `replies/plain-no-quote.eml` | Thunderbird, new message | lines that only look like markers: `… wrote about the release:` (no date or address), a `From:` line with only one more label | nothing to recognise: everything is fresh |
+
 ## Conversations in the corpus
 
 - `thunderbird-flowed` → `gmail-web-reply` → `ios-mail-reply`: one conversation through References.

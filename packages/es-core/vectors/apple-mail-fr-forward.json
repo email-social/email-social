@@ -34,5 +34,10 @@
       "precedence": null,
       "returnPath": null
     }
+  },
+  "split": {
+    "fresh": "Bonjour Sophie,\n\nJe te transfère l’invitation, au cas où tu voudrais te joindre à nous lundi.\n\nCamille",
+    "quoted": "Début du message réexpédié :\n\nDe: Camille Lefèvre <camille@example.org>\nObjet: Réunion de lundi\nDate: 4 mars 2026 à 17:42:09 UTC+1\nÀ: Julien Moreau <julien@example.org>\nCc: Amélie Rousseau <amelie@example.org>\n\nBonjour à tous,\n\nLa réunion de lundi est déplacée à 14 h 30, salle B. Merci de préparer vos points pour l’ordre du jour.\n\nBonne soirée,\nCamille",
+    "signature": ""
   }
 }

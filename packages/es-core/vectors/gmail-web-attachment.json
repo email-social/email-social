@@ -43,5 +43,10 @@
       "precedence": null,
       "returnPath": null
     }
+  },
+  "split": {
+    "fresh": "Ahoj Alice,\n\nv příloze posílám návrh smlouvy. Podívej se prosím hlavně na článek 4 (termíny plnění).\n\nDíky,\nBob",
+    "quoted": "",
+    "signature": ""
   }
 }

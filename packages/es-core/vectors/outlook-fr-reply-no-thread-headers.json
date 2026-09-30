@@ -39,5 +39,10 @@
       "precedence": null,
       "returnPath": "julien@example.org"
     }
+  },
+  "split": {
+    "fresh": "Bonjour Camille,\n\n14 h 30 me convient. J'apporterai les chiffres du trimestre.\n\nBonne journée,\nJulien",
+    "quoted": "-----Message d'origine-----\nDe : Camille Lefèvre [mailto:camille@example.org] \nEnvoyé : mercredi 4 mars 2026 17:42\nÀ : Julien Moreau\nCc : Amélie Rousseau\nObjet : Réunion de lundi\n\nBonjour à tous,\n\nLa réunion de lundi est déplacée à 14 h 30, salle B. Merci de préparer vos points pour l’ordre du jour.\n\nBonne soirée,\nCamille",
+    "signature": ""
   }
 }
