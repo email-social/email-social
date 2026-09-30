@@ -145,6 +145,26 @@ export interface Conversation {
   lastDate: string | null;
 }
 
+/** One message of a chat, with the base subject the client uses to mark subject changes. */
+export interface ChatEntry {
+  /** EsMessage.id. */
+  id: string;
+  /** Base subject of the message (see `normalizeSubject`); "" when it has none. */
+  subject: string;
+}
+
+/** A chat: every message exchanged with exactly one set of people (see `groupByParticipants`). */
+export interface Chat {
+  /** "chat-" + first 32 hex digits of SHA-256 over the participants' canonical addresses, sorted and joined with "\n". */
+  id: string;
+  /** Everyone in From, To and Cc except the account owner, sorted by address; [] for messages to oneself. */
+  participants: EsAddress[];
+  /** The messages, oldest first (undated last). */
+  messages: ChatEntry[];
+  firstDate: string | null;
+  lastDate: string | null;
+}
+
 /** A contact derived from the addresses seen in messages. */
 export interface Contact {
   /** Canonical address (identity of the contact). */

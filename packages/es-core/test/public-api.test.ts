@@ -24,6 +24,7 @@ describe("public API (src/index.ts)", () => {
       "deriveDid",
       "extractPart",
       "formatDid",
+      "groupByParticipants",
       "isValidDid",
       "normalizeSubject",
       "parseDid",

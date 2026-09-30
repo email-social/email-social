@@ -3,6 +3,8 @@ export type * from "./types.js";
 export { extractPart, parseMessage } from "./parse.js";
 export { serializeMessage, serializeReceipt, replyTargetOf } from "./serialize.js";
 export { threadMessages } from "./threading/thread.js";
+export { groupByParticipants } from "./chats.js";
+export type { GroupOptions } from "./chats.js";
 export { normalizeSubject } from "./threading/subject.js";
 export type { NormalizedSubject } from "./threading/subject.js";
 export { deriveContacts } from "./contacts.js";
