@@ -21,6 +21,7 @@ threadMessages(messages: EsMessage[]): Conversation[]                 // threads
 groupByParticipants(messages, { self }): Chat[]                        // one chat per set of other people, any subjects
 classifyMessage(message): "person" | "list" | "automated"              // from List-*, Auto-Submitted, Precedence, Return-Path, no-reply
 splitQuoted(message): { fresh, quoted, signature }                     // what the sender wrote now; every line kept in one part
+quoteForReply(parent, { maxLines?, timeZone? }): string                // "On … wrote:" + the parent's fresh text as "> " lines
 normalizeSubject(subject): { base, isReply, isForward } · canonicalAddress(address)  // strips Re:/AW:/Odp:/[list] · lowercases the domain
 deriveContacts(messages, { exclude? }): Contact[] · deriveDid(address) · formatDid · parseDid · isValidDid  // contacts; did:es as metadata
 ES_MEDIA_TYPE · ES_DRAFT_MEDIA_TYPE · ES_TEXT_MAX_BYTES               // ES part media types, text limit (10000 B)
@@ -60,6 +61,11 @@ const raw = serializeMessage(
   values: the Date and Message-ID of new messages are passed in, and the same
   input always gives the same bytes. Conversation ids are derived from the
   root Message-ID (`conv-` + 32 hex digits of its SHA-256), not from time.
+- **Chats and quotes.** `groupByParticipants` groups by the people in a
+  message, not by subject, so one person is one chat. `splitQuoted` keeps
+  every line (the three parts together contain the whole text) and treats
+  an Email Social post as entirely fresh; `quoteForReply` is for replies to
+  people who do not use Email Social, whose clients show no history.
 - **Browsers.** The library uses only `Uint8Array`, `TextEncoder` and
   `TextDecoder`; a Node `Buffer` is accepted because it is a `Uint8Array`.
 - **Test vectors** in [`vectors/`](vectors/README.md) (raw message →
