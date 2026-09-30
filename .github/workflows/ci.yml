@@ -19,6 +19,8 @@ jobs:
           node-version-file: .nvmrc
           cache: npm
       - run: npm ci
+      - name: Licences of dependencies (no GPL, AGPL or unlicensed at run time; MPL-2.0 build tools listed in README.md)
+        run: npm run license:check
       - run: npm run typecheck
       - run: npm test
       - run: npm run build

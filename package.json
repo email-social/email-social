@@ -10,7 +10,7 @@
     "packages/es-bridge"
   ],
   "engines": {
-    "node": ">=22.12.0 <23"
+    "node": ">=22.12.0"
   },
   "scripts": {
     "test": "npm test --workspaces --if-present",
@@ -19,6 +19,7 @@
     "test:browser": "npm run test:browser --workspaces --if-present",
     "test:e2e": "npm run test:e2e --workspaces --if-present",
     "vectors:check": "npm run vectors:check --workspaces --if-present",
+    "license:check": "node scripts/license-check.mjs",
     "start": "email-social"
   }
 }
