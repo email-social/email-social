@@ -1,26 +1,36 @@
 /**
- * Acceptance (tasks/02): end to end with the Maildir adapter. A seeded
- * maildir with 40 messages in 9 conversations → the web client shows 9
- * conversations in the right order with the right unread counts; opening one
- * shows bubbles on the correct sides with the right text; sending a reply
- * appends an .eml to Sent that starts with text/plain, threads under the
- * conversation when read again, and is readable by mailparser.
+ * Acceptance (tasks/02 and 02b): end to end with the Maildir adapter, the
+ * built web client in Chromium.
+ *
+ * Task 2: the chats in the right order with the right unread counts, bubbles
+ * on the correct sides, a reply that starts with text/plain and is readable
+ * by mailparser, keyboard use, downloads, nothing loaded from elsewhere.
+ *
+ * Task 2b: (1) one person who wrote under four subjects is one chat with four
+ * separators; (2) a reply with quoted text shows only the fresh text, and the
+ * control reveals the rest; (3) "New chat" to a new address writes a message
+ * whose first part is text/plain, with the derived subject, and the chat
+ * appears; (4) a reply to a plain sender has the attribution line and the
+ * quoted parent below the text, a reply to an Email Social sender does not;
+ * (5) the contact page shows dates, count and attachments; (6) newsletters
+ * appear only under "Other mail".
  *
  * Needs the built web client (npm run build) and Chromium (playwright-core).
  */
-import { existsSync, readdirSync, readFileSync } from "node:fs";
+import { copyFileSync, existsSync, readdirSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { simpleParser } from "mailparser";
 import { chromium, type Browser, type Page } from "playwright-core";
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
-import { extractPart, parseMessage, threadMessages } from "@email-social/es-core";
+import { extractPart, groupByParticipants, parseMessage, splitQuoted } from "@email-social/es-core";
 import { startBridge, type RunningBridge } from "../src/bridge.js";
 import { DEMO_ACCOUNT } from "../src/demo.js";
-import { EXPECTED } from "../test/helpers/demo-expected.js";
+import { EXPECTED_CHATS, EXPECTED_OTHER } from "../test/helpers/demo-expected.js";
 import { NOW, demoMaildir } from "../test/helpers/session.js";
 
 const webRoot = fileURLToPath(new URL("../../es-web/dist/", import.meta.url));
+const replyFixture = fileURLToPath(new URL("../../es-core/fixtures/replies/gmail-web-de.eml", import.meta.url));
 
 let browser: Browser;
 let bridge: RunningBridge;
@@ -28,11 +38,21 @@ let root: string;
 let page: Page;
 const requests: string[] = [];
 const problems: string[] = [];
+/** Date of the reply sent to the group with Bob, the newest message Bob is in. */
+let groupReplyDate: string | null = null;
 
 beforeAll(async () => {
   if (!existsSync(join(webRoot, "index.html"))) throw new Error("Build the web client first: npm run build");
   root = await demoMaildir();
-  bridge = await startBridge({ webRoot, maildir: { root, account: DEMO_ACCOUNT, pollMs: 200 }, clock: () => NOW, log: () => undefined });
+  // A clock that moves on a minute per message sent, so what is sent later is newer.
+  let tick = 0;
+  bridge = await startBridge({
+    webRoot,
+    maildir: { root, account: DEMO_ACCOUNT, pollMs: 200 },
+    clock: () => new Date(NOW.getTime() + 60_000 * tick++),
+    timeZone: "Europe/Prague",
+    log: () => undefined,
+  });
   browser = await chromium.launch({ executablePath: process.env.CHROMIUM_PATH || undefined });
   page = await browser.newPage();
   page.on("request", (request) => requests.push(request.url()));
@@ -60,60 +80,85 @@ function mailbox() {
   );
 }
 
-async function listRows() {
-  return page.$$eval("button.conversation", (buttons) =>
+async function chatRows() {
+  return page.$$eval("ul.chats[aria-label='Chats'] button.chat-row", (buttons) =>
     buttons.map((b) => ({
       id: b.getAttribute("data-id")!,
-      subject: b.querySelector(".subject")!.textContent!.replace(/^Group of \d+ · /, ""),
+      title: b.querySelector(".title")!.textContent!,
       badge: b.querySelector(".badge")?.textContent ?? "",
       spoken: b.querySelector(".sr-only")?.textContent ?? "",
+      lastLine: b.querySelector(".last-line")!.textContent!.replace(/^Group of \d+ · /, ""),
     })),
   );
 }
 
-async function bubbles() {
-  return page.$$eval("li.bubble", (items) => items.map((li) => [li.getAttribute("data-side"), li.querySelector(".text")!.textContent]));
+async function openChat(title: string): Promise<void> {
+  await page.click(`ul.chats[aria-label='Chats'] button.chat-row:has(.title:text-is("${title}"))`);
+  await page.waitForFunction((t) => document.querySelector("#thread-title")?.textContent === t, title);
+  await page.waitForSelector("li.bubble");
 }
 
-/** Sends a reply from the open conversation and returns the new Sent file. */
+/** The visible text of each bubble: what the sender wrote. */
+async function bubbles() {
+  return page.$$eval("li.bubble", (items) => items.map((li) => [li.getAttribute("data-side"), li.querySelector(":scope > .text")?.textContent ?? ""]));
+}
+
+/** Sends from the open chat and returns the new Sent file. */
 async function reply(text: string): Promise<Uint8Array> {
   const before = sentFiles();
   await page.fill("#reply", text);
   await page.focus("#reply");
   await page.keyboard.press("Control+Enter");
-  await page.waitForFunction((t) => [...document.querySelectorAll("li.bubble.mine .text")].some((e) => e.textContent === t), text);
+  await page.waitForFunction((t) => [...document.querySelectorAll("li.bubble.mine > .text")].some((e) => e.textContent === t), text);
   const added = sentFiles().filter((n) => !before.includes(n));
   expect(added).toHaveLength(1);
   return new Uint8Array(readFileSync(join(root, "Sent", added[0]!)));
 }
 
 describe("email-social in a browser, on the seeded maildir", () => {
-  it("shows the 9 conversations newest first, with the right unread counts in numbers and words", async () => {
-    await page.waitForFunction(() => document.querySelectorAll("button.conversation").length === 9);
-    const rows = await listRows();
-    expect(rows.map((r) => r.subject)).toEqual(EXPECTED.map((e) => e.subject));
-    expect(rows.map((r) => (r.badge === "" ? 0 : Number(r.badge)))).toEqual(EXPECTED.map((e) => e.unread));
+  it("shows the 7 chats newest first, with the right unread counts in numbers and words", async () => {
+    await page.waitForFunction(() => document.querySelectorAll("ul.chats[aria-label='Chats'] button.chat-row").length === 7);
+    const rows = await chatRows();
+    expect(rows.map((r) => r.title)).toEqual(EXPECTED_CHATS.map((e) => e.title));
+    expect(rows.map((r) => (r.badge === "" ? 0 : Number(r.badge)))).toEqual(EXPECTED_CHATS.map((e) => e.unread));
     for (const [i, row] of rows.entries()) {
-      const n = EXPECTED[i]!.unread;
+      const n = EXPECTED_CHATS[i]!.unread;
       expect(row.spoken).toBe(n === 0 ? "" : `${n} unread message${n === 1 ? "" : "s"}`);
     }
     expect(page.url()).not.toContain("token=");
-    expect(await page.title()).toBe("(10) Email Social");
+    expect(await page.title()).toBe("(11) Email Social");
   });
 
-  it("is used with the keyboard: arrows move through the list, Enter opens, focus goes to the conversation", async () => {
-    await page.focus("button.conversation >> nth=0");
+  it("(6) lists newsletters and mailing lists only under a collapsed Other mail, read-only", async () => {
+    const titles = (await chatRows()).map((r) => r.title);
+    expect(titles).not.toContain("Garden Club");
+    expect(titles.some((t) => t.includes("dev-list"))).toBe(false);
+    expect(await page.$eval("details.other-mail", (d) => (d as HTMLDetailsElement).open)).toBe(false);
+    expect(await page.textContent("details.other-mail summary")).toBe("Other mail · 3 unread messages");
+    await page.click("details.other-mail summary");
+    const others = await page.$$eval("details.other-mail button.chat-row .title", (els) => els.map((e) => e.textContent));
+    expect(others).toEqual(EXPECTED_OTHER.map((o) => o.title));
+    await page.click("details.other-mail button.chat-row:has-text('Garden Club')");
+    await page.waitForSelector("li.bubble .note");
+    expect(await page.textContent("li.bubble .note")).toContain("Shown as plain text.");
+    expect(await page.getAttribute("li.bubble .note a", "href")).toMatch(/^\/api\/messages\/[^/]+\/original\?token=/);
+    expect(await page.textContent("li.bubble > .text")).toContain("Pruning workshop & seed swap");
+    expect(await page.$("#reply")).toBeNull();
+    expect(await page.textContent(".thread-header .people")).toContain("Read only");
+  });
+
+  it("is used with the keyboard: arrows move through the list, Enter opens, focus goes to the chat", async () => {
+    await page.focus("ul.chats[aria-label='Chats'] button.chat-row >> nth=0");
     await page.keyboard.press("ArrowDown");
-    const rows = await listRows();
+    const rows = await chatRows();
     expect(await page.evaluate(() => document.activeElement?.getAttribute("data-id"))).toBe(rows[1]!.id);
     await page.keyboard.press("ArrowUp");
     await page.keyboard.press("Enter");
-    await page.waitForSelector("li.bubble");
+    await page.waitForFunction(() => document.querySelector("#thread-title")?.textContent === "Karel Holub");
     expect(await page.evaluate(() => document.activeElement?.id)).toBe("thread-title");
   });
 
-  it("shows the opened conversation as bubbles: the account's messages on the right, the others on the left", async () => {
-    expect(await page.textContent("#thread-title")).toBe("Karel Holub");
+  it("shows the opened chat as bubbles: the account's messages on the right, the others on the left", async () => {
     expect(await bubbles()).toEqual([
       ["left", "Ahoj Alice, kdy dorazíš v sobotu?"],
       ["right", "Kolem desáté, vlakem."],
@@ -124,43 +169,82 @@ describe("email-social in a browser, on the seeded maildir", () => {
       ["left", "Tak já čekám u vchodu."],
       ["left", "Vidím tě! 🚆"],
     ]);
-    await page.waitForFunction(() => document.querySelector('button.conversation[aria-current="true"] .badge') === null);
+    await page.waitForFunction(() => document.querySelector('button.chat-row[aria-current="true"] .badge') === null);
   });
 
-  it("sends a reply that starts with text/plain, threads under the conversation and is readable by mailparser", async () => {
-    const [d] = await listRows();
+  it("(4) replies to an Email Social sender with the ES part and no quote; the reply is text/plain first and readable by mailparser", async () => {
+    const [karel] = await chatRows();
     const text = "Už jsem tady, stojím u vchodu.";
     const raw = await reply(text);
-
-    // (a) The first MIME part is text/plain: multipart/mixed with text first, then the ES part.
     expect(extractPart(raw, "1")?.contentType).toBe("text/plain");
     const message = parseMessage(raw);
     expect(message).toMatchObject({ text, textSource: "plain", subject: "Re: Kdy dorazíš?" });
     expect(message.es).toMatchObject({ $type: "es.social.post", requestReceipts: ["delivered", "read"] });
-
-    // (b) Read again with everything else, it threads under the same conversation.
-    const conversations = threadMessages(mailbox());
-    expect(conversations).toHaveLength(9);
-    expect(conversations.find((c) => c.messageIds.includes(message.id))!.id).toBe(d!.id);
-
-    // (c) An independent parser reads the same text and subject.
+    expect(splitQuoted(message).quoted).toBe("");
+    const chats = groupByParticipants(mailbox(), { self: DEMO_ACCOUNT.address });
+    expect(chats.find((c) => c.messages.some((m) => m.id === message.id))!.id).toBe(karel!.id);
     const mail = await simpleParser(Buffer.from(raw));
     expect(mail.text).toBe(text);
     expect(mail.subject).toBe("Re: Kdy dorazíš?");
-
-    expect(await page.textContent("button.conversation >> nth=0 >> .last-line")).toBe(`You: ${text}`);
+    expect((await chatRows())[0]!.lastLine).toBe(`You: ${text}`);
   });
 
   it("returns focus to the list with Escape", async () => {
-    const [d] = await listRows();
+    const [karel] = await chatRows();
     await page.focus("#reply");
     await page.keyboard.press("Escape");
-    expect(await page.evaluate(() => document.activeElement?.getAttribute("data-id"))).toBe(d!.id);
+    expect(await page.evaluate(() => document.activeElement?.getAttribute("data-id"))).toBe(karel!.id);
   });
 
-  it("shows a group with every sender named, and replies to it as plain text/plain e-mail", async () => {
-    await page.click("button.conversation:has-text('Oběd v pátek')");
-    await page.waitForFunction(() => document.querySelector("#thread-title")?.textContent === "Bob Svoboda, Jana Nováková");
+  it("(1) shows one chat with a person who wrote under four subjects, with four separators", async () => {
+    await openChat("Bob Svoboda");
+    expect(await page.$$eval("li.subject-separator h3", (els) => els.map((e) => e.textContent))).toEqual([
+      "Faktura za únor",
+      "Víkend na chatě",
+      "Návrh smlouvy",
+      "Kolo na prodej",
+    ]);
+    expect(await page.$$eval("li.bubble", (els) => els.length)).toBe(10);
+  });
+
+  it("(2) shows only the fresh text of a reply that quotes, and reveals the rest on request", async () => {
+    const bubble = page.locator("li.bubble", { hasText: "Jedu! Dřevo se hodí" });
+    expect(await bubble.locator(":scope > .text").textContent()).toBe("Jedu! Dřevo se hodí, já vezmu jídlo.\n\nBob");
+    const quoted = bubble.locator("details.quoted");
+    expect(await quoted.evaluate((d) => (d as HTMLDetailsElement).open)).toBe(false);
+    expect(await quoted.locator("p.text").isVisible()).toBe(false);
+    await quoted.locator("summary").click();
+    expect(await quoted.locator("p.text").isVisible()).toBe(true);
+    expect(await quoted.locator("p.text").textContent()).toMatch(/^On Sat, Mar 7, 2026 at 9:30 AM Alice Dvořáková <alice@example\.com> wrote:\n\n> Ahoj Bobe, jedeš o víkendu na chatu\?/);
+  });
+
+  it("(2) shows a reply fixture that arrives while the page is open, with only its fresh text", async () => {
+    copyFileSync(replyFixture, join(root, "INBOX", "gmail-web-de.eml"));
+    await page.waitForFunction(() => [...document.querySelectorAll("button.chat-row .title")].some((e) => e.textContent === "Anna Becker" && e.closest("button")?.querySelector(".badge")?.textContent === "3"));
+    await openChat("Anna Becker");
+    const bubble = page.locator("li.bubble", { hasText: "ich muss noch zwei Zahlen prüfen" });
+    expect(await bubble.locator(":scope > .text").textContent()).toBe("Hallo Alice,\n\ndie Übersicht kommt am Donnerstag, ich muss noch zwei Zahlen prüfen.\n\nViele Grüße\nAnna");
+    expect(await bubble.locator("details.quoted p.text").isVisible()).toBe(false);
+    await bubble.locator("details.quoted summary").click();
+    expect(await bubble.locator("details.quoted p.text").textContent()).toMatch(/^Am Di\., 3\. März 2026 um 10:15 Uhr schrieb Alice Dvořáková <\nalice@example\.com>:\n\n> Hallo Anna,/);
+  });
+
+  it("(4) replies to a plain sender with the attribution line and the quoted parent below the text", async () => {
+    const raw = await reply("Danke, Anna!");
+    const message = parseMessage(raw);
+    expect(message.es).toBeNull();
+    expect(extractPart(raw, "1")?.contentType).toBe("text/plain");
+    expect(message.text).toBe(
+      "Danke, Anna!\n\nOn Fri, 6 Mar 2026 at 14:30, Anna Becker <anna.becker@example.net> wrote:\n> Nachtrag: Meilenstein 3 verschiebt sich um eine Woche.\n>\n> Anna",
+    );
+    expect((await simpleParser(Buffer.from(raw))).text).toContain("> Nachtrag: Meilenstein 3 verschiebt sich um eine Woche.");
+    // In the chat, the reply shows only what was written.
+    const mine = page.locator("li.bubble.mine", { hasText: "Danke, Anna!" });
+    expect(await mine.locator(":scope > .text").textContent()).toBe("Danke, Anna!");
+  });
+
+  it("shows a group with every sender named, and replies to all of them as plain text/plain e-mail", async () => {
+    await openChat("Bob Svoboda, Jana Nováková");
     expect(await page.textContent(".thread-header .people")).toBe("Group of 3: Bob Svoboda, Jana Nováková, you");
     const names = await page.$$eval("li.bubble.theirs .who", (els) => els.map((e) => e.textContent));
     expect(names).toEqual(["Bob Svoboda", "Jana Nováková", "Bob Svoboda"]);
@@ -170,26 +254,54 @@ describe("email-social in a browser, on the seeded maildir", () => {
     expect(message.es).toBeNull();
     expect(message.attachments).toEqual([]);
     expect(message.to.map((a) => a.address).sort()).toEqual(["bob@example.org", "jana@example.net"]);
-    expect((await simpleParser(Buffer.from(raw))).text).toBe("Tak v pátek!");
-    expect(threadMessages(mailbox())).toHaveLength(9);
+    expect(splitQuoted(message).fresh).toBe("Tak v pátek!");
+    expect((await simpleParser(Buffer.from(raw))).text).toMatch(/^Tak v pátek!\n\nOn Mon, 2 Mar 2026 at 11:05, Bob Svoboda <bob@example\.org> wrote:/);
+    groupReplyDate = message.date;
   });
 
-  it("shows HTML-only mail as text with an Open original link, and attachments as download links", async () => {
-    await page.click("button.conversation:has-text('March news from the garden club')");
-    await page.waitForSelector("li.bubble .note");
-    expect(await page.textContent("li.bubble .note")).toContain("Shown as plain text.");
-    expect(await page.getAttribute("li.bubble .note a", "href")).toMatch(/^\/api\/messages\/[^/]+\/original\?token=/);
-    expect(await page.textContent("li.bubble .text")).toContain("Pruning workshop & seed swap");
+  it("(3) starts a new chat to a new address: text/plain first, the derived subject, and the chat appears", async () => {
+    await page.click("button.new-chat-button");
+    await page.waitForSelector("#recipient");
+    await page.fill("#recipient", "zuzana@example.net");
+    await page.press("#recipient", "Enter");
+    expect(await page.textContent("ul.recipients li")).toContain("zuzana@example.net");
+    const text = "Ahoj Zuzano, posílám slíbené fotky z hor, ty nejlepší jsou z vrcholu Sněžky.\n\nAlice";
+    await page.fill("#text", text);
+    const before = sentFiles();
+    await page.click("form.new-chat button[type=submit]");
+    await page.waitForFunction(() => document.querySelector("#thread-title")?.textContent === "zuzana@example.net");
+    const added = sentFiles().filter((n) => !before.includes(n));
+    expect(added).toHaveLength(1);
+    const raw = new Uint8Array(readFileSync(join(root, "Sent", added[0]!)));
+    expect(extractPart(raw, "1")?.contentType).toBe("text/plain");
+    const message = parseMessage(raw);
+    expect(message.subject).toBe("Ahoj Zuzano, posílám slíbené fotky z hor, ty nejlepší jsou z");
+    expect(message.to).toEqual([{ name: "", address: "zuzana@example.net" }]);
+    expect(message.refs.inReplyTo).toEqual([]);
+    expect((await simpleParser(Buffer.from(raw))).text).toBe(text);
+    expect((await chatRows())[0]).toMatchObject({ title: "zuzana@example.net", lastLine: "You: Ahoj Zuzano, posílám slíbené fotky z hor, ty nejlepší jsou z vrcholu Sněžky." });
+  });
 
-    await page.click("button.conversation:has-text('Návrh smlouvy')");
-    await page.waitForSelector("li.bubble .attachments a");
-    const href = (await page.getAttribute("li.bubble .attachments a", "href"))!;
-    expect(await page.textContent("li.bubble .attachments a")).toBe("Návrh smlouvy.pdf");
+  it("(5) opens a person's page from their name: names, address, first and last message, count, attachments, groups", async () => {
+    await openChat("Bob Svoboda");
+    await page.click("li.bubble.theirs button.person >> nth=0");
+    await page.waitForFunction(() => document.querySelector("#contact-title")?.textContent === "Bob Svoboda");
+    expect(await page.textContent(".contact .thread-header .people")).toBe("bob@example.org");
+    const facts = await page.$$eval(".facts dt, .facts dd", (els) => els.map((e) => e.textContent));
+    expect(facts.slice(0, 2)).toEqual(["Messages", "16 messages"]);
+    expect(await page.getAttribute(".facts dd:nth-of-type(2) time", "datetime")).toBe("2026-03-02T08:15:42.000Z");
+    expect(await page.getAttribute(".facts dd:nth-of-type(3) time", "datetime")).toBe(groupReplyDate);
+    const attachments = await page.$$eval(".contact ul.attachments li a", (els) => els.map((e) => e.textContent));
+    expect(attachments).toEqual(["Návrh smlouvy v2.pdf", "Návrh smlouvy.pdf", "Faktura 2026-02.pdf"]);
+    const href = (await page.getAttribute(".contact ul.attachments li a >> nth=1", "href"))!;
     const download = await page.evaluate(async (url) => {
       const response = await fetch(url);
       return { type: response.headers.get("content-type"), start: (await response.text()).slice(0, 5) };
     }, href);
     expect(download).toEqual({ type: "application/octet-stream", start: "%PDF-" });
+    expect(await page.$$eval(".contact ul.groups button", (els) => els.map((e) => e.textContent))).toEqual(["Bob Svoboda, Jana Nováková"]);
+    await page.click(".contact .actions button:has-text('Open chat')");
+    await page.waitForFunction(() => document.querySelector("#thread-title")?.textContent === "Bob Svoboda");
   });
 
   it("loaded nothing from anywhere but the bridge, and had no errors", () => {

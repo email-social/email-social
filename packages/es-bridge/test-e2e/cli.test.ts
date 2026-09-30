@@ -30,8 +30,8 @@ describe("email-social command", () => {
     const page = await fetch(`${base}/`);
     expect(page.status).toBe(200);
     expect(await page.text()).toContain("<title>Email Social</title>");
-    const list = (await (await fetch(`${base}/api/conversations`, { headers: { authorization: `Bearer ${token}` } })).json()) as unknown[];
-    expect(list).toHaveLength(9);
+    const list = (await (await fetch(`${base}/api/chats`, { headers: { authorization: `Bearer ${token}` } })).json()) as unknown[];
+    expect(list).toHaveLength(7);
   });
 
   it("prints its usage for --help", async () => {
