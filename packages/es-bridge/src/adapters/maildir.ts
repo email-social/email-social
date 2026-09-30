@@ -16,7 +16,7 @@ import { randomBytes } from "node:crypto";
 import { readdirSync, watch as fsWatch, type FSWatcher } from "node:fs";
 import { mkdir, readdir, readFile, rename, writeFile } from "node:fs/promises";
 import { join } from "node:path";
-import { SEEN, type Envelope, type FolderRole, type MailboxAdapter, type MailboxChanges, type MailEntry, type MailRef } from "./types.js";
+import { SEEN, type ConnectionStatus, type Envelope, type FolderRole, type MailboxAdapter, type MailboxChanges, type MailEntry, type MailRef } from "./types.js";
 
 const FOLDER_DIRS: Record<FolderRole, string> = { inbox: "INBOX", sent: "Sent" };
 const OUTBOX = "Outbox";
@@ -113,6 +113,13 @@ export class MaildirAdapter implements MailboxAdapter {
     return new Uint8Array(await readFile(this.file(ref)));
   }
 
+  async fetchMany(refs: readonly MailRef[], each: (ref: MailRef, raw: Uint8Array) => void): Promise<void> {
+    for (const ref of refs) each(ref, await this.fetchRaw(ref));
+  }
+
+  /** Local files do not disconnect. */
+  reconnect(): void {}
+
   async addFlags(ref: MailRef, add: readonly string[]): Promise<void> {
     this.file(ref);
     const flags = await this.readFlags(ref.folder);
@@ -147,7 +154,8 @@ export class MaildirAdapter implements MailboxAdapter {
     return [...list("inbox"), "|", ...list("sent")].join("\n");
   }
 
-  watch(onChange: () => void): () => void {
+  watch(onChange: () => void, onStatus?: (status: ConnectionStatus) => void): () => void {
+    onStatus?.({ state: "online" });
     let signature = this.signatureSync();
     let stopped = false;
     const check = async (): Promise<void> => {

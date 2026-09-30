@@ -18,7 +18,12 @@ export interface MailRef {
 /** A message with its current flags (IMAP system flags and keywords, RFC 9051 §2.3.2). */
 export interface MailEntry extends MailRef {
   flags: string[];
+  /** When the mailbox received it (IMAP INTERNALDATE), ISO 8601; used to load the newest first. */
+  date?: string;
 }
+
+/** The connection to the mail server, for "Reconnecting…" on the page. */
+export type ConnectionStatus = { state: "online" } | { state: "reconnecting"; error: string | null };
 
 /** The IMAP \Seen flag; also used by the Maildir adapter. */
 export const SEEN = "\\Seen";
@@ -48,6 +53,8 @@ export interface MailboxAdapter {
   listSince(cursor: string | null): Promise<MailboxChanges>;
   /** The raw RFC 5322 bytes of a message. */
   fetchRaw(ref: MailRef): Promise<Uint8Array>;
+  /** The raw bytes of several messages, handed to `each` one by one as they arrive (in any order). */
+  fetchMany(refs: readonly MailRef[], each: (ref: MailRef, raw: Uint8Array) => void): Promise<void>;
   /** Adds flags or keywords to a message (IMAP STORE +FLAGS, RFC 9051 §6.4.6). */
   addFlags(ref: MailRef, flags: readonly string[]): Promise<void>;
   /**
@@ -58,8 +65,14 @@ export interface MailboxAdapter {
   appendToSent(raw: Uint8Array): Promise<MailEntry | null>;
   /** Sends a message to the envelope recipients. */
   send(raw: Uint8Array, envelope: Envelope): Promise<void>;
-  /** Calls `onChange` when the mailbox may have changed; returns a function that stops watching. */
-  watch(onChange: () => void): () => void;
+  /**
+   * Calls `onChange` when the mailbox may have changed (new mail, and after
+   * a lost connection is back) and `onStatus` when the connection is lost or
+   * restored; returns a function that stops watching.
+   */
+  watch(onChange: () => void, onStatus?: (status: ConnectionStatus) => void): () => void;
+  /** Drops a connection that stopped answering and connects again (IMAP); nothing for local folders. */
+  reconnect(reason: string): void;
   /** Whether keywords such as $EsRead are kept by the mailbox (IMAP PERMANENTFLAGS with \*). */
   readonly keepsKeywords: boolean;
   close(): Promise<void>;

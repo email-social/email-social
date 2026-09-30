@@ -1,7 +1,12 @@
-import { describe, expect, it } from "vitest";
-import { ImapSmtpAdapter, imapOptions, smtpOptions, type ImapClient, type SmtpTransport } from "../src/adapters/imap-smtp.js";
-import { SEEN } from "../src/adapters/types.js";
+/**
+ * ImapSmtpAdapter with the real imapflow client against a small IMAP server
+ * on 127.0.0.1 (helpers/fake-imap.ts), and a recording SMTP transport.
+ */
+import { afterEach, describe, expect, it } from "vitest";
+import { ImapSmtpAdapter, imapOptions, smtpOptions } from "../src/adapters/imap-smtp.js";
+import { SEEN, type ConnectionStatus } from "../src/adapters/types.js";
 import type { AccountConfig } from "../src/credentials.js";
+import { FakeImapServer, FakeSmtp, imapTo } from "./helpers/fake-imap.js";
 
 const CONFIG: AccountConfig = {
   address: "alice@example.com",
@@ -13,132 +18,41 @@ const CONFIG: AccountConfig = {
   appendToSent: true,
 };
 
-interface Box {
-  uidValidity: bigint;
-  uidNext: number;
-  permanentFlags: Set<string>;
-  messages: { uid: number; flags: Set<string>; source: Buffer }[];
-}
+const message = (n: number): string => `From: bob@example.org\r\nTo: alice@example.com\r\nSubject: ${n}\r\nMessage-ID: <m${n}@example.org>\r\n\r\nbody ${n}\r\n`;
 
-/** An in-memory stand-in for the ImapFlow methods the adapter uses. */
-class FakeImap implements ImapClient {
-  boxes = new Map<string, Box>();
-  listing: { path: string; specialUse?: string }[] = [
-    { path: "INBOX", specialUse: "\\Inbox" },
-    { path: "Sent Mail", specialUse: "\\Sent" },
-  ];
-  mailbox: ImapClient["mailbox"] = false;
-  selected: string[] = [];
-  stored: [string, string, string[]][] = [];
-  listeners = new Map<string, Set<() => void>>();
-  loggedOut = false;
-  failConnect: Error | null = null;
+const servers: FakeImapServer[] = [];
+const adapters: ImapSmtpAdapter[] = [];
 
-  constructor() {
-    const raw = (n: number) => Buffer.from(`Subject: ${n}\r\n\r\nbody ${n}\r\n`);
-    this.boxes.set("INBOX", {
-      uidValidity: 7n,
-      uidNext: 13,
-      permanentFlags: new Set(["\\Seen", "\\*"]),
-      messages: [10, 11, 12].map((uid) => ({ uid, flags: new Set(uid === 10 ? [SEEN] : []), source: raw(uid) })),
-    });
-    this.boxes.set("Sent Mail", { uidValidity: 3n, uidNext: 5, permanentFlags: new Set(["\\Seen"]), messages: [{ uid: 4, flags: new Set([SEEN]), source: raw(4) }] });
-  }
+afterEach(async () => {
+  while (adapters.length > 0) await adapters.pop()!.close();
+  while (servers.length > 0) await servers.pop()!.close();
+});
 
-  async connect(): Promise<void> {
-    if (this.failConnect !== null) throw this.failConnect;
-  }
-  async list(): Promise<{ path: string; specialUse?: string }[]> {
-    return this.listing;
-  }
-  async mailboxCreate(path: string): Promise<unknown> {
-    this.boxes.set(path, { uidValidity: 1n, uidNext: 1, permanentFlags: new Set(), messages: [] });
-    this.listing.push({ path });
-    return {};
-  }
-  async mailboxOpen(path: string): Promise<unknown> {
-    const box = this.boxes.get(path)!;
-    this.selected.push(path);
-    this.mailbox = { path, uidValidity: box.uidValidity, uidNext: box.uidNext, permanentFlags: box.permanentFlags, exists: box.messages.length };
-    return this.mailbox;
-  }
-  async getMailboxLock(path: string): Promise<{ release(): void }> {
-    await this.mailboxOpen(path);
-    return { release: () => undefined };
-  }
-  private box(): Box {
-    return this.boxes.get((this.mailbox as { path: string }).path)!;
-  }
-  private select(range: string): Box["messages"] {
-    const box = this.box();
-    const out: Box["messages"] = [];
-    for (const piece of range.split(",")) {
-      const [a, b] = piece.split(":");
-      const max = Math.max(0, ...box.messages.map((m) => m.uid));
-      const lo = Number(a);
-      const hi = b === undefined ? lo : b === "*" ? max : Number(b);
-      for (const m of box.messages) if (m.uid >= Math.min(lo, hi) && m.uid <= Math.max(lo, hi) && !out.includes(m)) out.push(m);
-    }
-    return out;
-  }
-  async search(): Promise<number[]> {
-    return this.box().messages.map((m) => m.uid);
-  }
-  async *fetch(range: string): AsyncGenerator<{ uid: number; flags?: Set<string> }> {
-    for (const m of this.select(range)) yield { uid: m.uid, flags: new Set(m.flags) };
-  }
-  async fetchOne(uid: string): Promise<{ uid: number; source?: Buffer } | false> {
-    const m = this.select(uid)[0];
-    return m === undefined ? false : { uid: m.uid, source: m.source };
-  }
-  async messageFlagsAdd(uid: string, flags: string[]): Promise<boolean> {
-    this.stored.push([(this.mailbox as { path: string }).path, uid, flags]);
-    return true;
-  }
-  async append(path: string, content: Buffer, flags: string[]): Promise<{ uid?: number; uidValidity?: bigint } | false> {
-    const box = this.boxes.get(path)!;
-    const uid = box.uidNext++;
-    box.messages.push({ uid, flags: new Set(flags), source: content });
-    return { uid, uidValidity: box.uidValidity };
-  }
-  on(event: string, listener: () => void): void {
-    (this.listeners.get(event) ?? this.listeners.set(event, new Set()).get(event)!).add(listener);
-  }
-  off(event: string, listener: () => void): void {
-    this.listeners.get(event)?.delete(listener);
-  }
-  emit(event: string): void {
-    for (const l of this.listeners.get(event) ?? []) l();
-  }
-  async logout(): Promise<void> {
-    this.loggedOut = true;
-  }
-}
-
-class FakeSmtp implements SmtpTransport {
-  sent: { envelope: { from: string; to: string[] }; raw: Buffer }[] = [];
-  verified = false;
-  failVerify: Error | null = null;
-  async verify(): Promise<true> {
-    if (this.failVerify !== null) throw this.failVerify;
-    this.verified = true;
-    return true;
-  }
-  async sendMail(message: { envelope: { from: string; to: string[] }; raw: Buffer }): Promise<unknown> {
-    this.sent.push(message);
-    return {};
-  }
-  close(): void {}
-}
-
-async function opened(config: AccountConfig = CONFIG, prepare?: (imap: FakeImap, smtp: FakeSmtp) => void) {
-  const imap = new FakeImap();
+async function setUp(prepare?: (server: FakeImapServer) => void, options: { maxMessages?: number; pollMs?: number } = {}) {
+  const server = new FakeImapServer();
+  servers.push(server);
+  prepare?.(server);
+  await server.start();
   const smtp = new FakeSmtp();
-  prepare?.(imap, smtp);
-  const adapter = new ImapSmtpAdapter(config, { imap: () => imap, smtp: () => smtp, maxMessages: 500, pollMs: 60_000 });
-  await adapter.open();
-  return { adapter, imap, smtp };
+  const adapter = new ImapSmtpAdapter(CONFIG, { imap: imapTo(server), smtp: () => smtp, maxMessages: options.maxMessages ?? 500, pollMs: options.pollMs ?? 60_000, backoffMs: [50, 100] });
+  adapters.push(adapter);
+  return { server, smtp, adapter };
 }
+
+function seed(server: FakeImapServer): void {
+  server.deliver("INBOX", message(1), { flags: [SEEN], date: new Date("2026-03-02T09:00:00Z") });
+  server.deliver("INBOX", message(2), { date: new Date("2026-03-03T09:00:00Z") });
+  server.deliver("INBOX", message(3), { date: new Date("2026-03-04T09:00:00Z") });
+  server.deliver("Sent", message(4), { flags: [SEEN], date: new Date("2026-03-03T10:00:00Z") });
+}
+
+const until = async (condition: () => boolean, ms = 5000): Promise<void> => {
+  const end = Date.now() + ms;
+  while (!condition()) {
+    if (Date.now() > end) throw new Error("timed out waiting");
+    await new Promise((resolve) => setTimeout(resolve, 20));
+  }
+};
 
 describe("IMAP and SMTP settings", () => {
   it("uses TLS from the first byte, or requires STARTTLS, and never falls back to plain text", () => {
@@ -148,103 +62,191 @@ describe("IMAP and SMTP settings", () => {
     expect(smtpOptions({ ...CONFIG, smtp: { host: "smtp.example.com", port: 587, security: "starttls" } })).toMatchObject({ secure: false, requireTLS: true });
     expect(imapOptions({ ...CONFIG, username: "alice" }).auth).toEqual({ user: "alice", pass: "app-password" });
   });
+
+  it("gives up on a server that does not answer within a minute", () => {
+    expect(imapOptions(CONFIG).connectionTimeout).toBeLessThanOrEqual(60_000);
+    expect(imapOptions(CONFIG).greetingTimeout).toBeLessThanOrEqual(60_000);
+    expect(smtpOptions(CONFIG).connectionTimeout).toBeLessThanOrEqual(60_000);
+  });
 });
 
-describe("ImapSmtpAdapter", () => {
+describe("ImapSmtpAdapter against an IMAP server", () => {
   it("logs in, checks SMTP, finds the sent folder by its special use (RFC 6154) and learns about keywords", async () => {
-    const { adapter, smtp } = await opened();
+    const { adapter, smtp } = await setUp(seed);
+    await adapter.open();
     expect(smtp.verified).toBe(true);
     expect(adapter.keepsKeywords).toBe(true);
     const { entries, complete } = await adapter.listSince(null);
     expect(complete).toEqual(["inbox", "sent"]);
     expect(entries).toEqual([
-      { folder: "inbox", uid: "7.10", flags: [SEEN] },
-      { folder: "inbox", uid: "7.11", flags: [] },
-      { folder: "inbox", uid: "7.12", flags: [] },
-      { folder: "sent", uid: "3.4", flags: [SEEN] },
+      { folder: "inbox", uid: "1700000001.1", flags: [SEEN], date: "2026-03-02T09:00:00.000Z" },
+      { folder: "inbox", uid: "1700000001.2", flags: [], date: "2026-03-03T09:00:00.000Z" },
+      { folder: "inbox", uid: "1700000001.3", flags: [], date: "2026-03-04T09:00:00.000Z" },
+      { folder: "sent", uid: "1700000002.1", flags: [SEEN], date: "2026-03-03T10:00:00.000Z" },
     ]);
   });
 
   it("finds a sent folder by name, or creates one when copies must be stored", async () => {
-    const byName = await opened(CONFIG, (imap) => {
-      imap.boxes.set("Sent Items", imap.boxes.get("Sent Mail")!);
-      imap.listing = [{ path: "INBOX" }, { path: "Sent Items" }];
+    const byName = await setUp((server) => {
+      const sent = server.mailboxes.get("Sent")!;
+      server.mailboxes.delete("Sent");
+      server.mailboxes.set("Sent Items", { ...sent, name: "Sent Items", specialUse: null });
+      server.deliver("Sent Items", message(9));
     });
-    expect((await byName.adapter.listSince(null)).entries.some((e) => e.folder === "sent")).toBe(true);
-    const created = await opened(CONFIG, (imap) => {
-      imap.listing = [{ path: "INBOX" }];
-    });
-    expect(created.imap.boxes.has("Sent")).toBe(true);
-    expect(created.adapter.keepsKeywords).toBe(true);
+    await byName.adapter.open();
+    expect((await byName.adapter.listSince(null)).entries.map((e) => e.folder)).toEqual(["sent"]);
+    const created = await setUp((server) => server.mailboxes.delete("Sent"));
+    await created.adapter.open();
+    expect(created.server.mailboxes.has("Sent")).toBe(true);
   });
 
   it("reports both an IMAP and an SMTP failure at login", async () => {
-    await expect(
-      opened(CONFIG, (imap, smtp) => {
-        imap.failConnect = new Error("IMAP says no");
-        smtp.failVerify = new Error("SMTP says no");
-      }),
-    ).rejects.toThrow(/IMAP says no[\s\S]*SMTP says no/);
+    const { adapter, smtp } = await setUp();
+    const wrong = new ImapSmtpAdapter({ ...CONFIG, password: "wrong" }, { imap: imapTo(servers[0]!), smtp: () => smtp });
+    smtp.failVerify = new Error("SMTP says no");
+    await expect(wrong.open()).rejects.toThrow(/IMAP imap\.example\.com: [\s\S]*SMTP smtp\.example\.com: SMTP says no/);
+    await adapter.close();
   });
 
-  it("lists only messages newer than the cursor, and everything again after a UIDVALIDITY change (RFC 9051 §2.3.1.1)", async () => {
-    const { adapter, imap } = await opened();
+  it("finds a message that arrived while INBOX stayed selected (its UIDNEXT from SELECT is stale by then)", async () => {
+    const { adapter, server } = await setUp(seed);
+    await adapter.open();
     const first = await adapter.listSince(null);
-    const box = imap.boxes.get("INBOX")!;
-    box.messages.push({ uid: 13, flags: new Set(), source: Buffer.from("Subject: 13\r\n\r\n") });
-    box.uidNext = 14;
+    server.deliver("INBOX", message(5));
     const second = await adapter.listSince(first.cursor);
-    expect(second).toMatchObject({ complete: [], entries: [{ folder: "inbox", uid: "7.13", flags: [] }] });
+    expect(second.complete).toEqual([]);
+    expect(second.entries.map((e) => e.uid)).toEqual(["1700000001.4"]);
     expect((await adapter.listSince(second.cursor)).entries).toEqual([]);
-    box.uidValidity = 8n;
-    const third = await adapter.listSince(second.cursor);
-    expect(third.complete).toEqual(["inbox"]);
-    expect(third.entries.filter((e) => e.folder === "inbox").map((e) => e.uid)).toEqual(["8.10", "8.11", "8.12", "8.13"]);
+    server.deliver("INBOX", message(6));
+    server.deliver("Sent", message(7));
+    expect((await adapter.listSince(second.cursor)).entries.map((e) => `${e.folder} ${e.uid}`)).toEqual(["inbox 1700000001.5", "sent 1700000002.2"]);
+  });
+
+  it("lists everything again after a UIDVALIDITY change (RFC 9051 §2.3.1.1)", async () => {
+    const { adapter, server } = await setUp(seed);
+    await adapter.open();
+    const first = await adapter.listSince(null);
+    server.mailboxes.get("INBOX")!.uidValidity = 1700000099;
+    server.dropConnections();
+    await until(() => server.connectionCount > 0);
+    await new Promise((resolve) => setTimeout(resolve, 300));
+    const again = await adapter.listSince(first.cursor);
+    expect(again.complete).toEqual(["inbox"]);
+    expect(again.entries.map((e) => e.uid)).toEqual(["1700000099.1", "1700000099.2", "1700000099.3"]);
   });
 
   it("lists at most maxMessages per folder, the newest", async () => {
-    const imap = new FakeImap();
-    const adapter = new ImapSmtpAdapter(CONFIG, { imap: () => imap, smtp: () => new FakeSmtp(), maxMessages: 2, pollMs: 60_000 });
+    const { adapter } = await setUp(seed, { maxMessages: 2 });
     await adapter.open();
-    expect((await adapter.listSince(null)).entries.filter((e) => e.folder === "inbox").map((e) => e.uid)).toEqual(["7.11", "7.12"]);
+    expect((await adapter.listSince(null)).entries.filter((e) => e.folder === "inbox").map((e) => e.uid)).toEqual(["1700000001.2", "1700000001.3"]);
   });
 
-  it("fetches raw messages and refuses a uid from an old UIDVALIDITY", async () => {
-    const { adapter, imap } = await opened();
-    expect(new TextDecoder().decode(await adapter.fetchRaw({ folder: "inbox", uid: "7.11" }))).toContain("body 11");
-    expect(new TextDecoder().decode(await adapter.fetchRaw({ folder: "sent", uid: "3.4" }))).toContain("body 4");
-    await expect(adapter.fetchRaw({ folder: "inbox", uid: "6.11" })).rejects.toThrow();
-    await expect(adapter.fetchRaw({ folder: "inbox", uid: "7.99" })).rejects.toThrow();
-    expect(imap.selected[imap.selected.length - 1]).toBe("INBOX");
+  it("fetches one or many raw messages and refuses a uid from an old UIDVALIDITY", async () => {
+    const { adapter, server } = await setUp((s) => {
+      seed(s);
+      for (let n = 10; n < 70; n++) s.deliver("INBOX", message(n));
+    });
+    await adapter.open();
+    expect(new TextDecoder().decode(await adapter.fetchRaw({ folder: "inbox", uid: "1700000001.2" }))).toContain("body 2");
+    expect(new TextDecoder().decode(await adapter.fetchRaw({ folder: "sent", uid: "1700000002.1" }))).toContain("body 4");
+    await expect(adapter.fetchRaw({ folder: "inbox", uid: "1700000000.2" })).rejects.toThrow(/renumbered/);
+    await expect(adapter.fetchRaw({ folder: "inbox", uid: "1700000001.999" })).rejects.toThrow();
+    const got: string[] = [];
+    const refs = Array.from({ length: 63 }, (_, i) => ({ folder: "inbox" as const, uid: `1700000001.${i + 1}` }));
+    await adapter.fetchMany([...refs, { folder: "sent", uid: "1700000002.1" }], (ref, raw) => got.push(`${ref.uid} ${new TextDecoder().decode(raw).length > 0}`));
+    expect(got).toHaveLength(64);
+    // Single fetches: 2, and 1 for uid 999. fetchMany: 63 inbox messages in batches of 25, and 1 sent message.
+    expect(server.commands.filter((c) => c.startsWith("UID FETCH") && c.includes("BODY.PEEK[]")).length).toBe(3 + 3 + 1);
   });
 
   it("adds flags with UID STORE and stores sent copies marked \\Seen, then selects INBOX again for IDLE", async () => {
-    const { adapter, imap } = await opened();
-    await adapter.addFlags({ folder: "inbox", uid: "7.11" }, [SEEN, "$EsRead"]);
-    expect(imap.stored).toEqual([["INBOX", "11", [SEEN, "$EsRead"]]]);
+    const { adapter, server } = await setUp(seed);
+    await adapter.open();
+    await adapter.addFlags({ folder: "inbox", uid: "1700000001.2" }, [SEEN, "$EsRead"]);
+    expect(server.mailboxes.get("INBOX")!.messages[1]!.flags).toEqual([SEEN, "$EsRead"]);
     const entry = await adapter.appendToSent(new TextEncoder().encode("Subject: sent\r\n\r\nhi\r\n"));
-    expect(entry).toEqual({ folder: "sent", uid: "3.5", flags: [SEEN] });
-    expect(imap.selected[imap.selected.length - 1]).toBe("INBOX");
+    expect(entry).toEqual({ folder: "sent", uid: "1700000002.2", flags: [SEEN] });
+    await adapter.fetchRaw({ folder: "sent", uid: "1700000002.1" });
+    expect(server.commands.filter((c) => c.startsWith("SELECT")).at(-1)).toBe("SELECT INBOX");
   });
 
   it("sends through SMTP with the given envelope", async () => {
-    const { adapter, smtp } = await opened();
+    const { adapter, smtp } = await setUp();
+    await adapter.open();
     await adapter.send(new TextEncoder().encode("Subject: x\r\n\r\ny\r\n"), { from: "alice@example.com", to: ["bob@example.org"] });
     expect(smtp.sent).toHaveLength(1);
     expect(smtp.sent[0]!.envelope).toEqual({ from: "alice@example.com", to: ["bob@example.org"] });
     expect(smtp.sent[0]!.raw.toString()).toContain("Subject: x");
   });
+});
 
-  it("calls the watcher when INBOX gets a new message (IDLE, RFC 2177) and stops on request", async () => {
-    const { adapter, imap } = await opened();
+describe("live updates and lost connections", () => {
+  it("calls the watcher when INBOX gets a new message while idling (IDLE, RFC 2177), and stops on request", async () => {
+    const { adapter, server } = await setUp(seed);
+    await adapter.open();
     let calls = 0;
     const stop = adapter.watch(() => calls++);
-    imap.emit("exists");
-    expect(calls).toBe(1);
+    // imapflow starts IDLE after a quiet moment.
+    await until(() => server.commands.includes("IDLE"), 20_000);
+    server.deliver("INBOX", message(8));
+    await until(() => calls === 1);
     stop();
-    imap.emit("exists");
+    server.deliver("INBOX", message(9));
+    await new Promise((resolve) => setTimeout(resolve, 200));
     expect(calls).toBe(1);
+  }, 30_000);
+
+  it("checks every folder on a timer, for servers without IDLE and for the sent folder", async () => {
+    const { adapter } = await setUp(seed, { pollMs: 100 });
+    await adapter.open();
+    let calls = 0;
+    const stop = adapter.watch(() => calls++);
+    await until(() => calls >= 2, 2000);
+    stop();
+  });
+
+  it("reconnects after the connection is lost, telling the watcher, and then reports a change", async () => {
+    const { adapter, server } = await setUp(seed);
+    await adapter.open();
+    const statuses: ConnectionStatus["state"][] = [];
+    let calls = 0;
+    adapter.watch(
+      () => calls++,
+      (status) => statuses.push(status.state),
+    );
+    server.dropConnections();
+    await until(() => statuses.at(-1) === "online" && statuses.includes("reconnecting"));
+    expect(statuses).toEqual(["online", "reconnecting", "online"]);
+    await until(() => calls >= 1);
+    server.deliver("INBOX", message(5));
+    expect((await adapter.listSince(null)).entries.filter((e) => e.folder === "inbox")).toHaveLength(4);
+  });
+
+  it("drops a connection that stopped answering: waiting operations fail, and it connects again", async () => {
+    const { adapter, server } = await setUp(seed);
+    await adapter.open();
+    const statuses: string[] = [];
+    adapter.watch(
+      () => undefined,
+      (status) => statuses.push(status.state === "online" ? "online" : `reconnecting: ${status.error}`),
+    );
+    server.stall();
+    const hanging = adapter.fetchRaw({ folder: "inbox", uid: "1700000001.2" });
+    await new Promise((resolve) => setTimeout(resolve, 100));
+    adapter.reconnect("no answer for 45 s");
+    await expect(hanging).rejects.toThrow();
+    expect(statuses).toContain("reconnecting: no answer for 45 s");
+    server.resume();
+    await until(() => statuses.at(-1) === "online");
+    expect(new TextDecoder().decode(await adapter.fetchRaw({ folder: "inbox", uid: "1700000001.2" }))).toContain("body 2");
+  });
+
+  it("closes at once even when the server stopped answering", async () => {
+    const { adapter, server } = await setUp(seed);
+    await adapter.open();
+    server.stall();
+    const started = Date.now();
     await adapter.close();
-    expect(imap.loggedOut).toBe(true);
+    expect(Date.now() - started).toBeLessThan(3000);
   });
 });
