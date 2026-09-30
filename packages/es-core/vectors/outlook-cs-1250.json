@@ -32,6 +32,13 @@
         "<VI1PR02MB58347E6D5C4B3A2918F7E6D5C4B3A2918@VI1PR02MB5834.eurprd02.prod.outlook.example.com>",
         "<DB9PR08MB69213F4E5D6C7B8A9F0E1D2C3B4A5968@DB9PR08MB6921.eurprd08.prod.outlook.example.com>"
       ]
+    },
+    "delivery": {
+      "listHeaders": [],
+      "listId": null,
+      "autoSubmitted": null,
+      "precedence": null,
+      "returnPath": null
     }
   }
 }

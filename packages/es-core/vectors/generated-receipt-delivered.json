@@ -60,6 +60,13 @@
       "references": [
         "<es-vector-1@mail.example.com>"
       ]
+    },
+    "delivery": {
+      "listHeaders": [],
+      "listId": null,
+      "autoSubmitted": "auto-replied",
+      "precedence": null,
+      "returnPath": null
     }
   }
 }

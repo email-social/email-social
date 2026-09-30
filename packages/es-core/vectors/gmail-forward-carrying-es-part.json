@@ -39,6 +39,13 @@
       "references": [
         "<es.7f3a9c2e41b8d605@example.com>"
       ]
+    },
+    "delivery": {
+      "listHeaders": [],
+      "listId": null,
+      "autoSubmitted": null,
+      "precedence": null,
+      "returnPath": null
     }
   }
 }

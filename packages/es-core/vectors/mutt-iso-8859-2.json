@@ -30,6 +30,13 @@
       "references": [
         "<20260301174512.GB4411@example.org>"
       ]
+    },
+    "delivery": {
+      "listHeaders": [],
+      "listId": null,
+      "autoSubmitted": null,
+      "precedence": null,
+      "returnPath": "ondrej@host.example.com"
     }
   }
 }

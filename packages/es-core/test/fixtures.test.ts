@@ -9,7 +9,7 @@
 import { createHash } from "node:crypto";
 import { describe, expect, it } from "vitest";
 import { parseMessage } from "../src/parse.js";
-import type { EsAddress, EsMessage } from "../src/types.js";
+import type { EsAddress, EsDelivery, EsMessage } from "../src/types.js";
 import { listFixtures, readFixture } from "./helpers/fixtures.js";
 
 const lines = (...parts: string[]): string => parts.join("\n");
@@ -30,6 +30,9 @@ const amelie: EsAddress = { name: "Amélie Rousseau", address: "amelie@example.o
 const ondrej: EsAddress = { name: "Ondřej Beneš", address: "ondrej@host.example.com" };
 const karel: EsAddress = { name: "Karel Holub", address: "karel@example.org" };
 const daniel: EsAddress = { name: "Daniel Brooks", address: "daniel@example.com" };
+
+/** Delivery headers of a message a person sent directly (no list or automation fields), with its Return-Path if any. */
+const person = (returnPath: string | null = null): EsDelivery => ({ listHeaders: [], listId: null, autoSubmitted: null, precedence: null, returnPath });
 
 // ---------------------------------------------------------------- message ids
 
@@ -142,6 +145,7 @@ const CASES: Record<string, Case> = {
       es: null,
       attachments: [],
       refs: { messageId: ID.thunderbird, inReplyTo: [], references: [] },
+      delivery: person("alice@example.com"),
     },
   },
 
@@ -181,6 +185,7 @@ const CASES: Record<string, Case> = {
       es: null,
       attachments: [],
       refs: { messageId: ID.gmailReply, inReplyTo: [ID.thunderbird], references: [ID.thunderbird] },
+      delivery: person("bob@example.org"),
     },
   },
 
@@ -226,6 +231,7 @@ const CASES: Record<string, Case> = {
       es: null,
       attachments: [],
       refs: { messageId: ID.ios, inReplyTo: [ID.gmailReply], references: [ID.thunderbird, ID.gmailReply] },
+      delivery: person(),
     },
   },
 
@@ -244,6 +250,7 @@ const CASES: Record<string, Case> = {
       es: null,
       attachments: [],
       refs: { messageId: ID.outlookDe, inReplyTo: [], references: [] },
+      delivery: person(),
     },
   },
 
@@ -278,6 +285,7 @@ const CASES: Record<string, Case> = {
       es: null,
       attachments: [],
       refs: { messageId: ID.outlookDeReply, inReplyTo: [ID.outlookDe], references: [] },
+      delivery: person("Lukas.Weber@example.net"),
     },
   },
 
@@ -317,6 +325,7 @@ const CASES: Record<string, Case> = {
       es: null,
       attachments: [],
       refs: { messageId: ID.cs, inReplyTo: [ID.csParent], references: [ID.csRoot, ID.csMiddle, ID.csParent] },
+      delivery: person(),
     },
   },
 
@@ -335,6 +344,7 @@ const CASES: Record<string, Case> = {
       es: null,
       attachments: [],
       refs: { messageId: ID.appleFr, inReplyTo: [], references: [] },
+      delivery: person(),
     },
   },
 
@@ -370,6 +380,7 @@ const CASES: Record<string, Case> = {
       es: null,
       attachments: [],
       refs: { messageId: ID.outlookFr, inReplyTo: [], references: [] },
+      delivery: person("julien@example.org"),
     },
   },
 
@@ -405,6 +416,7 @@ const CASES: Record<string, Case> = {
       es: null,
       attachments: [],
       refs: { messageId: ID.appleFrForward, inReplyTo: [], references: [] },
+      delivery: person(),
     },
   },
 
@@ -438,6 +450,7 @@ const CASES: Record<string, Case> = {
       es: null,
       attachments: [],
       refs: { messageId: ID.outlookFrForward, inReplyTo: [], references: [] },
+      delivery: person(),
     },
   },
 
@@ -466,6 +479,7 @@ const CASES: Record<string, Case> = {
         },
       ],
       refs: { messageId: ID.appleImage, inReplyTo: [], references: [] },
+      delivery: person(),
     },
   },
 
@@ -501,6 +515,7 @@ const CASES: Record<string, Case> = {
         },
       ],
       refs: { messageId: ID.gmailAttachment, inReplyTo: [], references: [] },
+      delivery: person(),
     },
   },
 
@@ -537,6 +552,7 @@ const CASES: Record<string, Case> = {
         },
       ],
       refs: { messageId: ID.thunderbirdAttachment, inReplyTo: [], references: [] },
+      delivery: person(),
     },
   },
 
@@ -573,6 +589,7 @@ const CASES: Record<string, Case> = {
       es: null,
       attachments: [],
       refs: { messageId: ID.mutt, inReplyTo: [ID.muttParent], references: [ID.muttParent] },
+      delivery: person("ondrej@host.example.com"),
     },
   },
 
@@ -610,6 +627,7 @@ const CASES: Record<string, Case> = {
         },
       ],
       refs: { messageId: ID.muttPatch, inReplyTo: [], references: [] },
+      delivery: person(),
     },
   },
 
@@ -649,6 +667,7 @@ const CASES: Record<string, Case> = {
       es: null,
       attachments: [],
       refs: { messageId: ID.seznam, inReplyTo: [ID.seznamParent], references: [ID.seznamRoot, ID.seznamParent] },
+      delivery: person(),
     },
   },
 
@@ -680,6 +699,7 @@ const CASES: Record<string, Case> = {
       es: null,
       attachments: [],
       refs: { messageId: ID.newsletter, inReplyTo: [], references: [] },
+      delivery: { listHeaders: ["list-unsubscribe"], listId: null, autoSubmitted: null, precedence: "bulk", returnPath: "bounce-7f3a2c@news.example.org" },
     },
   },
 
@@ -716,6 +736,13 @@ const CASES: Record<string, Case> = {
       es: null,
       attachments: [],
       refs: { messageId: ID.list, inReplyTo: [ID.listParent], references: [ID.listParent] },
+      delivery: {
+        listHeaders: ["list-archive", "list-help", "list-id", "list-post", "list-subscribe", "list-unsubscribe"],
+        listId: "dev-list.lists.example.org",
+        autoSubmitted: null,
+        precedence: "list",
+        returnPath: "dev-list-bounces@lists.example.org",
+      },
     },
   },
 
@@ -744,6 +771,7 @@ const CASES: Record<string, Case> = {
       es: null,
       attachments: [],
       refs: { messageId: null, inReplyTo: [], references: [] },
+      delivery: person("sender@example.org"),
     },
   },
 
@@ -770,6 +798,7 @@ const CASES: Record<string, Case> = {
       },
       attachments: [],
       refs: { messageId: ID.esDraft, inReplyTo: [], references: [] },
+      delivery: person(),
     },
   },
 
@@ -809,6 +838,7 @@ const CASES: Record<string, Case> = {
         },
       ],
       refs: { messageId: ID.gmailForward, inReplyTo: [ID.esOriginal], references: [ID.esOriginal] },
+      delivery: person(),
     },
   },
 
@@ -839,6 +869,7 @@ const CASES: Record<string, Case> = {
       es: null,
       attachments: [],
       refs: { messageId: ID.undisclosed, inReplyTo: [], references: [] },
+      delivery: person("office@example.com"),
     },
   },
 };
@@ -976,6 +1007,10 @@ describe.each(Object.entries(CASES))("%s", (name, { exercises, expected }) => {
     const m = parsed(name);
     expect(m.attachments).toEqual(expected.attachments);
     expect(m.es).toEqual(expected.es);
+  });
+
+  it("list and automation headers", () => {
+    expect(parsed(name).delivery).toEqual(expected.delivery);
   });
 });
 

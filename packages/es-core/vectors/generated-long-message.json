@@ -61,6 +61,13 @@
       "messageId": "<es-vector-5@mail.example.net>",
       "inReplyTo": [],
       "references": []
+    },
+    "delivery": {
+      "listHeaders": [],
+      "listId": null,
+      "autoSubmitted": null,
+      "precedence": null,
+      "returnPath": null
     }
   }
 }

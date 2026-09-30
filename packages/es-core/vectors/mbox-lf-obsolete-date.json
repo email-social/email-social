@@ -26,6 +26,13 @@
       "messageId": null,
       "inReplyTo": [],
       "references": []
+    },
+    "delivery": {
+      "listHeaders": [],
+      "listId": null,
+      "autoSubmitted": null,
+      "precedence": null,
+      "returnPath": "sender@example.org"
     }
   }
 }

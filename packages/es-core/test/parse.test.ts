@@ -55,6 +55,7 @@ describe("parseMessage: input handling and header fields", () => {
       es: null,
       attachments: [],
       refs: { messageId: null, inReplyTo: [], references: [] },
+      delivery: { listHeaders: [], listId: null, autoSubmitted: null, precedence: null, returnPath: null },
     };
     expect(parseMessage(new Uint8Array(0))).toEqual(expected);
     expect(parseMessage("")).toEqual(expected);

@@ -31,6 +31,13 @@
       "messageId": "<000601dcac5e$1a2b3c40$4e5f6a70$@example.org>",
       "inReplyTo": [],
       "references": []
+    },
+    "delivery": {
+      "listHeaders": [],
+      "listId": null,
+      "autoSubmitted": null,
+      "precedence": null,
+      "returnPath": "julien@example.org"
     }
   }
 }

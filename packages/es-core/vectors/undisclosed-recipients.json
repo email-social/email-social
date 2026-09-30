@@ -30,6 +30,13 @@
       "messageId": "<announce-20260316-0730@example.com>",
       "inReplyTo": [],
       "references": []
+    },
+    "delivery": {
+      "listHeaders": [],
+      "listId": null,
+      "autoSubmitted": null,
+      "precedence": null,
+      "returnPath": "office@example.com"
     }
   }
 }

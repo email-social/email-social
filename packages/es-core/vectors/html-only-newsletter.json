@@ -26,6 +26,15 @@
       "messageId": "<0100018e2f4a7b3c-9d1e5f20-4a6b-4c8d-9e0f-1a2b3c4d5e6f-000000@email.example.org>",
       "inReplyTo": [],
       "references": []
+    },
+    "delivery": {
+      "listHeaders": [
+        "list-unsubscribe"
+      ],
+      "listId": null,
+      "autoSubmitted": null,
+      "precedence": "bulk",
+      "returnPath": "bounce-7f3a2c@news.example.org"
     }
   }
 }

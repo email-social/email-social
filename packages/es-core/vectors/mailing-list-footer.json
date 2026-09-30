@@ -30,6 +30,20 @@
       "references": [
         "<6f1d2c3b-4a5e-4f6d-9c8b-7a6e5d4c3b2a@example.org>"
       ]
+    },
+    "delivery": {
+      "listHeaders": [
+        "list-archive",
+        "list-help",
+        "list-id",
+        "list-post",
+        "list-subscribe",
+        "list-unsubscribe"
+      ],
+      "listId": "dev-list.lists.example.org",
+      "autoSubmitted": null,
+      "precedence": "list",
+      "returnPath": "dev-list-bounces@lists.example.org"
     }
   }
 }

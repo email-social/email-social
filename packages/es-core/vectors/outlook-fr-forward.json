@@ -26,6 +26,13 @@
       "messageId": "<PR3P192MB07415C2A8E1B4D6F9A0C3E5B7D9F1A3C5@PR3P192MB0741.EURP192.PROD.OUTLOOK.example.com>",
       "inReplyTo": [],
       "references": []
+    },
+    "delivery": {
+      "listHeaders": [],
+      "listId": null,
+      "autoSubmitted": null,
+      "precedence": null,
+      "returnPath": null
     }
   }
 }

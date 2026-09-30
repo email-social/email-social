@@ -20,6 +20,7 @@ describe("public API (src/index.ts)", () => {
       "ES_MEDIA_TYPE",
       "ES_TEXT_MAX_BYTES",
       "canonicalAddress",
+      "classifyMessage",
       "deriveContacts",
       "deriveDid",
       "extractPart",

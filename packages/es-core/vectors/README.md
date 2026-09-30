@@ -45,7 +45,12 @@ then be reviewed like any code change.
     `email.textSha256` then holds the hex SHA-256 of the body text;
   - `attachments`: metadata of every other leaf part (`filename`,
     `contentType`, `disposition`, decoded `size`, `contentId`, IMAP `partId`);
-  - `refs`: `messageId`, and every msg-id of `In-Reply-To` and `References`.
+  - `refs`: `messageId`, and every msg-id of `In-Reply-To` and `References`;
+  - `delivery`: the list and automation header fields: the lowercased names
+    of the RFC 2369 / RFC 2919 `List-*` fields present (sorted), the
+    `List-Id` identifier, the `Auto-Submitted` keyword (RFC 3834) and the
+    `Precedence` value (lowercased, without comments or parameters), and the
+    `Return-Path` address (`""` for `<>`), each `null` when absent.
 - **Generated vectors** (`source: "generated"`) were written by es-core's
   serializer from `input` with a fixed date and Message-ID. A conforming
   writer need not produce the same bytes, but a conforming parser must read

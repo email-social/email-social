@@ -35,6 +35,13 @@
       "messageId": "<E2B4C6D8-0A1C-4E3F-9B5D-7F8A9C0D1E2F@example.com>",
       "inReplyTo": [],
       "references": []
+    },
+    "delivery": {
+      "listHeaders": [],
+      "listId": null,
+      "autoSubmitted": null,
+      "precedence": null,
+      "returnPath": null
     }
   }
 }

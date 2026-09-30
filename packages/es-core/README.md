@@ -19,13 +19,12 @@ serializeReceipt(receipt: EsOutgoingReceipt, { date, messageId }): string  // a 
 replyTargetOf(parent: EsMessage): ReplyTarget                         // In-Reply-To/References/subject for a reply
 threadMessages(messages: EsMessage[]): Conversation[]                 // threads by references and subject, any input order
 groupByParticipants(messages, { self }): Chat[]                        // one chat per set of other people, any subjects
-normalizeSubject(subject): { base, isReply, isForward }               // strips Re:/Fwd:/AW:/Odp:/RE :/TR :/[list]
-deriveContacts(messages, { exclude? }): Contact[]                     // one per canonical address
-canonicalAddress(address): string                                     // lowercases the domain only
-deriveDid(address) · formatDid(domain, localId) · parseDid(did) · isValidDid(did)  // did:es as metadata
+classifyMessage(message): "person" | "list" | "automated"              // from List-*, Auto-Submitted, Precedence, Return-Path, no-reply
+normalizeSubject(subject): { base, isReply, isForward } · canonicalAddress(address)  // strips Re:/AW:/Odp:/[list] · lowercases the domain
+deriveContacts(messages, { exclude? }): Contact[] · deriveDid(address) · formatDid · parseDid · isValidDid  // contacts; did:es as metadata
 ES_MEDIA_TYPE · ES_DRAFT_MEDIA_TYPE · ES_TEXT_MAX_BYTES               // ES part media types, text limit (10000 B)
-// Types (src/types.ts): EsMessage, EsAddress, EsAttachment, EsRefs, EsPart (EsPostPart | EsReceiptPart),
-// Conversation, Chat, ChatEntry, Contact, EsOutgoing, EsOutgoingReceipt, ReplyTarget, SerializeOptions, ReceiptKind, EsPartContent
+// Types (src/types.ts): EsMessage, EsAddress, EsAttachment, EsRefs, EsDelivery, EsPart (EsPostPart | EsReceiptPart), Conversation,
+// Chat, ChatEntry, MessageKind, Contact, EsOutgoing, EsOutgoingReceipt, ReplyTarget, SerializeOptions, ReceiptKind, EsPartContent
 ```
 
 ## Example

@@ -89,6 +89,13 @@
         "<root-0@mail.example.com>",
         "<es-vector-1@mail.example.com>"
       ]
+    },
+    "delivery": {
+      "listHeaders": [],
+      "listId": null,
+      "autoSubmitted": null,
+      "precedence": null,
+      "returnPath": null
     }
   }
 }

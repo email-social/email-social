@@ -107,6 +107,23 @@ export interface EsPartContent {
 /** Where `EsMessage.text` came from. */
 export type TextSource = "plain" | "html" | "none";
 
+/**
+ * Header fields that tell mail sent to a list or by a program from mail a
+ * person wrote (see `classifyMessage`). Values are lowercased.
+ */
+export interface EsDelivery {
+  /** Names of the RFC 2369 / RFC 2919 list fields present ("list-id", "list-unsubscribe", …), sorted, each once. */
+  listHeaders: string[];
+  /** The List-Id identifier (RFC 2919 §2) without angle brackets, or null. */
+  listId: string | null;
+  /** The Auto-Submitted keyword (RFC 3834 §5) without parameters or comments, or null when absent. */
+  autoSubmitted: string | null;
+  /** The Precedence value ("bulk", "list", "junk", …), or null when absent. */
+  precedence: string | null;
+  /** The Return-Path address (RFC 5322 §3.6.7) in canonical form; "" for the null path "<>"; null when absent. */
+  returnPath: string | null;
+}
+
 /** A parsed e-mail message, as Email Social sees it. */
 export interface EsMessage {
   /** refs.messageId when present, otherwise "sha256:" + hex SHA-256 of the raw bytes. */
@@ -127,6 +144,7 @@ export interface EsMessage {
   es: EsPart | null;
   attachments: EsAttachment[];
   refs: EsRefs;
+  delivery: EsDelivery;
 }
 
 /** A conversation: messages grouped by the threading algorithm. */
@@ -144,6 +162,9 @@ export interface Conversation {
   firstDate: string | null;
   lastDate: string | null;
 }
+
+/** Who a message comes from (see `classifyMessage`). */
+export type MessageKind = "person" | "list" | "automated";
 
 /** One message of a chat, with the base subject the client uses to mark subject changes. */
 export interface ChatEntry {
