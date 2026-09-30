@@ -3,33 +3,54 @@ import { mkdtempSync, readdirSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { describe, expect, it } from "vitest";
-import { canonicalAddress, parseMessage, threadMessages } from "@email-social/es-core";
+import { canonicalAddress, classifyMessage, groupByParticipants, parseMessage, splitQuoted } from "@email-social/es-core";
 import { MaildirAdapter } from "../src/adapters/maildir.js";
 import { SEEN } from "../src/adapters/types.js";
 import { DEMO_ACCOUNT, buildDemoMailbox, writeDemoMaildir } from "../src/demo.js";
-import { EXPECTED } from "./helpers/demo-expected.js";
-
-
+import { BOB_SUBJECTS, EXPECTED_CHATS, EXPECTED_OTHER } from "./helpers/demo-expected.js";
 
 describe("demo mailbox (the seed of the end-to-end test)", () => {
   const mailbox = buildDemoMailbox();
 
-  it("has 40 messages that es-core threads into the 9 expected conversations, newest first", () => {
-    expect(mailbox).toHaveLength(40);
+  it("has 45 messages that es-core groups into the 7 expected chats, newest first, and two lists", () => {
+    expect(mailbox).toHaveLength(45);
     const parsed = mailbox.map((m) => ({ ...m, message: parseMessage(m.raw) }));
-    const conversations = threadMessages(parsed.map((p) => p.message));
-    expect(conversations.map((c) => c.subject)).toEqual(EXPECTED.map((e) => e.subject));
-    expect(conversations.map((c) => c.messageIds.length)).toEqual(EXPECTED.map((e) => e.messages));
-    for (const [i, conversation] of conversations.entries()) {
-      const keys = new Set(parsed.filter((p) => conversation.messageIds.includes(p.message.id)).map((p) => p.conversation));
-      expect([...keys]).toEqual([EXPECTED[i]!.key]);
+    const lists = new Set(EXPECTED_OTHER.flatMap((o) => o.threads));
+    const people = parsed.filter((p) => !lists.has(p.conversation));
+    for (const p of parsed) {
+      const mine = p.folder === "sent";
+      expect(mine || classifyMessage(p.message) === (lists.has(p.conversation) ? "list" : "person"), p.name).toBe(true);
     }
+    const chats = groupByParticipants(
+      people.map((p) => p.message),
+      { self: DEMO_ACCOUNT.address },
+    );
+    expect(chats.map((c) => c.messages.length)).toEqual(EXPECTED_CHATS.map((e) => e.messages));
+    for (const [i, chat] of chats.entries()) {
+      const threads = new Set(parsed.filter((p) => chat.messages.some((m) => m.id === p.message.id)).map((p) => p.conversation));
+      expect([...threads].sort(), EXPECTED_CHATS[i]!.title).toEqual(EXPECTED_CHATS[i]!.threads);
+    }
+    const bob = chats[1]!.messages.map((m) => m.subject).filter((subject, i, all) => i === 0 || all[i - 1] !== subject);
+    expect(bob).toEqual(BOB_SUBJECTS);
   });
 
   it("marks the expected incoming messages as unread", () => {
-    for (const { key, unread } of EXPECTED) {
-      const unseen = mailbox.filter((m) => m.conversation === key && m.folder === "inbox" && !m.seen);
-      expect(unseen, key).toHaveLength(unread);
+    for (const { title, threads, unread } of [...EXPECTED_CHATS, ...EXPECTED_OTHER]) {
+      const unseen = mailbox.filter((m) => threads.includes(m.conversation) && m.folder === "inbox" && !m.seen);
+      expect(unseen, title).toHaveLength(unread);
+    }
+  });
+
+  it("quotes like real clients: what each sender wrote is what splitQuoted finds", () => {
+    for (const m of mailbox) {
+      const split = splitQuoted(parseMessage(m.raw));
+      if (m.style === "newsletter") continue;
+      // iOS Mail's "Odesláno z iPhonu" is a signature, not part of what Jana wrote.
+      const fresh = m.fresh.replace(/\n\nOdesláno z iPhonu$/, "");
+      expect(split.fresh, m.name).toBe(fresh.trim());
+      const reply = m.name.slice(1, 2) !== "1"; // every thread's first message is its original
+      const quotes = reply && !(m.style === "email-social" && parseMessage(m.raw).es !== null);
+      expect(split.quoted !== "", m.name).toBe(quotes);
     }
   });
 
@@ -55,7 +76,8 @@ describe("demo mailbox (the seed of the end-to-end test)", () => {
 
   it("contains only example.com / example.org / example.net domains", () => {
     for (const m of mailbox) {
-      const text = new TextDecoder("latin1").decode(m.raw);
+      // Quoted-printable soft line breaks may split a domain; join them before looking.
+      const text = new TextDecoder("latin1").decode(m.raw).replace(/=\r\n/g, "");
       for (const [, domain] of text.matchAll(/@([A-Za-z0-9.-]+\.[A-Za-z]{2,})/g)) {
         expect(domain!, m.name).toMatch(/(^|\.)example\.(com|org|net)$/i);
       }
@@ -79,7 +101,7 @@ describe("demo mailbox (the seed of the end-to-end test)", () => {
     const adapter = new MaildirAdapter(root);
     await adapter.open();
     const { entries } = await adapter.listSince(null);
-    expect(entries).toHaveLength(40);
+    expect(entries).toHaveLength(45);
     for (const m of mailbox) {
       const entry = entries.find((e) => e.uid === m.name)!;
       expect(entry.folder).toBe(m.folder);

@@ -4,7 +4,7 @@ import { join } from "node:path";
 import { afterEach, describe, expect, it } from "vitest";
 import WebSocket from "ws";
 import { MaildirAdapter } from "../src/adapters/maildir.js";
-import type { ConversationSummary, MessageView, SessionInfo, ThreadView } from "../src/api-types.js";
+import type { ChatSummary, ChatView, ContactDetail, OtherSummary, OtherView, SendResult, SessionInfo } from "../src/api-types.js";
 import { startBridge, type BridgeOptions, type RunningBridge } from "../src/bridge.js";
 import { MemoryStore, type AccountConfig } from "../src/credentials.js";
 import { DEMO_ACCOUNT } from "../src/demo.js";
@@ -105,44 +105,68 @@ describe("local API: where and to whom it answers", () => {
   });
 });
 
-describe("local API: the mailbox as conversations", () => {
-  it("lists conversations, opens a thread, marks it read and lists contacts", async () => {
+describe("local API: the mailbox as chats", () => {
+  it("lists chats and Other mail, opens a chat, marks it read and lists contacts", async () => {
     const bridge = await demoBridge();
     const session = await json<SessionInfo>(await api(bridge, "/api/session"));
-    expect(session).toEqual({ state: "ready", account: { address: "alice@example.com", name: "Alice Dvořáková" }, mode: "maildir", remembered: false });
-    const list = await json<ConversationSummary[]>(await api(bridge, "/api/conversations"));
-    expect(list).toHaveLength(9);
-    const b = list.find((c) => c.subject === "Projektübersicht Q2")!;
-    expect(b.unread).toBe(2);
-    const thread = await json<ThreadView>(await api(bridge, `/api/conversations/${b.id}`));
-    expect(thread.messages).toHaveLength(5);
-    expect((await api(bridge, `/api/conversations/${b.id}/read`, { method: "POST", body: "{}" })).status).toBe(204);
-    const after = await json<ConversationSummary[]>(await api(bridge, "/api/conversations"));
-    expect(after.find((c) => c.id === b.id)!.unread).toBe(0);
-    expect((await api(bridge, "/api/conversations/conv-unknown")).status).toBe(404);
+    expect(session).toEqual({
+      state: "ready",
+      account: { address: "alice@example.com", name: "Alice Dvořáková" },
+      mode: "maildir",
+      remembered: false,
+      sync: { loading: null, connection: "online", error: null },
+    });
+    const list = await json<ChatSummary[]>(await api(bridge, "/api/chats"));
+    expect(list).toHaveLength(7);
+    const anna = list.find((c) => c.title === "Anna Becker")!;
+    expect(anna.unread).toBe(2);
+    const chat = await json<ChatView>(await api(bridge, `/api/chats/${anna.id}`));
+    expect(chat.messages).toHaveLength(5);
+    expect((await api(bridge, `/api/chats/${anna.id}/read`, { method: "POST", body: "{}" })).status).toBe(204);
+    const after = await json<ChatSummary[]>(await api(bridge, "/api/chats"));
+    expect(after.find((c) => c.id === anna.id)!.unread).toBe(0);
+    expect((await api(bridge, "/api/chats/chat-unknown")).status).toBe(404);
+    expect((await api(bridge, "/api/chats/chat-unknown/read", { method: "POST", body: "{}" })).status).toBe(404);
+    const others = await json<OtherSummary[]>(await api(bridge, "/api/other"));
+    expect(others.map((o) => o.title)).toEqual(["dev-list@lists.example.org", "Garden Club"]);
+    const news = await json<OtherView>(await api(bridge, `/api/other/${others[1]!.id}`));
+    expect(news.messages[0]!.textSource).toBe("html");
+    expect((await api(bridge, `/api/other/${others[1]!.id}/read`, { method: "POST", body: "{}" })).status).toBe(204);
     const contacts = await json<{ address: string }[]>(await api(bridge, "/api/contacts"));
     expect(contacts.map((c) => c.address)).toContain("karel@example.org");
+    const bob = await json<ContactDetail>(await api(bridge, "/api/contacts/bob%40example.org"));
+    expect(bob).toMatchObject({ address: "bob@example.org", count: 15, firstDate: "2026-03-02T08:15:42.000Z" });
+    expect(bob.attachments).toHaveLength(3);
+    expect((await api(bridge, "/api/contacts/nobody%40example.org")).status).toBe(404);
   });
 
-  it("sends a reply and checks the request", async () => {
+  it("sends a reply or starts a new chat, and checks the request", async () => {
     const bridge = await demoBridge();
-    const [first] = await json<ConversationSummary[]>(await api(bridge, "/api/conversations"));
-    const sent = await api(bridge, `/api/conversations/${first!.id}/messages`, { method: "POST", body: JSON.stringify({ text: "On my way" }) });
+    const [first] = await json<ChatSummary[]>(await api(bridge, "/api/chats"));
+    const post = (body: unknown, headers: Record<string, string> = {}) =>
+      api(bridge, "/api/messages", { method: "POST", body: typeof body === "string" ? body : JSON.stringify(body), headers });
+    const sent = await post({ chatId: first!.id, text: "On my way" });
     expect(sent.status).toBe(201);
-    expect(await json<MessageView>(sent)).toMatchObject({ mine: true, text: "On my way" });
-    expect((await api(bridge, `/api/conversations/${first!.id}/messages`, { method: "POST", body: JSON.stringify({ text: "  " }) })).status).toBe(400);
-    expect((await api(bridge, `/api/conversations/${first!.id}/messages`, { method: "POST", body: "not json" })).status).toBe(400);
-    expect(
-      (await api(bridge, `/api/conversations/${first!.id}/messages`, { method: "POST", body: JSON.stringify({ text: "x" }), headers: { "content-type": "text/plain" } })).status,
-    ).toBe(415);
-    expect((await api(bridge, `/api/conversations/conv-unknown/messages`, { method: "POST", body: JSON.stringify({ text: "x" }) })).status).toBe(404);
+    expect(await json<SendResult>(sent)).toMatchObject({ chatId: first!.id, message: { mine: true, fresh: "On my way" } });
+    const created = await json<SendResult>(await post({ to: ["zuzana@example.net"], text: "Hello Zuzana" }));
+    expect(created.message.subject).toBe("Hello Zuzana");
+    // Both messages carry the test clock's time, so the order between the two chats is not the point here.
+    expect((await json<ChatSummary[]>(await api(bridge, "/api/chats"))).find((c) => c.id === created.chatId)).toMatchObject({ lastLine: "Hello Zuzana", lastFromMe: true });
+    expect((await post({ chatId: first!.id, text: "  " })).status).toBe(400);
+    expect((await post("not json")).status).toBe(400);
+    expect((await post({ text: "x" })).status).toBe(400);
+    expect((await post({ chatId: first!.id, to: ["a@example.org"], text: "x" })).status).toBe(400);
+    expect((await post({ to: "a@example.org", text: "x" })).status).toBe(400);
+    expect((await post({ to: ["not an address"], text: "x" })).status).toBe(400);
+    expect((await post({ chatId: first!.id, text: "x" }, { "content-type": "text/plain" })).status).toBe(415);
+    expect((await post({ chatId: "chat-unknown", text: "x" })).status).toBe(404);
   });
 
   it("serves attachments and originals as downloads, never as pages", async () => {
     const bridge = await demoBridge();
-    const list = await json<ConversationSummary[]>(await api(bridge, "/api/conversations"));
-    const thread = await json<ThreadView>(await api(bridge, `/api/conversations/${list.find((c) => c.subject === "Návrh smlouvy")!.id}`));
-    const message = thread.messages[0]!;
+    const list = await json<ChatSummary[]>(await api(bridge, "/api/chats"));
+    const chat = await json<ChatView>(await api(bridge, `/api/chats/${list.find((c) => c.title === "Bob Svoboda")!.id}`));
+    const message = chat.messages.find((m) => m.attachments.some((a) => a.filename === "Návrh smlouvy.pdf"))!;
     const pdf = await fetch(`http://127.0.0.1:${bridge.port}${message.attachments[0]!.path}?token=${bridge.token}`);
     expect(pdf.status).toBe(200);
     expect(pdf.headers.get("content-type")).toBe("application/octet-stream");
@@ -162,9 +186,9 @@ describe("local API: the mailbox as conversations", () => {
       ws.once("open", resolve);
       ws.once("error", reject);
     });
-    const event = new Promise<string>((resolve) => ws.once("message", (data) => resolve(String(data))));
-    const [first] = await json<ConversationSummary[]>(await api(bridge, "/api/conversations"));
-    await api(bridge, `/api/conversations/${first!.id}/messages`, { method: "POST", body: JSON.stringify({ text: "ping" }) });
+    const event = new Promise<string>((resolve) => ws.on("message", (data) => JSON.parse(String(data)).type === "changed" && resolve(String(data))));
+    const [first] = await json<ChatSummary[]>(await api(bridge, "/api/chats"));
+    await api(bridge, "/api/messages", { method: "POST", body: JSON.stringify({ chatId: first!.id, text: "ping" }) });
     expect(JSON.parse(await event)).toEqual({ type: "changed" });
     ws.close();
 
@@ -225,7 +249,7 @@ describe("local API: signing in to an IMAP account", () => {
     expect(JSON.parse(body)).toMatchObject({ state: "ready", mode: "imap", remembered: false });
     expect(seen[0]).toMatchObject({ address: "alice@example.com", password: LOGIN.password, username: "", appendToSent: true });
     expect(await store.load()).toBeNull();
-    expect(await json<ConversationSummary[]>(await api(bridge, "/api/conversations"))).toHaveLength(9);
+    expect(await json<ChatSummary[]>(await api(bridge, "/api/chats"))).toHaveLength(7);
   });
 
   it("remembers the account when asked, signs in with it at the next start, and forgets it on request", async () => {
@@ -239,7 +263,7 @@ describe("local API: signing in to an IMAP account", () => {
     const out = await json<SessionInfo>(await api(second.bridge, "/api/logout", { method: "POST", body: JSON.stringify({ forget: true }) }));
     expect(out.state).toBe("signed-out");
     expect(await store.load()).toBeNull();
-    expect((await api(second.bridge, "/api/conversations")).status).toBe(409);
+    expect((await api(second.bridge, "/api/chats")).status).toBe(409);
   });
 
   it("reports a failed sign-in without echoing the password", async () => {
@@ -249,7 +273,53 @@ describe("local API: signing in to an IMAP account", () => {
     expect(response.status).toBe(401);
     expect(body).toContain("authentication failed");
     expect(body).not.toContain(LOGIN.password);
-    expect(await json<SessionInfo>(await api(bridge, "/api/session"))).toMatchObject({ state: "signed-out", error: expect.stringContaining("authentication failed") });
+    expect(await json<SessionInfo>(await api(bridge, "/api/session"))).toMatchObject({
+      state: "signed-out",
+      error: expect.stringContaining("authentication failed"),
+      canRetry: true,
+    });
+  });
+  it("tries the last sign-in again on request, with the settings kept in memory", async () => {
+    let attempts = 0;
+    const root = await demoMaildir();
+    const bridge = await start({
+      credentials: new MemoryStore(),
+      connect: () => {
+        attempts++;
+        const adapter = new MaildirAdapter(root, { pollMs: 60_000 });
+        return attempts === 1 ? Object.assign(adapter, { open: async () => Promise.reject(new Error("IMAP imap.example.com: timed out")) }) : adapter;
+      },
+    });
+    expect((await api(bridge, "/api/retry", { method: "POST", body: "{}" })).status).toBe(409);
+    expect((await api(bridge, "/api/login", { method: "POST", body: JSON.stringify({ ...LOGIN, remember: false }) })).status).toBe(401);
+    const retried = await api(bridge, "/api/retry", { method: "POST", body: "{}" });
+    expect(retried.status).toBe(200);
+    expect(await json<SessionInfo>(retried)).toMatchObject({ state: "ready" });
+    expect(attempts).toBe(2);
+    expect((await api(bridge, "/api/retry", { method: "POST", body: "{}" })).status).toBe(202);
+    await api(bridge, "/api/logout", { method: "POST", body: "{}" });
+    expect(await json<SessionInfo>(await api(bridge, "/api/session"))).toMatchObject({ state: "signed-out", canRetry: false });
+  });
+
+  it("reports progress while signing in: connecting, listing, then a changing count of loaded messages", async () => {
+    const root = await demoMaildir();
+    const bridge = await start({ credentials: new MemoryStore(), firstBatch: 20, connect: () => new MaildirAdapter(root, { pollMs: 60_000 }) });
+    const ws = new WebSocket(`ws://127.0.0.1:${bridge.port}/api/events?token=${bridge.token}`, { origin: `http://127.0.0.1:${bridge.port}` });
+    await new Promise((resolve) => ws.once("open", resolve));
+    const seen: string[] = [];
+    ws.on("message", () => {
+      void api(bridge, "/api/session")
+        .then((r) => r.json())
+        .then((info: SessionInfo) => {
+          if (info.state === "connecting") seen.push(`${info.progress.step} ${info.progress.loaded}/${info.progress.total ?? "?"}`);
+        });
+    });
+    const response = await api(bridge, "/api/login", { method: "POST", body: JSON.stringify({ ...LOGIN, remember: false }) });
+    expect(response.status).toBe(200);
+    await new Promise((resolve) => setTimeout(resolve, 100));
+    ws.close();
+    expect(seen.length).toBeGreaterThan(0);
+    expect(seen.every((s) => /^(connecting|listing|loading) \d+\/(\?|45)$/.test(s))).toBe(true);
   });
 
   it("rejects incomplete sign-in requests", async () => {

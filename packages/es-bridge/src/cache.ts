@@ -13,7 +13,7 @@ import type { EsMessage } from "@email-social/es-core";
 import type { MailEntry } from "./adapters/types.js";
 
 interface CacheFile {
-  version: 1;
+  version: 2;
   messages: { key: string; entry: MailEntry; message: EsMessage }[];
 }
 
@@ -42,7 +42,7 @@ export class MetadataCache {
     const out = new Map<string, { entry: MailEntry; message: EsMessage }>();
     try {
       const data = JSON.parse(await readFile(this.file, "utf8")) as CacheFile;
-      if (data.version !== 1 || !Array.isArray(data.messages)) return out;
+      if (data.version !== 2 || !Array.isArray(data.messages)) return out;
       for (const m of data.messages) out.set(m.key, { entry: m.entry, message: withoutBodies(m.message) });
     } catch {
       // No cache yet, or an unreadable one: start from the mailbox.
@@ -52,7 +52,7 @@ export class MetadataCache {
 
   async save(messages: Iterable<{ key: string; entry: MailEntry; message: EsMessage }>): Promise<void> {
     const data: CacheFile = {
-      version: 1,
+      version: 2,
       messages: [...messages].map((m) => ({ key: m.key, entry: m.entry, message: withoutBodies(m.message) })),
     };
     await mkdir(this.dir, { recursive: true, mode: 0o700 });

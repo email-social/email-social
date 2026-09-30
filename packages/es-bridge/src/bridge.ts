@@ -20,7 +20,7 @@ import { WebSocketServer, type WebSocket } from "ws";
 import { ImapSmtpAdapter } from "./adapters/imap-smtp.js";
 import { MaildirAdapter } from "./adapters/maildir.js";
 import type { MailboxAdapter } from "./adapters/types.js";
-import type { LoginRequest, Person, ServerEvent, ServerSettings, SessionInfo } from "./api-types.js";
+import type { LoginRequest, Person, SendRequest, ServerEvent, ServerSettings, SessionInfo, StartProgress } from "./api-types.js";
 import { MetadataCache } from "./cache.js";
 import { MemoryStore, type AccountConfig, type CredentialStore } from "./credentials.js";
 import { PRESETS } from "./providers.js";
@@ -41,6 +41,14 @@ export interface BridgeOptions {
   /** Opt-in metadata cache directory. */
   cacheDir?: string | null;
   maxMessages?: number;
+  /** How often an IMAP mailbox is checked besides IDLE, in ms. Default 30 s. */
+  pollMs?: number;
+  /** Messages loaded before the chats are shown. Default 50. */
+  firstBatch?: number;
+  /** No answer from the mail server for this long (ms) is reported as an error. Default 45 s. */
+  stallMs?: number;
+  /** Time zone of the dates in quoted replies. Default: this computer's. */
+  timeZone?: string;
   clock?: () => Date;
   newMessageId?: () => string;
   log?: (message: string) => void;
@@ -153,11 +161,15 @@ export async function startBridge(options: BridgeOptions): Promise<RunningBridge
   const log = options.log ?? ((m: string) => console.error(m));
   const clients = new Set<WebSocket>();
   let session: MailSession | null = null;
-  let state: { state: "signed-out"; error: string | null } | { state: "connecting"; address: string } | { state: "ready" } = {
+  let state: { state: "signed-out"; error: string | null } | { state: "connecting"; address: string; progress: StartProgress } | { state: "ready" } = {
     state: "signed-out",
     error: null,
   };
   let remembered = false;
+  /** The last sign-in, kept in memory only, for "Try again". */
+  let lastSignIn: { config: AccountConfig; remember: boolean } | null = null;
+  /** Increases with every sign-in and sign-out, so a slow earlier sign-in cannot win. */
+  let generation = 0;
   let port = 0;
   let webRootReal: string | null = null;
   if (options.webRoot !== null) webRootReal = await realpath(options.webRoot).catch(() => null);
@@ -167,7 +179,14 @@ export async function startBridge(options: BridgeOptions): Promise<RunningBridge
     for (const client of clients) if (client.readyState === client.OPEN) client.send(data);
   };
 
-  const openSession = async (adapter: MailboxAdapter, account: Person, mode: "imap" | "maildir", appendToSent: boolean): Promise<MailSession> =>
+  let lastProgressEvent = 0;
+  const openSession = async (
+    adapter: MailboxAdapter,
+    account: Person,
+    mode: "imap" | "maildir",
+    appendToSent: boolean,
+    onProgress?: (progress: StartProgress) => void,
+  ): Promise<MailSession> =>
     MailSession.start({
       adapter,
       account,
@@ -176,16 +195,40 @@ export async function startBridge(options: BridgeOptions): Promise<RunningBridge
       cache: options.cacheDir ? new MetadataCache(options.cacheDir, account.address) : null,
       ...(options.clock ? { clock: options.clock } : {}),
       ...(options.newMessageId ? { newMessageId: options.newMessageId } : {}),
+      ...(options.firstBatch !== undefined ? { firstBatch: options.firstBatch } : {}),
+      ...(options.stallMs !== undefined ? { stallMs: options.stallMs } : {}),
+      ...(options.timeZone !== undefined ? { timeZone: options.timeZone } : {}),
       onChange: () => broadcast({ type: "changed" }),
+      onStatus: () => broadcast({ type: "session" }),
+      ...(onProgress ? { onProgress } : {}),
       log,
     });
 
   const signIn = async (config: AccountConfig, remember: boolean): Promise<void> => {
-    state = { state: "connecting", address: config.address };
+    const mine = ++generation;
+    lastSignIn = { config, remember };
+    state = { state: "connecting", address: config.address, progress: { step: "connecting", loaded: 0, total: null } };
     broadcast({ type: "session" });
-    const adapter = options.connect?.(config) ?? new ImapSmtpAdapter(config, { maxMessages: options.maxMessages ?? 500 });
+    const adapter =
+      options.connect?.(config) ?? new ImapSmtpAdapter(config, { maxMessages: options.maxMessages ?? 500, ...(options.pollMs !== undefined ? { pollMs: options.pollMs } : {}) });
+    const onProgress = (progress: StartProgress): void => {
+      if (mine !== generation || state.state !== "connecting") return;
+      const stepChanged = state.progress.step !== progress.step;
+      state = { ...state, progress };
+      // At most a few updates a second, but every change of step at once.
+      const now = Date.now();
+      if (stepChanged || now - lastProgressEvent >= 200 || progress.loaded === progress.total) {
+        lastProgressEvent = now;
+        broadcast({ type: "session" });
+      }
+    };
     try {
-      session = await openSession(adapter, { address: config.address, name: config.name === "" ? config.address : config.name }, "imap", config.appendToSent);
+      const opened = await openSession(adapter, { address: config.address, name: config.name === "" ? config.address : config.name }, "imap", config.appendToSent, onProgress);
+      if (mine !== generation) {
+        await opened.close().catch(() => undefined);
+        throw new HttpError(409, "A newer sign-in replaced this one");
+      }
+      session = opened;
       state = { state: "ready" };
       remembered = false;
       if (remember) {
@@ -200,8 +243,9 @@ export async function startBridge(options: BridgeOptions): Promise<RunningBridge
       await Promise.resolve()
         .then(() => adapter.close())
         .catch(() => undefined);
-      state = { state: "signed-out", error: e instanceof Error ? e.message : String(e) };
-      throw new HttpError(401, state.error ?? "Sign-in failed");
+      if (e instanceof HttpError) throw e;
+      if (mine === generation) state = { state: "signed-out", error: e instanceof Error ? e.message : String(e) };
+      throw new HttpError(401, e instanceof Error ? e.message : "Sign-in failed");
     } finally {
       broadcast({ type: "session" });
     }
@@ -209,10 +253,16 @@ export async function startBridge(options: BridgeOptions): Promise<RunningBridge
 
   const info = async (): Promise<SessionInfo> => {
     if (state.state === "ready" && session !== null) {
-      return { state: "ready", account: session.account, mode: session.mode, remembered };
+      return { state: "ready", account: session.account, mode: session.mode, remembered, sync: session.status() };
     }
-    if (state.state === "connecting") return { state: "connecting", address: state.address };
-    return { state: "signed-out", error: state.state === "signed-out" ? state.error : null, presets: [...PRESETS], keychain: await credentials.available() };
+    if (state.state === "connecting") return { state: "connecting", address: state.address, progress: state.progress };
+    return {
+      state: "signed-out",
+      error: state.state === "signed-out" ? state.error : null,
+      presets: [...PRESETS],
+      keychain: await credentials.available(),
+      canRetry: lastSignIn !== null,
+    };
   };
 
   const ready = (): MailSession => {
@@ -295,38 +345,68 @@ export async function startBridge(options: BridgeOptions): Promise<RunningBridge
     if (method === "POST" && path === "/api/logout") {
       const body = (await readJson(req)) as { forget?: unknown } | null;
       if (options.maildir !== undefined) throw new HttpError(409, "This bridge serves a maildir");
+      generation++;
       await session?.close().catch(() => undefined);
       session = null;
+      lastSignIn = null;
       state = { state: "signed-out", error: null };
       if (body?.forget === true) await credentials.clear();
       remembered = false;
       broadcast({ type: "session" });
       return send(res, 200, await info());
     }
-    if (method === "GET" && path === "/api/conversations") return send(res, 200, await ready().conversations());
+    if (method === "POST" && path === "/api/retry") {
+      await readJson(req);
+      if (session !== null && state.state === "ready") {
+        void session.retry().catch((e: unknown) => log(`retry failed: ${String(e)}`));
+        return send(res, 202, await info());
+      }
+      if (lastSignIn === null || state.state === "connecting") throw new HttpError(409, "Nothing to try again");
+      await signIn(lastSignIn.config, lastSignIn.remember);
+      return send(res, 200, await info());
+    }
+    if (method === "GET" && path === "/api/chats") return send(res, 200, await ready().chats());
+    if (method === "GET" && path === "/api/other") return send(res, 200, await ready().others());
     if (method === "GET" && path === "/api/contacts") return send(res, 200, ready().contacts());
+    if ((m = /^\/api\/contacts\/([^/]+)$/.exec(path)) && method === "GET") {
+      const detail = ready().contact(decodeURIComponent(m[1]!));
+      if (detail === null) throw new HttpError(404, "No such contact");
+      return send(res, 200, detail);
+    }
     if (method === "POST" && path === "/api/sync") {
       await ready().sync();
       return send(res, 204, undefined);
     }
-    if ((m = /^\/api\/conversations\/([^/]+)$/.exec(path)) && method === "GET") {
-      const thread = await ready().thread(decodeURIComponent(m[1]!));
-      if (thread === null) throw new HttpError(404, "No such conversation");
-      return send(res, 200, thread);
+    if ((m = /^\/api\/chats\/([^/]+)$/.exec(path)) && method === "GET") {
+      const chat = await ready().chat(decodeURIComponent(m[1]!));
+      if (chat === null) throw new HttpError(404, "No such chat");
+      return send(res, 200, chat);
     }
-    if ((m = /^\/api\/conversations\/([^/]+)\/read$/.exec(path)) && method === "POST") {
+    if ((m = /^\/api\/other\/([^/]+)$/.exec(path)) && method === "GET") {
+      const other = await ready().other(decodeURIComponent(m[1]!));
+      if (other === null) throw new HttpError(404, "No such sender");
+      return send(res, 200, other);
+    }
+    if ((m = /^\/api\/(?:chats|other)\/([^/]+)\/read$/.exec(path)) && method === "POST") {
       await readJson(req);
-      const id = decodeURIComponent(m[1]!);
-      if ((await ready().thread(id)) === null) throw new HttpError(404, "No such conversation");
-      await ready().markRead(id);
+      if (!(await ready().markRead(decodeURIComponent(m[1]!)))) throw new HttpError(404, "No such chat");
       return send(res, 204, undefined);
     }
-    if ((m = /^\/api\/conversations\/([^/]+)\/messages$/.exec(path)) && method === "POST") {
-      const body = (await readJson(req)) as { text?: unknown } | null;
+    if (method === "POST" && path === "/api/messages") {
+      const body = (await readJson(req)) as Partial<SendRequest> | null;
       if (typeof body?.text !== "string" || body.text.trim() === "") throw new HttpError(400, "The message is empty");
-      const id = decodeURIComponent(m[1]!);
-      if ((await ready().thread(id)) === null) throw new HttpError(404, "No such conversation");
-      return send(res, 201, await ready().send(id, body.text));
+      if (body.chatId !== undefined && typeof body.chatId !== "string") throw new HttpError(400, "chatId must be a string");
+      if (body.to !== undefined && (!Array.isArray(body.to) || body.to.some((a) => typeof a !== "string"))) throw new HttpError(400, "to must be a list of addresses");
+      if (body.subject !== undefined && typeof body.subject !== "string") throw new HttpError(400, "subject must be a string");
+      if ((body.chatId === undefined) === (body.to === undefined)) throw new HttpError(400, "Send either chatId (a reply) or to (a new chat)");
+      const request: SendRequest = {
+        text: body.text,
+        ...(body.chatId !== undefined ? { chatId: body.chatId } : {}),
+        ...(body.to !== undefined ? { to: body.to } : {}),
+        ...(body.subject !== undefined ? { subject: body.subject } : {}),
+      };
+      if (request.chatId !== undefined && (await ready().chat(request.chatId)) === null) throw new HttpError(404, "No such chat");
+      return send(res, 201, await ready().send(request));
     }
     if ((m = /^\/api\/messages\/([^/]+)\/attachments\/([^/]+)$/.exec(path)) && method === "GET") {
       const part = await ready().attachment(decodeURIComponent(m[1]!), decodeURIComponent(m[2]!));

@@ -31,6 +31,7 @@ export async function openSession(root: string, extra: Partial<SessionOptions> =
     mode: "maildir",
     clock: () => NOW,
     newMessageId: () => `<test-${++ids}@example.com>`,
+    timeZone: "Europe/Prague",
     ...extra,
   });
 }

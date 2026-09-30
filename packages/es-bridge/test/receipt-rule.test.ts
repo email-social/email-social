@@ -56,7 +56,7 @@ describe("receipt rule", () => {
     const root = await mailbox();
     const session = await openSession(root);
     for (let round = 0; round < 2; round++) {
-      for (const conversation of await session.conversations()) await session.markRead(conversation.id);
+      for (const view of [...(await session.chats()), ...(await session.others())]) await session.markRead(view.id);
     }
     const read = receipts(root).filter(([kind]) => kind === "read");
     expect(read.sort()).toEqual([
@@ -70,11 +70,11 @@ describe("receipt rule", () => {
   it("does not send a receipt twice after a restart", async () => {
     const root = await mailbox();
     const first = await openSession(root);
-    for (const conversation of await first.conversations()) await first.markRead(conversation.id);
+    for (const view of [...(await first.chats()), ...(await first.others())]) await first.markRead(view.id);
     await first.close();
     const before = receipts(root).length;
     const second = await openSession(root);
-    for (const conversation of await second.conversations()) await second.markRead(conversation.id);
+    for (const view of [...(await second.chats()), ...(await second.others())]) await second.markRead(view.id);
     expect(receipts(root)).toHaveLength(before);
     expect(before).toBe(3);
     await second.close();
@@ -87,7 +87,7 @@ describe("receipt rule", () => {
     writeFileSync(join(root, "INBOX", ".email-social-flags.json"), JSON.stringify({ "old.eml": ["\\Seen"] }));
     const session = await openSession(root);
     expect(receipts(root)).toEqual([]);
-    for (const conversation of await session.conversations()) await session.markRead(conversation.id);
+    for (const view of [...(await session.chats()), ...(await session.others())]) await session.markRead(view.id);
     expect(receipts(root)).toEqual([["read", "<old@example.org>", "ema@example.org"]]);
     await session.close();
   });
@@ -118,7 +118,7 @@ describe("receipt rule", () => {
     for (const dir of ["INBOX", "Sent", "Outbox"]) mkdirSync(join(root, dir));
     deliver(root, "self.eml", message(me, "<self@example.com>", "Note to self", ["delivered", "read"], "2026-03-20T08:00:00Z"));
     const session = await openSession(root);
-    for (const conversation of await session.conversations()) await session.markRead(conversation.id);
+    for (const view of [...(await session.chats()), ...(await session.others())]) await session.markRead(view.id);
     expect(receipts(root)).toEqual([]);
     await session.close();
   });

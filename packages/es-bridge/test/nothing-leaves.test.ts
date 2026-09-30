@@ -8,7 +8,7 @@ import { join } from "node:path";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
 import WebSocket from "ws";
 import { extractPart, parseMessage } from "@email-social/es-core";
-import type { ConversationSummary, ThreadView } from "../src/api-types.js";
+import type { ChatSummary, ChatView, OtherSummary, OtherView, SendResult } from "../src/api-types.js";
 import { startBridge, type RunningBridge } from "../src/bridge.js";
 import { MemoryStore } from "../src/credentials.js";
 import { DEMO_ACCOUNT, buildDemoMailbox } from "../src/demo.js";
@@ -29,7 +29,9 @@ afterEach(async () => {
 });
 
 async function start(options: Parameters<typeof startBridge>[0]): Promise<RunningBridge> {
-  const bridge = await startBridge({ clock: () => NOW, log: () => undefined, ...options });
+  // A clock that moves on a second per message, so what is sent later is newer.
+  let tick = 0;
+  const bridge = await startBridge({ clock: () => new Date(NOW.getTime() + 1000 * tick++), log: () => undefined, ...options });
   bridges.push(bridge);
   ports.push(bridge.port);
   return bridge;
@@ -43,25 +45,34 @@ function call(bridge: RunningBridge, path: string, body?: unknown): Promise<Resp
   });
 }
 
-/** Uses everything the web client uses: list, threads, read marks, replies, downloads, contacts, events. */
+/** Uses everything the web client uses: chats, Other mail, read marks, replies, new chats, downloads, contacts, events. */
 async function exercise(bridge: RunningBridge, reply: string): Promise<void> {
   const ws = new WebSocket(`ws://127.0.0.1:${bridge.port}/api/events?token=${bridge.token}`);
   await new Promise((resolve, reject) => {
     ws.once("open", resolve);
     ws.once("error", reject);
   });
-  const list = (await (await call(bridge, "/api/conversations")).json()) as ConversationSummary[];
-  expect(list).toHaveLength(9);
-  for (const conversation of list) {
-    const thread = (await (await call(bridge, `/api/conversations/${conversation.id}`)).json()) as ThreadView;
-    expect((await call(bridge, `/api/conversations/${conversation.id}/read`, {})).status).toBe(204);
-    for (const message of thread.messages) {
+  const list = (await (await call(bridge, "/api/chats")).json()) as ChatSummary[];
+  expect(list).toHaveLength(7);
+  const others = (await (await call(bridge, "/api/other")).json()) as OtherSummary[];
+  expect(others).toHaveLength(2);
+  const views = [
+    ...(await Promise.all(list.map(async (c) => ({ id: c.id, kind: "chats", view: (await (await call(bridge, `/api/chats/${c.id}`)).json()) as ChatView })))),
+    ...(await Promise.all(others.map(async (o) => ({ id: o.id, kind: "other", view: (await (await call(bridge, `/api/other/${o.id}`)).json()) as OtherView })))),
+  ];
+  for (const { id, kind, view } of views) {
+    expect((await call(bridge, `/api/${kind}/${id}/read`, {})).status).toBe(204);
+    for (const message of view.messages) {
       expect((await call(bridge, message.originalPath)).status).toBe(200);
       for (const attachment of message.attachments) expect((await call(bridge, attachment.path)).status).toBe(200);
     }
   }
-  expect((await call(bridge, `/api/conversations/${list[0]!.id}/messages`, { text: reply })).status).toBe(201);
+  const created = await call(bridge, "/api/messages", { to: ["zuzana@example.net"], text: "Nový chat, nic neodchází." });
+  expect(created.status).toBe(201);
+  expect((await call(bridge, "/api/messages", { chatId: list[0]!.id, text: reply })).status).toBe(201);
   expect((await call(bridge, "/api/contacts")).status).toBe(200);
+  expect((await call(bridge, "/api/contacts/bob%40example.org")).status).toBe(200);
+  expect(((await created.json()) as SendResult).chatId).toMatch(/^chat-/);
   expect((await fetch(`http://127.0.0.1:${bridge.port}/`)).status).toBe(404);
   ws.close();
 }
@@ -134,10 +145,10 @@ describe("the metadata cache keeps no message body", () => {
     }
 
     const second = await start({ webRoot: null, cacheDir, maildir: { root, account: DEMO_ACCOUNT, pollMs: 60_000 } });
-    const list = (await (await call(second, "/api/conversations")).json()) as ConversationSummary[];
+    const list = (await (await call(second, "/api/chats")).json()) as ChatSummary[];
     expect(list[0]).toMatchObject({ lastLine: reply, lastFromMe: true });
-    const thread = (await (await call(second, `/api/conversations/${list[0]!.id}`)).json()) as ThreadView;
-    expect(thread.messages[thread.messages.length - 1]!.text).toBe(reply);
+    const chat = (await (await call(second, `/api/chats/${list[0]!.id}`)).json()) as ChatView;
+    expect(chat.messages[chat.messages.length - 1]!.text).toBe(reply);
     expect(guard.attempts).toEqual([]);
   });
 });

@@ -1,10 +1,18 @@
 /**
- * A demo mailbox: 40 messages in 9 conversations, written in the formats of
- * the clients reconstructed in Task 1 (packages/es-core/fixtures): Gmail web,
+ * A demo mailbox: 45 messages in 12 scripted threads (A–L), written in the
+ * formats of the clients reconstructed in es-core's fixtures: Gmail web,
  * Thunderbird (format=flowed), Outlook (German, French; one without
  * References, one without any threading header), Apple Mail, iOS Mail, mutt
  * (8-bit ISO-8859-2, a patch attachment), Seznam.cz webmail, a Mailman list,
  * an HTML-only newsletter, and Email Social itself (es-core's serializer).
+ * Replies quote what they answer the way each client does ("On … wrote:",
+ * Outlook's header block, Seznam's "Původní e-mail", mutt below the quote);
+ * Alice's plain replies from Email Social quote with es-core's quoteForReply,
+ * her replies to Email Social users quote nothing.
+ *
+ * As chats: a group with Bob and Jana, a group with Camille and Julien, and
+ * one chat each with Anna, Karel (Email Social), Petr, Ondřej and Bob (four
+ * subjects); the newsletter and the mailing list are "Other mail".
  *
  * The mailbox belongs to Alice (alice@example.com). It is the seed of the
  * end-to-end test and of `email-social --demo`. Everything is fixed: the same
@@ -13,7 +21,7 @@
 
 import { mkdir, writeFile } from "node:fs/promises";
 import { join } from "node:path";
-import { serializeMessage, type EsAddress } from "@email-social/es-core";
+import { parseMessage, quoteForReply, serializeMessage, type EsAddress } from "@email-social/es-core";
 
 export const DEMO_ACCOUNT: EsAddress = { name: "Alice Dvořáková", address: "alice@example.com" };
 
@@ -30,8 +38,10 @@ export type DemoStyle =
   | "email-social";
 
 export interface DemoMessage {
-  /** Which conversation of the script (A–I) the message belongs to. */
+  /** Which thread of the script (A–L) the message belongs to. */
   conversation: string;
+  /** What the sender wrote in this message (without the quote their client added). */
+  fresh: string;
   style: DemoStyle;
   folder: "inbox" | "sent";
   seen: boolean;
@@ -270,9 +280,13 @@ function thunderbird(spec: Spec): string {
   ].join(CRLF);
 }
 
-function outlook(spec: Spec, mode: "in-reply-to" | "none", lang: string, charset: "iso-8859-1" | "windows-1252"): string {
+function outlook(spec: Spec, mode: "in-reply-to" | "none", lang: string, legacy: "iso-8859-1" | "windows-1252"): string {
   const b = `----=_NextPart_000_${hexOf(spec.id, 4).toUpperCase()}_01DCAAF1.${hexOf(spec.id, 8).toUpperCase()}`;
-  const encode = latin1;
+  // Outlook writes a single-byte charset when the text fits in it, UTF-8 otherwise (Alice's name has "ř").
+  const names = [spec.from, ...spec.to, ...(spec.cc ?? [])].map((a) => a.name).join("");
+  const fits = /^[\x00-\xff]*$/.test(spec.text + spec.subject + names);
+  const charset = fits ? legacy : "utf-8";
+  const encode = fits ? latin1 : utf8;
   return [
     `From: ${mailbox(spec.from, charset, encode)}`,
     ...addressLines(spec, charset, encode),
@@ -514,6 +528,93 @@ function emailSocial(spec: Spec): string {
 }
 
 // ---------------------------------------------------------------------------
+// How each client quotes the message it answers
+
+/** Date parts of an ISO date in the demo's time zone (CET, UTC+1). */
+function cet(iso: string): { d: Date; day: number; month: number; year: number; h: number; m: number; s: number; weekday: number } {
+  const d = new Date(Date.parse(iso) + 60 * 60_000);
+  return { d, day: d.getUTCDate(), month: d.getUTCMonth(), year: d.getUTCFullYear(), h: d.getUTCHours(), m: d.getUTCMinutes(), s: d.getUTCSeconds(), weekday: d.getUTCDay() };
+}
+const two = (n: number): string => String(n).padStart(2, "0");
+const DE_DAYS = ["Sonntag", "Montag", "Dienstag", "Mittwoch", "Donnerstag", "Freitag", "Samstag"];
+const DE_MONTHS = ["Januar", "Februar", "März", "April", "Mai", "Juni", "Juli", "August", "September", "Oktober", "November", "Dezember"];
+const FR_DAYS = ["dimanche", "lundi", "mardi", "mercredi", "jeudi", "vendredi", "samedi"];
+const FR_MONTHS = ["janvier", "février", "mars", "avril", "mai", "juin", "juillet", "août", "septembre", "octobre", "novembre", "décembre"];
+
+const who = (a: EsAddress): string => `${a.name} <${a.address}>`;
+const prefixed = (text: string, prefix: string, empty: string): string =>
+  text
+    .split("\n")
+    .map((line) => (line === "" ? empty : prefix + line))
+    .join("\n");
+
+/** The reply's full text: what the sender wrote plus their client's quote of the parent. */
+function withQuote(step: Step, parent: Spec, parentRaw: string): string {
+  const t = cet(parent.date);
+  const text = step.text;
+  const client = step.style === "mailman" ? (step.variant ?? "thunderbird") : step.style;
+  switch (client) {
+    case "gmail": {
+      const hour12 = t.h % 12 === 0 ? 12 : t.h % 12;
+      const attribution = `On ${DAYS[t.weekday]}, ${MONTHS[t.month]} ${t.day}, ${t.year} at ${hour12}:${two(t.m)}\u202f${t.h < 12 ? "AM" : "PM"} ${who(parent.from)} wrote:`;
+      return `${text}\n\n${attribution}\n\n${prefixed(parent.text, "> ", ">")}\n`;
+    }
+    case "outlook": {
+      if (step.variant === "none") {
+        const cc = parent.cc?.map((a) => a.name).join("; ");
+        const block = [
+          "-----Message d'origine-----",
+          `De : ${parent.from.name} [mailto:${parent.from.address}] `,
+          `Envoyé : ${FR_DAYS[t.weekday]} ${t.day} ${FR_MONTHS[t.month]} ${t.year} ${two(t.h)}:${two(t.m)}`,
+          `À : ${parent.to.map((a) => a.name).join("; ")}`,
+          ...(cc ? [`Cc : ${cc}`] : []),
+          `Objet : ${parent.subject}`,
+        ];
+        return `${text}\n\n${block.join("\n")}\n\n${parent.text}\n`;
+      }
+      const block = [
+        `Von: ${who(parent.from)} `,
+        `Gesendet: ${DE_DAYS[t.weekday]}, ${t.day}. ${DE_MONTHS[t.month]} ${t.year} ${two(t.h)}:${two(t.m)}`,
+        `An: ${parent.to.map(who).join("; ")}`,
+        `Betreff: ${parent.subject}`,
+      ];
+      return `${text}\n\n${block.join("\n")}\n\n${parent.text}\n`;
+    }
+    case "apple-mail": {
+      const attribution = `On ${t.day} ${MONTHS[t.month]} ${t.year}, at ${two(t.h)}:${two(t.m)}, ${who(parent.from)} wrote:`;
+      return `${text}\n\n${prefixed(`${attribution}\n\n${parent.text}`, "> ", "> ")}\n`;
+    }
+    case "ios-mail": {
+      const attribution = `Dne ${t.day}. ${t.month + 1}. ${t.year} v ${two(t.h)}:${two(t.m)}, ${who(parent.from)} napsal:`;
+      return `${text}\n\n> ${attribution}\n>\n${prefixed(parent.text, "> ", ">")}\n`;
+    }
+    case "thunderbird": {
+      const attribution = `On ${t.month + 1}/${t.day}/${String(t.year).slice(2)} ${two(t.h)}:${two(t.m)}, ${parent.from.name} wrote:`;
+      return `${attribution}\n${prefixed(parent.text.replace(/\n+$/, ""), "> ", ">")}\n\n${text}`;
+    }
+    case "mutt": {
+      const attribution = `On ${DAYS[t.weekday]}, ${MONTHS[t.month]} ${two(t.day)}, ${t.year} at ${two(t.h % 12 === 0 ? 12 : t.h % 12)}:${two(t.m)}:${two(t.s)}${t.h < 12 ? "AM" : "PM"} +0100, ${parent.from.name} wrote:`;
+      return `${attribution}\n${prefixed(parent.text.replace(/\n+$/, ""), "> ", ">")}\n\n${text}`;
+    }
+    case "seznam": {
+      const block = [
+        "---------- Původní e-mail ----------",
+        `Od: ${who(parent.from)}`,
+        `Komu: ${parent.to.map(who).join(", ")}`,
+        `Datum: ${t.day}. ${t.month + 1}. ${t.year} ${t.h}:${two(t.m)}:${two(t.s)}`,
+        `Předmět: ${parent.subject}`,
+      ];
+      return `${text}\n\n${block.join("\n")}\n"${parent.text}"\n`;
+    }
+    case "email-social":
+      // Email Social quotes only for people who do not use it.
+      return step.es === true ? text : `${text}\n\n${quoteForReply(parseMessage(parentRaw), { maxLines: 40, timeZone: "Europe/Prague" })}`;
+    default:
+      return text;
+  }
+}
+
+// ---------------------------------------------------------------------------
 // The script
 
 const alice = DEMO_ACCOUNT;
@@ -547,6 +648,8 @@ interface Step {
   date: string;
   text: string;
   replyTo?: string;
+  /** The message a reply without threading headers quotes (replyTo sets both). */
+  quotes?: string;
   attachment?: Spec["attachment"];
   es?: boolean;
   receipts?: boolean;
@@ -580,7 +683,7 @@ const SCRIPT: Step[] = [
   // C: French; Julien's Outlook reply has no threading headers at all.
   { key: "C1", style: "apple-mail", seen: true, from: camille, to: [alice], cc: [julien], subject: "Réunion de lundi", date: "2026-03-04T15:42:09Z",
     text: "Bonjour Alice,\n\nla réunion de lundi est déplacée à 14 h 30, salle B.\n\nBonne soirée,\nCamille" },
-  { key: "C2", style: "outlook", variant: "none", seen: true, from: julien, to: [camille], cc: [alice], subject: "RE : Réunion de lundi", date: "2026-03-05T06:15:27Z",
+  { key: "C2", style: "outlook", variant: "none", seen: true, from: julien, to: [camille], cc: [alice], subject: "RE : Réunion de lundi", date: "2026-03-05T06:15:27Z", quotes: "C1",
     text: "Bonjour Camille,\n\nc'est noté, je serai là.\n\nJulien" },
   { key: "C3", style: "email-social", from: alice, to: [camille, julien], subject: "Re: Réunion de lundi", date: "2026-03-05T06:40:00Z", replyTo: "C2",
     text: "Merci, à lundi 14 h 30 !" },
@@ -649,6 +752,18 @@ const SCRIPT: Step[] = [
     text: "Mám dvě připomínky k článku 4, pošlu je zítra." },
   { key: "I5", style: "gmail", seen: true, from: bob, to: [alice], subject: "Re: Návrh smlouvy", date: "2026-03-16T08:00:00Z", replyTo: "I4",
     text: "Upravená verze je v příloze.\n\nBob", attachment: { name: "Návrh smlouvy v2.pdf", type: "application/pdf", bytes: PDF } },
+
+  // J, K, L: more subjects with Bob, so the chat with him shows four of them.
+  { key: "J1", style: "gmail", seen: true, from: bob, to: [alice], subject: "Faktura za únor", date: "2026-03-04T09:10:00Z",
+    text: "Ahoj Alice,\n\nposílám fakturu za únor, splatná je do konce března.\n\nBob", attachment: { name: "Faktura 2026-02.pdf", type: "application/pdf", bytes: PDF } },
+  { key: "J2", style: "email-social", from: alice, to: [bob], subject: "Re: Faktura za únor", date: "2026-03-04T10:00:00Z", replyTo: "J1",
+    text: "Díky, zaplatím ji v pátek." },
+  { key: "K1", style: "email-social", from: alice, to: [bob], subject: "Víkend na chatě", date: "2026-03-07T08:30:00Z",
+    text: "Ahoj Bobe, jedeš o víkendu na chatu? Můžu vzít dřevo." },
+  { key: "K2", style: "gmail", seen: true, from: bob, to: [alice], subject: "Re: Víkend na chatě", date: "2026-03-07T09:12:00Z", replyTo: "K1",
+    text: "Jedu! Dřevo se hodí, já vezmu jídlo.\n\nBob" },
+  { key: "L1", style: "gmail", seen: false, from: bob, to: [alice], subject: "Kolo na prodej", date: "2026-03-17T18:20:00Z",
+    text: "Ahoj Alice,\n\nprodávám svoje staré kolo, nechceš ho pro Karla?\n\nBob" },
 ];
 
 function messageId(step: Step): string {
@@ -656,18 +771,20 @@ function messageId(step: Step): string {
   return `<${step.key.toLowerCase()}.${hexOf(step.key, 12)}@${host}>`;
 }
 
-/** The 40 messages of the demo mailbox, in script order. */
+/** The 45 messages of the demo mailbox, in script order. */
 export function buildDemoMailbox(): DemoMessage[] {
   const specs = new Map<string, Spec>();
+  const raws = new Map<string, string>();
   const out: DemoMessage[] = [];
   for (const step of SCRIPT) {
     const parent = step.replyTo === undefined ? undefined : specs.get(step.replyTo);
+    const quoted = step.replyTo ?? step.quotes;
     const spec: Spec = {
       from: step.from,
       to: step.to,
       ...(step.cc === undefined ? {} : { cc: step.cc }),
       subject: step.subject,
-      text: step.text,
+      text: quoted === undefined ? step.text : withQuote(step, specs.get(quoted)!, raws.get(quoted)!),
       date: step.date,
       id: messageId(step),
       ...(parent === undefined ? {} : { parent: { id: parent.id, references: refs(parent) } }),
@@ -689,9 +806,11 @@ export function buildDemoMailbox(): DemoMessage[] {
       : step.style === "mailman" ? mailman(spec, (step.variant ?? "thunderbird") as "thunderbird" | "mutt" | "apple-mail")
       : step.style === "newsletter" ? newsletter(spec)
       : emailSocial(spec);
+    raws.set(step.key, raw);
     const mine = step.from.address === DEMO_ACCOUNT.address;
     out.push({
       conversation: step.key[0]!,
+      fresh: step.text,
       style: step.style,
       folder: mine ? "sent" : "inbox",
       seen: mine || step.seen === true,
