@@ -11,10 +11,15 @@ loads nothing from the internet and gets all data from the bridge's local API.
   a collapsed, read-only "Other mail" section below.
 - **Bubbles.** Your messages on the right labelled "You", the others on the
   left; in a group every bubble names its sender. A bubble shows only what
-  the sender wrote: quoted earlier messages and the signature are behind
-  "Show quoted text" and "Show signature". A small separator marks where
-  the subject changes. Attachments are download links; HTML-only mail is
-  shown as text with an "Open original" link.
+  the sender wrote, never the text their mail client quoted. Above it, a
+  quote card says what it answers, as messengers do: the answered sender in
+  bold, the first lines of their message, its attachment, with an accent bar;
+  pressing the card scrolls to that message and highlights it. Where a
+  message starts a new subject, or answers something not in the mailbox, the
+  card shows the subject instead; this is the only place subjects appear.
+  The signature is behind "Show signature", and the ⋯ menu offers "Open
+  original" (the raw `.eml`). Attachments are download links; HTML-only mail
+  is shown as text with an "Open original" link.
 - **Writing.** The box under a chat replies to everyone in it and says how
   the message is sent (with an Email Social part, or as an ordinary e-mail
   with the answered message quoted below). "New chat" takes recipients

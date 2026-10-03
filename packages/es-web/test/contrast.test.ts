@@ -35,11 +35,16 @@ describe("colour contrast (WCAG AA)", () => {
     ["accent", "theirs-bg"],
     ["badge-text", "badge-bg"],
     ["error", "bg"],
+    ["theirs-text", "card-bg"],
+    ["muted", "card-bg"],
+    ["mine-text", "mine-card-bg"],
+    ["mine-muted", "mine-card-bg"],
   ])("%s on %s is at least 4.5:1", (fg, bg) => {
     expect(contrast(fg, bg)).toBeGreaterThanOrEqual(4.5);
   });
 
-  it.each([["focus", "bg"], ["focus", "panel"], ["focus", "selected-bg"], ["border", "bg"]])("%s against %s is at least 3:1", (a, b) => {
+  // The focus ring and the highlight of a bubble a quote card points to are drawn outside the element, on --bg.
+  it.each([["focus", "bg"], ["focus", "panel"], ["focus", "selected-bg"], ["border", "bg"], ["accent", "card-bg"], ["mine-text", "mine-card-bg"]])("%s against %s is at least 3:1", (a, b) => {
     expect(contrast(a, b)).toBeGreaterThanOrEqual(3);
   });
 });

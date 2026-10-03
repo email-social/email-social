@@ -45,33 +45,37 @@ const chats: ChatSummary[] = [
 
 const theirs: MessageView = {
   key: "inbox:a.eml",
+  id: "<k2@example.org>",
   from: { address: "bob@example.org", name: "Bob Svoboda" },
   mine: false,
   date: "2026-03-20T17:00:00Z",
   subject: "Víkend na chatě",
-  text: "Jedu! <b>Dřevo</b> se hodí.\n\n-- \nBob\n\nOn Sat, Mar 7, 2026 at 9:30 AM Alice <alice@example.com> wrote:\n> Jedeš?",
+  text: "Jedu! <b>Dřevo</b> se hodí.\n\n-- \nBob\n\nOn Sat, Mar 7, 2026 at 9:30 AM Alice <alice@example.com> wrote:\n> Jedeš o víkendu na chatu?",
   fresh: "Jedu! <b>Dřevo</b> se hodí.",
-  quoted: "On Sat, Mar 7, 2026 at 9:30 AM Alice <alice@example.com> wrote:\n> Jedeš?",
+  quoted: "On Sat, Mar 7, 2026 at 9:30 AM Alice <alice@example.com> wrote:\n> Jedeš o víkendu na chatu?",
   signature: "-- \nBob",
   textSource: "html",
   attachments: [{ partId: "2", filename: "plán.pdf", contentType: "application/pdf", size: 12_300, path: "/api/messages/inbox%3Aa.eml/attachments/2" }],
   originalPath: "/api/messages/inbox%3Aa.eml/original",
   status: null,
   emailSocial: false,
+  replyContext: { kind: "parent", messageId: "<k1@example.com>", from: "Alice Dvořáková", fromMe: true, excerpt: "Jedeš o víkendu na chatu?", attachment: null },
 };
 
 const mine: MessageView = {
   ...theirs,
   key: "sent:b.eml",
+  id: "<k1@example.com>",
   from: { address: "alice@example.com", name: "Alice" },
   mine: true,
-  text: "Kolem desáté.",
-  fresh: "Kolem desáté.",
+  text: "Jedeš o víkendu na chatu?",
+  fresh: "Jedeš o víkendu na chatu?",
   quoted: "",
   signature: "",
   textSource: "plain",
   attachments: [],
   status: "read",
+  replyContext: { kind: "subject", subject: "Víkend na chatě" },
 };
 
 describe("chat list", () => {
@@ -119,40 +123,64 @@ describe("Other mail", () => {
 });
 
 describe("message bubbles", () => {
-  it("shows what the sender wrote, as text, and hides the quoted text and the signature behind controls", () => {
-    const html = render(<Bubble message={theirs} token="tok" group={false} onPerson={noop} now={NOW} />);
+  const bubble = (message: MessageView) => render(<Bubble message={message} token="tok" group={false} onPerson={noop} onQuote={noop} now={NOW} />);
+
+  it("shows only what the sender wrote, as text: no quoted text anywhere, the signature collapsed", () => {
+    const html = bubble(theirs);
     expect(html).toContain('data-side="left"');
     expect(html).toContain('<p class="text">Jedu! &lt;b>Dřevo&lt;/b> se hodí.</p>');
-    expect(html).toMatch(/<details class="quoted"><summary>Show quoted text<\/summary><p class="text">On Sat, Mar 7/);
+    expect(html).not.toContain("wrote:");
+    expect(html).not.toContain("Show quoted text");
+    expect(html).not.toContain("&gt; Jedeš");
     expect(html).toMatch(/<details class="signature"><summary>Show signature<\/summary><p class="text">-- \nBob<\/p>/);
   });
 
+  it("puts a quote card above the text: who is answered in bold, the excerpt muted, a button to the answered message", () => {
+    const html = bubble(theirs);
+    expect(html).toMatch(
+      /<button type="button" class="quote-card" data-target="&lt;k1@example.com>" title="Show the message this answers"><span class="sr-only">In reply to <\/span><span class="quote-from">You<\/span><span class="quote-excerpt">Jedeš o víkendu na chatu\?<\/span><\/button><p class="text">/,
+    );
+    const named = bubble({ ...theirs, replyContext: { kind: "parent", messageId: "<x@example.org>", from: "Karel Holub", fromMe: false, excerpt: "Fotky jsou v příloze.", attachment: "výlet.zip" } });
+    expect(named).toContain('<span class="quote-from">Karel Holub</span>');
+    expect(named).toContain('<span class="quote-attachment"><span aria-hidden="true">📎 </span><span class="sr-only">Attachment: </span>výlet.zip</span>');
+  });
+
+  it("shows a subject card with the subject alone, not as a button", () => {
+    const html = bubble(mine);
+    expect(html).toContain('<p class="quote-card subject"><span class="quote-excerpt">Víkend na chatě</span></p>');
+    expect(html).not.toContain('class="quote-card"><span class="quote-from"');
+    expect(bubble({ ...mine, replyContext: null })).not.toContain("quote-card");
+  });
+
   it("makes the sender's name a button that opens the contact page, and leaves the verification slot empty", () => {
-    const html = render(<Bubble message={theirs} token="tok" group={false} onPerson={noop} now={NOW} />);
-    expect(html).toMatch(/<button type="button" class="person" data-address="bob@example.org">Bob Svoboda<\/button>/);
+    expect(bubble(theirs)).toMatch(/<button type="button" class="person" data-address="bob@example.org">Bob Svoboda<\/button>/);
     expect(render(<VerificationBadgeSlot address="bob@example.org" />)).toBe("");
   });
 
   it("puts own messages on the right, labelled You, with their receipt status in words", () => {
-    const html = render(<Bubble message={mine} token="tok" group={false} onPerson={noop} now={NOW} />);
+    const html = bubble(mine);
     expect(html).toContain('data-side="right"');
     expect(html).toContain(">You<");
     expect(html).toContain("Read");
-    expect(html).not.toContain("Show quoted text");
   });
 
-  it("lists attachments as named download links and offers the original of an HTML-only message", () => {
-    const html = render(<Bubble message={theirs} token="tok" group={false} onPerson={noop} now={NOW} />);
+  it("offers the original message in the ⋯ menu, as a download through the bridge", () => {
+    const html = bubble(mine);
+    expect(html).toMatch(/<details class="message-menu"><summary aria-label="Message actions">⋯<\/summary><ul><li><a href="\/api\/messages\/inbox%3Aa.eml\/original\?token=tok" download>Open original<\/a><\/li><\/ul><\/details>/);
+  });
+
+  it("lists attachments as named download links and notes HTML-only mail", () => {
+    const html = bubble(theirs);
     expect(html).toContain('href="/api/messages/inbox%3Aa.eml/attachments/2?token=tok"');
     expect(html).toContain("plán.pdf");
     expect(html).toContain("12 KB");
     expect(html).toContain("Shown as plain text");
-    expect(html).toContain('href="/api/messages/inbox%3Aa.eml/original?token=tok"');
   });
 
-  it("shows the quoted text at once when the sender wrote nothing new (a plain forward)", () => {
-    const html = render(<Bubble message={{ ...theirs, fresh: "", signature: "" }} token="tok" group={false} onPerson={noop} now={NOW} />);
-    expect(html).toMatch(/<details class="quoted" open/);
+  it("says when the sender wrote nothing new (a plain forward), without showing what they quoted", () => {
+    const html = bubble({ ...theirs, fresh: "", signature: "" });
+    expect(html).toContain('<p class="text empty-text">(no new text; the full message is under ⋯ → Open original)</p>');
+    expect(html).not.toContain("wrote:");
   });
 });
 
@@ -160,28 +188,32 @@ describe("chat pane", () => {
   const view: ChatView = {
     chat: chats[0]!,
     messages: [
-      { ...theirs, key: "1", subject: "Kdy dorazíš?" },
-      { ...mine, key: "2", subject: "Kdy dorazíš?" },
-      { ...theirs, key: "3", subject: "Fotky" },
-      { ...theirs, key: "4", subject: "Fotky" },
-      { ...mine, key: "5", subject: "" },
-      { ...theirs, key: "6", subject: "Kdy dorazíš?" },
+      { ...mine, key: "1", id: "<1@x>", subject: "Kdy dorazíš?", replyContext: { kind: "subject", subject: "Kdy dorazíš?" } },
+      { ...theirs, key: "2", id: "<2@x>", subject: "Kdy dorazíš?", replyContext: { kind: "parent", messageId: "<1@x>", from: "Alice", fromMe: true, excerpt: "Kdy?", attachment: null } },
+      { ...theirs, key: "3", id: "<3@x>", subject: "Fotky", replyContext: { kind: "subject", subject: "Fotky" } },
+      { ...theirs, key: "4", id: "<4@x>", subject: "Fotky", replyContext: null },
     ],
   };
+  const pane = (v: ChatView) => render(<ChatPane view={v} token="tok" headingRef={{ current: null }} onSend={asyncNoop} onPerson={noop} now={NOW} />);
 
-  it("marks where the subject changes with a small separator, starting with the first subject", () => {
-    const html = render(<ChatPane view={view} token="tok" headingRef={{ current: null }} onSend={asyncNoop} onPerson={noop} now={NOW} />);
-    const separators = [...html.matchAll(/<li class="subject-separator"><h3>([^<]*)<\/h3><\/li>/g)].map((m) => m[1]);
-    expect(separators).toEqual(["Kdy dorazíš?", "Fotky", "(no subject)", "Kdy dorazíš?"]);
-    expect(html.match(/class="bubble /g)).toHaveLength(6);
+  it("has no subject separators: subjects appear only in cards", () => {
+    const html = pane(view);
+    expect(html).not.toContain("subject-separator");
+    expect(html.match(/class="bubble /g)).toHaveLength(4);
+    expect([...html.matchAll(/<p class="quote-card subject"><span class="quote-excerpt">([^<]*)<\/span><\/p>/g)].map((m) => m[1])).toEqual(["Kdy dorazíš?", "Fotky"]);
+    expect(html.match(/data-target=/g)).toHaveLength(1);
+  });
+
+  it("marks every bubble with its message id, so a card can scroll to it", () => {
+    expect(pane(view)).toMatch(/<li class="bubble mine" data-side="right" data-message-id="&lt;1@x>" tabIndex="-1"|<li class="bubble mine" data-side="right" data-message-id="&lt;1@x>" tabindex="-1"/);
   });
 
   it("names the people in the heading as buttons and says how a reply is sent", () => {
-    const html = render(<ChatPane view={view} token="tok" headingRef={{ current: null }} onSend={asyncNoop} onPerson={noop} now={NOW} />);
+    const html = pane(view);
     expect(html).toMatch(/<h2[^>]*>Karel Holub<\/h2>/);
     expect(html).toContain('<label for="reply">Message to Karel Holub</label>');
     expect(html).toContain("Karel uses Email Social");
-    const plain = render(<ChatPane view={{ ...view, chat: chats[1]! }} token="tok" headingRef={{ current: null }} onSend={asyncNoop} onPerson={noop} now={NOW} />);
+    const plain = pane({ ...view, chat: chats[1]! });
     expect(plain).toContain("Group of 3");
     expect(plain).toMatch(/<button type="button" class="person" data-address="jana@example.net">Jana Nováková<\/button>/);
     expect(plain).toContain("sent as an ordinary e-mail, with the message you answer quoted below it");

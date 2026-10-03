@@ -18,6 +18,8 @@
   --mine-muted: #dbe5f5;
   --theirs-bg: #eceff3;
   --theirs-text: #1b1d21;
+  --card-bg: #dde2e9;
+  --mine-card-bg: #163d70;
   --badge-bg: #a4262c;
   --badge-text: #ffffff;
   --error: #a4262c;
@@ -444,32 +446,125 @@ button.person {
   text-underline-offset: 2px;
 }
 
-/* Subject separators in a chat */
-.subject-separator {
-  align-self: center;
-  max-width: 90%;
-}
-
-.subject-separator h3 {
-  margin: 0.4rem 0 0;
+/* Quote cards: what a message answers, or the subject where one starts */
+.quote-card {
+  display: block;
+  width: 100%;
+  text-align: left;
+  font: inherit;
   font-size: 0.85rem;
-  font-weight: 600;
-  color: var(--muted);
-  text-align: center;
+  line-height: 1.35;
+  margin: 0.2rem 0 0.35rem;
+  padding: 0.25rem 0.5rem;
+  background: var(--card-bg);
+  color: var(--theirs-text);
+  border: 0;
+  border-left: 3px solid var(--accent);
+  border-radius: 4px;
 }
 
-/* Quoted text and signatures, collapsed */
-.bubble details {
+button.quote-card {
+  cursor: pointer;
+}
+
+.quote-card .quote-from {
+  display: block;
+  font-weight: 700;
+}
+
+.quote-card .quote-excerpt,
+.quote-card .quote-attachment {
+  display: block;
+  color: var(--muted);
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.quote-card .quote-excerpt {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+}
+
+.quote-card.subject .quote-excerpt {
+  color: var(--theirs-text);
+  font-weight: 600;
+}
+
+.bubble.mine .quote-card {
+  background: var(--mine-card-bg);
+  color: var(--mine-text);
+  border-left-color: var(--mine-text);
+}
+
+.bubble.mine .quote-card .quote-excerpt,
+.bubble.mine .quote-card .quote-attachment {
+  color: var(--mine-muted);
+}
+
+.bubble.mine .quote-card.subject .quote-excerpt {
+  color: var(--mine-text);
+}
+
+/* The bubble a card points to, for a second */
+.bubble.highlight {
+  outline: 3px solid var(--focus);
+  outline-offset: 2px;
+}
+
+/* The ⋯ menu of a message */
+.bubble .meta {
+  display: flex;
+  align-items: center;
+  gap: 0.2rem;
+}
+
+.message-menu {
+  position: relative;
+  margin-left: auto;
+}
+
+.message-menu summary {
+  list-style: none;
+  cursor: pointer;
+  padding: 0 0.35rem;
+  border-radius: 4px;
+}
+
+.message-menu summary::-webkit-details-marker {
+  display: none;
+}
+
+.message-menu ul {
+  position: absolute;
+  right: 0;
+  bottom: 1.6rem;
+  z-index: 1;
+  list-style: none;
+  margin: 0;
+  padding: 0.3rem 0.6rem;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  white-space: nowrap;
+}
+
+.bubble .message-menu ul a {
+  color: var(--accent);
+}
+
+/* Signatures, collapsed */
+.bubble details.signature {
   margin-top: 0.3rem;
   font-size: 0.9rem;
 }
 
-.bubble details summary {
+.bubble details.signature summary {
   cursor: pointer;
   color: var(--muted);
 }
 
-.bubble.mine details summary {
+.bubble.mine details.signature summary {
   color: var(--mine-muted);
 }
 

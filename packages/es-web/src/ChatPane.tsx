@@ -76,23 +76,28 @@ export function People({ people, onPerson }: { people: readonly Person[]; onPers
   );
 }
 
-/** Messages oldest first, with a small separator wherever the subject changes (and before the first). */
+/**
+ * Messages oldest first. A quote card shows the message it answers: pressing
+ * it scrolls to that bubble and highlights it for a second.
+ */
 function Messages({ messages, token, group, onPerson, now }: { messages: readonly MessageView[]; token: string; group: boolean; onPerson: (a: string) => void; now: Date | undefined }) {
   const list = useRef<HTMLOListElement>(null);
   useEffect(() => {
     list.current?.lastElementChild?.scrollIntoView?.({ block: "end" });
   }, [messages.length, messages[0]?.key]);
+  const targets = new Set(messages.map((m) => m.id));
+  const show = (messageId: string): void => {
+    const bubble = [...(list.current?.querySelectorAll<HTMLElement>("li.bubble") ?? [])].find((el) => el.dataset.messageId === messageId);
+    if (bubble === undefined) return;
+    bubble.scrollIntoView?.({ block: "center", behavior: "smooth" });
+    bubble.focus({ preventScroll: true });
+    bubble.classList.add("highlight");
+    setTimeout(() => bubble.classList.remove("highlight"), 1000);
+  };
   return (
     <ol class="messages" aria-label="Messages" ref={list}>
-      {messages.map((m, i) => (
-        <Fragment key={m.key}>
-          {i === 0 || messages[i - 1]!.subject !== m.subject ? (
-            <li class="subject-separator">
-              <h3>{m.subject === "" ? "(no subject)" : m.subject}</h3>
-            </li>
-          ) : null}
-          <Bubble message={m} token={token} group={group} onPerson={onPerson} {...(now ? { now } : {})} />
-        </Fragment>
+      {messages.map((m) => (
+        <Bubble key={m.key} message={m} token={token} group={group} onPerson={onPerson} onQuote={show} quoteTargets={targets} {...(now ? { now } : {})} />
       ))}
     </ol>
   );
