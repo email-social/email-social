@@ -39,7 +39,11 @@ Seznam.cz and other providers: [`docs/TRY-IT.md`](../../docs/TRY-IT.md).
   (`groupByParticipants`), not by subject. Mail from lists and programs
   (`classifyMessage`: `List-*`, `Auto-Submitted`, `Precedence`, `Return-Path: <>`,
   no-reply senders) goes to "Other mail", read-only. Each message is split
-  into what the sender wrote, the quoted text and the signature (`splitQuoted`).
+  into what the sender wrote, the quoted text and the signature (`splitQuoted`),
+  and carries its quote card (`replyContextOf`): the message it answers,
+  looked up among everything the session holds, or its subject where a new
+  one starts or the answered message is not held. The web client shows the
+  card and the fresh text, never the quoted text.
 - **Live.** New mail in INBOX arrives by IDLE; every folder (also the sent
   folder, for messages sent from other clients) is checked every 30 seconds.
   A lost connection is re-established with growing pauses (1 s to 60 s),

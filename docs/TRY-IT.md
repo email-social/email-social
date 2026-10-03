@@ -29,10 +29,12 @@ The terminal prints an address such as
 open it yourself; it only works with the token). You should see 7 chats of
 a demo mailbox belonging to "Alice", and below them a collapsed "Other mail"
 with a mailing list and a newsletter. The newest chat is with Karel Holub
-and has 3 unread messages. The chat with Bob Svoboda holds four subjects,
-each marked by a small separator. Opening a chat shows your messages on the
-right and the others on the left, each with only what its sender wrote;
-"Show quoted text" reveals what their mail client quoted. A message you send
+and has 3 unread messages. Opening a chat shows your messages on the right
+and the others on the left, each with only what its sender wrote, never the
+text their mail client quoted. A small card above a message says what it
+answers: who wrote that message and how it began (press the card to jump to
+it); where a new subject starts, the card shows the subject. The chat with
+Bob Svoboda holds four subjects, so it has four subject cards. A message you send
 is written into the demo folder printed in the terminal: `Sent/` gets your
 copy, `Outbox/` what would have been sent, and nothing goes on the network.
 Any `.eml` file you copy into its `INBOX/` appears within a few seconds.
@@ -102,9 +104,10 @@ The page shows **Sign in to your mailbox**.
 | Sign in | "Signing in as …" with a number that changes: seconds while connecting, then "Loading messages: 23 of 540". The chats appear once the newest 50 messages are in; a line at the top then shows "Loading older messages: … of …" until the rest is there. Nothing stays on "Signing in…" without a changing number. A wrong password shows the server's error in red above the form, and the password is not shown anywhere. If the server does not answer, the error and **Try again** appear within a minute. |
 | Chat list | One row per person or group (at most the 500 newest messages of the inbox and of the sent folder), newest first, with names, the first line of what was last written (no quoted text) and an unread count that matches the unread messages from those people in your webmail's inbox. Someone who wrote under several subjects is one chat. |
 | Other mail | Mailing lists, newsletters and automated senders (notifications, no-reply senders, delivery reports) are not chats: they are under the collapsed **Other mail**, read-only. |
-| Open a chat | Bubbles in date order: your messages (from the sent folder) on the right labelled "You", the others on the left with the sender's name. Each bubble shows only what its sender wrote; **Show quoted text** and **Show signature** reveal the rest. A small separator shows each subject. The unread count drops to 0, and the messages show as read in your webmail too. HTML-only mail shows as text with "Shown as plain text. Open original". |
+| Open a chat | Bubbles in date order: your messages (from the sent folder) on the right labelled "You", the others on the left with the sender's name. Each bubble shows only what its sender wrote: no quoted text, not even behind a control; **Show signature** reveals the signature, and the **⋯** menu of a bubble offers **Open original**, which downloads the whole message as `.eml`. The unread count drops to 0, and the messages show as read in your webmail too. HTML-only mail shows as text with "Shown as plain text. Open original". |
+| Quote card | A reply has a small card above its text, with a coloured bar on the left: the name of the person it answers in bold ("You" for your own message), the first one or two lines of that message, and a 📎 with the file name when that message had an attachment. Pressing the card scrolls to that message and outlines it for a second. A message that starts a new subject, or answers something that is not in your mailbox (for example an older message beyond the 500 loaded), shows a card with the subject alone. There are no other subject lines in the chat. |
 | Attachments | Listed under the message by file name. Clicking downloads the file; "Open original" downloads the `.eml`. |
-| Reply | Type in the box at the bottom and press Send (or Ctrl+Enter). The reply appears on the right with only your text. The recipient gets an ordinary e-mail whose text is readable in any client. If the recipient has never sent you an Email Social message, it is plain text only, with no attachment, and the message you answered is quoted below your text ("On … wrote:" and "> " lines), so they can see what you are answering. |
+| Reply | Type in the box at the bottom and press Send (or Ctrl+Enter). The reply appears on the right with only your text and the card of the message it answers. The recipient gets an ordinary e-mail whose text is readable in any client. If the recipient has never sent you an Email Social message, it is plain text only, with no attachment, and the message you answered is quoted below your text ("On … wrote:" and "> " lines), so they can see what you are answering. |
 | New chat | **New chat**, type a name (suggestions come from your contacts) or any address and press Enter, optionally a subject, then the text. Without a subject, the first line of the text (at most 60 characters) is used. The chat appears in the list; the recipient gets an ordinary e-mail. Several recipients make a group. |
 | Contact page | Click a sender's name: names seen, address, first and last message, number of messages, the chat, attachments exchanged (download links) and groups you share. |
 | Sent folder | Exactly one copy of each message in your webmail's Sent folder. For Gmail, Gmail stores it; for others, Email Social does. If you see two copies with a generic provider, sign in again with **More → Store a copy of sent messages** unticked, and note it in the result. |
@@ -126,14 +129,14 @@ With two accounts that both run Email Social (A and B):
 
 ## Results (filled in by the maintainer)
 
-Task 2b rerun (messenger model), to be filled in; the Task 2 table is kept
-below it for comparison.
+Task 2b/2c rerun (messenger model with quote cards), to be filled in; the
+Task 2 table is kept below it for comparison.
 
-| Provider | Date | Sign-in progress | Chat per person | Other mail | Fresh text only | Reply quotes (plain) | New chat | Contact page | New mail live | Reconnecting | Notes |
-| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| Gmail (app password) | | | | | | | | | | | |
-| Seznam.cz | | | | | | | | | | | |
-| Generic IMAP (provider: …) | | | | | | | | | | | |
+| Provider | Date | Sign-in progress | Chat per person | Other mail | Fresh text only | Quote cards | Card jumps to parent | Subject cards | Open original | Reply quotes (plain) | New chat | Contact page | New mail live | Reconnecting | Notes |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| Gmail (app password) | | | | | | | | | | | | | | | |
+| Seznam.cz | | | | | | | | | | | | | | | |
+| Generic IMAP (provider: …) | | | | | | | | | | | | | | | |
 
 Task 2 (first run):
 
