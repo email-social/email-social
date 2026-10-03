@@ -117,7 +117,11 @@ describe("MailSession: quote cards", () => {
     // Bob's answer to Alice's message from the sent folder.
     const k2 = bob.messages.find((m) => m.fresh.startsWith("Jedu!"))!;
     expect(k2.replyContext).toMatchObject({ kind: "parent", from: "Alice Dvořáková", fromMe: true, excerpt: "Ahoj Bobe, jedeš o víkendu na chatu? Můžu vzít dřevo." });
-    expect(bob.messages.every((m) => m.id !== "" && (m.replyContext?.kind !== "parent" || bob.messages.some((p) => p.id === m.replyContext!.messageId)))).toBe(true);
+    // Every answered message is a bubble of the same chat, so its card can show it.
+    for (const m of bob.messages) {
+      const card = m.replyContext;
+      if (card?.kind === "parent") expect(bob.messages.some((p) => p.id === card.messageId), m.id).toBe(true);
+    }
     await session.close();
   });
 
