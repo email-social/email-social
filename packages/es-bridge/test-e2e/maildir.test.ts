@@ -1,19 +1,26 @@
 /**
- * Acceptance (tasks/02 and 02b): end to end with the Maildir adapter, the
- * built web client in Chromium.
+ * Acceptance (tasks/02, 02b and 02c): end to end with the Maildir adapter,
+ * the built web client in Chromium.
  *
  * Task 2: the chats in the right order with the right unread counts, bubbles
  * on the correct sides, a reply that starts with text/plain and is readable
  * by mailparser, keyboard use, downloads, nothing loaded from elsewhere.
  *
- * Task 2b: (1) one person who wrote under four subjects is one chat with four
- * separators; (2) a reply with quoted text shows only the fresh text, and the
- * control reveals the rest; (3) "New chat" to a new address writes a message
- * whose first part is text/plain, with the derived subject, and the chat
- * appears; (4) a reply to a plain sender has the attribution line and the
- * quoted parent below the text, a reply to an Email Social sender does not;
- * (5) the contact page shows dates, count and attachments; (6) newsletters
- * appear only under "Other mail".
+ * Task 2b: one chat per person whatever the subjects; "New chat" to a new
+ * address writes a message whose first part is text/plain, with the derived
+ * subject, and the chat appears; a reply to a plain sender has the
+ * attribution line and the quoted parent below the text, a reply to an
+ * Email Social sender does not; the contact page shows dates, count and
+ * attachments; newsletters appear only under "Other mail".
+ *
+ * Task 2c: (1) a reply whose parent is in the mailbox shows a card with the
+ * parent's name and excerpt, and no quoted text anywhere in the bubble;
+ * (2) pressing the card scrolls to the parent and highlights it; (3) a reply
+ * to a message not in the mailbox shows the subject card; (4) a person who
+ * used four subjects: subject cards at each change, no separators; (5) a
+ * reply quoting 40 lines shows only its fresh text, and "Open original"
+ * downloads the raw message; (6) a sent reply to a plain sender shows the
+ * card in our chat while the written .eml contains the quoted parent.
  *
  * Needs the built web client (npm run build) and Chromium (playwright-core).
  */
@@ -31,6 +38,7 @@ import { NOW, demoMaildir } from "../test/helpers/session.js";
 
 const webRoot = fileURLToPath(new URL("../../es-web/dist/", import.meta.url));
 const replyFixture = fileURLToPath(new URL("../../es-core/fixtures/replies/gmail-web-de.eml", import.meta.url));
+const longQuoteFixture = fileURLToPath(new URL("../../es-core/fixtures/replies/gmail-long-quote.eml", import.meta.url));
 
 let browser: Browser;
 let bridge: RunningBridge;
@@ -196,40 +204,61 @@ describe("email-social in a browser, on the seeded maildir", () => {
     expect(await page.evaluate(() => document.activeElement?.getAttribute("data-id"))).toBe(karel!.id);
   });
 
-  it("(1) shows one chat with a person who wrote under four subjects, with four separators", async () => {
+  it("2c (4): shows one chat with a person who used four subjects, a subject card at each change and no separators", async () => {
     await openChat("Bob Svoboda");
-    expect(await page.$$eval("li.subject-separator h3", (els) => els.map((e) => e.textContent))).toEqual([
+    expect(await page.$$eval("li.bubble", (els) => els.length)).toBe(10);
+    expect(await page.$$eval("li.subject-separator", (els) => els.length)).toBe(0);
+    expect(await page.$$eval("li.bubble .quote-card.subject", (els) => els.map((e) => e.textContent))).toEqual([
       "Faktura za únor",
       "Víkend na chatě",
       "Návrh smlouvy",
       "Kolo na prodej",
     ]);
-    expect(await page.$$eval("li.bubble", (els) => els.length)).toBe(10);
   });
 
-  it("(2) shows only the fresh text of a reply that quotes, and reveals the rest on request", async () => {
+  it("2c (1): shows a reply whose parent is in the mailbox with a card naming the parent and its first lines, and no quoted text", async () => {
     const bubble = page.locator("li.bubble", { hasText: "Jedu! Dřevo se hodí" });
+    expect(await bubble.locator(".quote-card .quote-from").textContent()).toBe("You");
+    expect(await bubble.locator(".quote-card .quote-excerpt").textContent()).toBe("Ahoj Bobe, jedeš o víkendu na chatu? Můžu vzít dřevo.");
     expect(await bubble.locator(":scope > .text").textContent()).toBe("Jedu! Dřevo se hodí, já vezmu jídlo.\n\nBob");
-    const quoted = bubble.locator("details.quoted");
-    expect(await quoted.evaluate((d) => (d as HTMLDetailsElement).open)).toBe(false);
-    expect(await quoted.locator("p.text").isVisible()).toBe(false);
-    await quoted.locator("summary").click();
-    expect(await quoted.locator("p.text").isVisible()).toBe(true);
-    expect(await quoted.locator("p.text").textContent()).toMatch(/^On Sat, Mar 7, 2026 at 9:30 AM Alice Dvořáková <alice@example\.com> wrote:\n\n> Ahoj Bobe, jedeš o víkendu na chatu\?/);
+    const html = await bubble.innerHTML();
+    expect(html).not.toContain("wrote:");
+    expect(html).not.toContain("&gt; Ahoj Bobe");
+    expect(html).not.toContain("Show quoted text");
+    const named = page.locator("li.bubble", { hasText: "Díky, zaplatím ji v pátek." });
+    expect(await named.locator(".quote-card .quote-from").textContent()).toBe("Bob Svoboda");
+    expect(await named.locator(".quote-card .quote-excerpt").textContent()).toBe("Ahoj Alice, posílám fakturu za únor, splatná je do konce března.");
+    expect(await named.locator(".quote-card .quote-attachment").textContent()).toBe("📎 Attachment: Faktura 2026-02.pdf");
+    // No bubble in the whole chat shows quoted text.
+    expect(await page.$$eval("ol.messages", (els) => els.map((e) => e.textContent ?? "").join(""))).not.toMatch(/wrote:|napsal|^> /m);
   });
 
-  it("(2) shows a reply fixture that arrives while the page is open, with only its fresh text", async () => {
+  it("2c (2): pressing the card scrolls to the answered message and highlights it for a second", async () => {
+    await page.$eval("ol.messages", (list) => list.scrollTo({ top: list.scrollHeight }));
+    const parent = page.locator("li.bubble", { hasText: "Ahoj Bobe, jedeš o víkendu na chatu?" }).first();
+    await page.locator("li.bubble", { hasText: "Jedu! Dřevo se hodí" }).locator("button.quote-card").click();
+    await page.waitForFunction(() => document.querySelector("li.bubble.highlight") !== null);
+    expect(await parent.evaluate((el) => el.classList.contains("highlight"))).toBe(true);
+    expect(await parent.evaluate((el) => document.activeElement === el)).toBe(true);
+    const box = await parent.boundingBox();
+    const list = await page.locator("ol.messages").boundingBox();
+    expect(box!.y).toBeGreaterThanOrEqual(list!.y - 1);
+    expect(box!.y + box!.height).toBeLessThanOrEqual(list!.y + list!.height + 1);
+    await page.waitForFunction(() => document.querySelector("li.bubble.highlight") === null, undefined, { timeout: 3000 });
+  });
+
+  it("2c (3): shows the subject card for a reply whose parent is not in the mailbox (a reply fixture arriving while the page is open)", async () => {
     copyFileSync(replyFixture, join(root, "INBOX", "gmail-web-de.eml"));
     await page.waitForFunction(() => [...document.querySelectorAll("button.chat-row .title")].some((e) => e.textContent === "Anna Becker" && e.closest("button")?.querySelector(".badge")?.textContent === "3"));
     await openChat("Anna Becker");
     const bubble = page.locator("li.bubble", { hasText: "ich muss noch zwei Zahlen prüfen" });
     expect(await bubble.locator(":scope > .text").textContent()).toBe("Hallo Alice,\n\ndie Übersicht kommt am Donnerstag, ich muss noch zwei Zahlen prüfen.\n\nViele Grüße\nAnna");
-    expect(await bubble.locator("details.quoted p.text").isVisible()).toBe(false);
-    await bubble.locator("details.quoted summary").click();
-    expect(await bubble.locator("details.quoted p.text").textContent()).toMatch(/^Am Di\., 3\. März 2026 um 10:15 Uhr schrieb Alice Dvořáková <\nalice@example\.com>:\n\n> Hallo Anna,/);
+    expect(await bubble.locator(".quote-card").getAttribute("class")).toBe("quote-card subject");
+    expect(await bubble.locator(".quote-card").textContent()).toBe("Projektübersicht");
+    expect(await bubble.innerHTML()).not.toContain("schrieb");
   });
 
-  it("(4) replies to a plain sender with the attribution line and the quoted parent below the text", async () => {
+  it("2b (4) and 2c (6): replies to a plain sender with the quoted parent below the text in the .eml, and the card in our chat", async () => {
     const raw = await reply("Danke, Anna!");
     const message = parseMessage(raw);
     expect(message.es).toBeNull();
@@ -238,9 +267,12 @@ describe("email-social in a browser, on the seeded maildir", () => {
       "Danke, Anna!\n\nOn Fri, 6 Mar 2026 at 14:30, Anna Becker <anna.becker@example.net> wrote:\n> Nachtrag: Meilenstein 3 verschiebt sich um eine Woche.\n>\n> Anna",
     );
     expect((await simpleParser(Buffer.from(raw))).text).toContain("> Nachtrag: Meilenstein 3 verschiebt sich um eine Woche.");
-    // In the chat, the reply shows only what was written.
+    // 2c (6): in our chat the reply shows only what was written, with the card of the message it answers.
     const mine = page.locator("li.bubble.mine", { hasText: "Danke, Anna!" });
     expect(await mine.locator(":scope > .text").textContent()).toBe("Danke, Anna!");
+    expect(await mine.locator(".quote-card .quote-from").textContent()).toBe("Anna Becker");
+    expect(await mine.locator(".quote-card .quote-excerpt").textContent()).toBe("Nachtrag: Meilenstein 3 verschiebt sich um eine Woche. Anna");
+    expect(await mine.innerHTML()).not.toContain("wrote:");
   });
 
   it("shows a group with every sender named, and replies to all of them as plain text/plain e-mail", async () => {
@@ -302,6 +334,24 @@ describe("email-social in a browser, on the seeded maildir", () => {
     expect(await page.$$eval(".contact ul.groups button", (els) => els.map((e) => e.textContent))).toEqual(["Bob Svoboda, Jana Nováková"]);
     await page.click(".contact .actions button:has-text('Open chat')");
     await page.waitForFunction(() => document.querySelector("#thread-title")?.textContent === "Bob Svoboda");
+  });
+
+  it("2c (5): shows only the fresh text of a reply quoting 40 lines, and Open original downloads the raw message", async () => {
+    copyFileSync(longQuoteFixture, join(root, "INBOX", "gmail-long-quote.eml"));
+    await openChat("Bob Svoboda");
+    await page.waitForSelector("li.bubble:has-text('the tent')");
+    const bubble = page.locator("li.bubble", { hasText: "the tent" });
+    expect(await bubble.locator(":scope > .text").textContent()).toBe("Looks good, I'll bring the tent.\n\nBob");
+    expect(await bubble.locator(".quote-card").textContent()).toBe("Club weekend");
+    const html = await bubble.innerHTML();
+    expect(html).not.toContain("Item 1:");
+    expect(html).not.toContain("wrote:");
+    expect((await bubble.innerText()).split("\n").filter((line) => line.trim() !== "").length).toBeLessThan(8);
+    await bubble.locator("details.message-menu summary").click();
+    const [download] = await Promise.all([page.waitForEvent("download"), bubble.locator("details.message-menu a", { hasText: "Open original" }).click()]);
+    const saved = readFileSync((await download.path())!);
+    expect(saved.equals(readFileSync(longQuoteFixture))).toBe(true);
+    expect(download.suggestedFilename()).toBe("Re_ Club weekend.eml");
   });
 
   it("loaded nothing from anywhere but the bridge, and had no errors", () => {
