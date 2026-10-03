@@ -1,0 +1,43 @@
+{
+  "description": "Thunderbird, new message: lines that only look like markers: … wrote about the release: (no date or address), a From: line with only one more label",
+  "source": "fixtures/replies/plain-no-quote.eml",
+  "raw": "Message-ID: <2c5d7e9a-1f3b-4d5c-a7e9-c1d3f5b7d9e1@example.org>\r\nDate: Wed, 4 Mar 2026 09:12:40 +0100\r\nMIME-Version: 1.0\r\nUser-Agent: Mozilla Thunderbird\r\nContent-Language: en-US\r\nTo: =?UTF-8?Q?Alice_Dvo=C5=99=C3=A1kov=C3=A1?= <alice@example.com>\r\nFrom: =?UTF-8?Q?Eva_Mal=C3=A1?= <eva@example.net>\r\nSubject: Release notes\r\nContent-Type: text/plain; charset=UTF-8; format=flowed\r\nContent-Transfer-Encoding: 8bit\r\n\r\nHi team,\r\n\r\nHere is what Bob wrote about the release:\r\nthe build is green and the notes are ready.\r\n\r\nFrom: the release checklist\r\nDate: to be decided\r\n\r\nThanks,\r\nEva\r\n\r\n",
+  "expected": {
+    "id": "<2c5d7e9a-1f3b-4d5c-a7e9-c1d3f5b7d9e1@example.org>",
+    "from": {
+      "name": "Eva Malá",
+      "address": "eva@example.net"
+    },
+    "to": [
+      {
+        "name": "Alice Dvořáková",
+        "address": "alice@example.com"
+      }
+    ],
+    "cc": [],
+    "replyTo": [],
+    "date": "2026-03-04T08:12:40.000Z",
+    "subject": "Release notes",
+    "text": "Hi team,\n\nHere is what Bob wrote about the release:\nthe build is green and the notes are ready.\n\nFrom: the release checklist\nDate: to be decided\n\nThanks,\nEva\n\n",
+    "textSource": "plain",
+    "es": null,
+    "attachments": [],
+    "refs": {
+      "messageId": "<2c5d7e9a-1f3b-4d5c-a7e9-c1d3f5b7d9e1@example.org>",
+      "inReplyTo": [],
+      "references": []
+    },
+    "delivery": {
+      "listHeaders": [],
+      "listId": null,
+      "autoSubmitted": null,
+      "precedence": null,
+      "returnPath": null
+    }
+  },
+  "split": {
+    "fresh": "Hi team,\n\nHere is what Bob wrote about the release:\nthe build is green and the notes are ready.\n\nFrom: the release checklist\nDate: to be decided\n\nThanks,\nEva",
+    "quoted": "",
+    "signature": ""
+  }
+}

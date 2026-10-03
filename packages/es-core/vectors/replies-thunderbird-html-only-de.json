@@ -1,0 +1,47 @@
+{
+  "description": "Thunderbird, German, HTML only: moz-cite-prefix (wrapped), <blockquote type=\"cite\" cite=\"mid:…\">, answer below, <pre class=\"moz-signature\">",
+  "source": "fixtures/replies/thunderbird-html-only-de.eml",
+  "raw": "Message-ID: <1b4c6d8f-0e2a-4c4b-96f8-b0c2e4a6c8d0@example.org>\r\nDate: Tue, 3 Mar 2026 12:30:48 +0100\r\nMIME-Version: 1.0\r\nUser-Agent: Mozilla Thunderbird\r\nContent-Language: de-DE\r\nTo: =?UTF-8?Q?Alice_Dvo=C5=99=C3=A1kov=C3=A1?= <alice@example.com>\r\nFrom: Anna Becker <anna.becker@example.net>\r\nSubject: =?UTF-8?Q?Re=3A_Projekt=C3=BCbersicht?=\r\nReferences: <CAKx4mS9xY4aB3dP5rT7vJ0lN2fH8iU1wG4eC6mO8qS0uW2yA@mail.example.com>\r\nIn-Reply-To: <CAKx4mS9xY4aB3dP5rT7vJ0lN2fH8iU1wG4eC6mO8qS0uW2yA@mail.example.com>\r\nContent-Type: text/html; charset=UTF-8\r\nContent-Transfer-Encoding: 8bit\r\n\r\n<!DOCTYPE html>\r\n<html>\r\n  <head>\r\n    <meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\">\r\n  </head>\r\n  <body>\r\n    <div class=\"moz-cite-prefix\">Am 03.03.26 um 10:15 schrieb Alice\r\n      Dvořáková:<br>\r\n    </div>\r\n    <blockquote type=\"cite\"\r\n      cite=\"mid:CAKx4mS9xY4aB3dP5rT7vJ0lN2fH8iU1wG4eC6mO8qS0uW2yA@mail.example.com\">\r\n      <meta http-equiv=\"content-type\" content=\"text/html; charset=UTF-8\">\r\n      Hallo Anna,<br>\r\n      <br>\r\n      kannst du mir die Projektübersicht bis Freitag schicken?<br>\r\n      <br>\r\n      Viele Grüße<br>\r\n      Alice<br>\r\n    </blockquote>\r\n    <p>Hallo Alice,</p>\r\n    <p>ja, die Übersicht kommt am Donnerstag.</p>\r\n    <p>Viele Grüße<br>\r\n      Anna<br>\r\n    </p>\r\n    <pre class=\"moz-signature\" cols=\"72\">--\r\nAnna Becker\r\nExample GmbH</pre>\r\n  </body>\r\n</html>\r\n",
+  "expected": {
+    "id": "<1b4c6d8f-0e2a-4c4b-96f8-b0c2e4a6c8d0@example.org>",
+    "from": {
+      "name": "Anna Becker",
+      "address": "anna.becker@example.net"
+    },
+    "to": [
+      {
+        "name": "Alice Dvořáková",
+        "address": "alice@example.com"
+      }
+    ],
+    "cc": [],
+    "replyTo": [],
+    "date": "2026-03-03T11:30:48.000Z",
+    "subject": "Re: Projektübersicht",
+    "text": "Am 03.03.26 um 10:15 schrieb Alice Dvořáková:\n> Hallo Anna,\n>\n> kannst du mir die Projektübersicht bis Freitag schicken?\n>\n> Viele Grüße\n> Alice\n\nHallo Alice,\n\nja, die Übersicht kommt am Donnerstag.\n\nViele Grüße\nAnna\n\n--\nAnna Becker\nExample GmbH",
+    "textSource": "html",
+    "es": null,
+    "attachments": [],
+    "refs": {
+      "messageId": "<1b4c6d8f-0e2a-4c4b-96f8-b0c2e4a6c8d0@example.org>",
+      "inReplyTo": [
+        "<CAKx4mS9xY4aB3dP5rT7vJ0lN2fH8iU1wG4eC6mO8qS0uW2yA@mail.example.com>"
+      ],
+      "references": [
+        "<CAKx4mS9xY4aB3dP5rT7vJ0lN2fH8iU1wG4eC6mO8qS0uW2yA@mail.example.com>"
+      ]
+    },
+    "delivery": {
+      "listHeaders": [],
+      "listId": null,
+      "autoSubmitted": null,
+      "precedence": null,
+      "returnPath": null
+    }
+  },
+  "split": {
+    "fresh": "Hallo Alice,\n\nja, die Übersicht kommt am Donnerstag.\n\nViele Grüße\nAnna",
+    "quoted": "Am 03.03.26 um 10:15 schrieb Alice Dvořáková:\n> Hallo Anna,\n>\n> kannst du mir die Projektübersicht bis Freitag schicken?\n>\n> Viele Grüße\n> Alice",
+    "signature": "--\nAnna Becker\nExample GmbH"
+  }
+}

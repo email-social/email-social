@@ -89,6 +89,18 @@
         "<root-0@mail.example.com>",
         "<es-vector-1@mail.example.com>"
       ]
+    },
+    "delivery": {
+      "listHeaders": [],
+      "listId": null,
+      "autoSubmitted": null,
+      "precedence": null,
+      "returnPath": null
     }
+  },
+  "split": {
+    "fresh": "Ahoj Alice,\n\nv pátek ve 12 mi to vyhovuje. Příliš žluťoučký kůň úpěl ďábelské ódy. 👍\n\nJana",
+    "quoted": "",
+    "signature": ""
   }
 }

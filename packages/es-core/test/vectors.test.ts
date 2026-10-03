@@ -14,9 +14,10 @@ import { readdirSync, readFileSync, writeFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import { describe, expect, it } from "vitest";
 import { parseMessage } from "../src/parse.js";
+import { splitQuoted } from "../src/quotes.js";
 import { serializeMessage, serializeReceipt } from "../src/serialize.js";
-import type { EsMessage, EsOutgoing, EsOutgoingReceipt, SerializeOptions } from "../src/types.js";
-import { FIXTURES_DIR, listFixtures, readFixture } from "./helpers/fixtures.js";
+import type { EsMessage, EsOutgoing, EsOutgoingReceipt, QuotedSplit, SerializeOptions } from "../src/types.js";
+import { FIXTURES_DIR, listAllFixtures, readFixture } from "./helpers/fixtures.js";
 
 const VECTORS_DIR = fileURLToPath(new URL("../vectors/", import.meta.url));
 const UPDATE = process.env.ES_UPDATE_VECTORS === "1";
@@ -36,6 +37,8 @@ interface Vector {
   /** ... otherwise its bytes in base64. */
   rawBase64?: string;
   expected: EsMessage;
+  /** splitQuoted(expected): what the sender wrote now, what was quoted, the signature. */
+  split: QuotedSplit;
 }
 
 const GENERATED: Record<string, { description: string; input: GeneratedInput }> = {
@@ -136,8 +139,9 @@ function serialize(input: GeneratedInput): string {
     : serializeReceipt(input.receipt, input.options);
 }
 
+/** "name.eml" → "name.json"; "replies/name.eml" → "replies-name.json". */
 function vectorName(fixture: string): string {
-  return fixture.replace(/\.eml$/, ".json");
+  return fixture.replace(/\//g, "-").replace(/\.eml$/, ".json");
 }
 
 /** One-line descriptions from the table in fixtures/README.md ("client: what it exercises"). */
@@ -171,18 +175,21 @@ function write(name: string, vector: Vector): void {
 
 if (UPDATE) {
   const descriptions = fixtureDescriptions();
-  for (const fixture of listFixtures()) {
+  for (const fixture of listAllFixtures()) {
     const bytes = readFixture(fixture);
+    const expected = parseMessage(bytes);
     write(vectorName(fixture), {
       description: descriptions.get(fixture) ?? fixture,
       source: "fixtures/" + fixture,
       ...encodeRaw(bytes),
-      expected: parseMessage(bytes),
+      expected,
+      split: splitQuoted(expected),
     });
   }
   for (const [name, { description, input }] of Object.entries(GENERATED)) {
     const raw = serialize(input);
-    write(name, { description, source: "generated", input, raw, expected: parseMessage(raw) });
+    const expected = parseMessage(raw);
+    write(name, { description, source: "generated", input, raw, expected, split: splitQuoted(expected) });
   }
 }
 
@@ -198,11 +205,11 @@ describe("test vectors (vectors/*.json)", () => {
   });
 
   it("has one vector per fixture plus the generated ones, and nothing else", () => {
-    expect(files).toEqual([...listFixtures().map(vectorName), ...Object.keys(GENERATED)].sort());
+    expect(files).toEqual([...listAllFixtures().map(vectorName), ...Object.keys(GENERATED)].sort());
   });
 
   it("stores each fixture byte for byte", () => {
-    for (const fixture of listFixtures()) {
+    for (const fixture of listAllFixtures()) {
       const vector = vectors.find(([f]) => f === vectorName(fixture))?.[1];
       expect(vector?.source, fixture).toBe("fixtures/" + fixture);
       expect(rawBytes(vector!), fixture).toEqual(readFixture(fixture));
@@ -213,6 +220,10 @@ describe("test vectors (vectors/*.json)", () => {
   it.each(vectors)("%s: parseMessage(raw) equals expected", (_, vector) => {
     expect(vector.raw === undefined).not.toBe(vector.rawBase64 === undefined);
     expect(parseMessage(rawBytes(vector))).toEqual(vector.expected);
+  });
+
+  it.each(vectors)("%s: splitQuoted(expected) equals split", (_, vector) => {
+    expect(splitQuoted(vector.expected)).toEqual(vector.split);
   });
 
   it.each(Object.keys(GENERATED))("%s: serialising the input gives the raw message byte for byte", (name) => {

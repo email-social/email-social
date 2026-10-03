@@ -1,0 +1,47 @@
+{
+  "description": "Thunderbird, Czech: Dne 03. 03. 26 v 10:15 Name napsal(a):, answer below",
+  "source": "fixtures/replies/thunderbird-cs.eml",
+  "raw": "Message-ID: <9f2a4b6d-8c0e-4a2f-b4d6-f8a0c2e4a6b8@example.org>\r\nDate: Tue, 3 Mar 2026 11:44:27 +0100\r\nMIME-Version: 1.0\r\nUser-Agent: Mozilla Thunderbird\r\nContent-Language: cs\r\nTo: =?UTF-8?Q?Alice_Dvo=C5=99=C3=A1kov=C3=A1?= <alice@example.com>\r\nFrom: Karel Holub <karel@example.org>\r\nSubject: =?UTF-8?Q?Re=3A_Fotky_z_v=C3=BDletu?=\r\nReferences: <CAKx4mR8wX3zA2cO4qS6uI9kM1eG7hT0vF3dB5lN7pR9tV1xZ@mail.example.com>\r\nIn-Reply-To: <CAKx4mR8wX3zA2cO4qS6uI9kM1eG7hT0vF3dB5lN7pR9tV1xZ@mail.example.com>\r\nContent-Type: text/plain; charset=UTF-8; format=flowed\r\nContent-Transfer-Encoding: 8bit\r\n\r\nDne 03. 03. 26 v 10:15 Alice Dvořáková napsal(a):\r\n> Ahoj Karle,\r\n>\r\n> pošleš mi prosím fotky z výletu? Chci je dát do alba.\r\n>\r\n> Díky,\r\n> Alice\r\n\r\nAhoj Alice,\r\n\r\nfotky nahraju dnes večer, je jich asi dvě stě.\r\n\r\nKarel\r\n\r\n",
+  "expected": {
+    "id": "<9f2a4b6d-8c0e-4a2f-b4d6-f8a0c2e4a6b8@example.org>",
+    "from": {
+      "name": "Karel Holub",
+      "address": "karel@example.org"
+    },
+    "to": [
+      {
+        "name": "Alice Dvořáková",
+        "address": "alice@example.com"
+      }
+    ],
+    "cc": [],
+    "replyTo": [],
+    "date": "2026-03-03T10:44:27.000Z",
+    "subject": "Re: Fotky z výletu",
+    "text": "Dne 03. 03. 26 v 10:15 Alice Dvořáková napsal(a):\n> Ahoj Karle,\n>\n> pošleš mi prosím fotky z výletu? Chci je dát do alba.\n>\n> Díky,\n> Alice\n\nAhoj Alice,\n\nfotky nahraju dnes večer, je jich asi dvě stě.\n\nKarel\n\n",
+    "textSource": "plain",
+    "es": null,
+    "attachments": [],
+    "refs": {
+      "messageId": "<9f2a4b6d-8c0e-4a2f-b4d6-f8a0c2e4a6b8@example.org>",
+      "inReplyTo": [
+        "<CAKx4mR8wX3zA2cO4qS6uI9kM1eG7hT0vF3dB5lN7pR9tV1xZ@mail.example.com>"
+      ],
+      "references": [
+        "<CAKx4mR8wX3zA2cO4qS6uI9kM1eG7hT0vF3dB5lN7pR9tV1xZ@mail.example.com>"
+      ]
+    },
+    "delivery": {
+      "listHeaders": [],
+      "listId": null,
+      "autoSubmitted": null,
+      "precedence": null,
+      "returnPath": null
+    }
+  },
+  "split": {
+    "fresh": "Ahoj Alice,\n\nfotky nahraju dnes večer, je jich asi dvě stě.\n\nKarel",
+    "quoted": "Dne 03. 03. 26 v 10:15 Alice Dvořáková napsal(a):\n> Ahoj Karle,\n>\n> pošleš mi prosím fotky z výletu? Chci je dát do alba.\n>\n> Díky,\n> Alice",
+    "signature": ""
+  }
+}

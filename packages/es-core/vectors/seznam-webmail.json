@@ -31,6 +31,18 @@
         "<5Mz.Vjx1.2aQwE4tYuIo.1fWb3C@example.net>",
         "<VI1PR02MB5834B6C7D8E9F0A1B2C3D4E5F6A7B8C9D@VI1PR02MB5834.eurprd02.prod.outlook.example.com>"
       ]
+    },
+    "delivery": {
+      "listHeaders": [],
+      "listId": null,
+      "autoSubmitted": null,
+      "precedence": null,
+      "returnPath": null
     }
+  },
+  "split": {
+    "fresh": "Dobrý den,\n\nposílám opravené vyúčtování za březen, chybějící položku jsem doplnil.\n\nS pozdravem\nTomáš Král",
+    "quoted": "---------- Původní e-mail ----------\nOd: Marie Svobodová <marie.svobodova@example.com>\nKomu: Tomáš Král <tomas.kral@example.net>\nDatum: 10. 3. 2026 15:22:47\nPředmět: Odp: Vyúčtování za březen\n\"Dobrý den,\n\nve vyúčtování za březen chybí položka za dopravu. Můžete ho prosím poslat\nznovu?\n\nDěkuji\nMarie Svobodová\"",
+    "signature": ""
   }
 }

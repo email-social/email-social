@@ -19,7 +19,16 @@ describe("htmlToText", () => {
   });
 
   it("starts block elements on a new line without adding blank lines for nested blocks", () => {
-    expect(htmlToText("a<div><div>b</div></div>c<section>d</section><blockquote>e</blockquote>")).toBe("a\nb\nc\nd\ne");
+    expect(htmlToText("a<div><div>b</div></div>c<section>d</section><blockquote>e</blockquote>")).toBe("a\nb\nc\nd\n> e");
+  });
+
+  it("quotes the lines inside <blockquote> with '> ' per level, as a plain-text reply does", () => {
+    expect(htmlToText("Fresh<blockquote>One<br>two<br><br>three<blockquote><p>Older</p><p>text</p></blockquote>back</blockquote>after")).toBe(
+      "Fresh\n> One\n> two\n>\n> three\n\n> > Older\n\n> > text\n\n> back\nafter",
+    );
+    expect(htmlToText("<blockquote><ul><li>item</li></ul><pre>a\nb</pre></blockquote>")).toBe("> - item\n> a\n> b");
+    expect(htmlToText("<blockquote>unclosed")).toBe("> unclosed");
+    expect(htmlToText("</blockquote>stray close")).toBe("stray close");
   });
 
   it("writes list items as lines starting with '- '", () => {

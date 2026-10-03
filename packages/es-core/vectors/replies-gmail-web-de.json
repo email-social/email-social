@@ -1,0 +1,47 @@
+{
+  "description": "Gmail web, German UI: Am Di., 3. März 2026 um 10:15 Uhr schrieb Name < / address>: (name after the verb, wrapped inside the address)",
+  "source": "fixtures/replies/gmail-web-de.eml",
+  "raw": "MIME-Version: 1.0\r\nReferences: <CAKx4mS9xY4aB3dP5rT7vJ0lN2fH8iU1wG4eC6mO8qS0uW2yA@mail.example.com>\r\nIn-Reply-To: <CAKx4mS9xY4aB3dP5rT7vJ0lN2fH8iU1wG4eC6mO8qS0uW2yA@mail.example.com>\r\nFrom: Anna Becker <anna.becker@example.net>\r\nDate: Tue, 3 Mar 2026 13:05:44 +0100\r\nMessage-ID: <CAH7x9kT4uV6xY8aB0dF3hJ5lN7pR9tV1xC4eG6iK8mO0qS2uE@mail.example.com>\r\nSubject: =?UTF-8?B?UmU6IFByb2pla3TDvGJlcnNpY2h0?=\r\nTo: =?UTF-8?Q?Alice_Dvo=C5=99=C3=A1kov=C3=A1?= <alice@example.com>\r\nContent-Type: multipart/alternative; boundary=\"000000000000ca79468ab0df3579\"\r\n\r\n--000000000000ca79468ab0df3579\r\nContent-Type: text/plain; charset=\"UTF-8\"\r\nContent-Transfer-Encoding: quoted-printable\r\n\r\nHallo Alice,\r\n\r\ndie =C3=9Cbersicht kommt am Donnerstag, ich muss noch zwei Zahlen pr=C3=BCf=\r\nen.\r\n\r\nViele Gr=C3=BC=C3=9Fe\r\nAnna\r\n\r\nAm Di., 3. M=C3=A4rz 2026 um 10:15 Uhr schrieb Alice Dvo=C5=99=C3=A1kov=C3=\r\n=A1 <\r\nalice@example.com>:\r\n\r\n> Hallo Anna,\r\n>\r\n> kannst du mir die Projekt=C3=BCbersicht bis Freitag schicken?\r\n>\r\n> Viele Gr=C3=BC=C3=9Fe\r\n> Alice\r\n\r\n\r\n--000000000000ca79468ab0df3579\r\nContent-Type: text/html; charset=\"UTF-8\"\r\nContent-Transfer-Encoding: quoted-printable\r\n\r\n<div dir=3D\"ltr\"><div>Hallo Alice,</div><div><br></div><div>die =C3=9Cbersi=\r\ncht kommt am Donnerstag, ich muss noch zwei Zahlen pr=C3=BCfen.</div><div><=\r\nbr></div><div>Viele Gr=C3=BC=C3=9Fe</div><div>Anna</div></div><br><div clas=\r\ns=3D\"gmail_quote gmail_quote_container\"><div dir=3D\"ltr\" class=3D\"gmail_att=\r\nr\">Am Di., 3. M=C3=A4rz 2026 um 10:15 Uhr schrieb Alice Dvo=C5=99=C3=A1kov=\r\n=C3=A1 &lt;<a href=3D\"mailto:alice@example.com\">alice@example.com</a>&gt;:<=\r\nbr></div><blockquote class=3D\"gmail_quote\" style=3D\"margin:0px 0px 0px 0.8e=\r\nx;border-left:1px solid rgb(204,204,204);padding-left:1ex\"><div dir=3D\"ltr\"=\r\n>Hallo Anna,<br><br>kannst du mir die Projekt=C3=BCbersicht bis Freitag sch=\r\nicken?<br><br>Viele Gr=C3=BC=C3=9Fe<br>Alice</div></blockquote></div>\r\n\r\n--000000000000ca79468ab0df3579--\r\n",
+  "expected": {
+    "id": "<CAH7x9kT4uV6xY8aB0dF3hJ5lN7pR9tV1xC4eG6iK8mO0qS2uE@mail.example.com>",
+    "from": {
+      "name": "Anna Becker",
+      "address": "anna.becker@example.net"
+    },
+    "to": [
+      {
+        "name": "Alice Dvořáková",
+        "address": "alice@example.com"
+      }
+    ],
+    "cc": [],
+    "replyTo": [],
+    "date": "2026-03-03T12:05:44.000Z",
+    "subject": "Re: Projektübersicht",
+    "text": "Hallo Alice,\n\ndie Übersicht kommt am Donnerstag, ich muss noch zwei Zahlen prüfen.\n\nViele Grüße\nAnna\n\nAm Di., 3. März 2026 um 10:15 Uhr schrieb Alice Dvořáková <\nalice@example.com>:\n\n> Hallo Anna,\n>\n> kannst du mir die Projektübersicht bis Freitag schicken?\n>\n> Viele Grüße\n> Alice\n\n",
+    "textSource": "plain",
+    "es": null,
+    "attachments": [],
+    "refs": {
+      "messageId": "<CAH7x9kT4uV6xY8aB0dF3hJ5lN7pR9tV1xC4eG6iK8mO0qS2uE@mail.example.com>",
+      "inReplyTo": [
+        "<CAKx4mS9xY4aB3dP5rT7vJ0lN2fH8iU1wG4eC6mO8qS0uW2yA@mail.example.com>"
+      ],
+      "references": [
+        "<CAKx4mS9xY4aB3dP5rT7vJ0lN2fH8iU1wG4eC6mO8qS0uW2yA@mail.example.com>"
+      ]
+    },
+    "delivery": {
+      "listHeaders": [],
+      "listId": null,
+      "autoSubmitted": null,
+      "precedence": null,
+      "returnPath": null
+    }
+  },
+  "split": {
+    "fresh": "Hallo Alice,\n\ndie Übersicht kommt am Donnerstag, ich muss noch zwei Zahlen prüfen.\n\nViele Grüße\nAnna",
+    "quoted": "Am Di., 3. März 2026 um 10:15 Uhr schrieb Alice Dvořáková <\nalice@example.com>:\n\n> Hallo Anna,\n>\n> kannst du mir die Projektübersicht bis Freitag schicken?\n>\n> Viele Grüße\n> Alice",
+    "signature": ""
+  }
+}

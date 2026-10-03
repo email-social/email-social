@@ -1,0 +1,52 @@
+{
+  "description": "Outlook (Microsoft 365), German: Von:/Gesendet:/An:/Cc:/Betreff:; AW: subject",
+  "source": "fixtures/replies/outlook-desktop-de.eml",
+  "raw": "From: Anna Becker <anna.becker@example.net>\r\nTo: =?UTF-8?Q?Alice_Dvo=C5=99=C3=A1kov=C3=A1?= <alice@example.com>\r\nCC: Lukas Weber <lukas.weber@example.net>\r\nSubject: =?utf-8?Q?AW=3A_Projekt=C3=BCbersicht?=\r\nThread-Topic: =?utf-8?Q?Projekt=C3=BCbersicht?=\r\nThread-Index: AQHcqvE5b2m3ZkRHSUqL0mN3oPq8Rw==\r\nDate: Tue, 3 Mar 2026 12:14:09 +0000\r\nMessage-ID: <AM0PR07MB6211F7A8B9C0D1E2F3A4B5C6D7E8F9A0B@AM0PR07MB6211F7A8B9C0D1E2F3A4B5C6D7E8F9A0B.eurprd02.prod.outlook.example.com>\r\nReferences: <CAKx4mS9xY4aB3dP5rT7vJ0lN2fH8iU1wG4eC6mO8qS0uW2yA@mail.example.com>\r\nIn-Reply-To: <CAKx4mS9xY4aB3dP5rT7vJ0lN2fH8iU1wG4eC6mO8qS0uW2yA@mail.example.com>\r\nAccept-Language: de-DE, en-US\r\nContent-Language: de-DE\r\nX-MS-Has-Attach:\r\nX-MS-TNEF-Correlator:\r\nContent-Type: multipart/alternative;\r\n\tboundary=\"_000_AM0PR07MB6211F7A8B9C0D1E2F3A4B5C6D7E8F_\"\r\nMIME-Version: 1.0\r\n\r\n--_000_AM0PR07MB6211F7A8B9C0D1E2F3A4B5C6D7E8F_\r\nContent-Type: text/plain; charset=\"utf-8\"\r\nContent-Transfer-Encoding: quoted-printable\r\n\r\nHallo Alice,\r\n\r\nanbei die =C3=9Cbersicht, Meilenstein 3 ist neu.\r\n\r\nViele Gr=C3=BC=C3=9Fe\r\nAnna\r\n\r\nVon: Alice Dvo=C5=99=C3=A1kov=C3=A1 <alice@example.com>=20\r\nGesendet: Dienstag, 3. M=C3=A4rz 2026 10:15\r\nAn: Anna Becker <anna.becker@example.net>\r\nCc: Lukas Weber <lukas.weber@example.net>\r\nBetreff: Projekt=C3=BCbersicht\r\n\r\nHallo Anna,\r\n\r\nkannst du mir die Projekt=C3=BCbersicht bis Freitag schicken?\r\n\r\nViele Gr=C3=BC=C3=9Fe\r\nAlice\r\n\r\n\r\n\r\n--_000_AM0PR07MB6211F7A8B9C0D1E2F3A4B5C6D7E8F_\r\nContent-Type: text/html; charset=\"utf-8\"\r\nContent-Transfer-Encoding: quoted-printable\r\n\r\n<html xmlns:v=3D\"urn:schemas-microsoft-com:vml\" xmlns:o=3D\"urn:schemas-micr=\r\nosoft-com:office:office\" xmlns:w=3D\"urn:schemas-microsoft-com:office:word\">\r\n<head>\r\n<meta http-equiv=3D\"Content-Type\" content=3D\"text/html; charset=3Dutf-8\">\r\n<meta name=3D\"Generator\" content=3D\"Microsoft Word 15 (filtered medium)\">\r\n<style><!--\r\np.MsoNormal, li.MsoNormal, div.MsoNormal {margin:0cm; font-size:11.0pt; fon=\r\nt-family:\"Calibri\",sans-serif;}\r\n@page WordSection1 {size:612.0pt 792.0pt; margin:70.85pt 70.85pt 70.85pt 70=\r\n.85pt;}\r\ndiv.WordSection1 {page:WordSection1;}\r\n--></style>\r\n</head>\r\n<body lang=3D\"EN-US\" link=3D\"#0563C1\" vlink=3D\"#954F72\" style=3D\"word-wrap:=\r\nbreak-word\">\r\n<div class=3D\"WordSection1\">\r\n<p class=3D\"MsoNormal\">Hallo Alice,<o:p></o:p></p>\r\n<p class=3D\"MsoNormal\"><o:p>&nbsp;</o:p></p>\r\n<p class=3D\"MsoNormal\">anbei die =C3=9Cbersicht, Meilenstein 3 ist neu.<o:p=\r\n></o:p></p>\r\n<p class=3D\"MsoNormal\"><o:p>&nbsp;</o:p></p>\r\n<p class=3D\"MsoNormal\">Viele Gr=C3=BC=C3=9Fe<o:p></o:p></p>\r\n<p class=3D\"MsoNormal\">Anna<o:p></o:p></p>\r\n<p class=3D\"MsoNormal\"><o:p>&nbsp;</o:p></p>\r\n<div style=3D\"border:none;border-top:solid #E1E1E1 1.0pt;padding:3.0pt 0cm =\r\n0cm 0cm\">\r\n<p class=3D\"MsoNormal\"><b>Von:</b> Alice Dvo=C5=99=C3=A1kov=C3=A1 &lt;alice=\r\n@example.com&gt;<br>\r\n<b>Gesendet:</b> Dienstag, 3. M=C3=A4rz 2026 10:15<br>\r\n<b>An:</b> Anna Becker &lt;anna.becker@example.net&gt;<br>\r\n<b>Cc:</b> Lukas Weber &lt;lukas.weber@example.net&gt;<br>\r\n<b>Betreff:</b> Projekt=C3=BCbersicht<o:p></o:p></p>\r\n</div>\r\n<p class=3D\"MsoNormal\"><o:p>&nbsp;</o:p></p>\r\n<p class=3D\"MsoNormal\">Hallo Anna,<o:p></o:p></p>\r\n<p class=3D\"MsoNormal\"><o:p>&nbsp;</o:p></p>\r\n<p class=3D\"MsoNormal\">kannst du mir die Projekt=C3=BCbersicht bis Freitag =\r\nschicken?<o:p></o:p></p>\r\n<p class=3D\"MsoNormal\"><o:p>&nbsp;</o:p></p>\r\n<p class=3D\"MsoNormal\">Viele Gr=C3=BC=C3=9Fe<o:p></o:p></p>\r\n<p class=3D\"MsoNormal\">Alice<o:p></o:p></p>\r\n</div>\r\n</body>\r\n</html>\r\n\r\n\r\n--_000_AM0PR07MB6211F7A8B9C0D1E2F3A4B5C6D7E8F_--\r\n",
+  "expected": {
+    "id": "<AM0PR07MB6211F7A8B9C0D1E2F3A4B5C6D7E8F9A0B@AM0PR07MB6211F7A8B9C0D1E2F3A4B5C6D7E8F9A0B.eurprd02.prod.outlook.example.com>",
+    "from": {
+      "name": "Anna Becker",
+      "address": "anna.becker@example.net"
+    },
+    "to": [
+      {
+        "name": "Alice Dvořáková",
+        "address": "alice@example.com"
+      }
+    ],
+    "cc": [
+      {
+        "name": "Lukas Weber",
+        "address": "lukas.weber@example.net"
+      }
+    ],
+    "replyTo": [],
+    "date": "2026-03-03T12:14:09.000Z",
+    "subject": "AW: Projektübersicht",
+    "text": "Hallo Alice,\n\nanbei die Übersicht, Meilenstein 3 ist neu.\n\nViele Grüße\nAnna\n\nVon: Alice Dvořáková <alice@example.com> \nGesendet: Dienstag, 3. März 2026 10:15\nAn: Anna Becker <anna.becker@example.net>\nCc: Lukas Weber <lukas.weber@example.net>\nBetreff: Projektübersicht\n\nHallo Anna,\n\nkannst du mir die Projektübersicht bis Freitag schicken?\n\nViele Grüße\nAlice\n\n\n",
+    "textSource": "plain",
+    "es": null,
+    "attachments": [],
+    "refs": {
+      "messageId": "<AM0PR07MB6211F7A8B9C0D1E2F3A4B5C6D7E8F9A0B@AM0PR07MB6211F7A8B9C0D1E2F3A4B5C6D7E8F9A0B.eurprd02.prod.outlook.example.com>",
+      "inReplyTo": [
+        "<CAKx4mS9xY4aB3dP5rT7vJ0lN2fH8iU1wG4eC6mO8qS0uW2yA@mail.example.com>"
+      ],
+      "references": [
+        "<CAKx4mS9xY4aB3dP5rT7vJ0lN2fH8iU1wG4eC6mO8qS0uW2yA@mail.example.com>"
+      ]
+    },
+    "delivery": {
+      "listHeaders": [],
+      "listId": null,
+      "autoSubmitted": null,
+      "precedence": null,
+      "returnPath": null
+    }
+  },
+  "split": {
+    "fresh": "Hallo Alice,\n\nanbei die Übersicht, Meilenstein 3 ist neu.\n\nViele Grüße\nAnna",
+    "quoted": "Von: Alice Dvořáková <alice@example.com> \nGesendet: Dienstag, 3. März 2026 10:15\nAn: Anna Becker <anna.becker@example.net>\nCc: Lukas Weber <lukas.weber@example.net>\nBetreff: Projektübersicht\n\nHallo Anna,\n\nkannst du mir die Projektübersicht bis Freitag schicken?\n\nViele Grüße\nAlice",
+    "signature": ""
+  }
+}

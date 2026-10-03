@@ -19,15 +19,19 @@ jobs:
           node-version-file: .nvmrc
           cache: npm
       - run: npm ci
+      - name: Licences of dependencies (no GPL, AGPL or unlicensed at run time; MPL-2.0 build tools listed in README.md)
+        run: npm run license:check
       - run: npm run typecheck
       - run: npm test
       - run: npm run build
-      - name: Install Chromium for the browser smoke test
+      - name: Install Chromium for the browser and end-to-end tests
         # Install with the playwright CLI of exactly the playwright-core
-        # version the smoke test uses, so the Chromium revision it
+        # version the tests use, so the Chromium revision it
         # downloads is the one playwright-core launches.
         working-directory: packages/es-core
         run: |
           PLAYWRIGHT_VERSION=$(node -p "require('playwright-core/package.json').version")
           npx --yes "playwright@${PLAYWRIGHT_VERSION}" install --with-deps chromium
       - run: npm run test:browser
+      - name: End-to-end tests (web client in Chromium against the bridge, and the email-social command)
+        run: npm run test:e2e

@@ -1,0 +1,25 @@
+{
+  "name": "@email-social/es-web",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Email Social web client: conversations as chats, served locally by es-bridge.",
+  "license": "Apache-2.0",
+  "type": "module",
+  "engines": {
+    "node": ">=22.12.0"
+  },
+  "scripts": {
+    "test": "vitest run",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "build": "vite build"
+  },
+  "dependencies": {
+    "preact": "10.29.8"
+  },
+  "devDependencies": {
+    "preact-render-to-string": "6.7.0",
+    "typescript": "7.0.2",
+    "vite": "8.3.1",
+    "vitest": "5.0.2"
+  }
+}

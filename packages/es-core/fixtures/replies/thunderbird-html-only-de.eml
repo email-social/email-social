@@ -1,0 +1,42 @@
+Message-ID: <1b4c6d8f-0e2a-4c4b-96f8-b0c2e4a6c8d0@example.org>
+Date: Tue, 3 Mar 2026 12:30:48 +0100
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Content-Language: de-DE
+To: =?UTF-8?Q?Alice_Dvo=C5=99=C3=A1kov=C3=A1?= <alice@example.com>
+From: Anna Becker <anna.becker@example.net>
+Subject: =?UTF-8?Q?Re=3A_Projekt=C3=BCbersicht?=
+References: <CAKx4mS9xY4aB3dP5rT7vJ0lN2fH8iU1wG4eC6mO8qS0uW2yA@mail.example.com>
+In-Reply-To: <CAKx4mS9xY4aB3dP5rT7vJ0lN2fH8iU1wG4eC6mO8qS0uW2yA@mail.example.com>
+Content-Type: text/html; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  </head>
+  <body>
+    <div class="moz-cite-prefix">Am 03.03.26 um 10:15 schrieb Alice
+      Dvořáková:<br>
+    </div>
+    <blockquote type="cite"
+      cite="mid:CAKx4mS9xY4aB3dP5rT7vJ0lN2fH8iU1wG4eC6mO8qS0uW2yA@mail.example.com">
+      <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+      Hallo Anna,<br>
+      <br>
+      kannst du mir die Projektübersicht bis Freitag schicken?<br>
+      <br>
+      Viele Grüße<br>
+      Alice<br>
+    </blockquote>
+    <p>Hallo Alice,</p>
+    <p>ja, die Übersicht kommt am Donnerstag.</p>
+    <p>Viele Grüße<br>
+      Anna<br>
+    </p>
+    <pre class="moz-signature" cols="72">--
+Anna Becker
+Example GmbH</pre>
+  </body>
+</html>

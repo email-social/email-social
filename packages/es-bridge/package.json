@@ -1,0 +1,46 @@
+{
+  "name": "@email-social/es-bridge",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Email Social bridge: a local service that reads and sends the user's own mail over IMAP/SMTP and serves the chat-like web client on 127.0.0.1.",
+  "license": "Apache-2.0",
+  "type": "module",
+  "bin": {
+    "email-social": "bin/email-social.js"
+  },
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "engines": {
+    "node": ">=22.12.0"
+  },
+  "scripts": {
+    "test": "vitest run",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "build": "tsc -p tsconfig.build.json && node scripts/finish-build.mjs",
+    "test:e2e": "vitest run --config vitest.e2e.config.ts"
+  },
+  "dependencies": {
+    "@email-social/es-core": "0.1.0",
+    "@napi-rs/keyring": "2.1.0",
+    "imapflow": "2.1.2",
+    "nodemailer": "10.0.12",
+    "ws": "8.22.0"
+  },
+  "devDependencies": {
+    "@types/node": "22.20.4",
+    "@types/nodemailer": "8.0.2",
+    "@types/ws": "8.18.1",
+    "mailparser": "3.9.31",
+    "playwright-core": "1.56.1",
+    "typescript": "7.0.2",
+    "vitest": "5.0.2"
+  },
+  "files": [
+    "bin",
+    "dist"
+  ]
+}
