@@ -101,9 +101,26 @@ export interface AttachmentView {
   path: string;
 }
 
+/** The quote card above a message (es-core replyContextOf, plus whether the answered message is the account's own). */
+export type ReplyContextView =
+  | {
+      kind: "parent";
+      /** MessageView.id of the answered message (its bubble, when it is in the same chat). */
+      messageId: string;
+      from: string;
+      fromMe: boolean;
+      /** The first two lines of what the answered message's sender wrote, at most 140 characters. */
+      excerpt: string;
+      /** The file name of its first attachment, or null. */
+      attachment: string | null;
+    }
+  | { kind: "subject"; subject: string };
+
 export interface MessageView {
   /** The bridge's key for the message (folder and uid), used in paths. */
   key: string;
+  /** The message's identity (its Message-ID), as quote cards name it. */
+  id: string;
   from: Person | null;
   mine: boolean;
   date: string | null;
@@ -126,6 +143,8 @@ export interface MessageView {
   status: "sent" | "delivered" | "read" | null;
   /** The message carried an Email Social part. */
   emailSocial: boolean;
+  /** The card shown above the text: the message answered, or the subject where a new one starts; null for none. */
+  replyContext: ReplyContextView | null;
 }
 
 export interface ChatView {

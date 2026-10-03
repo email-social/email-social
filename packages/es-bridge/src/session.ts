@@ -22,6 +22,7 @@ import {
   normalizeSubject,
   parseMessage,
   quoteForReply,
+  replyContextOf,
   replyTargetOf,
   serializeMessage,
   serializeReceipt,
@@ -44,6 +45,7 @@ import type {
   OtherSummary,
   OtherView,
   Person,
+  ReplyContextView,
   SendRequest,
   SendResult,
   StartProgress,
@@ -599,13 +601,54 @@ export class MailSession {
     return model.chats.map((chat) => this.chatSummary(model, chat));
   }
 
-  private view(model: Model, stored: Stored): MessageView {
+  /** The held message with this Message-ID (the copy shown for it), or null. */
+  private held(model: Model, id: string): Stored | null {
+    return model.copies.has(id) ? this.shown(model, id) : null;
+  }
+
+  /**
+   * The quote card of a message: the message it answers when the session
+   * holds it (in any folder), else its subject where one starts. `previous`
+   * is the message before it in its chat.
+   */
+  private context(model: Model, stored: Stored, previous: EsMessage | null): ReplyContextView | null {
+    let parent: Stored | null = null;
+    const context = replyContextOf(
+      stored.message,
+      (id) => {
+        parent = this.held(model, id);
+        return parent?.message ?? null;
+      },
+      { previous },
+    );
+    if (context === null || context.kind === "subject") return context;
+    return { ...context, fromMe: parent !== null && this.isMine(parent) };
+  }
+
+  /** Views of the messages of one chat (or Other mail sender), oldest first, with their quote cards. */
+  private async views(model: Model, shown: Stored[]): Promise<MessageView[]> {
+    await this.ensureText(shown);
+    // The cards quote the answered messages: their text must be there too.
+    const parents: Stored[] = [];
+    for (const s of shown) {
+      replyContextOf(s.message, (id) => {
+        const parent = this.held(model, id);
+        if (parent !== null) parents.push(parent);
+        return null;
+      });
+    }
+    await this.ensureText(parents);
+    return shown.map((s, i) => this.view(model, s, i === 0 ? null : shown[i - 1]!.message));
+  }
+
+  private view(model: Model, stored: Stored, previous: EsMessage | null): MessageView {
     const mine = this.isMine(stored);
     const kinds = model.receipts.get(stored.message.id);
     const key = encodeURIComponent(stored.key);
     const split = this.split(stored.message);
     return {
       key: stored.key,
+      id: stored.message.id,
       from: stored.message.from === null ? null : person(stored.message.from),
       mine,
       date: stored.message.date,
@@ -625,6 +668,7 @@ export class MailSession {
       originalPath: `/api/messages/${key}/original`,
       status: !mine ? null : kinds?.has("read") ? "read" : kinds?.has("delivered") ? "delivered" : "sent",
       emailSocial: stored.message.es !== null,
+      replyContext: this.context(model, stored, previous),
     };
   }
 
@@ -633,8 +677,7 @@ export class MailSession {
     const chat = model.chats.find((c) => c.id === chatId);
     if (chat === undefined) return null;
     const shown = chat.messages.map((m) => this.shown(model, m.id));
-    await this.ensureText(shown);
-    return { chat: this.chatSummary(model, chat), messages: shown.map((s) => this.view(model, s)) };
+    return { chat: this.chatSummary(model, chat), messages: await this.views(model, shown) };
   }
 
   private otherSummary(model: Model, group: OtherGroup): OtherSummary {
@@ -664,8 +707,7 @@ export class MailSession {
     const group = model.others.find((g) => g.summaryId === id);
     if (group === undefined) return null;
     const shown = group.messageIds.map((m) => this.shown(model, m));
-    await this.ensureText(shown);
-    return { sender: this.otherSummary(model, group), messages: shown.map((s) => this.view(model, s)) };
+    return { sender: this.otherSummary(model, group), messages: await this.views(model, shown) };
   }
 
   private messageIdsOf(model: Model, id: string): string[] | null {
@@ -810,7 +852,9 @@ export class MailSession {
     this.mailChanged.flush();
     const after = this.build();
     const chat = after.chats.find((c) => c.messages.some((m) => m.id === stored.message.id));
-    return { chatId: chat?.id ?? "", message: this.view(after, stored) };
+    const index = chat?.messages.findIndex((m) => m.id === stored.message.id) ?? -1;
+    const previous = chat !== undefined && index > 0 ? this.shown(after, chat.messages[index - 1]!.id).message : null;
+    return { chatId: chat?.id ?? "", message: this.view(after, stored, previous) };
   }
 
   contacts(): ContactView[] {
@@ -844,7 +888,7 @@ export class MailSession {
         return from === target || this.isMine(s);
       })
       .sort((a, b) => byDateOldestFirst(b.message, a.message))
-      .flatMap((s) => this.view(model, s).attachments.map((a) => ({ ...a, date: s.message.date, fromMe: this.isMine(s) })));
+      .flatMap((s) => this.view(model, s, null).attachments.map((a) => ({ ...a, date: s.message.date, fromMe: this.isMine(s) })));
     const chats = model.chats.filter((c) => c.participants.some((p) => p.address === target));
     return {
       address: target,

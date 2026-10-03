@@ -1,3 +1,4 @@
+import { readFileSync } from "node:fs";
 import { simpleParser } from "mailparser";
 import { describe, expect, it } from "vitest";
 import { parseMessage, serializeMessage, serializeReceipt, splitQuoted } from "@email-social/es-core";
@@ -95,6 +96,51 @@ describe("MailSession: chats with people", () => {
     const again = await openSession(root);
     expect((await chatNamed(again, "Anna Becker")).unread).toBe(0);
     await again.close();
+  });
+});
+
+describe("MailSession: quote cards", () => {
+  it("gives every message its card: the answered message (also from another folder), or the subject where one starts", async () => {
+    const session = await openSession(await demoMaildir());
+    const bob = (await session.chat((await chatNamed(session, "Bob Svoboda")).id))!;
+    const cards = bob.messages.map((m) => m.replyContext);
+    expect(cards.filter((c) => c?.kind === "subject").map((c) => c?.kind === "subject" && c.subject)).toEqual(BOB_SUBJECTS);
+    expect(cards[0]).toEqual({ kind: "subject", subject: "Faktura za únor" });
+    expect(cards[1]).toEqual({
+      kind: "parent",
+      messageId: bob.messages[0]!.id,
+      from: "Bob Svoboda",
+      fromMe: false,
+      excerpt: "Ahoj Alice, posílám fakturu za únor, splatná je do konce března.",
+      attachment: "Faktura 2026-02.pdf",
+    });
+    // Bob's answer to Alice's message from the sent folder.
+    const k2 = bob.messages.find((m) => m.fresh.startsWith("Jedu!"))!;
+    expect(k2.replyContext).toMatchObject({ kind: "parent", from: "Alice Dvořáková", fromMe: true, excerpt: "Ahoj Bobe, jedeš o víkendu na chatu? Můžu vzít dřevo." });
+    expect(bob.messages.every((m) => m.id !== "" && (m.replyContext?.kind !== "parent" || bob.messages.some((p) => p.id === m.replyContext!.messageId)))).toBe(true);
+    await session.close();
+  });
+
+  it("shows the subject card for a reply whose parent is not in the mailbox", async () => {
+    const root = await demoMaildir();
+    const session = await openSession(root);
+    deliver(root, "gmail-web-de.eml", readFileSync(new URL("../../es-core/fixtures/replies/gmail-web-de.eml", import.meta.url)));
+    await session.sync();
+    const anna = (await session.chat((await chatNamed(session, "Anna Becker")).id))!;
+    const reply = anna.messages.find((m) => m.fresh.includes("zwei Zahlen"))!;
+    expect(reply.replyContext).toEqual({ kind: "subject", subject: "Projektübersicht" });
+    await session.close();
+  });
+
+  it("gives a sent reply the card of the message it answers, and a new chat its subject", async () => {
+    const root = await demoMaildir();
+    const session = await openSession(root);
+    const { message } = await session.send({ chatId: (await chatNamed(session, "Anna Becker")).id, text: "Danke!" });
+    expect(message.fresh).toBe("Danke!");
+    expect(message.replyContext).toMatchObject({ kind: "parent", from: "Anna Becker", fromMe: false, excerpt: "Nachtrag: Meilenstein 3 verschiebt sich um eine Woche. Anna" });
+    const created = await session.send({ to: ["zuzana@example.net"], text: "Ahoj Zuzano!" });
+    expect(created.message.replyContext).toEqual({ kind: "subject", subject: "Ahoj Zuzano!" });
+    await session.close();
   });
 });
 
