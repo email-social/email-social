@@ -251,7 +251,7 @@ Quotations from the draft are translated from Czech where the draft is in Czech.
   - In a chat view each message then shows the whole conversation again below it. The maintainer's first manual test with a real mailbox (tasks/02b, item 5) showed exactly that.
   - Signatures (RFC 3676 §4.3 `-- `, often without the space) and one-line mobile signatures ("Sent from my iPhone", "Odesláno z iPhonu") follow the text.
 - **es-core does:** `splitQuoted` separates what the sender wrote now from the quoted text and the signature, without dropping a line; HTML is reduced to text with `> ` in front of lines inside `<blockquote>` (Gmail's quote container, Apple Mail's and Thunderbird's `type="cite"`). A quote between two answers stays with the answers. An Email Social post is always entirely fresh text.
-- **Covered by:** `test/split-quoted.test.ts` (26 reconstructed reply formats in `fixtures/replies/` and 11 corpus replies, a seeded property test that no line is lost), `test/html-to-text.test.ts`, the `split` field of every test vector.
+- **Covered by:** `test/split-quoted.test.ts` (27 reconstructed reply formats in `fixtures/replies/` and 11 corpus replies, a seeded property test that no line is lost), `test/html-to-text.test.ts`, the `split` field of every test vector.
 
 ### D22. People write to each other under many subjects; lists and programs are not people
 

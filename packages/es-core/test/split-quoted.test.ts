@@ -51,6 +51,11 @@ const CASES: Record<string, Case> = {
     fresh: "Sure, Thursday it is!",
     quotedFrom: "On Tue, 3 Mar 2026, 10:15 Alice Dvořáková, <alice@example.com> wrote:",
   },
+  "replies/gmail-long-quote.eml": {
+    client: "Gmail web, a two-line answer above 40 quoted lines",
+    fresh: lines("Looks good, I'll bring the tent.", "", "Bob"),
+    quotedFrom: `${GMAIL_EN} wrote:`,
+  },
   "replies/gmail-web-signature.eml": {
     client: "Gmail web with a signature above the quote",
     fresh: lines("Hi Alice,", "", "the invoice for February is attached.", "", "Best,", "Bob"),

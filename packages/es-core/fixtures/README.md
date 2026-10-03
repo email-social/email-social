@@ -77,6 +77,7 @@ with a remote domain set to HTML-only MIME; they test the HTML path
 | `replies/gmail-web-de.eml` | Gmail web, German UI | `Am Di., 3. März 2026 um 10:15 Uhr schrieb Name <` / `address>:` (name after the verb, wrapped inside the address) | German Gmail word order |
 | `replies/gmail-web-fr.eml` | Gmail web, French UI | `Le mar. 3 mars 2026 à 10:15, Name <address> a` / `écrit :` with the French space before the colon | French Gmail attribution |
 | `replies/gmail-app-en.eml` | Gmail app for Android | one-line answer; `On Tue, 3 Mar 2026, 10:15 Name, <address> wrote:` | the app's attribution has a comma after the name |
+| `replies/gmail-long-quote.eml` | Gmail web, English UI | a two-line answer above an attribution and 40 quoted lines (a long agenda); the quote card and "Open original" end-to-end case | Gmail quotes the whole message it answers |
 | `replies/gmail-web-signature.eml` | Gmail web with a signature | `-- ` signature above the quote (Gmail puts the signature before the quoted text) | text/plain as Gmail generates it |
 | `replies/gmail-quote-html-only.eml` | Gmail web, HTML part only | `gmail_signature_prefix`/`gmail_signature`, the `gmail_quote` container with `gmail_attr` and `<blockquote class="gmail_quote">` | Gmail's current class names |
 | `replies/outlook-desktop-en.eml` | Outlook (Microsoft 365), English | header block `From:`/`Sent:`/`To:`/`Subject:` without prefix, original not quoted; trailing space after the From address | text/plain alternative Outlook writes for an HTML reply |
