@@ -16,7 +16,7 @@ parseMessage(raw: string | Uint8Array): EsMessage                     // never t
 extractPart(raw, partId): EsPartContent | null                        // decoded bytes of one attachment (EsAttachment.partId)
 serializeMessage(out: EsOutgoing, { date, messageId, includeEsPart? }): string  // CRLF, 7-bit; text/plain first, then the ES part
 serializeReceipt(receipt: EsOutgoingReceipt, { date, messageId }): string  // a "delivered" or "read" receipt
-replyTargetOf(parent: EsMessage): ReplyTarget                         // In-Reply-To/References/subject for a reply
+replyTargetOf(parent): ReplyTarget · replyContextOf(message, lookup, { previous? })  // headers for a reply · its quote card
 threadMessages(messages: EsMessage[]): Conversation[]                 // threads by references and subject, any input order
 groupByParticipants(messages, { self }): Chat[]                        // one chat per set of other people, any subjects
 classifyMessage(message): "person" | "list" | "automated"              // from List-*, Auto-Submitted, Precedence, Return-Path, no-reply
@@ -26,7 +26,7 @@ normalizeSubject(subject): { base, isReply, isForward } · canonicalAddress(addr
 deriveContacts(messages, { exclude? }): Contact[] · deriveDid(address) · formatDid · parseDid · isValidDid  // contacts; did:es as metadata
 ES_MEDIA_TYPE · ES_DRAFT_MEDIA_TYPE · ES_TEXT_MAX_BYTES               // ES part media types, text limit (10000 B)
 // Types (src/types.ts): EsMessage, EsAddress, EsAttachment, EsRefs, EsDelivery, EsPart (EsPostPart | EsReceiptPart), Conversation,
-// Chat, ChatEntry, MessageKind, QuotedSplit, Contact, EsOutgoing, EsOutgoingReceipt, ReplyTarget, SerializeOptions, ReceiptKind, EsPartContent
+// Chat, ChatEntry, MessageKind, QuotedSplit, ReplyContext, Contact, EsOutgoing, EsOutgoingReceipt, ReplyTarget, SerializeOptions, ReceiptKind, EsPartContent
 ```
 
 ## Example
@@ -66,6 +66,9 @@ const raw = serializeMessage(
   every line (the three parts together contain the whole text) and treats
   an Email Social post as entirely fresh; `quoteForReply` is for replies to
   people who do not use Email Social, whose clients show no history.
+  `replyContextOf` gives the quote card a client shows above a message
+  instead of quoted text: the answered message's sender and first lines, or
+  the subject where a new one starts.
 - **Browsers.** The library uses only `Uint8Array`, `TextEncoder` and
   `TextDecoder`; a Node `Buffer` is accepted because it is a `Uint8Array`.
 - **Test vectors** in [`vectors/`](vectors/README.md) (raw message →

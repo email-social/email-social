@@ -31,6 +31,7 @@ describe("public API (src/index.ts)", () => {
       "parseDid",
       "parseMessage",
       "quoteForReply",
+      "replyContextOf",
       "replyTargetOf",
       "serializeMessage",
       "serializeReceipt",

@@ -7,6 +7,8 @@ export { groupByParticipants } from "./chats.js";
 export { classifyMessage } from "./classify.js";
 export { splitQuoted } from "./quotes.js";
 export { quoteForReply } from "./reply-quote.js";
+export { replyContextOf } from "./reply-context.js";
+export type { ReplyContextOptions } from "./reply-context.js";
 export type { QuoteOptions } from "./reply-quote.js";
 export type { GroupOptions } from "./chats.js";
 export { normalizeSubject } from "./threading/subject.js";

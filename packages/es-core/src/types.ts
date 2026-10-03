@@ -173,6 +173,25 @@ export interface QuotedSplit {
   signature: string;
 }
 
+/** The quote card above a message (see `replyContextOf`). */
+export type ReplyContext =
+  | {
+      kind: "parent";
+      /** EsMessage.id of the message answered. */
+      messageId: string;
+      /** Its sender's display name, else address; "" when it has no sender. */
+      from: string;
+      /** The first two lines of what its sender wrote, at most 140 characters ("…" when cut). */
+      excerpt: string;
+      /** The file name of its first attachment, or null. */
+      attachment: string | null;
+    }
+  | {
+      kind: "subject";
+      /** The base subject (no Re:/Fwd: prefixes or list tags). */
+      subject: string;
+    };
+
 /** Who a message comes from (see `classifyMessage`). */
 export type MessageKind = "person" | "list" | "automated";
 
