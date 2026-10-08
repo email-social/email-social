@@ -7,7 +7,9 @@
  *     "author": "did:es:…",                      (optional, metadata only)
  *     "value": { "text", "via", "createdAt",      (required; see below for "text")
  *                "email": { "messageId", "subject", "inReplyTo", "references",
- *                           "textSha256" },
+ *                           "textSha256", "topicRoot", "topicLabel",
+ *                           "replyTo": { "messageId", "from": { "name", "address" },
+ *                                        "excerpt" } },
  *                "requestReceipts": ["delivered", "read"] } }
  *
  *   { "$type": "es.social.receipt",
@@ -22,6 +24,19 @@
  * present. `requestReceipts` and the receipt record are additions: the draft
  * has no receipts.
  *
+ * `email` is the sub-object that is ours (the lexicon's `reply`, with AT
+ * URIs, stays unwritten and is ignored). Topics and deliberate replies live
+ * there:
+ * - `topicRoot`: the Message-ID of the root of the topic (a thread inside a
+ *   chat) the message belongs to; the root writes its own Message-ID. Left
+ *   out when the root has no Message-ID.
+ * - `topicLabel`: the topic's name, on every message of a named topic, so the
+ *   name survives the root falling outside what a reader holds.
+ * - `replyTo`: only on a deliberate reply, the message it answers: its
+ *   Message-ID (null when it has none), its sender, and the start of what the
+ *   sender wrote (at most 140 characters). It has nothing to do with the
+ *   RFC 5322 Reply-To header field.
+ *
  * A text longer than ES_TEXT_MAX_BYTES is not put in the record (the lexicon
  * limit); the full text is always in the message's text/plain part. Such a
  * record leaves `text` out and carries `email.textSha256`, the lowercase hex
@@ -34,7 +49,7 @@
 import { canonicalAddress } from "../headers/canonical.js";
 import { normalizeMessageId } from "../headers/message-id.js";
 import { isValidDid } from "../did.js";
-import type { EsEmailMeta, EsPart, EsPostPart, EsReceiptPart, ReceiptKind } from "../types.js";
+import type { EsEmailMeta, EsPart, EsPostPart, EsReceiptPart, EsReplyToCard, ReceiptKind } from "../types.js";
 
 /** Media type of the ES part written by es-core. */
 export const ES_MEDIA_TYPE = "application/vnd.email-social.message+json";
@@ -90,9 +105,24 @@ function readReceiptKinds(value: unknown): ReceiptKind[] {
   return RECEIPT_KINDS.filter((kind) => value.includes(kind));
 }
 
+/** `email.replyTo`, or null when it is not an object with a usable `from.address`. */
+function readReplyTo(value: unknown): EsReplyToCard | null {
+  if (!isObject(value) || !isObject(value.from)) return null;
+  const address = readAddress(value.from.address);
+  if (address === null) return null;
+  return {
+    messageId: typeof value.messageId === "string" ? normalizeMessageId(value.messageId) : null,
+    from: { name: typeof value.from.name === "string" ? value.from.name : "", address },
+    excerpt: typeof value.excerpt === "string" ? value.excerpt : "",
+  };
+}
+
 function readEmailMeta(value: unknown): EsEmailMeta {
-  const meta: EsEmailMeta = { messageId: null, subject: null, inReplyTo: null, references: [], textSha256: null };
+  const meta: EsEmailMeta = { messageId: null, subject: null, inReplyTo: null, references: [], textSha256: null, topicRoot: null, topicLabel: null, replyTo: null };
   if (!isObject(value)) return meta;
+  if (typeof value.topicRoot === "string") meta.topicRoot = normalizeMessageId(value.topicRoot);
+  if (typeof value.topicLabel === "string") meta.topicLabel = value.topicLabel;
+  meta.replyTo = readReplyTo(value.replyTo);
   if (typeof value.messageId === "string") meta.messageId = normalizeMessageId(value.messageId);
   if (typeof value.subject === "string") meta.subject = value.subject;
   if (typeof value.inReplyTo === "string") meta.inReplyTo = normalizeMessageId(value.inReplyTo);
@@ -169,6 +199,12 @@ export function esPartToWire(part: EsPart): Record<string, unknown> {
     if (part.email.inReplyTo !== null) email.inReplyTo = part.email.inReplyTo;
     if (part.email.references.length > 0) email.references = [...part.email.references];
     if (part.email.textSha256 !== null) email.textSha256 = part.email.textSha256;
+    if (part.email.topicRoot !== null) email.topicRoot = part.email.topicRoot;
+    if (part.email.topicLabel !== null) email.topicLabel = part.email.topicLabel;
+    const replyTo = part.email.replyTo;
+    if (replyTo !== null) {
+      email.replyTo = { messageId: replyTo.messageId, from: { name: replyTo.from.name, address: replyTo.from.address }, excerpt: replyTo.excerpt };
+    }
     if (Object.keys(email).length > 0) value.email = email;
     if (part.requestReceipts.length > 0) value.requestReceipts = readReceiptKinds(part.requestReceipts);
     wire.value = value;

@@ -8,8 +8,9 @@ import { describe, expect, it } from "vitest";
 import { parseMessage } from "../src/parse.js";
 import { quoteForReply } from "../src/reply-quote.js";
 import { replyCardOf } from "../src/reply-card.js";
+import { topicsOf } from "../src/topics.js";
 import { replyTargetOf, serializeMessage } from "../src/serialize.js";
-import type { EsEmailMeta, EsMessage, EsReplyToCard } from "../src/types.js";
+import type { EsMessage, EsReplyToCard } from "../src/types.js";
 import { readFixture } from "./helpers/fixtures.js";
 import { mid, msg, t } from "./helpers/messages.js";
 
@@ -38,8 +39,8 @@ function replyTo(parent: EsMessage, text = "Díky!"): EsMessage {
 
 /** `message` as an Email Social post, its ES part carrying `replyTo` when given. */
 function es(message: EsMessage, replyTo?: EsReplyToCard): EsMessage {
-  const email = { messageId: message.refs.messageId, subject: message.subject, inReplyTo: message.refs.inReplyTo[0] ?? null, references: message.refs.references, textSha256: null, ...(replyTo === undefined ? {} : { replyTo }) };
-  return { ...message, es: { $type: "es.social.post", author: null, text: message.text, via: message.from!.address, createdAt: message.date!, email: email as EsEmailMeta, requestReceipts: [] } };
+  const email = { messageId: message.refs.messageId, subject: message.subject, inReplyTo: message.refs.inReplyTo[0] ?? null, references: message.refs.references, textSha256: null, topicRoot: null, topicLabel: null, replyTo: replyTo ?? null };
+  return { ...message, es: { $type: "es.social.post", author: null, text: message.text, via: message.from!.address, createdAt: message.date!, email, requestReceipts: [] } };
 }
 
 describe("replyCardOf: the two fixtures that quote one sentence of their parent", () => {
@@ -230,6 +231,32 @@ describe("replyCardOf: Email Social messages", () => {
   it("our own ES message with replyTo → a card too", () => {
     const mine = es(msg({ id: mid("m"), from: ALICE, to: BOB, date: t(5), subject: "Re: Contract", text: "See article 4." }), carried);
     expect(replyCardOf(mine, holding(target), { inChat: chatOf(target, mine), self })).toMatchObject({ messageId: mid("t"), clickable: true });
+  });
+});
+
+describe("replyCardOf and topicsOf on records written by serializeMessage", () => {
+  it("a named root and a deliberate reply in it, parsed back: one named topic and a clickable card", () => {
+    const root = parseMessage(
+      serializeMessage({ from: ALICE, to: [BOB], subject: "Trip", text: "Shall we take the 7:40 train?", es: { topicRoot: "self", topicLabel: "Trip" } }, { date: "2026-03-03T08:00:00Z", messageId: "<root-2d@example.com>" }),
+    );
+    const card: EsReplyToCard = { messageId: root.id, from: ALICE, excerpt: "Shall we take the 7:40 train?" };
+    const reply = parseMessage(
+      serializeMessage(
+        { from: BOB, to: [ALICE], subject: "Re: Trip", text: "Yes.", inReplyTo: replyTargetOf(root), es: { topicRoot: root.id, topicLabel: "Trip", replyTo: card } },
+        { date: "2026-03-03T08:20:00Z", messageId: "<reply-2d@example.org>" },
+      ),
+    );
+    const continuation = parseMessage(
+      serializeMessage({ from: ALICE, to: [BOB], subject: "Re: Trip", text: "Great.", inReplyTo: replyTargetOf(reply), es: { topicRoot: root.id, topicLabel: "Trip" } }, { date: "2026-03-03T08:30:00Z", messageId: "<cont-2d@example.com>" }),
+    );
+    expect(topicsOf([root, reply, continuation])).toEqual({
+      topics: [{ rootId: root.id, label: "Trip", base: "Trip", kind: "named", count: 3 }],
+      of: { [root.id]: { rootId: root.id, topicStart: true }, [reply.id]: { rootId: root.id, topicStart: false }, [continuation.id]: { rootId: root.id, topicStart: false } },
+    });
+    const options = { inChat: chatOf(root, reply, continuation), self: "alice@example.com" };
+    expect(replyCardOf(reply, holding(root), options)).toEqual({ messageId: root.id, from: "Alice Dvořáková", excerpt: "Shall we take the 7:40 train?", attachment: null, clickable: true });
+    expect(replyCardOf(continuation, holding(root, reply), options)).toBeNull();
+    expect(replyCardOf(root, holding(root), options)).toBeNull();
   });
 });
 

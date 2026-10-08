@@ -117,7 +117,7 @@ describe("quotedFragmentOf: a fragment the sender singled out", () => {
   });
 
   it("an Email Social post never quotes, so it has no fragment", () => {
-    const post: EsMessage = { ...reply("> Could you bring the projector?\n\nYes."), es: { $type: "es.social.post", author: null, text: "x", via: "bob@example.org", createdAt: t(5), email: { messageId: null, subject: null, inReplyTo: null, references: [], textSha256: null }, requestReceipts: [] } };
+    const post: EsMessage = { ...reply("> Could you bring the projector?\n\nYes."), es: { $type: "es.social.post", author: null, text: "x", via: "bob@example.org", createdAt: t(5), email: { messageId: null, subject: null, inReplyTo: null, references: [], textSha256: null, topicRoot: null, topicLabel: null, replyTo: null }, requestReceipts: [] } };
     expect(quotedFragmentOf(post, parent(PLAN))).toBeNull();
   });
 

@@ -105,6 +105,45 @@ const GENERATED: Record<string, { description: string; input: GeneratedInput }> 
       options: { date: "2026-03-02T09:01:00Z", messageId: "<es-vector-6@mail.example.com>", includeEsPart: false },
     },
   },
+  "generated-topic-root.json": {
+    description:
+      "The root of a named topic written by es-core: Subject is the label, no threading headers, email.topicRoot is the message's own Message-ID and email.topicLabel the name.",
+    input: {
+      kind: "message",
+      outgoing: {
+        from: { name: "Alice Example", address: "alice@example.com" },
+        to: [{ name: "Bob", address: "bob@example.org" }],
+        subject: "Trip to the hills",
+        text: "Shall we take the 7:40 train on Saturday?\n",
+        es: { topicRoot: "self", topicLabel: "Trip to the hills" },
+      },
+      options: { date: "2026-03-03T08:00:00Z", messageId: "<es-vector-7@mail.example.com>" },
+    },
+  },
+  "generated-topic-reply.json": {
+    description:
+      "A deliberate reply inside that topic written by es-core: Subject \"Re: \" + the root's base subject, In-Reply-To/References to the message answered, email.topicRoot and email.topicLabel, and email.replyTo with the answered message's id, sender and excerpt.",
+    input: {
+      kind: "message",
+      outgoing: {
+        from: { name: "Bob", address: "bob@example.org" },
+        to: [{ name: "Alice Example", address: "alice@example.com" }],
+        subject: "Re: Trip to the hills",
+        text: "Yes, 7:40 works. I'll bring the map.\n",
+        inReplyTo: { messageId: "<es-vector-7@mail.example.com>", references: [], subject: "Trip to the hills" },
+        es: {
+          topicRoot: "<es-vector-7@mail.example.com>",
+          topicLabel: "Trip to the hills",
+          replyTo: {
+            messageId: "<es-vector-7@mail.example.com>",
+            from: { name: "Alice Example", address: "alice@example.com" },
+            excerpt: "Shall we take the 7:40 train on Saturday?",
+          },
+        },
+      },
+      options: { date: "2026-03-03T08:20:00Z", messageId: "<es-vector-8@mail.example.org>" },
+    },
+  },
   "generated-receipt-delivered.json": {
     description: "A Delivered receipt (es.social.receipt, kind delivered) answering the first generated message.",
     input: {

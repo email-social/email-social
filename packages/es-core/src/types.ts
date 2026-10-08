@@ -57,6 +57,17 @@ export interface EsEmailMeta {
    * otherwise. It ties the record to the text/plain body of the message.
    */
   textSha256: string | null;
+  /**
+   * Message-ID of the root of the topic (the thread inside a chat) this
+   * message belongs to; on the root itself, its own Message-ID. Null when
+   * absent (records written before topics existed, or a root without a
+   * Message-ID); a reader then places the message by its threading headers.
+   */
+  topicRoot: string | null;
+  /** The name an Email Social user gave the topic, written on every message of a named topic; null when it has none. */
+  topicLabel: string | null;
+  /** The message a deliberate reply answers (see EsReplyToCard); null for a message typed without choosing one. */
+  replyTo: EsReplyToCard | null;
 }
 
 /** A direct message: the parsed `es.social.post` record (spec 2.3.1, direct-message subset). */
@@ -314,6 +325,12 @@ export interface EsOutgoing {
     requestReceipts?: ReceiptKind[];
     /** A did:es identifier to put in the ES part as metadata. */
     author?: string;
+    /** `email.topicRoot`: the Message-ID of the topic's root, or "self" when this message is the root (the new Message-ID is written). */
+    topicRoot?: string;
+    /** `email.topicLabel`: the topic's name, white space collapsed; left out when empty. */
+    topicLabel?: string;
+    /** `email.replyTo`: what a deliberate reply answers. */
+    replyTo?: EsReplyToCard;
   };
 }
 
@@ -337,7 +354,7 @@ export interface SerializeOptions {
   /**
    * Whether to attach the ES part (default true). False writes a plain
    * single-part text/plain message, e.g. for a recipient who has never sent
-   * an ES part; the ES fields of EsOutgoing (requestReceipts, author) are then
+   * an ES part; the ES fields of EsOutgoing (requestReceipts, author, topicRoot, topicLabel, replyTo) are then
    * not sent. Receipts ignore it: they always carry their ES part.
    */
   includeEsPart?: boolean;

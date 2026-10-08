@@ -6,7 +6,7 @@ import { describe, expect, it } from "vitest";
 import { parseMessage } from "../src/parse.js";
 import { normalizeSubject, subjectKey } from "../src/threading/subject.js";
 import { carrierSubject, subjectNoteOf, topicsOf } from "../src/topics.js";
-import type { EsEmailMeta, EsMessage } from "../src/types.js";
+import type { EsMessage } from "../src/types.js";
 import { readFixture } from "./helpers/fixtures.js";
 import { mid, msg, t } from "./helpers/messages.js";
 
@@ -14,9 +14,9 @@ const ALICE = "Alice Dvořáková <alice@example.com>";
 const BOB = "Bob Svoboda <bob@example.org>";
 
 /** `message` as an Email Social post carrying the given topic fields in its ES part. */
-function es(message: EsMessage, email: { topicRoot?: string; topicLabel?: string } = {}): EsMessage {
-  const meta = { messageId: message.refs.messageId, subject: message.subject, inReplyTo: message.refs.inReplyTo[0] ?? null, references: message.refs.references, textSha256: null, ...email };
-  return { ...message, es: { $type: "es.social.post", author: null, text: message.text, via: message.from!.address, createdAt: message.date!, email: meta as EsEmailMeta, requestReceipts: [] } };
+function es(message: EsMessage, email: { topicRoot?: string | null; topicLabel?: string | null } = {}): EsMessage {
+  const meta = { messageId: message.refs.messageId, subject: message.subject, inReplyTo: message.refs.inReplyTo[0] ?? null, references: message.refs.references, textSha256: null, topicRoot: null, topicLabel: null, replyTo: null, ...email };
+  return { ...message, es: { $type: "es.social.post", author: null, text: message.text, via: message.from!.address, createdAt: message.date!, email: meta, requestReceipts: [] } };
 }
 
 /** Root id of each message, by EsMessage.id. */

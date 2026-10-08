@@ -12,7 +12,7 @@
 import { canonicalAddress } from "./headers/canonical.js";
 import { isInterleaved, splitQuoted, unquote, unquotedLines } from "./quotes.js";
 import { isAutomatic } from "./topics.js";
-import type { EsMessage, EsPostPart, EsReplyToCard, ReplyCard } from "./types.js";
+import type { EsMessage, ReplyCard } from "./types.js";
 import { collapse, excerpt } from "./util/text.js";
 
 /** A quoted line, as in quotes.ts: ">" after at most three spaces or the U+FEFF iOS Mail writes. */
@@ -61,17 +61,6 @@ export interface ReplyCardOptions {
   self: string | readonly string[];
 }
 
-/** The `email.replyTo` an Email Social post carries, when it has a usable sender address. */
-function carriedReplyTo(es: EsPostPart): EsReplyToCard | null {
-  const value = (es.email as { replyTo?: unknown }).replyTo as Partial<EsReplyToCard> | null | undefined;
-  if (typeof value !== "object" || value === null || typeof value.from?.address !== "string" || value.from.address === "") return null;
-  return {
-    messageId: typeof value.messageId === "string" ? value.messageId : null,
-    from: { name: typeof value.from.name === "string" ? value.from.name : "", address: value.from.address },
-    excerpt: typeof value.excerpt === "string" ? value.excerpt : "",
-  };
-}
-
 /** The Message-ID a message answers: the first In-Reply-To id, else the last References id (RFC 5322 §3.6.4); never its own. */
 function answeredId(message: EsMessage): string | null {
   const id = message.refs.inReplyTo[0] ?? message.refs.references[message.refs.references.length - 1] ?? null;
@@ -108,7 +97,7 @@ function senderOf(message: Pick<EsMessage, "from">): string {
 export function replyCardOf(message: EsMessage, lookup: (messageId: string) => EsMessage | null | undefined, options: ReplyCardOptions): ReplyCard | null {
   if (isAutomatic(message)) return null;
   if (message.es !== null) {
-    const carried = message.es.$type === "es.social.post" ? carriedReplyTo(message.es) : null;
+    const carried = message.es.$type === "es.social.post" ? (message.es.email.replyTo ?? null) : null;
     if (carried === null) return null;
     const target = carried.messageId === null ? null : (lookup(carried.messageId) ?? null);
     const name = collapse(carried.from.name);

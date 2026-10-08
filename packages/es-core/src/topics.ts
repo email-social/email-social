@@ -66,12 +66,11 @@ export function isAutomatic(message: Pick<EsMessage, "delivery">): boolean {
   return value !== null && value !== "no";
 }
 
-/** The topic fields an Email Social post carries in `email` (spec: `topicRoot`, `topicLabel`), or nulls. */
+/** The topic fields an Email Social post carries in `email` (`topicRoot`, `topicLabel`, white space collapsed), or nulls. */
 function carried(message: EsMessage): { root: string | null; label: string | null } {
   if (message.es?.$type !== "es.social.post") return { root: null, label: null };
-  const email = message.es.email as { topicRoot?: unknown; topicLabel?: unknown };
-  const label = typeof email.topicLabel === "string" ? collapse(email.topicLabel) : "";
-  return { root: typeof email.topicRoot === "string" ? email.topicRoot : null, label: label === "" ? null : label };
+  const label = collapse(message.es.email.topicLabel ?? "");
+  return { root: message.es.email.topicRoot ?? null, label: label === "" ? null : label };
 }
 
 /**
