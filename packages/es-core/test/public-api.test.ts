@@ -20,6 +20,7 @@ describe("public API (src/index.ts)", () => {
       "ES_MEDIA_TYPE",
       "ES_TEXT_MAX_BYTES",
       "canonicalAddress",
+      "carrierSubject",
       "classifyMessage",
       "collapse",
       "deriveContacts",
@@ -39,7 +40,9 @@ describe("public API (src/index.ts)", () => {
       "serializeMessage",
       "serializeReceipt",
       "splitQuoted",
+      "subjectKey",
       "threadMessages",
+      "topicsOf",
       "unquote",
       "unquotedLines",
     ]);

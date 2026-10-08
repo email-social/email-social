@@ -18,15 +18,15 @@ serializeMessage(out: EsOutgoing, { date, messageId, includeEsPart? }): string  
 serializeReceipt(receipt: EsOutgoingReceipt, { date, messageId }): string  // a "delivered" or "read" receipt
 replyTargetOf(parent): ReplyTarget · replyContextOf(message, lookup, { previous? }) · quotedFragmentOf(message, parent)  // reply headers · quote card
 threadMessages(messages: EsMessage[]): Conversation[]                 // threads by references and subject, any input order
-groupByParticipants(messages, { self }): Chat[]                        // one chat per set of other people, any subjects
+groupByParticipants(messages, { self }): Chat[] · topicsOf(chat messages): ChatTopics · carrierSubject(sender, others)  // chats · threads in a chat
 classifyMessage(message): "person" | "list" | "automated"              // from List-*, Auto-Submitted, Precedence, Return-Path, no-reply
 splitQuoted(message): { fresh, quoted, signature } · isInterleaved · unquotedLines(quoted) · unquote · collapse(text)  // every line kept · quote marks off
 quoteForReply(parent, { maxLines?, timeZone? }): string                // "On … wrote:" + the parent's fresh text as "> " lines
-normalizeSubject(subject): { base, isReply, isForward } · canonicalAddress(address)  // strips Re:/AW:/Odp:/[list] · lowercases the domain
+normalizeSubject(subject): { base, isReply, isForward } · subjectKey(base) · canonicalAddress(address)  // strips Re:/AW:/Odp:/[list] · compares · lowercases the domain
 deriveContacts(messages, { exclude? }): Contact[] · deriveDid(address) · formatDid · parseDid · isValidDid  // contacts; did:es as metadata
 ES_MEDIA_TYPE · ES_DRAFT_MEDIA_TYPE · ES_TEXT_MAX_BYTES               // ES part media types, text limit (10000 B)
 // Types (src/types.ts): EsMessage, EsAddress, EsAttachment, EsRefs, EsDelivery, EsPart (EsPostPart | EsReceiptPart), Conversation,
-// Chat, ChatEntry, MessageKind, QuotedSplit, ReplyContext, Contact, EsOutgoing, EsOutgoingReceipt, ReplyTarget, SerializeOptions, ReceiptKind, EsPartContent
+// Chat, ChatEntry, ChatTopics, Topic, TopicKind, MessageKind, QuotedSplit, ReplyContext, Contact, EsOutgoing, EsOutgoingReceipt, ReplyTarget, SerializeOptions, ReceiptKind, EsPartContent
 ```
 
 ## Example

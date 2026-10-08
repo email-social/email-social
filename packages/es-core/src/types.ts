@@ -192,14 +192,48 @@ export type ReplyContext =
       subject: string;
     };
 
+/** What a topic is called (see `topicsOf`). */
+export type TopicKind =
+  /** An Email Social user gave it a name (`email.topicLabel`). */
+  | "named"
+  /** No name; its root is an Email Social message or carries the carrier subject ("Message from …"). */
+  | "carrier"
+  /** Started by a fresh mail from any client; its subject is the root's base subject. */
+  | "plain";
+
+/** A thread inside a chat, identified by the Message-ID (EsMessage.id) of its root, never by its subject. */
+export interface Topic {
+  /** EsMessage.id of the root message. */
+  rootId: string;
+  /** The `email.topicLabel` of the oldest message of the topic that carries one, else null. */
+  label: string | null;
+  /** The root's base subject (`normalizeSubject`); "" when it has none. */
+  base: string;
+  kind: TopicKind;
+  /** Number of messages in the topic. */
+  count: number;
+}
+
+/** The topics of one chat (see `topicsOf`). */
+export interface ChatTopics {
+  /** In the order their roots appear. */
+  topics: Topic[];
+  /**
+   * Where each message was placed, by EsMessage.id: its topic's root, and
+   * whether it starts a run (the previous message belongs to another topic;
+   * true for the first).
+   */
+  of: Record<string, { rootId: string; topicStart: boolean }>;
+}
+
 /** Who a message comes from (see `classifyMessage`). */
 export type MessageKind = "person" | "list" | "automated";
 
-/** One message of a chat, with the base subject the client uses to mark subject changes. */
+/** One message of a chat, with its base subject. */
 export interface ChatEntry {
   /** EsMessage.id. */
   id: string;
-  /** Base subject of the message (see `normalizeSubject`); "" when it has none. */
+  /** Base subject of the message (see `normalizeSubject`); "" when it has none. Topics (`topicsOf`) are identified by their root, not by this. */
   subject: string;
 }
 
