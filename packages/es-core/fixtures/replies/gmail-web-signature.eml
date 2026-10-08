@@ -1,0 +1,54 @@
+MIME-Version: 1.0
+References: <CAKx4mQ7vW2yZ1bN3pR5tH8jL0dF6gS9uE2cA4kM6oQ8sU0wY@mail.example.com>
+In-Reply-To: <CAKx4mQ7vW2yZ1bN3pR5tH8jL0dF6gS9uE2cA4kM6oQ8sU0wY@mail.example.com>
+From: Bob Svoboda <bob@example.org>
+Date: Tue, 3 Mar 2026 15:12:00 +0100
+Message-ID: <CAH7x9kW7xY9aB1dE3gI6kM8oQ0sU2wY4aF7hJ9lN1pR3tV5xE@mail.example.com>
+Subject: Re: Contract draft
+To: =?UTF-8?Q?Alice_Dvo=C5=99=C3=A1kov=C3=A1?= <alice@example.com>
+Content-Type: multipart/alternative; boundary="000000000000ca7979ab1de36802"
+
+--000000000000ca7979ab1de36802
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+
+Hi Alice,
+
+the invoice for February is attached.
+
+Best,
+Bob
+
+--=20
+Bob Svoboda
+Example s.r.o. | Sales
+
+On Tue, Mar 3, 2026 at 10:15=E2=80=AFAM Alice Dvo=C5=99=C3=A1kov=C3=A1 <ali=
+ce@example.com> wrote:
+
+> Hi Bob,
+>
+> could you send me the contract draft by Friday?
+>
+> Thanks,
+> Alice
+
+
+--000000000000ca7979ab1de36802
+Content-Type: text/html; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+
+<div dir=3D"ltr"><div>Hi Alice,</div><div><br></div><div>the invoice for Fe=
+bruary is attached.</div><div><br></div><div>Best,</div><div>Bob</div><br c=
+lear=3D"all"><div><br></div><span class=3D"gmail_signature_prefix">-- </spa=
+n><br><div dir=3D"ltr" class=3D"gmail_signature" data-smartmail=3D"gmail_si=
+gnature"><div dir=3D"ltr">Bob Svoboda<div>Example s.r.o. | Sales</div></div=
+></div></div><br><div class=3D"gmail_quote gmail_quote_container"><div dir=
+=3D"ltr" class=3D"gmail_attr">On Tue, Mar 3, 2026 at 10:15=E2=80=AFAM Alice=
+ Dvo=C5=99=C3=A1kov=C3=A1 &lt;<a href=3D"mailto:alice@example.com">alice@ex=
+ample.com</a>&gt; wrote:<br></div><blockquote class=3D"gmail_quote" style=
+=3D"margin:0px 0px 0px 0.8ex;border-left:1px solid rgb(204,204,204);padding=
+-left:1ex"><div dir=3D"ltr">Hi Bob,<br><br>could you send me the contract d=
+raft by Friday?<br><br>Thanks,<br>Alice</div></blockquote></div>
+
+--000000000000ca7979ab1de36802--

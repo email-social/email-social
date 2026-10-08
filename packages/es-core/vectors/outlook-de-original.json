@@ -26,6 +26,18 @@
       "messageId": "<AM0PR07MB62114F2E8A1C3B5D7E9F0A2B4C6D8E0FA@AM0PR07MB6211.eurprd07.prod.outlook.example.com>",
       "inReplyTo": [],
       "references": []
+    },
+    "delivery": {
+      "listHeaders": [],
+      "listId": null,
+      "autoSubmitted": null,
+      "precedence": null,
+      "returnPath": null
     }
+  },
+  "split": {
+    "fresh": "Hallo Lukas,\n\nanbei die Projektübersicht für das zweite Quartal:\n\n\n  *   Meilenstein 1: Anforderungen abgeschlossen (bis 15.04.)\n  *   Meilenstein 2: Prototyp für die Kundenpräsentation\n  *   Budget: 42.000 EUR (unverändert)\n\nKannst du bis Freitag kurz drüberschauen?\n\nViele Grüße\nAnna\n\nAnna Becker\nProjektleitung\nExample GmbH | Musterstraße 1 | 12345 Musterstadt",
+    "quoted": "",
+    "signature": ""
   }
 }

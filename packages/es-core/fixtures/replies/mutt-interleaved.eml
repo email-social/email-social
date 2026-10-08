@@ -1,0 +1,31 @@
+Date: Tue, 3 Mar 2026 21:14:05 +0100
+From: =?UTF-8?Q?Ond=C5=99ej_Bene=C5=A1?= <ondrej@host.example.com>
+To: =?UTF-8?Q?Alice_Dvo=C5=99=C3=A1kov=C3=A1?= <alice@example.com>
+Subject: Re: Backup server
+Message-ID: <20260303201405.GA31337@host.example.com>
+References: <20260303091500.GB2201@example.com>
+In-Reply-To: <20260303091500.GB2201@example.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+User-Agent: Mutt/2.2.13 (2024-03-09)
+
+On Tue, Mar 03, 2026 at 10:15:00AM +0100, Alice Dvořáková wrote:
+> Hi Ondřej,
+>
+> two questions about the backup server:
+> 1. Does the rotation keep 14 snapshots now?
+
+Yes, since last night.
+
+> 2. Can we move the backups to the new disk this week?
+
+Thursday evening works for me.
+
+> Thanks,
+> Alice
+
+-- 
+Ondřej Beneš
+

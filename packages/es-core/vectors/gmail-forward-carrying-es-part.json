@@ -39,6 +39,18 @@
       "references": [
         "<es.7f3a9c2e41b8d605@example.com>"
       ]
+    },
+    "delivery": {
+      "listHeaders": [],
+      "listId": null,
+      "autoSubmitted": null,
+      "precedence": null,
+      "returnPath": null
     }
+  },
+  "split": {
+    "fresh": "Evo, tohle mi poslala Alice, ať víš, kdy vyrážíme.",
+    "quoted": "---------- Forwarded message ---------\nFrom: Alice Dvořáková <alice@example.com>\nDate: Fri, Mar 13, 2026 at 6:05 PM\nSubject: Kdy dorazíš?\nTo: Bob Svoboda <bob@example.org>\n\n\nAhoj Bobe, kdy dorazíš v sobotu? Stačí odpovědět, jestli to stihneš do 10:00.",
+    "signature": ""
   }
 }

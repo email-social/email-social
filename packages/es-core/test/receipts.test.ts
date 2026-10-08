@@ -193,6 +193,7 @@ function message(refs: Partial<EsMessage["refs"]>, subject = "Lunch"): EsMessage
     es: null,
     attachments: [],
     refs: { messageId: null, inReplyTo: [], references: [], ...refs },
+    delivery: { listHeaders: [], listId: null, autoSubmitted: null, precedence: null, returnPath: null },
   };
 }
 

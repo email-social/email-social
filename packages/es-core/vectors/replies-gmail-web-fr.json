@@ -1,0 +1,47 @@
+{
+  "description": "Gmail web, French UI: Le mar. 3 mars 2026 à 10:15, Name <address> a / écrit : with the French space before the colon",
+  "source": "fixtures/replies/gmail-web-fr.eml",
+  "raw": "MIME-Version: 1.0\r\nReferences: <CAKx4mT0yZ5bC4eQ6sU8wK1mO3gI9jV2xH5fD7nP9rT1vX3zB@mail.example.com>\r\nIn-Reply-To: <CAKx4mT0yZ5bC4eQ6sU8wK1mO3gI9jV2xH5fD7nP9rT1vX3zB@mail.example.com>\r\nFrom: =?UTF-8?Q?Camille_Lef=C3=A8vre?= <camille@example.org>\r\nDate: Tue, 3 Mar 2026 14:21:09 +0100\r\nMessage-ID: <CAH7x9kU5vW7yZ9bC1eG4iK6mO8qS0uW2yD5fH7jL9nP1rT3vE@mail.example.com>\r\nSubject: Re: Compte rendu\r\nTo: =?UTF-8?Q?Alice_Dvo=C5=99=C3=A1kov=C3=A1?= <alice@example.com>\r\nContent-Type: multipart/alternative; boundary=\"000000000000ca79579bc1e46802\"\r\n\r\n--000000000000ca79579bc1e46802\r\nContent-Type: text/plain; charset=\"UTF-8\"\r\nContent-Transfer-Encoding: quoted-printable\r\n\r\nBonjour Alice,\r\n\r\nle compte rendu est presque pr=C3=AAt, je te l'envoie demain matin.\r\n\r\nCamille\r\n\r\nLe mar. 3 mars 2026 =C3=A0 10:15, Alice Dvo=C5=99=C3=A1kov=C3=A1 <alice@exa=\r\nmple.com> a\r\n=C3=A9crit :\r\n\r\n> Bonjour Camille,\r\n>\r\n> peux-tu m'envoyer le compte rendu de la r=C3=A9union ?\r\n>\r\n> Merci,\r\n> Alice\r\n\r\n\r\n--000000000000ca79579bc1e46802\r\nContent-Type: text/html; charset=\"UTF-8\"\r\nContent-Transfer-Encoding: quoted-printable\r\n\r\n<div dir=3D\"ltr\"><div>Bonjour Alice,</div><div><br></div><div>le compte ren=\r\ndu est presque pr=C3=AAt, je te l'envoie demain matin.</div><div><br></div>=\r\n<div>Camille</div></div><br><div class=3D\"gmail_quote gmail_quote_container=\r\n\"><div dir=3D\"ltr\" class=3D\"gmail_attr\">Le mar. 3 mars 2026 =C3=A0 10:15, A=\r\nlice Dvo=C5=99=C3=A1kov=C3=A1 &lt;<a href=3D\"mailto:alice@example.com\">alic=\r\ne@example.com</a>&gt; a =C3=A9crit :<br></div><blockquote class=3D\"gmail_qu=\r\note\" style=3D\"margin:0px 0px 0px 0.8ex;border-left:1px solid rgb(204,204,20=\r\n4);padding-left:1ex\"><div dir=3D\"ltr\">Bonjour Camille,<br><br>peux-tu m'env=\r\noyer le compte rendu de la r=C3=A9union ?<br><br>Merci,<br>Alice</div></blo=\r\nckquote></div>\r\n\r\n--000000000000ca79579bc1e46802--\r\n",
+  "expected": {
+    "id": "<CAH7x9kU5vW7yZ9bC1eG4iK6mO8qS0uW2yD5fH7jL9nP1rT3vE@mail.example.com>",
+    "from": {
+      "name": "Camille Lefèvre",
+      "address": "camille@example.org"
+    },
+    "to": [
+      {
+        "name": "Alice Dvořáková",
+        "address": "alice@example.com"
+      }
+    ],
+    "cc": [],
+    "replyTo": [],
+    "date": "2026-03-03T13:21:09.000Z",
+    "subject": "Re: Compte rendu",
+    "text": "Bonjour Alice,\n\nle compte rendu est presque prêt, je te l'envoie demain matin.\n\nCamille\n\nLe mar. 3 mars 2026 à 10:15, Alice Dvořáková <alice@example.com> a\nécrit :\n\n> Bonjour Camille,\n>\n> peux-tu m'envoyer le compte rendu de la réunion ?\n>\n> Merci,\n> Alice\n\n",
+    "textSource": "plain",
+    "es": null,
+    "attachments": [],
+    "refs": {
+      "messageId": "<CAH7x9kU5vW7yZ9bC1eG4iK6mO8qS0uW2yD5fH7jL9nP1rT3vE@mail.example.com>",
+      "inReplyTo": [
+        "<CAKx4mT0yZ5bC4eQ6sU8wK1mO3gI9jV2xH5fD7nP9rT1vX3zB@mail.example.com>"
+      ],
+      "references": [
+        "<CAKx4mT0yZ5bC4eQ6sU8wK1mO3gI9jV2xH5fD7nP9rT1vX3zB@mail.example.com>"
+      ]
+    },
+    "delivery": {
+      "listHeaders": [],
+      "listId": null,
+      "autoSubmitted": null,
+      "precedence": null,
+      "returnPath": null
+    }
+  },
+  "split": {
+    "fresh": "Bonjour Alice,\n\nle compte rendu est presque prêt, je te l'envoie demain matin.\n\nCamille",
+    "quoted": "Le mar. 3 mars 2026 à 10:15, Alice Dvořáková <alice@example.com> a\nécrit :\n\n> Bonjour Camille,\n>\n> peux-tu m'envoyer le compte rendu de la réunion ?\n>\n> Merci,\n> Alice",
+    "signature": ""
+  }
+}

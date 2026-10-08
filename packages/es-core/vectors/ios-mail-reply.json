@@ -36,6 +36,18 @@
         "<3f2a9c1e-6b4d-4e8a-9f1c-2d7e5b8a0c34@example.com>",
         "<CAH7x9kN4q2Lr8vT6YpW3mZs1bQ5dF0gJ+uE_aK8cR2xV9nB7eQ=w@mail.example.com>"
       ]
+    },
+    "delivery": {
+      "listHeaders": [],
+      "listId": null,
+      "autoSubmitted": null,
+      "precedence": null,
+      "returnPath": null
     }
+  },
+  "split": {
+    "fresh": "Jasně, jdu taky! Stůl pro tři je super, přijdu 👍 Těším se.",
+    "quoted": "> Dne 2. 3. 2026 v 11:02, Bob Svoboda <bob@example.org> napsal:\n>\n> ﻿Ahoj Alice,\n>\n> v pátek můžu, 12:30 je super. Zarezervuju stůl pro tři.\n>\n> Bob\n>\n>> On Mon, Mar 2, 2026 at 10:15 AM Alice Dvořáková <alice@example.com> wrote:\n>>\n>> Ahoj Bobe,\n>>\n>> nechceš v pátek zajít na oběd? Myslela jsem, že bychom mohli zkusit to nové bistro na rohu u nádraží, prý tam mají výborné polední menu a není tam taková fronta jako jinde.\n>>\n>> Jana už říkala, že by šla taky. Hodí se ti 12:30?\n>>\n>> Alice\n>>\n>> --\n>> Alice Dvořáková\n>> Example s.r.o.",
+    "signature": "Odesláno z iPhonu"
   }
 }

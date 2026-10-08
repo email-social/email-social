@@ -55,6 +55,7 @@ export function msg(init: MsgInit): EsMessage {
       inReplyTo: [...inReplyTo],
       references: [...(init.references ?? [])],
     },
+    delivery: { listHeaders: [], listId: null, autoSubmitted: null, precedence: null, returnPath: null },
   };
 }
 

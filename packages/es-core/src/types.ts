@@ -94,8 +94,35 @@ export interface EsReceiptPart {
 /** The structured ES part of a message. */
 export type EsPart = EsPostPart | EsReceiptPart;
 
+/** The decoded content of one MIME leaf part (see `extractPart`). */
+export interface EsPartContent {
+  /** Lowercased media type, as in EsAttachment.contentType. */
+  contentType: string;
+  /** As in EsAttachment.filename. */
+  filename: string | null;
+  /** The content with its Content-Transfer-Encoding removed. */
+  bytes: Uint8Array;
+}
+
 /** Where `EsMessage.text` came from. */
 export type TextSource = "plain" | "html" | "none";
+
+/**
+ * Header fields that tell mail sent to a list or by a program from mail a
+ * person wrote (see `classifyMessage`). Values are lowercased.
+ */
+export interface EsDelivery {
+  /** Names of the RFC 2369 / RFC 2919 list fields present ("list-id", "list-unsubscribe", …), sorted, each once. */
+  listHeaders: string[];
+  /** The List-Id identifier (RFC 2919 §2) without angle brackets, or null. */
+  listId: string | null;
+  /** The Auto-Submitted keyword (RFC 3834 §5) without parameters or comments, or null when absent. */
+  autoSubmitted: string | null;
+  /** The Precedence value ("bulk", "list", "junk", …), or null when absent. */
+  precedence: string | null;
+  /** The Return-Path address (RFC 5322 §3.6.7) in canonical form; "" for the null path "<>"; null when absent. */
+  returnPath: string | null;
+}
 
 /** A parsed e-mail message, as Email Social sees it. */
 export interface EsMessage {
@@ -117,6 +144,7 @@ export interface EsMessage {
   es: EsPart | null;
   attachments: EsAttachment[];
   refs: EsRefs;
+  delivery: EsDelivery;
 }
 
 /** A conversation: messages grouped by the threading algorithm. */
@@ -131,6 +159,58 @@ export interface Conversation {
   participants: EsAddress[];
   /** EsMessage.id values in chronological order. */
   messageIds: string[];
+  firstDate: string | null;
+  lastDate: string | null;
+}
+
+/** A message's text split by `splitQuoted`; every line of the text is in exactly one part. */
+export interface QuotedSplit {
+  /** What the sender wrote in this message (blank lines at the edges removed). */
+  fresh: string;
+  /** Earlier messages quoted by the sender's client: ">" lines with their attribution, Outlook header blocks and what follows. */
+  quoted: string;
+  /** The signature, from its "-- " delimiter, or a mobile client's one-line signature. */
+  signature: string;
+}
+
+/** The quote card above a message (see `replyContextOf`). */
+export type ReplyContext =
+  | {
+      kind: "parent";
+      /** EsMessage.id of the message answered. */
+      messageId: string;
+      /** Its sender's display name, else address; "" when it has no sender. */
+      from: string;
+      /** The first two lines of what its sender wrote, at most 140 characters ("…" when cut). */
+      excerpt: string;
+      /** The file name of its first attachment, or null. */
+      attachment: string | null;
+    }
+  | {
+      kind: "subject";
+      /** The base subject (no Re:/Fwd: prefixes or list tags). */
+      subject: string;
+    };
+
+/** Who a message comes from (see `classifyMessage`). */
+export type MessageKind = "person" | "list" | "automated";
+
+/** One message of a chat, with the base subject the client uses to mark subject changes. */
+export interface ChatEntry {
+  /** EsMessage.id. */
+  id: string;
+  /** Base subject of the message (see `normalizeSubject`); "" when it has none. */
+  subject: string;
+}
+
+/** A chat: every message exchanged with exactly one set of people (see `groupByParticipants`). */
+export interface Chat {
+  /** "chat-" + first 32 hex digits of SHA-256 over the participants' canonical addresses, sorted and joined with "\n". */
+  id: string;
+  /** Everyone in From, To and Cc except the account owner, sorted by address; [] for messages to oneself. */
+  participants: EsAddress[];
+  /** The messages, oldest first (undated last). */
+  messages: ChatEntry[];
   firstDate: string | null;
   lastDate: string | null;
 }

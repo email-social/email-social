@@ -1,0 +1,47 @@
+{
+  "description": "Outlook (Microsoft 365), Czech: Od:/Odesláno:/Komu:/Předmět:; Odp: subject",
+  "source": "fixtures/replies/outlook-desktop-cs.eml",
+  "raw": "From: Karel Holub <karel@example.org>\r\nTo: =?UTF-8?Q?Alice_Dvo=C5=99=C3=A1kov=C3=A1?= <alice@example.com>\r\nSubject: =?utf-8?Q?Odp=3A_Fotky_z_v=C3=BDletu?=\r\nThread-Topic: =?utf-8?Q?Fotky_z_v=C3=BDletu?=\r\nThread-Index: AQHcqvE5b2m3ZkRHSUqL0mN3oPq8Rw==\r\nDate: Tue, 3 Mar 2026 11:02:33 +0000\r\nMessage-ID: <VI1PR02MB5834E6F7A8B9C0D1E2F3A4B5C6D7E8F9A@VI1PR02MB5834E6F7A8B9C0D1E2F3A4B5C6D7E8F9A.eurprd02.prod.outlook.example.com>\r\nReferences: <CAKx4mR8wX3zA2cO4qS6uI9kM1eG7hT0vF3dB5lN7pR9tV1xZ@mail.example.com>\r\nIn-Reply-To: <CAKx4mR8wX3zA2cO4qS6uI9kM1eG7hT0vF3dB5lN7pR9tV1xZ@mail.example.com>\r\nAccept-Language: cs-CZ, en-US\r\nContent-Language: cs-CZ\r\nX-MS-Has-Attach:\r\nX-MS-TNEF-Correlator:\r\nContent-Type: multipart/alternative;\r\n\tboundary=\"_000_VI1PR02MB5834E6F7A8B9C0D1E2F3A4B5C6D7E_\"\r\nMIME-Version: 1.0\r\n\r\n--_000_VI1PR02MB5834E6F7A8B9C0D1E2F3A4B5C6D7E_\r\nContent-Type: text/plain; charset=\"utf-8\"\r\nContent-Transfer-Encoding: quoted-printable\r\n\r\nDobr=C3=BD den,\r\n\r\npos=C3=ADl=C3=A1m fotky z v=C3=BDletu v p=C5=99=C3=ADloze, dal=C5=A1=C3=AD =\r\nbudou z=C3=ADtra.\r\n\r\nS pozdravem\r\nKarel Holub\r\n\r\nOd: Alice Dvo=C5=99=C3=A1kov=C3=A1 <alice@example.com>=20\r\nOdesl=C3=A1no: =C3=BAter=C3=BD 3. b=C5=99ezna 2026 10:15\r\nKomu: Karel Holub <karel@example.org>\r\nP=C5=99edm=C4=9Bt: Fotky z v=C3=BDletu\r\n\r\nAhoj Karle,\r\n\r\npo=C5=A1le=C5=A1 mi pros=C3=ADm fotky z v=C3=BDletu? Chci je d=C3=A1t do al=\r\nba.\r\n\r\nD=C3=ADky,\r\nAlice\r\n\r\n\r\n\r\n--_000_VI1PR02MB5834E6F7A8B9C0D1E2F3A4B5C6D7E_\r\nContent-Type: text/html; charset=\"utf-8\"\r\nContent-Transfer-Encoding: quoted-printable\r\n\r\n<html xmlns:v=3D\"urn:schemas-microsoft-com:vml\" xmlns:o=3D\"urn:schemas-micr=\r\nosoft-com:office:office\" xmlns:w=3D\"urn:schemas-microsoft-com:office:word\">\r\n<head>\r\n<meta http-equiv=3D\"Content-Type\" content=3D\"text/html; charset=3Dutf-8\">\r\n<meta name=3D\"Generator\" content=3D\"Microsoft Word 15 (filtered medium)\">\r\n<style><!--\r\np.MsoNormal, li.MsoNormal, div.MsoNormal {margin:0cm; font-size:11.0pt; fon=\r\nt-family:\"Calibri\",sans-serif;}\r\n@page WordSection1 {size:612.0pt 792.0pt; margin:70.85pt 70.85pt 70.85pt 70=\r\n.85pt;}\r\ndiv.WordSection1 {page:WordSection1;}\r\n--></style>\r\n</head>\r\n<body lang=3D\"EN-US\" link=3D\"#0563C1\" vlink=3D\"#954F72\" style=3D\"word-wrap:=\r\nbreak-word\">\r\n<div class=3D\"WordSection1\">\r\n<p class=3D\"MsoNormal\">Dobr=C3=BD den,<o:p></o:p></p>\r\n<p class=3D\"MsoNormal\"><o:p>&nbsp;</o:p></p>\r\n<p class=3D\"MsoNormal\">pos=C3=ADl=C3=A1m fotky z v=C3=BDletu v p=C5=99=C3=\r\n=ADloze, dal=C5=A1=C3=AD budou z=C3=ADtra.<o:p></o:p></p>\r\n<p class=3D\"MsoNormal\"><o:p>&nbsp;</o:p></p>\r\n<p class=3D\"MsoNormal\">S pozdravem<o:p></o:p></p>\r\n<p class=3D\"MsoNormal\">Karel Holub<o:p></o:p></p>\r\n<p class=3D\"MsoNormal\"><o:p>&nbsp;</o:p></p>\r\n<div style=3D\"border:none;border-top:solid #E1E1E1 1.0pt;padding:3.0pt 0cm =\r\n0cm 0cm\">\r\n<p class=3D\"MsoNormal\"><b>Od:</b> Alice Dvo=C5=99=C3=A1kov=C3=A1 &lt;alice@=\r\nexample.com&gt;<br>\r\n<b>Odesl=C3=A1no:</b> =C3=BAter=C3=BD 3. b=C5=99ezna 2026 10:15<br>\r\n<b>Komu:</b> Karel Holub &lt;karel@example.org&gt;<br>\r\n<b>P=C5=99edm=C4=9Bt:</b> Fotky z v=C3=BDletu<o:p></o:p></p>\r\n</div>\r\n<p class=3D\"MsoNormal\"><o:p>&nbsp;</o:p></p>\r\n<p class=3D\"MsoNormal\">Ahoj Karle,<o:p></o:p></p>\r\n<p class=3D\"MsoNormal\"><o:p>&nbsp;</o:p></p>\r\n<p class=3D\"MsoNormal\">po=C5=A1le=C5=A1 mi pros=C3=ADm fotky z v=C3=BDletu?=\r\n Chci je d=C3=A1t do alba.<o:p></o:p></p>\r\n<p class=3D\"MsoNormal\"><o:p>&nbsp;</o:p></p>\r\n<p class=3D\"MsoNormal\">D=C3=ADky,<o:p></o:p></p>\r\n<p class=3D\"MsoNormal\">Alice<o:p></o:p></p>\r\n</div>\r\n</body>\r\n</html>\r\n\r\n\r\n--_000_VI1PR02MB5834E6F7A8B9C0D1E2F3A4B5C6D7E_--\r\n",
+  "expected": {
+    "id": "<VI1PR02MB5834E6F7A8B9C0D1E2F3A4B5C6D7E8F9A@VI1PR02MB5834E6F7A8B9C0D1E2F3A4B5C6D7E8F9A.eurprd02.prod.outlook.example.com>",
+    "from": {
+      "name": "Karel Holub",
+      "address": "karel@example.org"
+    },
+    "to": [
+      {
+        "name": "Alice Dvořáková",
+        "address": "alice@example.com"
+      }
+    ],
+    "cc": [],
+    "replyTo": [],
+    "date": "2026-03-03T11:02:33.000Z",
+    "subject": "Odp: Fotky z výletu",
+    "text": "Dobrý den,\n\nposílám fotky z výletu v příloze, další budou zítra.\n\nS pozdravem\nKarel Holub\n\nOd: Alice Dvořáková <alice@example.com> \nOdesláno: úterý 3. března 2026 10:15\nKomu: Karel Holub <karel@example.org>\nPředmět: Fotky z výletu\n\nAhoj Karle,\n\npošleš mi prosím fotky z výletu? Chci je dát do alba.\n\nDíky,\nAlice\n\n\n",
+    "textSource": "plain",
+    "es": null,
+    "attachments": [],
+    "refs": {
+      "messageId": "<VI1PR02MB5834E6F7A8B9C0D1E2F3A4B5C6D7E8F9A@VI1PR02MB5834E6F7A8B9C0D1E2F3A4B5C6D7E8F9A.eurprd02.prod.outlook.example.com>",
+      "inReplyTo": [
+        "<CAKx4mR8wX3zA2cO4qS6uI9kM1eG7hT0vF3dB5lN7pR9tV1xZ@mail.example.com>"
+      ],
+      "references": [
+        "<CAKx4mR8wX3zA2cO4qS6uI9kM1eG7hT0vF3dB5lN7pR9tV1xZ@mail.example.com>"
+      ]
+    },
+    "delivery": {
+      "listHeaders": [],
+      "listId": null,
+      "autoSubmitted": null,
+      "precedence": null,
+      "returnPath": null
+    }
+  },
+  "split": {
+    "fresh": "Dobrý den,\n\nposílám fotky z výletu v příloze, další budou zítra.\n\nS pozdravem\nKarel Holub",
+    "quoted": "Od: Alice Dvořáková <alice@example.com> \nOdesláno: úterý 3. března 2026 10:15\nKomu: Karel Holub <karel@example.org>\nPředmět: Fotky z výletu\n\nAhoj Karle,\n\npošleš mi prosím fotky z výletu? Chci je dát do alba.\n\nDíky,\nAlice",
+    "signature": ""
+  }
+}

@@ -40,6 +40,18 @@
       "messageId": "<unique-id@mail.example.com>",
       "inReplyTo": [],
       "references": []
+    },
+    "delivery": {
+      "listHeaders": [],
+      "listId": null,
+      "autoSubmitted": null,
+      "precedence": null,
+      "returnPath": null
     }
+  },
+  "split": {
+    "fresh": "Hello Email.Social!\n\nThis is a test message.",
+    "quoted": "",
+    "signature": ""
   }
 }

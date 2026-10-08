@@ -1,0 +1,47 @@
+{
+  "description": "Outlook (Microsoft 365), English: header block From:/Sent:/To:/Subject: without prefix, original not quoted; trailing space after the From address",
+  "source": "fixtures/replies/outlook-desktop-en.eml",
+  "raw": "From: Bob Svoboda <bob@example.org>\r\nTo: =?UTF-8?Q?Alice_Dvo=C5=99=C3=A1kov=C3=A1?= <alice@example.com>\r\nSubject: RE: Contract draft\r\nThread-Topic: Contract draft\r\nThread-Index: AQHcqvE5b2m3ZkRHSUqL0mN3oPq8Rw==\r\nDate: Tue, 3 Mar 2026 10:48:12 +0000\r\nMessage-ID: <DB9PR08MB6921C4D5E6F7A8B9C0D1E2F3A4B5C6D7E@DB9PR08MB6921C4D5E6F7A8B9C0D1E2F3A4B5C6D7E.eurprd02.prod.outlook.example.com>\r\nReferences: <CAKx4mQ7vW2yZ1bN3pR5tH8jL0dF6gS9uE2cA4kM6oQ8sU0wY@mail.example.com>\r\nIn-Reply-To: <CAKx4mQ7vW2yZ1bN3pR5tH8jL0dF6gS9uE2cA4kM6oQ8sU0wY@mail.example.com>\r\nAccept-Language: en-US, en-US\r\nContent-Language: en-US\r\nX-MS-Has-Attach:\r\nX-MS-TNEF-Correlator:\r\nContent-Type: multipart/alternative;\r\n\tboundary=\"_000_DB9PR08MB6921C4D5E6F7A8B9C0D1E2F3A4B5C_\"\r\nMIME-Version: 1.0\r\n\r\n--_000_DB9PR08MB6921C4D5E6F7A8B9C0D1E2F3A4B5C_\r\nContent-Type: text/plain; charset=\"utf-8\"\r\nContent-Transfer-Encoding: quoted-printable\r\n\r\nHi Alice,\r\n\r\nthe draft is attached, article 4 is new.\r\n\r\nBob\r\n\r\nFrom: Alice Dvo=C5=99=C3=A1kov=C3=A1 <alice@example.com>=20\r\nSent: Tuesday, March 3, 2026 10:15 AM\r\nTo: Bob Svoboda <bob@example.org>\r\nSubject: Contract draft\r\n\r\nHi Bob,\r\n\r\ncould you send me the contract draft by Friday?\r\n\r\nThanks,\r\nAlice\r\n\r\n\r\n\r\n--_000_DB9PR08MB6921C4D5E6F7A8B9C0D1E2F3A4B5C_\r\nContent-Type: text/html; charset=\"utf-8\"\r\nContent-Transfer-Encoding: quoted-printable\r\n\r\n<html xmlns:v=3D\"urn:schemas-microsoft-com:vml\" xmlns:o=3D\"urn:schemas-micr=\r\nosoft-com:office:office\" xmlns:w=3D\"urn:schemas-microsoft-com:office:word\">\r\n<head>\r\n<meta http-equiv=3D\"Content-Type\" content=3D\"text/html; charset=3Dutf-8\">\r\n<meta name=3D\"Generator\" content=3D\"Microsoft Word 15 (filtered medium)\">\r\n<style><!--\r\np.MsoNormal, li.MsoNormal, div.MsoNormal {margin:0cm; font-size:11.0pt; fon=\r\nt-family:\"Calibri\",sans-serif;}\r\n@page WordSection1 {size:612.0pt 792.0pt; margin:70.85pt 70.85pt 70.85pt 70=\r\n.85pt;}\r\ndiv.WordSection1 {page:WordSection1;}\r\n--></style>\r\n</head>\r\n<body lang=3D\"EN-US\" link=3D\"#0563C1\" vlink=3D\"#954F72\" style=3D\"word-wrap:=\r\nbreak-word\">\r\n<div class=3D\"WordSection1\">\r\n<p class=3D\"MsoNormal\">Hi Alice,<o:p></o:p></p>\r\n<p class=3D\"MsoNormal\"><o:p>&nbsp;</o:p></p>\r\n<p class=3D\"MsoNormal\">the draft is attached, article 4 is new.<o:p></o:p><=\r\n/p>\r\n<p class=3D\"MsoNormal\"><o:p>&nbsp;</o:p></p>\r\n<p class=3D\"MsoNormal\">Bob<o:p></o:p></p>\r\n<p class=3D\"MsoNormal\"><o:p>&nbsp;</o:p></p>\r\n<div style=3D\"border:none;border-top:solid #E1E1E1 1.0pt;padding:3.0pt 0cm =\r\n0cm 0cm\">\r\n<p class=3D\"MsoNormal\"><b>From:</b> Alice Dvo=C5=99=C3=A1kov=C3=A1 &lt;alic=\r\ne@example.com&gt;<br>\r\n<b>Sent:</b> Tuesday, March 3, 2026 10:15 AM<br>\r\n<b>To:</b> Bob Svoboda &lt;bob@example.org&gt;<br>\r\n<b>Subject:</b> Contract draft<o:p></o:p></p>\r\n</div>\r\n<p class=3D\"MsoNormal\"><o:p>&nbsp;</o:p></p>\r\n<p class=3D\"MsoNormal\">Hi Bob,<o:p></o:p></p>\r\n<p class=3D\"MsoNormal\"><o:p>&nbsp;</o:p></p>\r\n<p class=3D\"MsoNormal\">could you send me the contract draft by Friday?<o:p>=\r\n</o:p></p>\r\n<p class=3D\"MsoNormal\"><o:p>&nbsp;</o:p></p>\r\n<p class=3D\"MsoNormal\">Thanks,<o:p></o:p></p>\r\n<p class=3D\"MsoNormal\">Alice<o:p></o:p></p>\r\n</div>\r\n</body>\r\n</html>\r\n\r\n\r\n--_000_DB9PR08MB6921C4D5E6F7A8B9C0D1E2F3A4B5C_--\r\n",
+  "expected": {
+    "id": "<DB9PR08MB6921C4D5E6F7A8B9C0D1E2F3A4B5C6D7E@DB9PR08MB6921C4D5E6F7A8B9C0D1E2F3A4B5C6D7E.eurprd02.prod.outlook.example.com>",
+    "from": {
+      "name": "Bob Svoboda",
+      "address": "bob@example.org"
+    },
+    "to": [
+      {
+        "name": "Alice Dvořáková",
+        "address": "alice@example.com"
+      }
+    ],
+    "cc": [],
+    "replyTo": [],
+    "date": "2026-03-03T10:48:12.000Z",
+    "subject": "RE: Contract draft",
+    "text": "Hi Alice,\n\nthe draft is attached, article 4 is new.\n\nBob\n\nFrom: Alice Dvořáková <alice@example.com> \nSent: Tuesday, March 3, 2026 10:15 AM\nTo: Bob Svoboda <bob@example.org>\nSubject: Contract draft\n\nHi Bob,\n\ncould you send me the contract draft by Friday?\n\nThanks,\nAlice\n\n\n",
+    "textSource": "plain",
+    "es": null,
+    "attachments": [],
+    "refs": {
+      "messageId": "<DB9PR08MB6921C4D5E6F7A8B9C0D1E2F3A4B5C6D7E@DB9PR08MB6921C4D5E6F7A8B9C0D1E2F3A4B5C6D7E.eurprd02.prod.outlook.example.com>",
+      "inReplyTo": [
+        "<CAKx4mQ7vW2yZ1bN3pR5tH8jL0dF6gS9uE2cA4kM6oQ8sU0wY@mail.example.com>"
+      ],
+      "references": [
+        "<CAKx4mQ7vW2yZ1bN3pR5tH8jL0dF6gS9uE2cA4kM6oQ8sU0wY@mail.example.com>"
+      ]
+    },
+    "delivery": {
+      "listHeaders": [],
+      "listId": null,
+      "autoSubmitted": null,
+      "precedence": null,
+      "returnPath": null
+    }
+  },
+  "split": {
+    "fresh": "Hi Alice,\n\nthe draft is attached, article 4 is new.\n\nBob",
+    "quoted": "From: Alice Dvořáková <alice@example.com> \nSent: Tuesday, March 3, 2026 10:15 AM\nTo: Bob Svoboda <bob@example.org>\nSubject: Contract draft\n\nHi Bob,\n\ncould you send me the contract draft by Friday?\n\nThanks,\nAlice",
+    "signature": ""
+  }
+}

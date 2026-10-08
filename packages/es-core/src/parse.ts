@@ -16,7 +16,9 @@ import { parseMessageId, parseMessageIds } from "./headers/message-id.js";
 import { decodeFlowed } from "./mime/flowed.js";
 import { htmlToText } from "./mime/html-to-text.js";
 import { decodeBody, decodedSize, normalizeContentId, parseMimeTree, type MimeNode } from "./mime/tree.js";
-import type { EsAddress, EsAttachment, EsMessage, EsPart, EsRefs, TextSource } from "./types.js";
+import { canonicalAddress } from "./headers/canonical.js";
+import type { HeaderField } from "./headers/header-block.js";
+import type { EsAddress, EsAttachment, EsDelivery, EsMessage, EsPart, EsPartContent, EsRefs, TextSource } from "./types.js";
 import { toBytes, utf8Decode } from "./util/bytes.js";
 import { sha256Hex } from "./util/sha256.js";
 
@@ -181,6 +183,36 @@ function firstMailbox(values: readonly string[]): EsAddress | null {
   return null;
 }
 
+/** RFC 2369 §3 and RFC 2919 list header fields. */
+const LIST_FIELDS = new Set(["list-id", "list-help", "list-unsubscribe", "list-subscribe", "list-post", "list-owner", "list-archive"]);
+
+const NO_DELIVERY: EsDelivery = { listHeaders: [], listId: null, autoSubmitted: null, precedence: null, returnPath: null };
+
+/** A header value without RFC 5322 comments ("(...)"), trimmed and lowercased; null for null. */
+function keyword(value: string | null): string | null {
+  if (value === null) return null;
+  return value.replace(/\([^()]*\)/g, " ").split(";")[0]!.trim().toLowerCase();
+}
+
+function deliveryOf(fields: readonly HeaderField[]): EsDelivery {
+  const listHeaders = [...new Set(fields.map((f) => f.key).filter((key) => LIST_FIELDS.has(key)))].sort();
+  const listIdValue = getHeader(fields, "list-id");
+  const listId = listIdValue === null ? null : (/<([^<>]*)>/.exec(listIdValue)?.[1] ?? listIdValue).trim().toLowerCase() || null;
+  const returnPathValue = getHeader(fields, "return-path");
+  let returnPath: string | null = null;
+  if (returnPathValue !== null) {
+    const bracketed = /<([^<>]*)>/.exec(returnPathValue);
+    returnPath = canonicalAddress((bracketed === null ? returnPathValue : bracketed[1]!).trim());
+  }
+  return {
+    listHeaders,
+    listId,
+    autoSubmitted: keyword(getHeader(fields, "auto-submitted")),
+    precedence: keyword(getHeader(fields, "precedence")),
+    returnPath,
+  };
+}
+
 function parseBytes(bytes: Uint8Array): EsMessage {
   const root = parseMimeTree(bytes);
   const fields = root.fields;
@@ -214,6 +246,7 @@ function parseBytes(bytes: Uint8Array): EsMessage {
     es,
     attachments: all.filter((node) => !isBodyText(node) && !(es !== null && node === esNode)).map(toAttachment),
     refs,
+    delivery: deliveryOf(fields),
   };
 }
 
@@ -240,7 +273,38 @@ export function parseMessage(raw: string | Uint8Array): EsMessage {
       es: null,
       attachments: [],
       refs: { messageId: null, inReplyTo: [], references: [] },
+      delivery: { ...NO_DELIVERY, listHeaders: [] },
     };
+  }
+}
+
+/** The leaf with IMAP part number `partId` (RFC 9051 §6.4.5); a non-multipart message is part "1". */
+function findLeaf(root: MimeNode, partId: string): MimeNode | null {
+  if (root.children.length === 0) return partId === "1" ? root : null;
+  const walk = (node: MimeNode): MimeNode | null => {
+    if (node.partId === partId) return node;
+    for (const child of node.children) {
+      const found = walk(child);
+      if (found !== null) return found;
+    }
+    return null;
+  };
+  const node = partId === "" ? null : walk(root);
+  return node !== null && node.children.length === 0 ? node : null;
+}
+
+/**
+ * The decoded content of the leaf part `partId` (the `partId` of an
+ * EsAttachment), or null when the message has no such leaf. Like
+ * parseMessage, it never throws.
+ */
+export function extractPart(raw: string | Uint8Array, partId: string): EsPartContent | null {
+  try {
+    const node = findLeaf(parseMimeTree(toBytes(raw)), partId);
+    if (node === null) return null;
+    return { contentType: node.contentType, filename: filenameOf(node), bytes: decodeBody(node) };
+  } catch {
+    return null;
   }
 }
 

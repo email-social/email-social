@@ -53,6 +53,18 @@
       "messageId": "<es-vector-6@mail.example.com>",
       "inReplyTo": [],
       "references": []
+    },
+    "delivery": {
+      "listHeaders": [],
+      "listId": null,
+      "autoSubmitted": null,
+      "precedence": null,
+      "returnPath": null
     }
+  },
+  "split": {
+    "fresh": "Hi Carol,\n\nlunch on Friday at noon? Café Élysée.",
+    "quoted": "",
+    "signature": ""
   }
 }

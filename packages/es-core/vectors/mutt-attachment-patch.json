@@ -35,6 +35,18 @@
       "messageId": "<20260311211405.GA23456@host.example.com>",
       "inReplyTo": [],
       "references": []
+    },
+    "delivery": {
+      "listHeaders": [],
+      "listId": null,
+      "autoSubmitted": null,
+      "precedence": null,
+      "returnPath": null
     }
+  },
+  "split": {
+    "fresh": "Hi Karel,\n\nthe attached patch fixes the rotation: the script compared the snapshot\nage with \">\" instead of \">=\", so the oldest snapshot was never removed.\n\nTested on the staging box, three rotations in a row.\n\nOndrej",
+    "quoted": "",
+    "signature": ""
   }
 }

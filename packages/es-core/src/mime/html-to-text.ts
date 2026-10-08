@@ -106,6 +106,8 @@ class TextWriter {
   /** Line breaks required before the next visible text: 0, 1 (new line) or 2 (blank line). */
   private pending = 0;
   private bullet = false;
+  /** Number of enclosing <blockquote> elements: each line inside starts with that many "> ". */
+  private quoteDepth = 0;
 
   requestBreak(lines: 1 | 2): void {
     if (lines > this.pending) this.pending = lines;
@@ -113,6 +115,10 @@ class TextWriter {
 
   setBullet(on: boolean): void {
     this.bullet = on;
+  }
+
+  setQuoteDepth(depth: number): void {
+    this.quoteDepth = depth;
   }
 
   toString(): string {
@@ -136,6 +142,7 @@ class TextWriter {
   private flush(): void {
     if (this.pending > this.trailingBreaks && !this.empty) this.append("\n".repeat(this.pending - this.trailingBreaks));
     this.pending = 0;
+    if (this.quoteDepth > 0 && (this.empty || this.lastChar === "\n")) this.append("> ".repeat(this.quoteDepth));
     if (this.bullet) {
       this.append("- ");
       this.bullet = false;
@@ -160,11 +167,11 @@ class TextWriter {
     this.append(collapsed);
   }
 
-  /** Preformatted text: written as is. */
+  /** Preformatted text: written as is (inside a quote, every line gets the quote prefix). */
   raw(value: string): void {
     if (value === "") return;
     this.flush();
-    this.append(value);
+    this.append(this.quoteDepth > 0 ? value.replace(/\n/g, "\n" + "> ".repeat(this.quoteDepth)) : value);
   }
 }
 
@@ -173,9 +180,12 @@ class TextWriter {
  * <script> are dropped; <br> is a line break; block elements start and end a
  * line, paragraphs, headings and tables a blank line; list items start with
  * "- "; table cells are separated by a space; character references are
- * decoded; white space is collapsed outside <pre>; no-break spaces become
- * spaces; lines are right-trimmed, runs of blank lines reduced to one and the
- * result trimmed. Never throws.
+ * decoded; white space is collapsed outside <pre>; lines inside
+ * <blockquote> start with "> " per level, the way a plain-text reply quotes
+ * (so Gmail's quote container, Apple Mail's and Thunderbird's
+ * <blockquote type="cite"> read like quoted plain text); no-break spaces
+ * become spaces; lines are right-trimmed, runs of blank lines reduced to one
+ * and the result trimmed. Never throws.
  */
 export function htmlToText(html: string): string {
   const source = html.replace(/\r\n?/g, "\n");
@@ -183,6 +193,7 @@ export function htmlToText(html: string): string {
   let inHead = false;
   let preDepth = 0;
   let preJustOpened = false;
+  let quoteDepth = 0;
 
   const emit = (chunk: string): void => {
     if (inHead || chunk === "") return;
@@ -246,6 +257,10 @@ export function htmlToText(html: string): string {
       writer.requestBreak(2);
     } else if (LINE_BLOCKS.has(name)) {
       writer.requestBreak(1);
+      if (name === "blockquote") {
+        quoteDepth = closing ? Math.max(0, quoteDepth - 1) : quoteDepth + 1;
+        writer.setQuoteDepth(quoteDepth);
+      }
       if (name === "li") writer.setBullet(!closing);
       if (name === "pre") {
         preDepth = closing ? Math.max(0, preDepth - 1) : preDepth + 1;

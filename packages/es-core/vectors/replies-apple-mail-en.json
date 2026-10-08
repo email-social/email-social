@@ -1,0 +1,47 @@
+{
+  "description": "Apple Mail on macOS, English: the attribution is inside the quote (> On 3 Mar 2026, at 10:15, … wrote:); empty quote lines are >",
+  "source": "fixtures/replies/apple-mail-en.eml",
+  "raw": "Content-Type: multipart/alternative;\r\n\tboundary=\"Apple-Mail=_5B7D9F1A-3C5E-4A7B-9D1F-2A4C6E8A0B2D\"\r\nMime-Version: 1.0 (Mac OS X Mail 16.0 \\(3826.400.131.1.6\\))\r\nSubject: Re: Contract draft\r\nFrom: Bob Svoboda <bob@example.org>\r\nIn-Reply-To: <CAKx4mQ7vW2yZ1bN3pR5tH8jL0dF6gS9uE2cA4kM6oQ8sU0wY@mail.example.com>\r\nDate: Tue, 3 Mar 2026 10:40:02 +0100\r\nMessage-Id: <5B7D9F1A-3C5E-4A7B-9D1F-2A4C6E8A0B2D@example.org>\r\nReferences: <CAKx4mQ7vW2yZ1bN3pR5tH8jL0dF6gS9uE2cA4kM6oQ8sU0wY@mail.example.com>\r\nTo: =?utf-8?Q?Alice_Dvo=C5=99=C3=A1kov=C3=A1?= <alice@example.com>\r\nX-Mailer: Apple Mail (2.3826.400.131.1.6)\r\n\r\n\r\n--Apple-Mail=_5B7D9F1A-3C5E-4A7B-9D1F-2A4C6E8A0B2D\r\nContent-Transfer-Encoding: quoted-printable\r\nContent-Type: text/plain;\r\n\tcharset=utf-8\r\n\r\nHi Alice,\r\n\r\nyes, Friday works. The draft needs one more signature.\r\n\r\nBob\r\n\r\n> On 3 Mar 2026, at 10:15, Alice Dvo=C5=99=C3=A1kov=C3=A1 <alice@example.co=\r\nm> wrote:\r\n>=20\r\n> Hi Bob,\r\n>=20\r\n> could you send me the contract draft by Friday?\r\n>=20\r\n> Thanks,\r\n> Alice\r\n\r\n\r\n--Apple-Mail=_5B7D9F1A-3C5E-4A7B-9D1F-2A4C6E8A0B2D\r\nContent-Transfer-Encoding: quoted-printable\r\nContent-Type: text/html;\r\n\tcharset=utf-8\r\n\r\n<html><head><meta http-equiv=3D\"content-type\" content=3D\"text/html; charset=\r\n=3Dutf-8\"></head><body style=3D\"overflow-wrap: break-word; -webkit-nbsp-mod=\r\ne: space; line-break: after-white-space;\"><div>Hi Alice,</div><div><br></di=\r\nv><div>yes, Friday works. The draft needs one more signature.</div><div><br=\r\n></div><div>Bob</div><div><br><blockquote type=3D\"cite\"><div>On 3 Mar 2026,=\r\n at 10:15, Alice Dvo=C5=99=C3=A1kov=C3=A1 &lt;alice@example.com&gt; wrote:<=\r\n/div><br class=3D\"Apple-interchange-newline\"><div><div>Hi Bob,<br><br>could=\r\n you send me the contract draft by Friday?<br><br>Thanks,<br>Alice</div></d=\r\niv></blockquote></div><br></body></html>\r\n--Apple-Mail=_5B7D9F1A-3C5E-4A7B-9D1F-2A4C6E8A0B2D--\r\n",
+  "expected": {
+    "id": "<5B7D9F1A-3C5E-4A7B-9D1F-2A4C6E8A0B2D@example.org>",
+    "from": {
+      "name": "Bob Svoboda",
+      "address": "bob@example.org"
+    },
+    "to": [
+      {
+        "name": "Alice Dvořáková",
+        "address": "alice@example.com"
+      }
+    ],
+    "cc": [],
+    "replyTo": [],
+    "date": "2026-03-03T09:40:02.000Z",
+    "subject": "Re: Contract draft",
+    "text": "Hi Alice,\n\nyes, Friday works. The draft needs one more signature.\n\nBob\n\n> On 3 Mar 2026, at 10:15, Alice Dvořáková <alice@example.com> wrote:\n> \n> Hi Bob,\n> \n> could you send me the contract draft by Friday?\n> \n> Thanks,\n> Alice\n\n",
+    "textSource": "plain",
+    "es": null,
+    "attachments": [],
+    "refs": {
+      "messageId": "<5B7D9F1A-3C5E-4A7B-9D1F-2A4C6E8A0B2D@example.org>",
+      "inReplyTo": [
+        "<CAKx4mQ7vW2yZ1bN3pR5tH8jL0dF6gS9uE2cA4kM6oQ8sU0wY@mail.example.com>"
+      ],
+      "references": [
+        "<CAKx4mQ7vW2yZ1bN3pR5tH8jL0dF6gS9uE2cA4kM6oQ8sU0wY@mail.example.com>"
+      ]
+    },
+    "delivery": {
+      "listHeaders": [],
+      "listId": null,
+      "autoSubmitted": null,
+      "precedence": null,
+      "returnPath": null
+    }
+  },
+  "split": {
+    "fresh": "Hi Alice,\n\nyes, Friday works. The draft needs one more signature.\n\nBob",
+    "quoted": "> On 3 Mar 2026, at 10:15, Alice Dvořáková <alice@example.com> wrote:\n> \n> Hi Bob,\n> \n> could you send me the contract draft by Friday?\n> \n> Thanks,\n> Alice",
+    "signature": ""
+  }
+}

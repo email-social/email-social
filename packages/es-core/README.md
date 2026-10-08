@@ -13,17 +13,20 @@ is attached after it in `multipart/mixed`, so any mail client shows the text.
 
 ```ts
 parseMessage(raw: string | Uint8Array): EsMessage                     // never throws; strings are read as UTF-8
+extractPart(raw, partId): EsPartContent | null                        // decoded bytes of one attachment (EsAttachment.partId)
 serializeMessage(out: EsOutgoing, { date, messageId, includeEsPart? }): string  // CRLF, 7-bit; text/plain first, then the ES part
 serializeReceipt(receipt: EsOutgoingReceipt, { date, messageId }): string  // a "delivered" or "read" receipt
-replyTargetOf(parent: EsMessage): ReplyTarget                         // In-Reply-To/References/subject for a reply
-threadMessages(messages: EsMessage[]): Conversation[]                 // same conversations for any input order
-normalizeSubject(subject): { base, isReply, isForward }               // strips Re:/Fwd:/AW:/Odp:/RE :/TR :/[list]
-deriveContacts(messages, { exclude? }): Contact[]                     // one per canonical address
-canonicalAddress(address): string                                     // lowercases the domain only
-deriveDid(address) · formatDid(domain, localId) · parseDid(did) · isValidDid(did)  // did:es as metadata
+replyTargetOf(parent): ReplyTarget · replyContextOf(message, lookup, { previous? })  // headers for a reply · its quote card
+threadMessages(messages: EsMessage[]): Conversation[]                 // threads by references and subject, any input order
+groupByParticipants(messages, { self }): Chat[]                        // one chat per set of other people, any subjects
+classifyMessage(message): "person" | "list" | "automated"              // from List-*, Auto-Submitted, Precedence, Return-Path, no-reply
+splitQuoted(message): { fresh, quoted, signature }                     // what the sender wrote now; every line kept in one part
+quoteForReply(parent, { maxLines?, timeZone? }): string                // "On … wrote:" + the parent's fresh text as "> " lines
+normalizeSubject(subject): { base, isReply, isForward } · canonicalAddress(address)  // strips Re:/AW:/Odp:/[list] · lowercases the domain
+deriveContacts(messages, { exclude? }): Contact[] · deriveDid(address) · formatDid · parseDid · isValidDid  // contacts; did:es as metadata
 ES_MEDIA_TYPE · ES_DRAFT_MEDIA_TYPE · ES_TEXT_MAX_BYTES               // ES part media types, text limit (10000 B)
-// Types (src/types.ts): EsMessage, EsAddress, EsAttachment, EsRefs, EsPart (EsPostPart | EsReceiptPart),
-// Conversation, Contact, EsOutgoing, EsOutgoingReceipt, ReplyTarget, SerializeOptions, ReceiptKind
+// Types (src/types.ts): EsMessage, EsAddress, EsAttachment, EsRefs, EsDelivery, EsPart (EsPostPart | EsReceiptPart), Conversation,
+// Chat, ChatEntry, MessageKind, QuotedSplit, ReplyContext, Contact, EsOutgoing, EsOutgoingReceipt, ReplyTarget, SerializeOptions, ReceiptKind, EsPartContent
 ```
 
 ## Example
@@ -58,6 +61,14 @@ const raw = serializeMessage(
   values: the Date and Message-ID of new messages are passed in, and the same
   input always gives the same bytes. Conversation ids are derived from the
   root Message-ID (`conv-` + 32 hex digits of its SHA-256), not from time.
+- **Chats and quotes.** `groupByParticipants` groups by the people in a
+  message, not by subject, so one person is one chat. `splitQuoted` keeps
+  every line (the three parts together contain the whole text) and treats
+  an Email Social post as entirely fresh; `quoteForReply` is for replies to
+  people who do not use Email Social, whose clients show no history.
+  `replyContextOf` gives the quote card a client shows above a message
+  instead of quoted text: the answered message's sender and first lines, or
+  the subject where a new one starts.
 - **Browsers.** The library uses only `Uint8Array`, `TextEncoder` and
   `TextDecoder`; a Node `Buffer` is accepted because it is a `Uint8Array`.
 - **Test vectors** in [`vectors/`](vectors/README.md) (raw message →

@@ -60,6 +60,18 @@
       "references": [
         "<es-vector-1@mail.example.com>"
       ]
+    },
+    "delivery": {
+      "listHeaders": [],
+      "listId": null,
+      "autoSubmitted": "auto-replied",
+      "precedence": null,
+      "returnPath": null
     }
+  },
+  "split": {
+    "fresh": "Read receipt: the message \"Lunch on Friday?\" (<es-vector-1@mail.example.com>) was opened by bob@example.org on Mon, 2 Mar 2026 09:12:00 +0000.",
+    "quoted": "",
+    "signature": ""
   }
 }

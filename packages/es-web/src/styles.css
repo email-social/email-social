@@ -1,0 +1,654 @@
+/*
+ * Colours are defined once here; test/contrast.test.ts checks that every
+ * text/background pair meets WCAG 2.2 AA (4.5:1) and the focus ring 3:1.
+ * State is never shown by colour alone: unread has a number and bold text,
+ * the open chat a border, own messages the right side and "You".
+ */
+:root {
+  --bg: #ffffff;
+  --text: #1b1d21;
+  --muted: #545a64;
+  --panel: #f3f5f8;
+  --border: #8a929e;
+  --accent: #1d4f91;
+  --accent-text: #ffffff;
+  --selected-bg: #dfe7f3;
+  --mine-bg: #1d4f91;
+  --mine-text: #ffffff;
+  --mine-muted: #dbe5f5;
+  --theirs-bg: #eceff3;
+  --theirs-text: #1b1d21;
+  --card-bg: #dde2e9;
+  --mine-card-bg: #163d70;
+  --badge-bg: #a4262c;
+  --badge-text: #ffffff;
+  --error: #a4262c;
+  --focus: #b34a00;
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  font-size: 16px;
+  line-height: 1.45;
+  color: var(--text);
+  background: var(--bg);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+}
+
+:focus-visible {
+  outline: 3px solid var(--focus);
+  outline-offset: 2px;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+a {
+  color: var(--accent);
+}
+
+button {
+  font: inherit;
+  cursor: pointer;
+}
+
+button[type="submit"],
+.sign-out button,
+.new-chat-button,
+.actions button,
+.retry {
+  background: var(--accent);
+  color: var(--accent-text);
+  border: 0;
+  border-radius: 6px;
+  padding: 0.45rem 1rem;
+}
+
+button:disabled {
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
+.notice {
+  max-width: 36rem;
+  margin: 3rem auto;
+  padding: 0 1rem;
+}
+
+.error {
+  color: var(--error);
+  font-weight: 600;
+}
+
+.hint {
+  color: var(--muted);
+  font-size: 0.9rem;
+  margin: 0.2rem 0 0.8rem;
+}
+
+/* Sign-in */
+.login label {
+  display: block;
+  font-weight: 600;
+  margin-top: 0.8rem;
+}
+
+.login input:not([type="checkbox"]),
+.login select {
+  width: 100%;
+  padding: 0.45rem;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  font: inherit;
+}
+
+.login fieldset {
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  margin-top: 1rem;
+}
+
+.login .check {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+  margin-top: 1rem;
+}
+
+.login .check label {
+  margin: 0;
+}
+
+/* Layout */
+.app {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+
+.top {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+  padding: 0.5rem 1rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.top p {
+  margin: 0;
+}
+
+.brand {
+  font-weight: 700;
+}
+
+.account {
+  color: var(--muted);
+  flex: 1;
+}
+
+.sign-out {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.panes {
+  display: flex;
+  flex: 1;
+  min-height: 0;
+}
+
+.list-pane {
+  width: 22rem;
+  flex-shrink: 0;
+  overflow-y: auto;
+  background: var(--panel);
+  border-right: 1px solid var(--border);
+}
+
+.thread-pane {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.empty {
+  color: var(--muted);
+  padding: 1rem;
+}
+
+/* Chat list */
+.chats {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.chat-row {
+  display: block;
+  width: 100%;
+  text-align: left;
+  background: transparent;
+  color: var(--text);
+  border: 0;
+  border-left: 4px solid transparent;
+  border-bottom: 1px solid var(--border);
+  padding: 0.6rem 0.8rem;
+}
+
+.chat-row[aria-current="true"] {
+  background: var(--selected-bg);
+  border-left-color: var(--accent);
+}
+
+.chat-row .row {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+
+.chat-row .title {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.chat-row.unread .title,
+.chat-row.unread .last-line {
+  font-weight: 700;
+}
+
+.chat-row time {
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.chat-row time,
+.chat-row .last-line {
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
+.chat-row.unread .last-line {
+  color: var(--text);
+}
+
+.chat-row .last-line {
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.badge {
+  background: var(--badge-bg);
+  color: var(--badge-text);
+  border-radius: 999px;
+  min-width: 1.5rem;
+  padding: 0 0.4rem;
+  text-align: center;
+  font-size: 0.85rem;
+  font-weight: 700;
+}
+
+/* Thread */
+.thread {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.thread-header {
+  padding: 0.6rem 1rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.thread-header h2 {
+  margin: 0;
+  font-size: 1.15rem;
+}
+
+.thread-header p {
+  margin: 0.1rem 0 0;
+  color: var(--muted);
+}
+
+.messages {
+  list-style: none;
+  margin: 0;
+  padding: 1rem;
+  flex: 1;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.bubble {
+  max-width: 70%;
+  padding: 0.5rem 0.8rem;
+  border-radius: 12px;
+}
+
+.bubble p {
+  margin: 0;
+}
+
+.bubble.theirs {
+  align-self: flex-start;
+  background: var(--theirs-bg);
+  color: var(--theirs-text);
+  border-bottom-left-radius: 2px;
+}
+
+.bubble.mine {
+  align-self: flex-end;
+  background: var(--mine-bg);
+  color: var(--mine-text);
+  border-bottom-right-radius: 2px;
+}
+
+.bubble .who {
+  font-weight: 700;
+  font-size: 0.9rem;
+}
+
+.bubble .text {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.bubble .meta,
+.bubble .note,
+.bubble .size {
+  font-size: 0.85rem;
+  color: var(--muted);
+}
+
+.bubble.mine .meta,
+.bubble.mine .note,
+.bubble.mine .size {
+  color: var(--mine-muted);
+}
+
+.bubble.mine a {
+  color: var(--mine-text);
+}
+
+.attachments {
+  margin: 0.3rem 0 0;
+  padding-left: 1.1rem;
+}
+
+/* Composer */
+.composer {
+  border-top: 1px solid var(--border);
+  padding: 0.6rem 1rem;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 0.3rem 0.6rem;
+}
+
+.composer label {
+  grid-column: 1 / -1;
+  font-weight: 600;
+}
+
+.composer textarea {
+  font: inherit;
+  padding: 0.45rem;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  resize: vertical;
+}
+
+.composer button {
+  align-self: end;
+}
+
+.composer .hint,
+.composer .status {
+  grid-column: 1 / -1;
+  margin: 0;
+}
+
+.list-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  padding: 0.6rem 0.8rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.list-head h1 {
+  margin: 0;
+  font-size: 1.1rem;
+}
+
+/* Other mail: collapsed below the chats */
+.other-mail {
+  border-top: 1px solid var(--border);
+}
+
+.other-mail summary {
+  padding: 0.6rem 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.other-mail .hint {
+  padding: 0 0.8rem;
+}
+
+/* Status after sign-in */
+.status-bar {
+  border-bottom: 1px solid var(--border);
+  padding: 0.3rem 1rem;
+  background: var(--panel);
+}
+
+.status-bar p {
+  margin: 0.2rem 0;
+}
+
+.status-line {
+  color: var(--text);
+}
+
+progress {
+  vertical-align: middle;
+}
+
+/* Names that open a contact page */
+button.person {
+  background: none;
+  border: 0;
+  padding: 0;
+  font: inherit;
+  font-weight: inherit;
+  color: inherit;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+/* Quote cards: what a message answers, or the subject where one starts */
+.quote-card {
+  display: block;
+  width: 100%;
+  text-align: left;
+  font: inherit;
+  font-size: 0.85rem;
+  line-height: 1.35;
+  margin: 0.2rem 0 0.35rem;
+  padding: 0.25rem 0.5rem;
+  background: var(--card-bg);
+  color: var(--theirs-text);
+  border: 0;
+  border-left: 3px solid var(--accent);
+  border-radius: 4px;
+}
+
+button.quote-card {
+  cursor: pointer;
+}
+
+.quote-card .quote-from {
+  display: block;
+  font-weight: 700;
+}
+
+.quote-card .quote-excerpt,
+.quote-card .quote-attachment {
+  display: block;
+  color: var(--muted);
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.quote-card .quote-excerpt {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+}
+
+.quote-card.subject .quote-excerpt {
+  color: var(--theirs-text);
+  font-weight: 600;
+}
+
+.bubble.mine .quote-card {
+  background: var(--mine-card-bg);
+  color: var(--mine-text);
+  border-left-color: var(--mine-text);
+}
+
+.bubble.mine .quote-card .quote-excerpt,
+.bubble.mine .quote-card .quote-attachment {
+  color: var(--mine-muted);
+}
+
+.bubble.mine .quote-card.subject .quote-excerpt {
+  color: var(--mine-text);
+}
+
+/* The bubble a card points to, for a second */
+.bubble.highlight {
+  outline: 3px solid var(--focus);
+  outline-offset: 2px;
+}
+
+/* The ⋯ menu of a message */
+.bubble .meta {
+  display: flex;
+  align-items: center;
+  gap: 0.2rem;
+}
+
+.message-menu {
+  position: relative;
+  margin-left: auto;
+}
+
+.message-menu summary {
+  list-style: none;
+  cursor: pointer;
+  padding: 0 0.35rem;
+  border-radius: 4px;
+}
+
+.message-menu summary::-webkit-details-marker {
+  display: none;
+}
+
+.message-menu ul {
+  position: absolute;
+  right: 0;
+  bottom: 1.6rem;
+  z-index: 1;
+  list-style: none;
+  margin: 0;
+  padding: 0.3rem 0.6rem;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  white-space: nowrap;
+}
+
+.bubble .message-menu ul a {
+  color: var(--accent);
+}
+
+/* Signatures, collapsed */
+.bubble details.signature {
+  margin-top: 0.3rem;
+  font-size: 0.9rem;
+}
+
+.bubble details.signature summary {
+  cursor: pointer;
+  color: var(--muted);
+}
+
+.bubble.mine details.signature summary {
+  color: var(--mine-muted);
+}
+
+/* New chat and contact pages */
+.new-chat,
+.contact-body {
+  padding: 0.6rem 1rem;
+  overflow-y: auto;
+}
+
+.new-chat h2 {
+  margin: 0 0 0.5rem;
+  font-size: 1.15rem;
+}
+
+.new-chat label {
+  display: block;
+  font-weight: 600;
+  margin-top: 0.8rem;
+}
+
+.new-chat input,
+.new-chat textarea {
+  width: 100%;
+  padding: 0.45rem;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  font: inherit;
+}
+
+.recipients {
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin: 0.3rem 0;
+  padding: 0;
+}
+
+.recipients li {
+  background: var(--selected-bg);
+  border-radius: 999px;
+  padding: 0.1rem 0.3rem 0.1rem 0.7rem;
+}
+
+.recipients button {
+  background: none;
+  border: 0;
+  margin-left: 0.2rem;
+}
+
+button.secondary {
+  background: var(--bg);
+  color: var(--accent);
+  border: 1px solid var(--accent);
+  border-radius: 6px;
+  padding: 0.45rem 1rem;
+}
+
+.contact {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.facts {
+  display: grid;
+  grid-template-columns: max-content 1fr;
+  gap: 0.2rem 1rem;
+}
+
+.facts dt {
+  font-weight: 600;
+}
+
+.facts dd {
+  margin: 0;
+}
+
+.contact-body h3 {
+  font-size: 1rem;
+  margin: 1rem 0 0.3rem;
+}
+
+.groups {
+  padding-left: 1.1rem;
+}

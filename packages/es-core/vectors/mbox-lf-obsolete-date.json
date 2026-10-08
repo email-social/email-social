@@ -26,6 +26,18 @@
       "messageId": null,
       "inReplyTo": [],
       "references": []
+    },
+    "delivery": {
+      "listHeaders": [],
+      "listId": null,
+      "autoSubmitted": null,
+      "precedence": null,
+      "returnPath": "sender@example.org"
     }
+  },
+  "split": {
+    "fresh": "Hi all,\n\nthe minutes of the March meeting are below.\n\n>From the treasurer: the budget is unchanged.\n\nRegards,\nOT",
+    "quoted": "",
+    "signature": ""
   }
 }

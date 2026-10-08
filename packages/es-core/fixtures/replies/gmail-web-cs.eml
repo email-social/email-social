@@ -1,0 +1,50 @@
+MIME-Version: 1.0
+References: <CAKx4mR8wX3zA2cO4qS6uI9kM1eG7hT0vF3dB5lN7pR9tV1xZ@mail.example.com>
+In-Reply-To: <CAKx4mR8wX3zA2cO4qS6uI9kM1eG7hT0vF3dB5lN7pR9tV1xZ@mail.example.com>
+From: Karel Holub <karel@example.org>
+Date: Tue, 3 Mar 2026 12:40:05 +0100
+Message-ID: <CAH7x9kS3tU5wX7zA9cE2gI4kM6oQ8sU0wB3dF5hJ7lN9pR1tE@mail.example.com>
+Subject: =?UTF-8?B?UmU6IEZvdGt5IHogdsO9bGV0dQ==?=
+To: =?UTF-8?Q?Alice_Dvo=C5=99=C3=A1kov=C3=A1?= <alice@example.com>
+Content-Type: multipart/alternative; boundary="000000000000ca79357a9ce24680"
+
+--000000000000ca79357a9ce24680
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+
+Ahoj Alice,
+
+fotky jsem nahr=C3=A1l do sd=C3=ADlen=C3=A9ho alba, odkaz po=C5=A1lu ve=C4=
+=8Der.
+
+Karel
+
+=C3=BAt 3. 3. 2026 v 10:15 odes=C3=ADlatel Alice Dvo=C5=99=C3=A1kov=C3=A1 <=
+alice@example.com>
+napsal:
+
+> Ahoj Karle,
+>
+> po=C5=A1le=C5=A1 mi pros=C3=ADm fotky z v=C3=BDletu? Chci je d=C3=A1t do =
+alba.
+>
+> D=C3=ADky,
+> Alice
+
+
+--000000000000ca79357a9ce24680
+Content-Type: text/html; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+
+<div dir=3D"ltr"><div>Ahoj Alice,</div><div><br></div><div>fotky jsem nahr=
+=C3=A1l do sd=C3=ADlen=C3=A9ho alba, odkaz po=C5=A1lu ve=C4=8Der.</div><div=
+><br></div><div>Karel</div></div><br><div class=3D"gmail_quote gmail_quote_=
+container"><div dir=3D"ltr" class=3D"gmail_attr">=C3=BAt 3. 3. 2026 v 10:15=
+ odes=C3=ADlatel Alice Dvo=C5=99=C3=A1kov=C3=A1 &lt;<a href=3D"mailto:alice=
+@example.com">alice@example.com</a>&gt; napsal:<br></div><blockquote class=
+=3D"gmail_quote" style=3D"margin:0px 0px 0px 0.8ex;border-left:1px solid rg=
+b(204,204,204);padding-left:1ex"><div dir=3D"ltr">Ahoj Karle,<br><br>po=C5=
+=A1le=C5=A1 mi pros=C3=ADm fotky z v=C3=BDletu? Chci je d=C3=A1t do alba.<b=
+r><br>D=C3=ADky,<br>Alice</div></blockquote></div>
+
+--000000000000ca79357a9ce24680--
