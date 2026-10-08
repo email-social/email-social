@@ -6,7 +6,7 @@ Email Social turns the mailbox you already have into a messenger. One chat per p
 - Library, bridge and web client: `packages/` (Apache-2.0)
 - Work items and their acceptance tests: `tasks/`
 
-Status: `es-core` (Task 1), the local bridge with its web client (Task 2) and the messenger model (Task 2b: chats per person, clean bubbles, new chats, live updates; Task 2c: reply context as quote cards) are in place. To try it, see [`docs/TRY-IT.md`](docs/TRY-IT.md).
+Status: `es-core` (Task 1), the local bridge with its web client (Task 2) and the messenger model (Task 2b: chats per person, clean bubbles, new chats, live updates; Task 2c: reply context as quote cards; Task 2d: topics instead of subjects, quote cards only for deliberate replies) are in place. To try it, see [`docs/TRY-IT.md`](docs/TRY-IT.md).
 
 Requires Node.js 22.12 or later. `npm test`, `npm run typecheck`, `npm run build`, `npm run test:browser`, `npm run test:e2e` and `npm run license:check` run in CI on every pull request.
 

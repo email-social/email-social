@@ -11,20 +11,30 @@ loads nothing from the internet and gets all data from the bridge's local API.
   a collapsed, read-only "Other mail" section below.
 - **Bubbles.** Your messages on the right labelled "You", the others on the
   left; in a group every bubble names its sender. A bubble shows only what
-  the sender wrote, never the text their mail client quoted. Above it, a
-  quote card says what it answers, as messengers do: the answered sender in
-  bold, the first lines of their message, its attachment, with an accent bar;
-  pressing the card scrolls to that message and highlights it. Where a
-  message starts a new subject, or answers something not in the mailbox, the
-  card shows the subject instead; this is the only place subjects appear.
-  The signature is behind "Show signature", and the ⋯ menu offers "Open
-  original" (the raw `.eml`). Attachments are download links; HTML-only mail
-  is shown as text with an "Open original" link.
-- **Writing.** The box under a chat replies to everyone in it and says how
-  the message is sent (with an Email Social part, or as an ordinary e-mail
-  with the answered message quoted below). "New chat" takes recipients
-  (suggested from your contacts, any address accepted, several make a
-  group), an optional subject and the text.
+  the sender wrote, never the text their mail client quoted (an answer given
+  point by point keeps its quoted lines, muted, under "answered point by
+  point"). A quote card appears only above a deliberate reply, as messengers
+  do: the answered sender in bold, what of their message is answered, its
+  attachment, with an accent bar; pressing the card scrolls to that message
+  and highlights it. A subject changed by another mail client shows as one
+  small line on that bubble. The signature is behind "Show signature" (not
+  for the footer Email Social adds to your own plain messages), and the ⋯
+  menu offers "Reply" and "Open original" (the raw `.eml`). Attachments are
+  download links; HTML-only mail is shown as text with an "Open original"
+  link.
+- **Topics.** A chat can hold several topics (threads). When it does, a chip
+  marks where a run of another topic starts, and "All topics ▾" in the header
+  lists them with counts and shows one at a time. There is no subject
+  anywhere.
+- **Writing.** The box under a chat is bound to a topic: the one you last
+  wrote in when the chat opens, then whatever you last sent or chose; mail
+  arriving in another topic never moves it. Beside it, "+ Topic" names a new
+  topic (in a chat with several topics the chip names the bound one and
+  offers the others and "New topic…"). "Reply" in a message's ⋯ menu shows
+  "Replying to …" above the box and sends a deliberate reply. The hint says
+  how the message is sent (with an Email Social part, or as an ordinary
+  e-mail). "New chat" takes recipients (suggested from your contacts, any
+  address accepted, several make a group), the text and an optional topic.
 - **People.** A sender's name opens their page: names seen, address, first
   and last message, number of messages, the chat, attachments exchanged and
   the groups you share.

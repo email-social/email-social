@@ -166,6 +166,7 @@ Quotations from the draft are translated from Czech where the draft is in Czech.
   - It does not write `reply` and ignores it when reading.
   - Threading uses only e-mail headers and subjects.
   - The ES part's `email.inReplyTo` and `email.references` copy the header values.
+  - What a deliberate reply answers travels in `email.replyTo`, and the topic it belongs to in `email.topicRoot` and `email.topicLabel` (D25): Message-IDs, not AT URIs.
 - **Covered by:** `test/es-schema.test.ts` (unknown fields are ignored), `test/threading.test.ts`.
 
 ### D11. Mailing lists and gateways change the message on the way
@@ -250,8 +251,12 @@ Quotations from the draft are translated from Czech where the draft is in Czech.
   - Gmail, Outlook, Apple Mail, iOS Mail, Thunderbird, Seznam.cz and mutt quote the message they answer: `>` lines after an attribution line ("On … wrote:", "Dne … napsal(a):", "Am … schrieb …:", "Le … a écrit :", wrapped over two lines by Gmail), or, in Outlook, a `From:`/`Sent:`/`To:`/`Subject:` block in the user's language followed by the unprefixed original. Thunderbird and mutt put the answer below the quote; mutt users answer between quoted lines.
   - In a chat view each message then shows the whole conversation again below it. The maintainer's first manual test with a real mailbox (tasks/02b, item 5) showed exactly that.
   - Signatures (RFC 3676 §4.3 `-- `, often without the space) and one-line mobile signatures ("Sent from my iPhone", "Odesláno z iPhonu") follow the text.
-- **es-core does:** `splitQuoted` separates what the sender wrote now from the quoted text and the signature, without dropping a line, and `replyContextOf` describes what a message answers as a quote card (the answered message's sender and first lines, or the subject), which the client shows instead of any quoted text; HTML is reduced to text with `> ` in front of lines inside `<blockquote>` (Gmail's quote container, Apple Mail's and Thunderbird's `type="cite"`). A quote between two answers stays with the answers. An Email Social post is always entirely fresh text.
-- **Covered by:** `test/reply-context.test.ts`, `test/split-quoted.test.ts` (27 reconstructed reply formats in `fixtures/replies/` and 11 corpus replies, a seeded property test that no line is lost), `test/html-to-text.test.ts`, the `split` field of every test vector.
+  - Because every client quotes the whole message it answers by default, a quote says nothing about intent. A sender who wants to answer one point cuts the quote down to it (Gmail quotes only the text selected when Reply is pressed); that is the only sign of a deliberate reply an ordinary client leaves.
+- **es-core does:**
+  - `splitQuoted` separates what the sender wrote now from the quoted text and the signature, without dropping a line; HTML is reduced to text with `> ` in front of lines inside `<blockquote>` (Gmail's quote container, Apple Mail's and Thunderbird's `type="cite"`). A quote between two answers stays with the answers (`isInterleaved` reports it). An Email Social post is always entirely fresh text.
+  - `unquotedLines`/`unquote` give what a quote says without its markup (`>` at any depth, iOS Mail's U+FEFF, attribution lines, Outlook header blocks, `-----Original Message-----`).
+  - `replyCardOf` replaces 2c's `replyContextOf`. A quote card appears only above a deliberate reply: an Email Social post that carries `email.replyTo` (D25), a plain message whose quote is a fragment of its parent (`quotedFragmentOf`: at most 3 lines, part of the parent's own words but not all of them, not its start or end unless the parent is short, not an HTML-only parent, not interleaved), or the account's own plain message that quotes at all (Email Social quotes only on a deliberate reply, D23). A default reply quoting the whole message gets no card, and there is no longer a subject card: the subject is a topic carrier (D24), shown only as a one-line note where an ordinary client changed it (`subjectNoteOf`).
+- **Covered by:** `test/reply-card.test.ts`, `test/quoted-fragment.test.ts`, `test/unquote.test.ts`, `test/split-quoted.test.ts` (29 reconstructed reply formats in `fixtures/replies/`, two of them quoting one interior sentence, and 11 corpus replies, a seeded property test that no line is lost), `test/html-to-text.test.ts`, the `split` field of every test vector.
 
 ### D22. People write to each other under many subjects; lists and programs are not people
 
@@ -259,8 +264,25 @@ Quotations from the draft are translated from Czech where the draft is in Czech.
 - **Reality:**
   - The same two people start a new subject for every new topic, so a thread view splits one relationship into many conversations and "looks like a mail client" (tasks/02b, item 6).
   - A mailbox also holds mailing lists (RFC 2369 `List-*`, RFC 2919 `List-Id`, `Precedence: list`), newsletters (`List-Unsubscribe`, `Precedence: bulk`) and automated mail (RFC 3834 `Auto-Submitted`, the null `Return-Path: <>` of delivery reports, no-reply senders), none of which is a conversation with a person.
-- **es-core does:** `groupByParticipants` puts every message exchanged with exactly the same set of people (From, To and Cc without the account owner) into one chat, oldest first, with each message's base subject so a client can mark subject changes; the id is derived from the sorted addresses. `classifyMessage` tells `person`, `list` and `automated` mail apart from headers only; the bridge shows lists and automated mail under "Other mail". `threadMessages` (D8) is unchanged and still threads by headers and subject.
+- **es-core does:** `groupByParticipants` puts every message exchanged with exactly the same set of people (From, To and Cc without the account owner) into one chat, oldest first, with each message's base subject; the id is derived from the sorted addresses. Inside a chat, `topicsOf` places messages in topics identified by their root (D24). `classifyMessage` tells `person`, `list` and `automated` mail apart from headers only; the bridge shows lists and automated mail under "Other mail". `threadMessages` (D8) is unchanged and still threads by headers and subject.
 - **Covered by:** `test/chats.test.ts`, `test/classify.test.ts`, the `delivery` field of every test vector.
+
+### D24. Mail clients group a conversation by different keys: topics and the carrier subject
+
+- **Draft says:** §4.3 groups messages by threading headers and ES thread metadata; it has no notion of a subject inside a chat.
+- **Reality:**
+  - **Gmail** threads a message into a conversation only when its References point at earlier messages of the conversation *and* its subject matches; since the change of March 2019, the same subject alone no longer joins, and different subjects split even with References. The Gmail API states the same rule for inserting into a thread ("the Subject headers must match").
+  - **Exchange and everything backed by it** (Outlook desktop, new Outlook, Outlook on the web, Outlook mobile) group by the conversation topic, the normalized subject (`Thread-Topic`, `PidTagConversationTopic`, set from `PidTagNormalizedSubject`), and use the conversation index and References only to order and confirm. A changed subject starts a new conversation; an identical subject can merge unrelated mail. A 1:1 chat and a group chat with the same subject are one conversation there.
+  - **Thunderbird** threads by References and In-Reply-To only (`mail.strict_threading` is true by default since 3.0); a changed subject changes nothing there.
+  - **Apple Mail** does not document its rules; it is reported to lean on the subject and a literal `Re:`. **Seznam.cz** does not document them either.
+  - So the one layout that keeps a single conversation everywhere is a stable References chain **and** a byte-stable base subject (`Re: <base>` from the second message on). The one way to start a new conversation everywhere is a new root (no In-Reply-To, no References) **and** a different normalized subject; neither alone is reliable. Changing the subject inside a running chat (as the subject field of Tasks 2b–2c allowed) forks it in Gmail and Outlook.
+- **es-core and the bridge do:**
+  - A chat (D22) holds topics. `topicsOf` identifies a topic by the Message-ID of its root, never by its subject, and a message never moves between topics once placed: the ES part's `email.topicRoot` (D25), else the topic of the message answered, else an existing topic with the same base subject (Outlook replies without threading headers, D8), else the previous message's topic for replies, tagged or renamed replies and mails without a subject, else a new root for a fresh mail from any client. Auto-Submitted mail is left out.
+  - Only an Email Social user names a topic. A topic without a name gets the **carrier subject** (`carrierSubject`): "Message from" and the sender's display name, plus " to " and up to three others (then "+N") in a group, since Exchange would otherwise merge a 1:1 and a group chat with the same people. It is written once by the root and inherited byte for byte; it is never derived from the message text and is never a label anyone reads in the client. In a chat another Email Social user opened, our messages therefore go out as `Re: Message from <their name>`.
+  - Every message after a root carries exactly `Re: ` + the root's base subject, built from the root, so `Re: Odp: Re: AW:` stacks from other clients never propagate. A root whose base subject is empty ("(no subject)") is not continued with `Re: `; the next message becomes a new carrier root.
+  - A message from an ordinary client whose subject differs from its topic's (`… [EXTERNAL]`, a renamed reply) stays in its topic; `subjectNoteOf` gives the one-line note the client shows on that bubble.
+- **Not solved:** Gmail is reported to split a conversation after about 100 messages, and restarting a root after many messages is out of scope (tasks/02d). Coalescing quick messages is out of scope too.
+- **Covered by:** `test/topics.test.ts` (es-core), `test/session.test.ts` and `test-e2e/maildir.test.ts` (es-bridge). How Gmail, Outlook and Seznam.cz actually group what Email Social sends is recorded by the maintainer's manual run in `docs/TRY-IT.md`.
 
 ## B. Where es-core deliberately differs from the draft
 
@@ -288,11 +310,12 @@ Quotations from the draft are translated from Czech where the draft is in Czech.
   - The text in the two parts is identical. The only change is that `\r\n` and lone `\r` become `\n`. A text over 10000 bytes is only in the `text/plain` part (D14).
   - With `includeEsPart: false` the message is a single `text/plain` part without an ES part, for recipients who have never sent one; such a message never shows an `email-social.json` attachment. A text without a final line break is then written as quoted-printable ending in a soft line break (RFC 2045 §6.7 rule 5), so the body ends with CRLF and still decodes to the exact text. Receipts always carry their ES part.
   - Receipts use the same layout.
+  - The bridge ends every message to a chat where nobody has sent an ES part with a signature block whose last line is the footer "Sent with Email Social. Reply as you normally would; this is an ordinary e-mail." (D23). Its `-- ` delimiter line (RFC 3676 §4.3) ends with a space, which RFC 2045 §6.7 rule 3 forbids at the end of a 7bit line, so such messages are quoted-printable (`--=20`). The body still decodes to exactly the text, and read back the `-- ` is unchanged and the footer is in the signature.
 - **Why:**
   - Rule 1 of CLAUDE.md: the plain text must be what every client shows.
   - This layout avoids the problems in D1, D3, D4 and D5.
   - The cost is that ordinary clients show one attachment named `email-social.json`.
-- **Covered by:** `test/serialize.test.ts`, `test/compat-mailparser.test.ts` (mailparser reads the same text and subject).
+- **Covered by:** `test/serialize.test.ts`, `test/compat-mailparser.test.ts` (mailparser reads the same text and subject); the footer by `test/session.test.ts` (es-bridge: "answers a deliberate reply's target…" checks the Sent copy's encoding and parts).
 
 ### D18. Record envelope without `uri`, `cid` or `signature`, and the direct-message subset
 
@@ -307,7 +330,7 @@ Quotations from the draft are translated from Czech where the draft is in Czech.
     - The same CID string appears for different records in §2.2, §2.4 and §4.1, so it is a placeholder rather than a computed value.
 - **es-core does:**
   - It writes the envelope as `$type`, an optional `author` and `value`.
-  - `value` holds `text`, `via` and `createdAt` (required, as in §2.3.1, except that a text over 10000 bytes is left out, D14), `email { messageId, subject, inReplyTo, references, textSha256 }`, and `requestReceipts` (D19).
+  - `value` holds `text`, `via` and `createdAt` (required, as in §2.3.1, except that a text over 10000 bytes is left out, D14), `email { messageId, subject, inReplyTo, references, textSha256, topicRoot, topicLabel, replyTo }` (the last three: D25), and `requestReceipts` (D19).
   - When reading, it follows §4.1 (the lexicon record sits inside `value`). It ignores unknown fields, drops malformed optional fields, and rejects a record that lacks a required field. Flat records in the §2.4 form are not accepted.
 - **Why:**
   - `uri` and `cid` need a repository and DAG-CBOR/multiformats libraries, and this repository has neither.
@@ -352,12 +375,32 @@ Quotations from the draft are translated from Czech where the draft is in Czech.
   - The trade-off is that a derived DID changes when the address changes, contrary to what §1.1 intends.
 - **Covered by:** `test/did.test.ts`, including the fixed vector `deriveDid("alice@example.com")` = `did:es:example.com:ff8d9819fc0e12bf0d24892e45987e24`.
 
-### D23. Replies to people without Email Social quote what they answer
+### D23. A quote only on a deliberate reply, at most five lines, and a footer for people without Email Social
 
 - **Draft says:** nothing about quoting.
-- **es-core and the bridge do:** a reply sent from Email Social to a chat in which nobody has ever sent an ES part ends with `quoteForReply` of the message it answers: an English attribution line ("On Tue, 3 Mar 2026 at 10:15, Name <address> wrote:") and that message's fresh text as `> ` lines (at most 40). Such a reply has no ES part (D17 applies only when a recipient has sent one). A reply to someone who uses Email Social quotes nothing, since their client shows the chat.
-- **Why:** an ordinary mail client shows no chat history, so a bare answer arrives without context (tasks/02b, item 4). The quote is in the `text/plain` body, readable everywhere (rule 1), and `splitQuoted` recognises it when the reply is read back.
+- **es-core and the bridge do:**
+  - A message typed in a chat without choosing what it answers is a continuation of its topic (D24): it answers the topic's newest message (In-Reply-To, References) and quotes nothing.
+  - "Reply" on a message makes a deliberate reply. To a chat in which nobody has ever sent an ES part, it ends with `quoteForReply(target, { maxLines: 5 })`: an English attribution line ("On Tue, 3 Mar 2026 at 10:15, Name <address> wrote:") and at most five lines of the target's fresh text as `> ` lines, then `> [...]`.
+  - Every message to such a chat ends with a signature block whose last line is "Sent with Email Social. Reply as you normally would; this is an ordinary e-mail." After a `-- ` line of its own, or, when the user typed a signature, as its last line, so a message never has two `-- ` lines. The body is: text, blank line, quote (deliberate replies only), blank line, signature block (quoted-printable, D17).
+  - A message that carries an ES part never carries a quote or the footer: an ES post's text is exactly what its author typed, and the deliberate reply is recorded in `email.replyTo` (D25). In a mixed chat (some recipients have sent an ES part, some have not) the plain members therefore get a deliberate reply without a quote and without the footer.
+- **Why:**
+  - An ordinary mail client shows no chat history, so a bare deliberate answer would arrive without context (tasks/02b, item 4); a continuation needs none, as the conversation holds the earlier messages.
+  - Quoting the whole previous message under every chat message makes Outlook's **Conversation Clean Up** move the recipient's earlier messages to Deleted Items: it deletes every message whose text is wholly contained in a later message of the conversation. Only Gmail hides previously seen text; Thunderbird and classic Outlook show every quote inline.
+  - The quote is in the `text/plain` body, readable everywhere (rule 1), and `splitQuoted` recognises it when the reply is read back. In a chat without ES parts the quote is the only record of a deliberate reply (CLAUDE.md rule 2: nothing is stored outside the mailbox), so the client shows a card above the account's own quoting messages (D21).
+- **Not solved, accepted:** the cap does not help when the target has five lines or fewer: it is then quoted in full, and Conversation Clean Up can still move the recipient's copy of the target to Deleted Items. This is reduced to deliberate replies, documented, and not fixed.
 - **Covered by:** `test/reply-quote.test.ts` (es-core), `test/session.test.ts` and `test-e2e/maildir.test.ts` (es-bridge).
+
+### D25. `email.topicRoot`, `email.topicLabel` and `email.replyTo`
+
+- **Draft says:** §2.3.1 has `reply: { parent, root }` as AT URIs (D10) and no topics.
+- **es-core does:** three optional fields in the ES part's `email` object, the sub-object that is ours; the lexicon's `reply` stays unwritten and ignored.
+  - `topicRoot`: the Message-ID of the root of the topic the message belongs to (D24); on the root itself, its own Message-ID (`EsOutgoing.es.topicRoot: "self"`). Left out when the root has no Message-ID (its `EsMessage.id` is a synthetic `sha256:` id, which cannot be written as a msg-id). A reader without it places the message by its headers.
+  - `topicLabel`: the topic's name, on **every** message Email Social sends inside a named topic, not only on the root, so the name survives the root falling outside the messages a reader holds.
+  - `replyTo: { messageId, from: { name, address }, excerpt }`: only on a deliberate reply. The target's Message-ID (null when it has none), its sender, and the first 140 characters of what its sender wrote, cut at a word boundary. A reader shows the card from these values even when it does not hold the target. It has nothing to do with the RFC 5322 `Reply-To` field (`EsMessage.replyTo`).
+  - The writer adds them after the existing keys, in the order `messageId, subject, inReplyTo, references, textSha256, topicRoot, topicLabel, replyTo` (and `messageId, from, excerpt` inside `replyTo`), so output stays byte-stable. The reader drops a non-string `topicRoot` or `topicLabel` and a `replyTo` without a usable `from.address`, reads ids like any msg-id and the address in canonical form; records written before these fields existed read them as null.
+  - An ES post without `replyTo` never gets a card, whatever its In-Reply-To says: no shipped client can express a target any other way, so an unmarked ES message is a continuation.
+- **Why:** with an ES part the target of a deliberate reply cannot be inferred from a quote (an ES post quotes nothing, D23), and a topic must survive subjects other clients change; both need ids, and the mailbox is the only storage (rule 2).
+- **Covered by:** `test/es-schema.test.ts`, `test/serialize.test.ts`, `test/reply-card.test.ts`, `test/topics.test.ts`, the vectors `generated-topic-root.json` and `generated-topic-reply.json`.
 
 ## Sources
 
@@ -380,6 +423,13 @@ The following were read as search-result excerpts; the pages themselves could no
 - Outlook forwards include attachments, replies do not: https://support.microsoft.com/en-us/outlook/reply-to-or-forward-an-email-message
 - Gmail read receipts (work or school accounts only): https://support.google.com/mail/answer/9413651
 - Apple Mail and read receipts: https://discussions.apple.com/thread/254379303
+- Gmail threading by References and subject (Google Workspace Updates, 29 March 2019, "Threading changes in Gmail conversation view"): https://workspaceupdates.googleblog.com/2019/03/threading-changes-in-gmail-conversation-view.html
+- Gmail API, managing threads ("the Subject headers must match"; References and In-Reply-To per RFC 2822): https://developers.google.com/gmail/api/guides/threads
+- Exchange conversation topic (`PidTagConversationTopic`, set from `PidTagNormalizedSubject`; replies keep it unchanged) and conversation index: https://learn.microsoft.com/en-us/office/client-developer/outlook/mapi/pidtagconversationtopic-canonical-property and https://learn.microsoft.com/en-us/office/client-developer/outlook/mapi/pidtagnormalizedsubject-canonical-property
+- Exchange starts a new conversation (new ConversationTopic and ConversationIndex) when the subject changes: https://learn.microsoft.com/en-us/exchange/client-developer/exchange-web-services/how-to-work-with-conversations-by-using-ews-in-exchange and https://github.com/ecederstrand/exchangelib/issues/1223
+- MS-OXCMAIL: `Thread-Topic` carries `PidTagConversationTopic`, the subject without its prefix: https://learn.microsoft.com/en-us/openspecs/exchange_server_protocols/ms-oxcmail/0c6ea518-0f18-414d-a8cb-38a0dd7e693a
+- Outlook Conversation Clean Up ("If a message is completely contained within one of the replies, the previous message is deleted"): https://support.microsoft.com/en-us/outlook/use-conversation-clean-up-to-delete-redundant-messages-in-outlook
+- Thunderbird threading (`mail.strict_threading` true by default since 3.0, subject used only when it is false; `mail.thread_without_re`): https://wiki.mozilla.org/MailNews:Message_Threading
 
 The following was read locally:
 
