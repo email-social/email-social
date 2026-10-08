@@ -173,6 +173,34 @@ export interface QuotedSplit {
   signature: string;
 }
 
+/**
+ * The `email.replyTo` object of an Email Social post: the message a
+ * deliberate reply answers, as the sender's client saw it. It has nothing to
+ * do with the RFC 5322 Reply-To header field (`EsMessage.replyTo`).
+ */
+export interface EsReplyToCard {
+  /** Message-ID of the message answered, or null when it has none. */
+  messageId: string | null;
+  /** Its sender: display name and canonical address. */
+  from: EsAddress;
+  /** The start of what its sender wrote, at most 140 characters, cut at a word boundary with "…". */
+  excerpt: string;
+}
+
+/** The quote card above a message that deliberately answers another (see `replyCardOf`). */
+export interface ReplyCard {
+  /** EsMessage.id of the message answered when it is held, else null. */
+  messageId: string | null;
+  /** Its sender's display name, else address; "" when unknown. */
+  from: string;
+  /** What the card quotes of it, at most 140 characters ("…" when cut). */
+  excerpt: string;
+  /** The file name of its first attachment when it is held, else null. */
+  attachment: string | null;
+  /** True only when the message answered is held and in the chat being shown, so the card can bring it into view. */
+  clickable: boolean;
+}
+
 /** The quote card above a message (see `replyContextOf`). */
 export type ReplyContext =
   | {

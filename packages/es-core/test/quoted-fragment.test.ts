@@ -34,7 +34,7 @@ const reply = (text: string): EsMessage => msg({ id: mid("r"), from: "Bob <bob@e
 const PLAN = "Hi Bob,\n\nthe hall is booked for Saturday. Could you bring the projector? The talk starts at 10.\nLunch is at the café next door.\n\nThanks,\nAlice";
 
 describe("quotedFragmentOf: the whole message quoted is no fragment", () => {
-  it.each(listReplyFixtures().filter((name) => !["replies/plain-no-quote.eml", "replies/mutt-interleaved.eml", "replies/gmail-long-quote.eml"].includes(name)))(
+  it.each(listReplyFixtures().filter((name) => !["replies/plain-no-quote.eml", "replies/mutt-interleaved.eml", "replies/gmail-long-quote.eml", "replies/gmail-web-fragment.eml", "replies/outlook-desktop-fragment.eml"].includes(name)))(
     "%s quoting the original in full → null",
     (name) => {
       expect(quotedFragmentOf(parsed(name), parent(originalFor(name)))).toBeNull();

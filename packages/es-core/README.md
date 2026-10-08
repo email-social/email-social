@@ -16,9 +16,9 @@ parseMessage(raw: string | Uint8Array): EsMessage                     // never t
 extractPart(raw, partId): EsPartContent | null                        // decoded bytes of one attachment (EsAttachment.partId)
 serializeMessage(out: EsOutgoing, { date, messageId, includeEsPart? }): string  // CRLF, 7-bit; text/plain first, then the ES part
 serializeReceipt(receipt: EsOutgoingReceipt, { date, messageId }): string  // a "delivered" or "read" receipt
-replyTargetOf(parent): ReplyTarget · replyContextOf(message, lookup, { previous? }) · quotedFragmentOf(message, parent)  // reply headers · quote card
+replyTargetOf(parent) · replyCardOf(message, lookup, { inChat, self }) · quotedFragmentOf(message, parent) · replyContextOf  // reply headers · quote card
 threadMessages(messages: EsMessage[]): Conversation[]                 // threads by references and subject, any input order
-groupByParticipants(messages, { self }): Chat[] · topicsOf(chat messages): ChatTopics · carrierSubject(sender, others)  // chats · threads in a chat
+groupByParticipants(messages, { self }): Chat[] · topicsOf(chat messages): ChatTopics · subjectNoteOf · carrierSubject  // chats · their topics
 classifyMessage(message): "person" | "list" | "automated"              // from List-*, Auto-Submitted, Precedence, Return-Path, no-reply
 splitQuoted(message): { fresh, quoted, signature } · isInterleaved · unquotedLines(quoted) · unquote · collapse(text)  // every line kept · quote marks off
 quoteForReply(parent, { maxLines?, timeZone? }): string                // "On … wrote:" + the parent's fresh text as "> " lines
@@ -26,7 +26,7 @@ normalizeSubject(subject): { base, isReply, isForward } · subjectKey(base) · c
 deriveContacts(messages, { exclude? }): Contact[] · deriveDid(address) · formatDid · parseDid · isValidDid  // contacts; did:es as metadata
 ES_MEDIA_TYPE · ES_DRAFT_MEDIA_TYPE · ES_TEXT_MAX_BYTES               // ES part media types, text limit (10000 B)
 // Types (src/types.ts): EsMessage, EsAddress, EsAttachment, EsRefs, EsDelivery, EsPart (EsPostPart | EsReceiptPart), Conversation,
-// Chat, ChatEntry, ChatTopics, Topic, TopicKind, MessageKind, QuotedSplit, ReplyContext, Contact, EsOutgoing, EsOutgoingReceipt, ReplyTarget, SerializeOptions, ReceiptKind, EsPartContent
+// Chat, ChatEntry, ChatTopics, Topic, TopicKind, MessageKind, QuotedSplit, ReplyCard, EsReplyToCard, ReplyContext, Contact, EsOutgoing, EsOutgoingReceipt, ReplyTarget, SerializeOptions, ReceiptKind, EsPartContent
 ```
 
 ## Example

@@ -5,7 +5,7 @@
 import { describe, expect, it } from "vitest";
 import { parseMessage } from "../src/parse.js";
 import { normalizeSubject, subjectKey } from "../src/threading/subject.js";
-import { carrierSubject, topicsOf } from "../src/topics.js";
+import { carrierSubject, subjectNoteOf, topicsOf } from "../src/topics.js";
 import type { EsEmailMeta, EsMessage } from "../src/types.js";
 import { readFixture } from "./helpers/fixtures.js";
 import { mid, msg, t } from "./helpers/messages.js";
@@ -212,5 +212,32 @@ describe("topicsOf: kinds, counts and what it ignores", () => {
     expect(topicsOf([a, b])).toEqual(topicsOf([a, b]));
     expect(topicsOf([a, b, a]).topics[0]!.count).toBe(2);
     expect(topicsOf([])).toEqual({ topics: [], of: {} });
+  });
+});
+
+describe("subjectNoteOf", () => {
+  const root = msg({ id: mid("r"), from: BOB, to: ALICE, date: t(0), subject: "Invoice 114" });
+  const topic = { rootId: mid("r"), base: "Invoice 114" };
+
+  it("a plain sender's tagged reply → its base subject, for one small line on that bubble", () => {
+    const tagged = msg({ id: mid("t"), from: BOB, to: ALICE, date: t(1), subject: "Re: Invoice 114 [EXTERNAL]", inReplyTo: mid("r") });
+    expect(subjectNoteOf(tagged, topic)).toBe("Invoice 114 [EXTERNAL]");
+    expect(topicsOf([root, tagged]).of[mid("t")]!.rootId).toBe(mid("r"));
+  });
+
+  it("the same subject from an Email Social sender → null (its subject is only a carrier)", () => {
+    const tagged = es(msg({ id: mid("t"), from: BOB, to: ALICE, date: t(1), subject: "Re: Invoice 114 [EXTERNAL]", inReplyTo: mid("r") }));
+    expect(subjectNoteOf(tagged, topic)).toBeNull();
+  });
+
+  it("a topic root → null; an empty subject → null; the same base with other prefixes or case → null", () => {
+    expect(subjectNoteOf(root, topic)).toBeNull();
+    expect(subjectNoteOf(msg({ id: mid("e"), from: BOB, date: t(1), subject: "", inReplyTo: mid("r") }), topic)).toBeNull();
+    expect(subjectNoteOf(msg({ id: mid("s"), from: BOB, date: t(1), subject: "AW: Odp: invoice 114", inReplyTo: mid("r") }), topic)).toBeNull();
+  });
+
+  it("an Auto-Submitted message → null", () => {
+    const auto = { ...msg({ id: mid("a"), from: BOB, date: t(1), subject: "Automatic reply: Invoice 114" }), delivery: { listHeaders: [], listId: null, autoSubmitted: "auto-replied", precedence: null, returnPath: null } };
+    expect(subjectNoteOf(auto, topic)).toBeNull();
   });
 });

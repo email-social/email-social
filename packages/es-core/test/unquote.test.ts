@@ -62,7 +62,7 @@ describe("unquotedLines / unquote: every default reply format quotes exactly the
   });
 
   it("covers every reply fixture that quotes Alice's original", () => {
-    const quoting = listReplyFixtures().filter((name) => !["replies/plain-no-quote.eml", "replies/mutt-interleaved.eml", "replies/gmail-long-quote.eml"].includes(name));
+    const quoting = listReplyFixtures().filter((name) => !["replies/plain-no-quote.eml", "replies/mutt-interleaved.eml", "replies/gmail-long-quote.eml", "replies/gmail-web-fragment.eml", "replies/outlook-desktop-fragment.eml"].includes(name));
     expect(Object.keys(expected).sort()).toEqual(quoting);
   });
 });
@@ -123,6 +123,11 @@ describe("unquotedLines: the parts it drops and keeps", () => {
       "Bonjour à tous, La réunion de lundi est déplacée à 14 h 30, salle B. Merci de préparer vos points pour l’ordre du jour. Bonne soirée, Camille",
     );
     expect(unquotedLines("________________________________\nFrom: Alice <alice@example.com>\nSent: Tuesday\nTo: Julien <julien@example.org>\nSubject: Notes\n\nHi")).toEqual(["", "Hi"]);
+  });
+
+  it("gives the one sentence a sender kept of the original (Gmail web, Outlook desktop under a header block)", () => {
+    expect(unquote(quotedOf("replies/gmail-web-fragment.eml"))).toBe("Jana už říkala, že by šla taky.");
+    expect(unquotedLines(quotedOf("replies/outlook-desktop-fragment.eml"))).toEqual(["", "Podívej se prosím hlavně na článek 4 (termíny plnění)."]);
   });
 
   it("keeps signatures, list items and the '[...]' marker of a cut quote", () => {

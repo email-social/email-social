@@ -151,3 +151,17 @@ export function topicsOf(messages: readonly EsMessage[]): ChatTopics {
   }
   return { topics, of };
 }
+
+/**
+ * The note shown on one bubble when a message of an ordinary mail client
+ * changed the subject inside its topic (a gateway tag such as
+ * "… [EXTERNAL]", a renamed reply): its base subject, when non-empty and
+ * different (by `subjectKey`) from the topic's base. Null for a topic root,
+ * an Email Social post (its subject is only a carrier) and Auto-Submitted
+ * mail. It moves the message nowhere and changes nothing else.
+ */
+export function subjectNoteOf(message: EsMessage, topic: Pick<Topic, "rootId" | "base">): string | null {
+  if (message.es !== null || isAutomatic(message) || message.id === topic.rootId) return null;
+  const base = normalizeSubject(message.subject).base;
+  return base === "" || subjectKey(base) === subjectKey(topic.base) ? null : base;
+}
