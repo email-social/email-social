@@ -16,7 +16,7 @@ parseMessage(raw: string | Uint8Array): EsMessage                     // never t
 extractPart(raw, partId): EsPartContent | null                        // decoded bytes of one attachment (EsAttachment.partId)
 serializeMessage(out: EsOutgoing, { date, messageId, includeEsPart? }): string  // CRLF, 7-bit; text/plain first, then the ES part
 serializeReceipt(receipt: EsOutgoingReceipt, { date, messageId }): string  // a "delivered" or "read" receipt
-replyTargetOf(parent) · replyCardOf(message, lookup, { inChat, self }) · quotedFragmentOf(message, parent) · replyContextOf  // reply headers · quote card
+replyTargetOf(parent): ReplyTarget · replyCardOf(message, lookup, { inChat, self }) · quotedFragmentOf(message, parent)  // reply headers · quote card
 threadMessages(messages: EsMessage[]): Conversation[]                 // threads by references and subject, any input order
 groupByParticipants(messages, { self }): Chat[] · topicsOf(chat messages): ChatTopics · subjectNoteOf · carrierSubject  // chats · their topics
 classifyMessage(message): "person" | "list" | "automated"              // from List-*, Auto-Submitted, Precedence, Return-Path, no-reply
@@ -26,7 +26,7 @@ normalizeSubject(subject): { base, isReply, isForward } · subjectKey(base) · c
 deriveContacts(messages, { exclude? }): Contact[] · deriveDid(address) · formatDid · parseDid · isValidDid  // contacts; did:es as metadata
 ES_MEDIA_TYPE · ES_DRAFT_MEDIA_TYPE · ES_TEXT_MAX_BYTES               // ES part media types, text limit (10000 B)
 // Types (src/types.ts): EsMessage, EsAddress, EsAttachment, EsRefs, EsDelivery, EsPart (EsPostPart | EsReceiptPart), Conversation,
-// Chat, ChatEntry, ChatTopics, Topic, TopicKind, MessageKind, QuotedSplit, ReplyCard, EsReplyToCard, ReplyContext, Contact, EsOutgoing, EsOutgoingReceipt, ReplyTarget, SerializeOptions, ReceiptKind, EsPartContent
+// Chat, ChatEntry, ChatTopics, Topic, TopicKind, MessageKind, QuotedSplit, ReplyCard, EsReplyToCard, Contact, EsOutgoing, EsOutgoingReceipt, ReplyTarget, SerializeOptions, ReceiptKind, EsPartContent
 ```
 
 ## Example
@@ -66,9 +66,13 @@ const raw = serializeMessage(
   every line (the three parts together contain the whole text) and treats
   an Email Social post as entirely fresh; `quoteForReply` is for replies to
   people who do not use Email Social, whose clients show no history.
-  `replyContextOf` gives the quote card a client shows above a message
-  instead of quoted text: the answered message's sender and first lines, or
-  the subject where a new one starts.
+  `replyCardOf` gives the quote card a client shows above a deliberate
+  reply, and only there: an Email Social post that carries `email.replyTo`,
+  or a plain message that quotes a fragment of its parent
+  (`quotedFragmentOf`); a default reply quoting the whole message is a
+  continuation. `topicsOf` places the messages of a chat in topics
+  identified by their root; `carrierSubject` is the Subject of a topic
+  without a name.
 - **Browsers.** The library uses only `Uint8Array`, `TextEncoder` and
   `TextDecoder`; a Node `Buffer` is accepted because it is a `Uint8Array`.
 - **Test vectors** in [`vectors/`](vectors/README.md) (raw message →

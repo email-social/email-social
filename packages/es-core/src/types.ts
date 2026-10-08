@@ -212,25 +212,6 @@ export interface ReplyCard {
   clickable: boolean;
 }
 
-/** The quote card above a message (see `replyContextOf`). */
-export type ReplyContext =
-  | {
-      kind: "parent";
-      /** EsMessage.id of the message answered. */
-      messageId: string;
-      /** Its sender's display name, else address; "" when it has no sender. */
-      from: string;
-      /** The first two lines of what its sender wrote, at most 140 characters ("…" when cut). */
-      excerpt: string;
-      /** The file name of its first attachment, or null. */
-      attachment: string | null;
-    }
-  | {
-      kind: "subject";
-      /** The base subject (no Re:/Fwd: prefixes or list tags). */
-      subject: string;
-    };
-
 /** What a topic is called (see `topicsOf`). */
 export type TopicKind =
   /** An Email Social user gave it a name (`email.topicLabel`). */
