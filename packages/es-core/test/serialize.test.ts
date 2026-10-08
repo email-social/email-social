@@ -599,6 +599,45 @@ describe("serializeMessage: ES fields", () => {
     expect(() => serializeMessage(outgoing({ es: { author: "did:es:EXAMPLE.com:alice" } }), OPTIONS)).toThrow(TypeError);
   });
 
+  it("copies topicRoot, topicLabel and replyTo into email, after the existing fields, in that order", () => {
+    const replyTo = { messageId: "<m0@example.org>", from: { name: "Bob", address: "Bob@EXAMPLE.org" }, excerpt: "Shall we go?" };
+    const raw = serializeMessage(outgoing({ es: { topicRoot: "<root@example.com>", topicLabel: "Trip", replyTo } }), OPTIONS);
+    const email = esValue(raw).email as Record<string, unknown>;
+    expect(Object.keys(email)).toEqual(["messageId", "subject", "topicRoot", "topicLabel", "replyTo"]);
+    expect(email.topicRoot).toBe("<root@example.com>");
+    expect(email.topicLabel).toBe("Trip");
+    expect(email.replyTo).toEqual({ messageId: "<m0@example.org>", from: { name: "Bob", address: "Bob@example.org" }, excerpt: "Shall we go?" });
+    expect(Object.keys(email.replyTo as object)).toEqual(["messageId", "from", "excerpt"]);
+  });
+
+  it('writes the new message\'s own Message-ID for topicRoot "self" (the root of a named topic)', () => {
+    const raw = serializeMessage(outgoing({ es: { topicRoot: "self", topicLabel: "  Trip \n to the hills " } }), OPTIONS);
+    expect((esValue(raw).email as Record<string, unknown>).topicRoot).toBe(OPTIONS.messageId);
+    expect((esValue(raw).email as Record<string, unknown>).topicLabel).toBe("Trip to the hills");
+  });
+
+  it("rejects a topicRoot that is not a writable Message-ID (a synthetic sha256: id has none)", () => {
+    for (const topicRoot of ["sha256:" + "0".repeat(64), "<a b@example.com>", "", "<>"]) {
+      expect(() => serializeMessage(outgoing({ es: { topicRoot } }), OPTIONS), topicRoot).toThrow(TypeError);
+    }
+  });
+
+  it("leaves out an empty label, and rejects a replyTo without a usable sender address", () => {
+    const email = esValue(serializeMessage(outgoing({ es: { topicLabel: " \u00a0 " } }), OPTIONS)).email as Record<string, unknown>;
+    expect(email).not.toHaveProperty("topicLabel");
+    expect(() => serializeMessage(outgoing({ es: { replyTo: { messageId: null, from: { name: "x", address: "nobody" }, excerpt: "" } } }), OPTIONS)).toThrow(TypeError);
+  });
+
+  it("writes none of the new fields unless given, and none at all without the ES part", () => {
+    const email = esValue(serializeMessage(outgoing(), OPTIONS)).email as Record<string, unknown>;
+    expect(email).not.toHaveProperty("topicRoot");
+    expect(email).not.toHaveProperty("topicLabel");
+    expect(email).not.toHaveProperty("replyTo");
+    const plain = serializeMessage(outgoing({ es: { topicRoot: "self", topicLabel: "Trip", replyTo: { messageId: null, from: { name: "", address: "bob@example.org" }, excerpt: "x" } } }), { ...OPTIONS, includeEsPart: false });
+    expect(plain).not.toContain("Trip");
+    expect(plain).not.toContain("application/vnd.email-social");
+  });
+
   it("uses the Date header instant as createdAt (whole seconds, UTC)", () => {
     const raw = serializeMessage(outgoing(), { ...OPTIONS, date: "2026-03-02T10:00:05.987+01:00" });
     expect(inspect(raw).header("Date")).toBe("Mon, 2 Mar 2026 09:00:05 +0000");

@@ -5,7 +5,7 @@ import { parseMessage, serializeMessage, serializeReceipt, splitQuoted } from "@
 import { MaildirAdapter } from "../src/adapters/maildir.js";
 import type { StartProgress } from "../src/api-types.js";
 import { DEMO_ACCOUNT } from "../src/demo.js";
-import { MailSession, subjectFromText } from "../src/session.js";
+import { MailSession } from "../src/session.js";
 import { BOB_SUBJECTS, EXPECTED_CHATS, EXPECTED_OTHER } from "./helpers/demo-expected.js";
 import { deliver, demoMaildir, folder, NOW, openSession } from "./helpers/session.js";
 
@@ -39,7 +39,7 @@ describe("MailSession: chats with people", () => {
     await session.close();
   });
 
-  it("shows one chat per person across subjects, with each message's base subject for the separators", async () => {
+  it("shows one chat per person across subjects, with each message's base subject", async () => {
     const session = await openSession(await demoMaildir());
     const bob = (await session.chat((await chatNamed(session, "Bob Svoboda")).id))!;
     expect(bob.messages).toHaveLength(10);
@@ -99,144 +99,329 @@ describe("MailSession: chats with people", () => {
   });
 });
 
-describe("MailSession: quote cards", () => {
-  it("gives every message its card: the answered message (also from another folder), or the subject where one starts", async () => {
+const FOOTER = "Sent with Email Social. Reply as you normally would; this is an ordinary e-mail.";
+
+/** A plain message from someone else, as an ordinary client writes it. */
+function plainMail(init: { from: { name: string; address: string }; subject: string; text: string; date: string; id: string; inReplyTo?: string }): string {
+  return serializeMessage(
+    { from: init.from, to: [DEMO_ACCOUNT], subject: init.subject, text: init.text, ...(init.inReplyTo === undefined ? {} : { inReplyTo: { messageId: init.inReplyTo } }) },
+    { date: init.date, messageId: init.id, includeEsPart: false },
+  );
+}
+
+/** The copy of a sent message in the Sent folder whose text starts with `start`. */
+function sentCopy(root: string, start: string) {
+  const copy = folder(root, "Sent").find((m) => m.message.text.startsWith(start));
+  if (copy === undefined) throw new Error(`nothing sent starting with ${start}`);
+  return copy;
+}
+
+const BOB = { name: "Bob Svoboda", address: "bob@example.org" };
+
+describe("MailSession: topics and quote cards in the chat view", () => {
+  it("places every message of a chat in a topic, marks where runs start, and lists the topics with counts", async () => {
     const session = await openSession(await demoMaildir());
     const bob = (await session.chat((await chatNamed(session, "Bob Svoboda")).id))!;
-    const cards = bob.messages.map((m) => m.replyContext);
-    expect(cards.filter((c) => c?.kind === "subject").map((c) => c?.kind === "subject" && c.subject)).toEqual(BOB_SUBJECTS);
-    expect(cards[0]).toEqual({ kind: "subject", subject: "Faktura za únor" });
-    expect(cards[1]).toEqual({
-      kind: "parent",
-      messageId: bob.messages[0]!.id,
-      from: "Bob Svoboda",
-      fromMe: false,
-      excerpt: "Ahoj Alice, posílám fakturu za únor, splatná je do konce března.",
-      attachment: "Faktura 2026-02.pdf",
-    });
-    // Bob's answer to Alice's message from the sent folder.
-    const k2 = bob.messages.find((m) => m.fresh.startsWith("Jedu!"))!;
-    expect(k2.replyContext).toMatchObject({ kind: "parent", from: "Alice Dvořáková", fromMe: true, excerpt: "Ahoj Bobe, jedeš o víkendu na chatu? Můžu vzít dřevo." });
-    // Every answered message is a bubble of the same chat, so its card can show it.
-    for (const m of bob.messages) {
-      const card = m.replyContext;
-      if (card?.kind === "parent") expect(bob.messages.some((p) => p.id === card.messageId), m.id).toBe(true);
-    }
+    expect(bob.topics.map((t) => [t.base, t.kind, t.count])).toEqual([
+      ["Faktura za únor", "plain", 2],
+      ["Víkend na chatě", "plain", 2],
+      ["Návrh smlouvy", "plain", 5],
+      ["Kolo na prodej", "plain", 1],
+    ]);
+    expect(bob.topics.map((t) => t.base)).toEqual(BOB_SUBJECTS);
+    expect(bob.messages.filter((m) => m.topicStart).map((m) => m.topic!.rootId)).toEqual(bob.topics.map((t) => t.rootId));
+    expect(bob.messages.every((m) => m.topic !== null && m.subjectNote === null && !m.interleaved)).toBe(true);
+    // The composer continues the topic of the account's own newest message.
+    expect(bob.composerTopic).toBe(bob.topics[2]!.rootId);
+    const karel = (await session.chat((await chatNamed(session, "Karel Holub")).id))!;
+    expect(karel.topics).toEqual([{ rootId: karel.messages[0]!.id, label: null, base: "Kdy dorazíš?", kind: "carrier", count: 8 }]);
     await session.close();
   });
 
-  it("shows the subject card for a reply whose parent is not in the mailbox", async () => {
+  it("draws cards only above deliberate replies: the account's own quoted replies, never another client's whole-message quote", async () => {
+    const session = await openSession(await demoMaildir());
+    const bob = (await session.chat((await chatNamed(session, "Bob Svoboda")).id))!;
+    expect(bob.messages.map((m) => (m.replyCard === null ? "-" : m.mine ? "own" : "theirs"))).toEqual(["-", "own", "-", "-", "-", "own", "-", "own", "-", "-"]);
+    expect(bob.messages[1]!.replyCard).toEqual({
+      messageId: bob.messages[0]!.id,
+      from: "Bob Svoboda",
+      fromMe: false,
+      excerpt: "Ahoj Alice, posílám fakturu za únor, splatná je do konce března. Bob",
+      attachment: "Faktura 2026-02.pdf",
+      clickable: true,
+    });
+    const karel = (await session.chat((await chatNamed(session, "Karel Holub")).id))!;
+    expect(karel.messages.every((m) => m.replyCard === null)).toBe(true);
+    await session.close();
+  });
+
+  it("gives a reply whose parent is not in the mailbox no card, and a note for its different subject", async () => {
     const root = await demoMaildir();
     const session = await openSession(root);
     deliver(root, "gmail-web-de.eml", readFileSync(new URL("../../es-core/fixtures/replies/gmail-web-de.eml", import.meta.url)));
     await session.sync();
     const anna = (await session.chat((await chatNamed(session, "Anna Becker")).id))!;
     const reply = anna.messages.find((m) => m.fresh.includes("zwei Zahlen"))!;
-    expect(reply.replyContext).toEqual({ kind: "subject", subject: "Projektübersicht" });
+    expect(reply).toMatchObject({ replyCard: null, subjectNote: "Projektübersicht", topicStart: false });
+    expect(reply.topic!.rootId).toBe(anna.messages[0]!.id);
+    expect(anna.topics).toHaveLength(1);
     await session.close();
   });
 
-  it("gives a sent reply the card of the message it answers, and a new chat its subject", async () => {
-    const root = await demoMaildir();
-    const session = await openSession(root);
-    const { message } = await session.send({ chatId: (await chatNamed(session, "Anna Becker")).id, text: "Danke!" });
-    expect(message.fresh).toBe("Danke!");
-    expect(message.replyContext).toMatchObject({ kind: "parent", from: "Anna Becker", fromMe: false, excerpt: "Nachtrag: Meilenstein 3 verschiebt sich um eine Woche. Anna" });
-    const created = await session.send({ to: ["zuzana@example.net"], text: "Ahoj Zuzano!" });
-    expect(created.message.replyContext).toEqual({ kind: "subject", subject: "Ahoj Zuzano!" });
+  it("shows messages outside chats without topics, cards or notes", async () => {
+    const session = await openSession(await demoMaildir());
+    const list = (await session.other((await session.others()).find((o) => o.kind === "list" && o.title.startsWith("dev-list"))!.id))!;
+    expect(list.messages.every((m) => m.topic === null && !m.topicStart && m.replyCard === null && m.subjectNote === null && !m.interleaved)).toBe(true);
     await session.close();
   });
 });
 
-describe("MailSession: sending", () => {
-  it("replies to everyone else in a group as plain e-mail, quoting the message it answers", async () => {
+describe("MailSession: sending into a topic", () => {
+  it("continues the bound topic: answers its newest message, Subject 'Re: <root base>', no quote, the footer after '-- '", async () => {
+    const root = await demoMaildir();
+    const session = await openSession(root);
+    const anna = (await session.chat((await chatNamed(session, "Anna Becker")).id))!;
+    const { chatId, message } = await session.send({ chatId: anna.chat.id, text: "Danke!" });
+    expect(chatId).toBe(anna.chat.id);
+    expect(message).toMatchObject({ mine: true, fresh: "Danke!", quoted: "", replyCard: null, topicStart: false, emailSocial: false, status: "sent" });
+    expect(message.topic).toEqual({ rootId: anna.messages[0]!.id, label: null, kind: "plain" });
+    const sent = sentCopy(root, "Danke!");
+    expect(sent.message.subject).toBe("Re: Projektübersicht Q2");
+    expect(sent.message.refs.inReplyTo).toEqual([anna.messages[anna.messages.length - 1]!.id]);
+    expect(sent.message.text).toBe(`Danke!\n\n-- \n${FOOTER}`);
+    expect(splitQuoted(sent.message)).toEqual({ fresh: "Danke!", quoted: "", signature: `-- \n${FOOTER}` });
+    expect(sent.message.es).toBeNull();
+    await session.close();
+  });
+
+  it("answers a deliberate reply's target, binds to its topic and quotes at most 5 lines with the attribution", async () => {
+    const root = await demoMaildir();
+    const session = await openSession(root);
+    const bobChat = await chatNamed(session, "Bob Svoboda");
+    const before = (await session.chat(bobChat.id))!;
+    const invoice = before.messages[0]!;
+    const { message } = await session.send({ chatId: bobChat.id, replyTo: invoice.id, text: "Zaplaceno." });
+    expect(message.topic!.rootId).toBe(invoice.id);
+    expect(message.replyCard).toEqual({ messageId: invoice.id, from: "Bob Svoboda", fromMe: false, excerpt: "Ahoj Alice, posílám fakturu za únor, splatná je do konce března. Bob", attachment: "Faktura 2026-02.pdf", clickable: true });
+    const sent = sentCopy(root, "Zaplaceno.");
+    expect(sent.message.subject).toBe("Re: Faktura za únor");
+    expect(sent.message.refs.inReplyTo).toEqual([invoice.id]);
+    expect(sent.message.text).toBe(
+      "Zaplaceno.\n\nOn Wed, 4 Mar 2026 at 10:10, Bob Svoboda <bob@example.org> wrote:\n> Ahoj Alice,\n>\n> posílám fakturu za únor, splatná je do konce března.\n>\n> Bob\n\n-- \n" + FOOTER,
+    );
+    // The Sent copy read back: quoted-printable because of "-- " (RFC 2045 §6.7 rule 3), the parts where they belong.
+    const raw = new TextDecoder().decode(sent.raw);
+    expect(raw).toContain("Content-Transfer-Encoding: quoted-printable");
+    expect(raw).toContain("--=20");
+    const split = splitQuoted(sent.message);
+    expect(split.fresh).toBe("Zaplaceno.");
+    expect(split.quoted.split("\n")[0]).toBe("On Wed, 4 Mar 2026 at 10:10, Bob Svoboda <bob@example.org> wrote:");
+    expect(split.signature).toBe(`-- \n${FOOTER}`);
+    expect((await simpleParser(Buffer.from(sent.raw))).text).toContain("> posílám fakturu za únor");
+    // The composer follows what was sent.
+    expect((await session.chat(bobChat.id))!.composerTopic).toBe(invoice.id);
+
+    deliver(root, "long.eml", plainMail({ from: BOB, subject: "Re: Návrh smlouvy", date: "2026-03-20T09:00:00Z", id: "<long-1@example.org>", inReplyTo: before.messages[8]!.id, text: Array.from({ length: 9 }, (_, i) => `Bod ${i + 1}.`).join("\n") }));
+    await session.sync();
+    await session.send({ chatId: bobChat.id, replyTo: "<long-1@example.org>", text: "K bodu 3: souhlas." });
+    const quoted = splitQuoted(sentCopy(root, "K bodu 3").message).quoted.split("\n");
+    expect(quoted.slice(1)).toEqual(["> Bod 1.", "> Bod 2.", "> Bod 3.", "> Bod 4.", "> Bod 5.", "> [...]"]);
+    expect(sentCopy(root, "K bodu 3").message.subject).toBe("Re: Návrh smlouvy");
+    await session.close();
+  });
+
+  it("refuses a reply target from another chat and a topic that is not in the chat", async () => {
+    const session = await openSession(await demoMaildir());
+    const bob = await chatNamed(session, "Bob Svoboda");
+    const karel = (await session.chat((await chatNamed(session, "Karel Holub")).id))!;
+    await expect(session.send({ chatId: bob.id, replyTo: karel.messages[0]!.id, text: "x" })).rejects.toThrow(RangeError);
+    await expect(session.send({ chatId: bob.id, topic: { root: karel.messages[0]!.id }, text: "x" })).rejects.toThrow(RangeError);
+    await session.close();
+  });
+
+  it("starts a named topic: a new root with Subject = the name and topicRoot/topicLabel in the ES part; the same name again continues it", async () => {
+    const root = await demoMaildir();
+    const session = await openSession(root);
+    const karel = await chatNamed(session, "Karel Holub");
+    const first = await session.send({ chatId: karel.id, topic: { label: "  Výlet na  Sněžku " }, text: "Pojedeme v létě?" });
+    const rootCopy = folder(root, "Sent").find((m) => m.message.text === "Pojedeme v létě?")!;
+    expect(rootCopy.message.subject).toBe("Výlet na Sněžku");
+    expect(rootCopy.message.refs).toEqual({ messageId: rootCopy.message.id, inReplyTo: [], references: [] });
+    expect(rootCopy.message.es).toMatchObject({ $type: "es.social.post", email: { topicRoot: rootCopy.message.id, topicLabel: "Výlet na Sněžku", replyTo: null } });
+    expect(first.message).toMatchObject({ topicStart: true, topic: { rootId: rootCopy.message.id, label: "Výlet na Sněžku", kind: "named" } });
+    let chat = (await session.chat(karel.id))!;
+    expect(chat.topics.map((t) => [t.label, t.base, t.kind, t.count])).toEqual([
+      [null, "Kdy dorazíš?", "carrier", 8],
+      ["Výlet na Sněžku", "Výlet na Sněžku", "named", 1],
+    ]);
+    expect(chat.composerTopic).toBe(rootCopy.message.id);
+
+    await session.send({ chatId: karel.id, topic: { label: "výlet na sněžku" }, text: "Třeba v červenci." });
+    const again = folder(root, "Sent").find((m) => m.message.text === "Třeba v červenci.")!;
+    expect(again.message.subject).toBe("Re: Výlet na Sněžku");
+    expect(again.message.refs.inReplyTo).toEqual([rootCopy.message.id]);
+    expect(again.message.es).toMatchObject({ email: { topicRoot: rootCopy.message.id, topicLabel: "Výlet na Sněžku" } });
+    chat = (await session.chat(karel.id))!;
+    expect(chat.topics).toHaveLength(2);
+    expect(chat.topics[1]!.count).toBe(2);
+    await session.close();
+  });
+
+  it("re-enters a plain topic whose base subject equals a new name instead of starting a second root", async () => {
+    const root = await demoMaildir();
+    const session = await openSession(root);
+    const bob = (await session.chat((await chatNamed(session, "Bob Svoboda")).id))!;
+    await session.send({ chatId: bob.chat.id, topic: { label: "kolo na prodej" }, text: "Kolik za něj chceš?" });
+    const sent = sentCopy(root, "Kolik za něj chceš?");
+    expect(sent.message.subject).toBe("Re: Kolo na prodej");
+    expect(sent.message.refs.inReplyTo).toEqual([bob.messages[9]!.id]);
+    expect((await session.chat(bob.chat.id))!.topics).toHaveLength(4);
+    await session.close();
+  });
+
+  it("with an Email Social recipient, a deliberate reply carries email.replyTo and neither a quote nor the footer", async () => {
+    const root = await demoMaildir();
+    const session = await openSession(root);
+    const karel = (await session.chat((await chatNamed(session, "Karel Holub")).id))!;
+    const target = karel.messages.find((m) => m.fresh === "Super, vyzvednu tě na nádraží.")!;
+    const { message } = await session.send({ chatId: karel.chat.id, replyTo: target.id, text: "Díky, budu u kiosku." });
+    expect(message).toMatchObject({ emailSocial: true, text: "Díky, budu u kiosku." });
+    expect(message.replyCard).toEqual({ messageId: target.id, from: "Karel Holub", fromMe: false, excerpt: "Super, vyzvednu tě na nádraží.", attachment: null, clickable: true });
+    const sent = folder(root, "Sent").find((m) => m.message.text === "Díky, budu u kiosku.")!;
+    expect(sent.message.refs.inReplyTo).toEqual([target.id]);
+    expect(sent.message.subject).toBe("Re: Kdy dorazíš?");
+    expect(sent.message.es).toMatchObject({
+      requestReceipts: ["delivered", "read"],
+      email: { topicRoot: karel.messages[0]!.id, topicLabel: null, replyTo: { messageId: target.id, from: { name: "Karel Holub", address: "karel@example.org" }, excerpt: "Super, vyzvednu tě na nádraží." } },
+    });
+    // A continuation in the same chat: no replyTo, no card.
+    const next = await session.send({ chatId: karel.chat.id, text: "Už jsem tady." });
+    expect(next.message.replyCard).toBeNull();
+    expect(folder(root, "Sent").find((m) => m.message.text === "Už jsem tady.")!.message.es).toMatchObject({ email: { replyTo: null, topicRoot: karel.messages[0]!.id } });
+    await session.close();
+  });
+
+  it("puts the footer as the last line of a signature the user typed, never under a second '-- '", async () => {
+    const root = await demoMaildir();
+    const session = await openSession(root);
+    const anna = (await session.chat((await chatNamed(session, "Anna Becker")).id))!;
+    await session.send({ chatId: anna.chat.id, text: "Danke!\n\n-- \nAlice\n" });
+    const plain = sentCopy(root, "Danke!");
+    expect(plain.message.text).toBe(`Danke!\n\n-- \nAlice\n${FOOTER}`);
+    await session.send({ chatId: anna.chat.id, replyTo: anna.messages[3]!.id, text: "Ja, schon gesehen.\n-- \nAlice" });
+    const reply = sentCopy(root, "Ja, schon gesehen.");
+    expect(reply.message.text.split("\n").filter((line) => line === "-- ")).toHaveLength(1);
+    expect(reply.message.text).toMatch(new RegExp(`^Ja, schon gesehen\\.\\n\\nOn Fri, 6 Mar 2026 at 14:02, Anna Becker <anna.becker@example.net> wrote:\\n> [^]*\\n\\n-- \\nAlice\\n${FOOTER.replace(/[.;]/g, "\\$&")}$`));
+    expect(splitQuoted(reply.message)).toMatchObject({ fresh: "Ja, schon gesehen.", signature: `-- \nAlice\n${FOOTER}` });
+    await session.close();
+  });
+
+  it("starts a carrier root in a chat whose topic has no subject (a '(no subject)' mail)", async () => {
+    const root = await demoMaildir();
+    const session = await openSession(root);
+    deliver(root, "nosubject.eml", plainMail({ from: { name: "Zuzana Malá", address: "zuzana@example.net" }, subject: "", text: "Ahoj, tady Zuzana.", date: "2026-03-20T08:00:00Z", id: "<nosubj-1@example.net>" }));
+    await session.sync();
+    const chat = await chatNamed(session, "Zuzana Malá");
+    const { message } = await session.send({ chatId: chat.id, text: "Ahoj Zuzano!" });
+    const sent = sentCopy(root, "Ahoj Zuzano!");
+    expect(sent.message.subject).toBe("Message from Alice Dvořáková");
+    expect(sent.message.refs.inReplyTo).toEqual([]);
+    expect(message).toMatchObject({ topicStart: true, topic: { rootId: sent.message.id, kind: "carrier" } });
+    const view = (await session.chat(chat.id))!;
+    expect(view.topics.map((t) => [t.base, t.kind])).toEqual([["", "plain"], ["Message from Alice Dvořáková", "carrier"]]);
+    // The next message continues the carrier topic byte for byte.
+    await session.send({ chatId: chat.id, text: "Jak se máš?" });
+    expect(sentCopy(root, "Jak se máš?").message.subject).toBe("Re: Message from Alice Dvořáková");
+    await session.close();
+  });
+
+  it("keeps the composer on the topic the account last wrote in when mail arrives in another topic", async () => {
+    const root = await demoMaildir();
+    const session = await openSession(root);
+    const bob = (await session.chat((await chatNamed(session, "Bob Svoboda")).id))!;
+    const { message } = await session.send({ chatId: bob.chat.id, topic: { label: "Výlet" }, text: "Pojedeš v sobotu na výlet?" });
+    expect((await session.chat(bob.chat.id))!.composerTopic).toBe(message.topic!.rootId);
+    deliver(root, "later.eml", plainMail({ from: BOB, subject: "Re: Faktura za únor", text: "Platba dorazila, díky.", date: "2026-03-21T11:00:00Z", id: "<later-1@example.org>", inReplyTo: bob.messages[0]!.id }));
+    await session.sync();
+    const after = (await session.chat(bob.chat.id))!;
+    expect(after.messages.find((m) => m.fresh === "Platba dorazila, díky.")!.topic!.rootId).toBe(bob.messages[0]!.id);
+    expect(after.composerTopic).toBe(message.topic!.rootId);
+    expect(sentCopy(root, "Pojedeš v sobotu").message.subject).toBe("Výlet");
+    await session.close();
+  });
+});
+
+describe("MailSession: new chats and groups", () => {
+  it("replies to everyone else in a group as plain e-mail with the footer", async () => {
     const root = await demoMaildir();
     const session = await openSession(root);
     const group = await chatNamed(session, "Bob Svoboda, Jana Nováková");
     const sentBefore = folder(root, "Sent").length;
     const { chatId, message } = await session.send({ chatId: group.id, text: "Tak zítra!" });
     expect(chatId).toBe(group.id);
-    expect(message).toMatchObject({ mine: true, fresh: "Tak zítra!", status: "sent", emailSocial: false });
+    expect(message).toMatchObject({ mine: true, fresh: "Tak zítra!", status: "sent", emailSocial: false, replyCard: null });
     const sent = folder(root, "Sent");
     expect(sent).toHaveLength(sentBefore + 1);
-    const reply = sent.find((m) => m.message.text.startsWith("Tak zítra!"))!;
+    const reply = sentCopy(root, "Tak zítra!");
     expect(reply.message.to.map((t) => t.address).sort()).toEqual(["bob@example.org", "jana@example.net"]);
     expect(reply.message.es).toBeNull();
     expect(reply.message.subject).toBe("Re: Oběd v pátek");
-    // The answered message is Bob's newest one; its attribution line and text are quoted below the reply.
-    expect(reply.message.text).toBe(
-      "Tak zítra!\n\nOn Mon, 2 Mar 2026 at 11:05, Bob Svoboda <bob@example.org> wrote:\n> Stůl je zarezervovaný na jméno Svoboda.",
-    );
-    expect(splitQuoted(reply.message).fresh).toBe("Tak zítra!");
+    expect(reply.message.text).toBe(`Tak zítra!\n\n-- \n${FOOTER}`);
     expect(folder(root, "Outbox").some((m) => m.message.text.startsWith("Tak zítra!"))).toBe(true);
     expect((await session.chats())[0]).toMatchObject({ id: group.id, lastFromMe: true, lastLine: "Tak zítra!" });
-    expect((await simpleParser(Buffer.from(reply.raw))).text).toContain("> Stůl je zarezervovaný na jméno Svoboda.");
+    expect((await simpleParser(Buffer.from(reply.raw))).text).toContain(FOOTER);
     await session.close();
   });
 
-  it("replies with the ES part, asks for receipts and quotes nothing when the other side uses Email Social", async () => {
-    const root = await demoMaildir();
-    const session = await openSession(root);
-    const karel = await chatNamed(session, "Karel Holub");
-    const { message } = await session.send({ chatId: karel.id, text: "Už jsem tady." });
-    expect(message).toMatchObject({ mine: true, text: "Už jsem tady.", status: "sent", emailSocial: true });
-    const reply = folder(root, "Sent").find((m) => m.message.text === "Už jsem tady.")!;
-    expect(reply.message.es).toMatchObject({ $type: "es.social.post", requestReceipts: ["delivered", "read"] });
-    expect(reply.message.to).toEqual([{ name: "Karel Holub", address: "karel@example.org" }]);
-    expect(reply.message.subject).toBe("Re: Kdy dorazíš?");
-    await session.close();
-  });
-
-  it("starts a new chat: text/plain first, the subject from the first line, and the chat appears", async () => {
+  it("starts a new chat: text/plain first, the carrier subject, and the chat appears", async () => {
     const root = await demoMaildir();
     const session = await openSession(root);
     const text = "Ahoj Zuzano, posílám slíbené fotky z hor, ty nejlepší jsou z vrcholu Sněžky.\n\nAlice";
     const { chatId, message } = await session.send({ to: ["zuzana@example.net"], text });
-    expect(message.subject).toBe("Ahoj Zuzano, posílám slíbené fotky z hor, ty nejlepší jsou z");
-    const sent = folder(root, "Sent").find((m) => m.message.text === text)!;
-    expect(sent.message.subject).toBe("Ahoj Zuzano, posílám slíbené fotky z hor, ty nejlepší jsou z");
+    expect(message.subject).toBe("Message from Alice Dvořáková");
+    expect(message.replyCard).toBeNull();
+    const sent = sentCopy(root, "Ahoj Zuzano");
+    expect(sent.message.subject).toBe("Message from Alice Dvořáková");
     expect(sent.message.refs.inReplyTo).toEqual([]);
     expect(sent.message.es).toBeNull();
+    expect(sent.message.text).toBe(`${text}\n\n-- \n${FOOTER}`);
     const mail = await simpleParser(Buffer.from(sent.raw));
-    expect(mail.text).toBe(text);
+    expect(mail.text).toBe(`${text}\n\n-- \n${FOOTER}`);
     expect(new TextDecoder().decode(sent.raw)).toMatch(/Content-Type: text\/plain/);
     const chats = await session.chats();
-    expect(chats[0]).toMatchObject({ id: chatId, title: "zuzana@example.net", lastFromMe: true });
+    expect(chats[0]).toMatchObject({ id: chatId, title: "zuzana@example.net", lastFromMe: true, lastLine: "Ahoj Zuzano, posílám slíbené fotky z hor, ty nejlepší jsou z vrcholu Sněžky." });
     await session.close();
   });
 
-  it("starts a group with several recipients, keeps a given subject, and uses the ES part for Email Social users", async () => {
+  it("starts a group with a carrier subject naming everyone, or a named topic, with the ES part for Email Social users", async () => {
     const root = await demoMaildir();
     const session = await openSession(root);
-    const { chatId } = await session.send({ to: ["karel@example.org", "bob@example.org"], subject: "Sobota", text: "Kdo jede?" });
-    const sent = folder(root, "Sent").find((m) => m.message.subject === "Sobota")!;
+    const { chatId } = await session.send({ to: ["karel@example.org", "bob@example.org"], text: "Kdo jede?" });
+    const sent = folder(root, "Sent").find((m) => m.message.text === "Kdo jede?")!;
+    expect(sent.message.subject).toBe("Message from Alice Dvořáková to Bob Svoboda, Karel Holub");
     expect(sent.message.to.map((a) => a.address)).toEqual(["karel@example.org", "bob@example.org"]);
-    expect(sent.message.es?.$type).toBe("es.social.post");
+    expect(sent.message.es).toMatchObject({ $type: "es.social.post", email: { topicRoot: sent.message.id, topicLabel: null } });
     const chat = (await session.chats()).find((c) => c.id === chatId)!;
     expect(chat).toMatchObject({ group: true, title: "Bob Svoboda, Karel Holub" });
-    // Writing to Bob alone again lands in the existing chat with him.
+    const named = await session.send({ to: ["eva@example.net", "zuzana@example.net"], topic: { label: "Sobota" }, text: "Jedete?" });
+    expect(folder(root, "Sent").find((m) => m.message.text.startsWith("Jedete?"))!.message.subject).toBe("Sobota");
+    expect(named.message.topic).toMatchObject({ kind: "plain" });
+    // Writing to Bob alone again lands in the existing chat with him and continues its topic.
     const bob = await chatNamed(session, "Bob Svoboda");
     expect((await session.send({ to: ["bob@example.org"], text: "Nové téma" })).chatId).toBe(bob.id);
+    expect(sentCopy(root, "Nové téma").message.subject).toBe("Re: Návrh smlouvy");
     await session.close();
   });
 
-  it("refuses an empty message, no recipients, an invalid address and an unknown chat", async () => {
+  it("refuses an empty message, no recipients, an invalid address, an unknown chat and a reply target in a new chat", async () => {
     const session = await openSession(await demoMaildir());
     await expect(session.send({ chatId: (await session.chats())[0]!.id, text: "   " })).rejects.toThrow(/empty/);
     await expect(session.send({ to: [], text: "x" })).rejects.toThrow(/recipient/);
     await expect(session.send({ to: ["not an address"], text: "x" })).rejects.toThrow(/Not an e-mail address/);
     await expect(session.send({ chatId: "chat-unknown", text: "x" })).rejects.toThrow(/No such chat/);
+    await expect(session.send({ to: ["bob@example.org"], replyTo: "<x@example.org>", text: "x" })).rejects.toThrow(RangeError);
     expect(await session.chat("chat-unknown")).toBeNull();
     await session.close();
-  });
-
-  it("derives a subject from the first line, cut at 60 characters at a word boundary", () => {
-    expect(subjectFromText("Short line\nsecond")).toBe("Short line");
-    expect(subjectFromText("\n\n  Padded   words  \n")).toBe("Padded words");
-    expect(subjectFromText("a".repeat(70))).toBe("a".repeat(60));
-    const long = "The quick brown fox jumps over the lazy dog and keeps running far away";
-    expect(subjectFromText(long)).toBe("The quick brown fox jumps over the lazy dog and keeps");
-    expect(subjectFromText(long).length).toBeLessThanOrEqual(60);
   });
 });
 
@@ -364,17 +549,18 @@ describe("MailSession: receipts, contacts, loading", () => {
 });
 
 describe("MailSession: plain replies from Email Social are readable in any client", () => {
-  it("writes the reply text first and the quote below, as text/plain only", async () => {
+  it("writes the reply text first, the quote of a deliberate reply below it and the footer last, as text/plain only", async () => {
     const root = await demoMaildir();
     const session = await openSession(root);
-    const anna = await chatNamed(session, "Anna Becker");
-    await session.send({ chatId: anna.id, text: "Danke, Anna!" });
-    const sent = folder(root, "Sent").find((m) => m.message.text.startsWith("Danke, Anna!"))!;
+    const anna = (await session.chat((await chatNamed(session, "Anna Becker")).id))!;
+    await session.send({ chatId: anna.chat.id, replyTo: anna.messages[4]!.id, text: "Danke, Anna!" });
+    const sent = sentCopy(root, "Danke, Anna!");
     expect(sent.message.attachments).toEqual([]);
     expect(sent.message.text.split("\n")[2]).toBe("On Fri, 6 Mar 2026 at 14:30, Anna Becker <anna.becker@example.net> wrote:");
     expect(sent.message.text).toContain("> Nachtrag: Meilenstein 3 verschiebt sich um eine Woche.");
     expect(sent.message.text).not.toContain("Von:");
-    // Compare with what es-core writes for the same text: nothing is added besides the quote.
+    expect(sent.message.text.endsWith(`\n\n-- \n${FOOTER}`)).toBe(true);
+    // Compare with what es-core writes for the same text: nothing is added besides the quote and the footer.
     const plain = serializeMessage({ from: DEMO_ACCOUNT, to: [{ name: "", address: "x@example.net" }], subject: "s", text: sent.message.text }, { date: NOW, messageId: "<x@example.com>", includeEsPart: false });
     expect(parseMessage(plain).text).toBe(sent.message.text);
     await session.close();

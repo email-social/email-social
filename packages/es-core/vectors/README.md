@@ -44,6 +44,11 @@ then be reviewed like any code change.
     `email.messageId` is not the Message-ID); a post's `text` is `null` when
     the sender left a text over 10000 UTF-8 bytes out of the record, and
     `email.textSha256` then holds the hex SHA-256 of the body text;
+    `email.topicRoot` (the Message-ID of the root of the message's topic),
+    `email.topicLabel` (the topic's name) and `email.replyTo` (on a
+    deliberate reply: `{ messageId, from: { name, address }, excerpt }`, with
+    `messageId` read like any msg-id and `from.address` in canonical form) are
+    `null` when absent or malformed, as in records written before they existed;
   - `attachments`: metadata of every other leaf part (`filename`,
     `contentType`, `disposition`, decoded `size`, `contentId`, IMAP `partId`);
   - `refs`: `messageId`, and every msg-id of `In-Reply-To` and `References`;
@@ -63,7 +68,11 @@ then be reviewed like any code change.
   `replies-*.json` vectors (from `fixtures/replies/`) exist for this field:
   one reply per client format.
 - **Generated vectors** (`source: "generated"`) were written by es-core's
-  serializer from `input` with a fixed date and Message-ID. A conforming
+  serializer from `input` with a fixed date and Message-ID.
+  `generated-topic-root.json` and `generated-topic-reply.json` are the root
+  of a named topic and a deliberate reply inside it, with the `email` keys in
+  the order `messageId, subject, inReplyTo, references, textSha256,
+  topicRoot, topicLabel, replyTo`. A conforming
   writer need not produce the same bytes, but a conforming parser must read
   `raw` as `expected`. es-core additionally checks that serialising `input`
   again gives `raw` byte for byte.

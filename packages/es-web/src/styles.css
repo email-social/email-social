@@ -446,7 +446,7 @@ button.person {
   text-underline-offset: 2px;
 }
 
-/* Quote cards: what a message answers, or the subject where one starts */
+/* Quote cards: what a deliberate reply answers */
 .quote-card {
   display: block;
   width: 100%;
@@ -486,11 +486,6 @@ button.quote-card {
   -webkit-box-orient: vertical;
 }
 
-.quote-card.subject .quote-excerpt {
-  color: var(--theirs-text);
-  font-weight: 600;
-}
-
 .bubble.mine .quote-card {
   background: var(--mine-card-bg);
   color: var(--mine-text);
@@ -502,8 +497,127 @@ button.quote-card {
   color: var(--mine-muted);
 }
 
-.bubble.mine .quote-card.subject .quote-excerpt {
-  color: var(--mine-text);
+/* Topics: the chip on the first bubble of a run, the composer's control, the header filter */
+.bubble .topic-run {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--muted);
+  margin-bottom: 0.15rem;
+}
+
+.bubble.mine .topic-run {
+  color: var(--mine-muted);
+}
+
+.topic-control,
+.topics-filter {
+  position: relative;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.3rem 0.5rem;
+}
+
+.composer .topic-control {
+  grid-column: 1 / -1;
+}
+
+.topic-control label {
+  font-weight: 600;
+}
+
+.topic-control .topic-name {
+  font: inherit;
+  padding: 0.25rem 0.45rem;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  min-width: 12rem;
+}
+
+.topic-chip,
+.topics-button {
+  font: inherit;
+  font-size: 0.9rem;
+  padding: 0.15rem 0.65rem;
+  background: var(--panel);
+  color: var(--text);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+}
+
+.topic-cancel,
+.reply-cancel {
+  font: inherit;
+  background: none;
+  border: 0;
+  color: inherit;
+  padding: 0 0.3rem;
+}
+
+.topic-menu {
+  position: absolute;
+  z-index: 2;
+  left: 0;
+  list-style: none;
+  margin: 0;
+  padding: 0.3rem 0;
+  min-width: 14rem;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+}
+
+.topic-control .topic-menu {
+  bottom: 100%;
+}
+
+.topics-filter .topic-menu {
+  top: 100%;
+}
+
+.topic-menu button {
+  display: block;
+  width: 100%;
+  font: inherit;
+  text-align: left;
+  padding: 0.25rem 0.75rem;
+  background: none;
+  border: 0;
+  color: var(--text);
+}
+
+.topic-menu button[aria-current="true"] {
+  font-weight: 700;
+  text-decoration: underline;
+}
+
+/* The message a deliberate reply will answer, above the text box */
+.reply-chip {
+  grid-column: 1 / -1;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 0;
+  padding: 0.25rem 0.5rem;
+  font-size: 0.9rem;
+  background: var(--card-bg);
+  color: var(--theirs-text);
+  border-left: 3px solid var(--accent);
+  border-radius: 4px;
+}
+
+/* A subject changed by another mail client, and a point-by-point answer */
+.bubble .subject-note {
+  font-size: 0.8rem;
+}
+
+.bubble .quoted-line {
+  color: var(--muted);
+}
+
+.bubble.mine .quoted-line {
+  color: var(--mine-muted);
 }
 
 /* The bubble a card points to, for a second */
@@ -549,8 +663,17 @@ button.quote-card {
   white-space: nowrap;
 }
 
-.bubble .message-menu ul a {
+.bubble .message-menu ul a,
+.bubble .message-menu .menu-reply {
   color: var(--accent);
+}
+
+.message-menu .menu-reply {
+  font: inherit;
+  background: none;
+  border: 0;
+  padding: 0;
+  text-decoration: underline;
 }
 
 /* Signatures, collapsed */

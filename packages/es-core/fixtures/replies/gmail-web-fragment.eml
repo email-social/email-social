@@ -1,0 +1,39 @@
+MIME-Version: 1.0
+References: <3f2a9c1e-6b4d-4e8a-9f1c-2d7e5b8a0c34@example.com>
+In-Reply-To: <3f2a9c1e-6b4d-4e8a-9f1c-2d7e5b8a0c34@example.com>
+From: Bob Svoboda <bob@example.org>
+Date: Mon, 2 Mar 2026 11:40:05 +0100
+Message-ID: <CAH7x9kZ0aB2dE4gH6jL9nP1rT3vX5zB7dI0kM2oQ4sU6wY8aE@mail.example.com>
+Subject: =?UTF-8?B?UmU6IE9ixJtkIHYgcMOhdGVr?=
+To: =?UTF-8?Q?Alice_Dvo=C5=99=C3=A1kov=C3=A1?= <alice@example.com>
+Content-Type: multipart/alternative; boundary="000000000000ca790ab2de469135"
+
+--000000000000ca790ab2de469135
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+
+Super, a=C5=A5 jde taky. St=C5=AFl zarezervuju pro t=C5=99i.
+
+Bob
+
+On Mon, Mar 2, 2026 at 10:15=E2=80=AFAM Alice Dvo=C5=99=C3=A1kov=C3=A1 <ali=
+ce@example.com>
+wrote:
+
+> Jana u=C5=BE =C5=99=C3=ADkala, =C5=BEe by =C5=A1la taky.
+
+
+--000000000000ca790ab2de469135
+Content-Type: text/html; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+
+<div dir=3D"ltr"><div>Super, a=C5=A5 jde taky. St=C5=AFl zarezervuju pro t=
+=C5=99i.</div><div><br></div><div>Bob</div></div><br><div class=3D"gmail_qu=
+ote gmail_quote_container"><div dir=3D"ltr" class=3D"gmail_attr">On Mon, Ma=
+r 2, 2026 at 10:15=E2=80=AFAM Alice Dvo=C5=99=C3=A1kov=C3=A1 &lt;<a href=3D=
+"mailto:alice@example.com">alice@example.com</a>&gt; wrote:<br></div><block=
+quote class=3D"gmail_quote" style=3D"margin:0px 0px 0px 0.8ex;border-left:1=
+px solid rgb(204,204,204);padding-left:1ex"><div dir=3D"ltr">Jana u=C5=BE =
+=C5=99=C3=ADkala, =C5=BEe by =C5=A1la taky.</div></blockquote></div>
+
+--000000000000ca790ab2de469135--

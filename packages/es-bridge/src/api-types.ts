@@ -101,20 +101,36 @@ export interface AttachmentView {
   path: string;
 }
 
-/** The quote card above a message (es-core replyContextOf, plus whether the answered message is the account's own). */
-export type ReplyContextView =
-  | {
-      kind: "parent";
-      /** MessageView.id of the answered message (its bubble, when it is in the same chat). */
-      messageId: string;
-      from: string;
-      fromMe: boolean;
-      /** The first two lines of what the answered message's sender wrote, at most 140 characters. */
-      excerpt: string;
-      /** The file name of its first attachment, or null. */
-      attachment: string | null;
-    }
-  | { kind: "subject"; subject: string };
+/**
+ * The quote card above a deliberate reply (es-core replyCardOf), plus whether
+ * the answered message is the account's own.
+ */
+export interface ReplyCardView {
+  /** MessageView.id of the answered message when the mailbox holds it, else null. */
+  messageId: string | null;
+  from: string;
+  fromMe: boolean;
+  /** What the card quotes of it, at most 140 characters. */
+  excerpt: string;
+  /** The file name of its first attachment, or null. */
+  attachment: string | null;
+  /** The answered message is a bubble of this chat, so pressing the card can show it. */
+  clickable: boolean;
+}
+
+/** A thread inside a chat (es-core topicsOf), identified by its root message. */
+export interface TopicView {
+  /** MessageView.id of the root message. */
+  rootId: string;
+  /** The name an Email Social user gave it, or null. */
+  label: string | null;
+  /** The root's base subject; "" when it has none. */
+  base: string;
+  /** "named": it has a label; "carrier": the implicit topic of an Email Social chat ("Ongoing chat"); "plain": started by a mail with its own subject. */
+  kind: "named" | "carrier" | "plain";
+  /** Messages in the topic. */
+  count: number;
+}
 
 export interface MessageView {
   /** The bridge's key for the message (folder and uid), used in paths. */
@@ -124,7 +140,7 @@ export interface MessageView {
   from: Person | null;
   mine: boolean;
   date: string | null;
-  /** Base subject (no "Re:"/"AW:"), for the separator shown where the subject changes. */
+  /** The base subject (no "Re:"/"AW:"). Topics are identified by their root, not by this. */
   subject: string;
   /** The whole text. */
   text: string;
@@ -143,14 +159,26 @@ export interface MessageView {
   status: "sent" | "delivered" | "read" | null;
   /** The message carried an Email Social part. */
   emailSocial: boolean;
-  /** The card shown above the text: the message answered, or the subject where a new one starts; null for none. */
-  replyContext: ReplyContextView | null;
+  /** The topic the message belongs to; null outside a chat (Other mail, contact page) and for Auto-Submitted mail. */
+  topic: Pick<TopicView, "rootId" | "label" | "kind"> | null;
+  /** The previous message of the chat belongs to another topic (true for the first); false outside a chat. */
+  topicStart: boolean;
+  /** The card above a deliberate reply; null for a continuation and outside a chat. */
+  replyCard: ReplyCardView | null;
+  /** A plain message whose subject differs from its topic's (a gateway tag, a renamed reply): its base subject, shown as one small line; else null. */
+  subjectNote: string | null;
+  /** Answered point by point (es-core isInterleaved): the bubble shows its ">" lines muted, in place. False outside a chat. */
+  interleaved: boolean;
 }
 
 export interface ChatView {
   chat: ChatSummary;
   /** Oldest first. */
   messages: MessageView[];
+  /** The chat's topics, in the order their roots appear. */
+  topics: TopicView[];
+  /** The topic the composer is bound to when the chat is opened: that of the account's own newest message, else the newest topic. */
+  composerTopic: string | null;
 }
 
 /** A sender under "Other mail": a mailing list, a newsletter or a program. Read-only. */
@@ -206,13 +234,19 @@ export interface ContactDetail {
   groups: ChatSummary[];
 }
 
-/** POST /api/messages: a reply in a chat (chatId), or a new chat (to). */
+/**
+ * POST /api/messages: a message in a chat (chatId), or the first message to
+ * a set of people (to). Without replyTo it continues a topic; with it, it is
+ * a deliberate reply to that message.
+ */
 export interface SendRequest {
   chatId?: string;
   /** Recipient addresses of a new chat; several make a group. */
   to?: string[];
-  /** Optional; a new chat without one takes the first line of the text, cut at 60 characters. */
-  subject?: string;
+  /** MessageView.id of the message of this chat being answered (a Message-ID, or the "sha256:…" id of a message without one). */
+  replyTo?: string;
+  /** The topic to write in: an existing one by its root, or one by name (re-entered when it exists, else started). A new chat takes a name only. */
+  topic?: { root: string } | { label: string };
   text: string;
 }
 

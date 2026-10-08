@@ -47,6 +47,7 @@ import type {
   EsPart,
   EsPostPart,
   EsReceiptPart,
+  EsReplyToCard,
   ReceiptKind,
   ReplyTarget,
   SerializeOptions,
@@ -130,6 +131,39 @@ function checkMailbox(mailbox: unknown, role: string): EsAddress {
     parseAddressList(formatAddress({ name: "", address }))[0]?.address === address;
   if (!valid) throw new TypeError(`Not a usable e-mail address in ${role}: ${JSON.stringify(raw)}`);
   return { name: typeof input?.name === "string" ? input.name : "", address };
+}
+
+/** `email.topicRoot`: "self" stands for the new message's own Message-ID; anything else must be a writable msg-id. */
+function checkTopicRoot(root: unknown, messageId: string): string | null {
+  if (root === undefined || root === null) return null;
+  if (root === "self") return messageId;
+  if (typeof root !== "string" || !WRITABLE_ID.test(root) || root.length > MAX_ID_LENGTH) {
+    throw new TypeError(`Not a usable topic root Message-ID: ${JSON.stringify(root)}`);
+  }
+  return root;
+}
+
+/** `email.topicLabel` with white space collapsed, as subjects are; null when nothing is left. */
+function checkTopicLabel(label: unknown): string | null {
+  if (label === undefined || label === null) return null;
+  if (typeof label !== "string") throw new TypeError("topicLabel must be a string");
+  const collapsed = normalizeSubject(label);
+  return collapsed === "" ? null : collapsed;
+}
+
+/** `email.replyTo`: the sender address in canonical form, an id that cannot be written becomes null. */
+function checkReplyTo(card: unknown): EsReplyToCard | null {
+  if (card === undefined || card === null) return null;
+  const input = card as Partial<EsReplyToCard>;
+  const raw = input.from?.address;
+  const address = typeof raw === "string" ? canonicalAddress(raw) : "";
+  if (splitAddress(address) === null) throw new TypeError(`Not a usable sender address in replyTo: ${JSON.stringify(raw)}`);
+  const id = typeof input.messageId === "string" ? input.messageId : null;
+  return {
+    messageId: id !== null && WRITABLE_ID.test(id) && id.length <= MAX_ID_LENGTH ? id : null,
+    from: { name: typeof input.from?.name === "string" ? wellFormed(input.from.name) : "", address },
+    excerpt: typeof input.excerpt === "string" ? wellFormed(input.excerpt) : "",
+  };
 }
 
 function checkAuthor(author: unknown): string | null {
@@ -374,6 +408,9 @@ export function serializeMessage(out: EsOutgoing, options: SerializeOptions): st
       inReplyTo,
       references,
       textSha256: textInRecord ? null : sha256Hex(text),
+      topicRoot: checkTopicRoot(out.es?.topicRoot, messageId),
+      topicLabel: checkTopicLabel(out.es?.topicLabel),
+      replyTo: checkReplyTo(out.es?.replyTo),
     },
     requestReceipts: normalizeReceiptKinds(out.es?.requestReceipts),
   };

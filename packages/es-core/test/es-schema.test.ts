@@ -16,6 +16,9 @@ const post: EsPostPart = {
     inReplyTo: "<m0@example.com>",
     references: ["<m0@example.com>"],
     textSha256: null,
+    topicRoot: null,
+    topicLabel: null,
+    replyTo: null,
   },
   requestReceipts: ["delivered", "read"],
 };
@@ -29,12 +32,76 @@ describe("ES part JSON", () => {
     const minimal: EsPostPart = {
       ...post,
       author: null,
-      email: { messageId: null, subject: null, inReplyTo: null, references: [], textSha256: null },
+      email: { messageId: null, subject: null, inReplyTo: null, references: [], textSha256: null, topicRoot: null, topicLabel: null, replyTo: null },
       requestReceipts: [],
     };
     expect(formatEsJson(minimal)).toBe(
       '{\n  "$type": "es.social.post",\n  "value": {\n    "text": "Ahoj, jak se máš? 👋",\n    "via": "alice@example.com",\n    "createdAt": "2026-03-01T10:15:00.000Z"\n  }\n}\n',
     );
+  });
+
+  it("writes topicRoot, topicLabel and replyTo after the other email fields, in that order, and reads them back", () => {
+    const named: EsPostPart = {
+      ...post,
+      author: null,
+      requestReceipts: [],
+      email: {
+        ...post.email,
+        topicRoot: "<root@example.com>",
+        topicLabel: "Trip",
+        replyTo: { messageId: "<m0@example.com>", from: { name: "Bob", address: "bob@example.org" }, excerpt: "Shall we go?" },
+      },
+    };
+    expect(formatEsJson(named)).toBe(
+      "{\n" +
+        '  "$type": "es.social.post",\n' +
+        '  "value": {\n' +
+        '    "text": "Ahoj, jak se máš? 👋",\n' +
+        '    "via": "alice@example.com",\n' +
+        '    "createdAt": "2026-03-01T10:15:00.000Z",\n' +
+        '    "email": {\n' +
+        '      "messageId": "<m1@example.com>",\n' +
+        '      "subject": "Oběd",\n' +
+        '      "inReplyTo": "<m0@example.com>",\n' +
+        '      "references": [\n        "<m0@example.com>"\n      ],\n' +
+        '      "topicRoot": "<root@example.com>",\n' +
+        '      "topicLabel": "Trip",\n' +
+        '      "replyTo": {\n' +
+        '        "messageId": "<m0@example.com>",\n' +
+        '        "from": {\n          "name": "Bob",\n          "address": "bob@example.org"\n        },\n' +
+        '        "excerpt": "Shall we go?"\n' +
+        "      }\n" +
+        "    }\n" +
+        "  }\n" +
+        "}\n",
+    );
+    expect(parseEsJson(formatEsJson(named))).toEqual(named);
+  });
+
+  it("writes a replyTo without a Message-ID with messageId null, and reads it back", () => {
+    const noId: EsPostPart = { ...post, email: { ...post.email, replyTo: { messageId: null, from: { name: "", address: "bob@example.org" }, excerpt: "" } } };
+    expect(JSON.parse(formatEsJson(noId)).value.email.replyTo).toEqual({ messageId: null, from: { name: "", address: "bob@example.org" }, excerpt: "" });
+    expect(parseEsJson(formatEsJson(noId))).toEqual(noId);
+  });
+
+  it("reads the topic and reply fields liberally", () => {
+    const read = (email: unknown) => (parseEsJson(JSON.stringify({ $type: "es.social.post", value: { text: "x", via: "a@example.com", createdAt: "2026-01-01T00:00:00Z", email } })) as EsPostPart).email;
+    expect(read({ topicRoot: 5, topicLabel: ["Trip"], replyTo: "x" })).toMatchObject({ topicRoot: null, topicLabel: null, replyTo: null });
+    expect(read({ topicRoot: " root@Example.com ", topicLabel: "Trip" })).toMatchObject({ topicRoot: "<root@Example.com>", topicLabel: "Trip" });
+    for (const replyTo of [{ messageId: "<a@example.net>" }, { from: {} }, { from: { address: 7 } }, { from: { address: "no-at" } }, { from: "bob@example.org" }]) {
+      expect(read({ replyTo }).replyTo, JSON.stringify(replyTo)).toBeNull();
+    }
+    expect(read({ replyTo: { messageId: " m0@example.com", from: { name: 3, address: "Bob@EXAMPLE.org" }, excerpt: 5, extra: true } }).replyTo).toEqual({
+      messageId: "<m0@example.com>",
+      from: { name: "", address: "Bob@example.org" },
+      excerpt: "",
+    });
+    expect(read({ replyTo: { messageId: 9, from: { name: "Bob", address: "bob@example.org" }, excerpt: "Hi" } }).replyTo).toEqual({ messageId: null, from: { name: "Bob", address: "bob@example.org" }, excerpt: "Hi" });
+  });
+
+  it("reads a record written before these fields existed, with all three null", () => {
+    const old = { $type: "es.social.post", value: { text: "x", via: "a@example.com", createdAt: "2026-01-01T00:00:00Z", email: { messageId: "<m@example.com>" } } };
+    expect((parseEsJson(JSON.stringify(old)) as EsPostPart).email).toEqual({ messageId: "<m@example.com>", subject: null, inReplyTo: null, references: [], textSha256: null, topicRoot: null, topicLabel: null, replyTo: null });
   });
 
   it("round-trips both receipt kinds", () => {
@@ -77,6 +144,9 @@ describe("ES part JSON", () => {
         inReplyTo: null,
         references: [],
         textSha256: null,
+        topicRoot: null,
+        topicLabel: null,
+        replyTo: null,
       },
       requestReceipts: [],
     });

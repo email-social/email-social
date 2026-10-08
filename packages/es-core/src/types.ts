@@ -57,6 +57,17 @@ export interface EsEmailMeta {
    * otherwise. It ties the record to the text/plain body of the message.
    */
   textSha256: string | null;
+  /**
+   * Message-ID of the root of the topic (the thread inside a chat) this
+   * message belongs to; on the root itself, its own Message-ID. Null when
+   * absent (records written before topics existed, or a root without a
+   * Message-ID); a reader then places the message by its threading headers.
+   */
+  topicRoot: string | null;
+  /** The name an Email Social user gave the topic, written on every message of a named topic; null when it has none. */
+  topicLabel: string | null;
+  /** The message a deliberate reply answers (see EsReplyToCard); null for a message typed without choosing one. */
+  replyTo: EsReplyToCard | null;
 }
 
 /** A direct message: the parsed `es.social.post` record (spec 2.3.1, direct-message subset). */
@@ -173,33 +184,76 @@ export interface QuotedSplit {
   signature: string;
 }
 
-/** The quote card above a message (see `replyContextOf`). */
-export type ReplyContext =
-  | {
-      kind: "parent";
-      /** EsMessage.id of the message answered. */
-      messageId: string;
-      /** Its sender's display name, else address; "" when it has no sender. */
-      from: string;
-      /** The first two lines of what its sender wrote, at most 140 characters ("…" when cut). */
-      excerpt: string;
-      /** The file name of its first attachment, or null. */
-      attachment: string | null;
-    }
-  | {
-      kind: "subject";
-      /** The base subject (no Re:/Fwd: prefixes or list tags). */
-      subject: string;
-    };
+/**
+ * The `email.replyTo` object of an Email Social post: the message a
+ * deliberate reply answers, as the sender's client saw it. It has nothing to
+ * do with the RFC 5322 Reply-To header field (`EsMessage.replyTo`).
+ */
+export interface EsReplyToCard {
+  /** Message-ID of the message answered, or null when it has none. */
+  messageId: string | null;
+  /** Its sender: display name and canonical address. */
+  from: EsAddress;
+  /** The start of what its sender wrote, at most 140 characters, cut at a word boundary with "…". */
+  excerpt: string;
+}
+
+/** The quote card above a message that deliberately answers another (see `replyCardOf`). */
+export interface ReplyCard {
+  /** EsMessage.id of the message answered when it is held, else null. */
+  messageId: string | null;
+  /** Its sender's display name, else address; "" when unknown. */
+  from: string;
+  /** What the card quotes of it, at most 140 characters ("…" when cut). */
+  excerpt: string;
+  /** The file name of its first attachment when it is held, else null. */
+  attachment: string | null;
+  /** True only when the message answered is held and in the chat being shown, so the card can bring it into view. */
+  clickable: boolean;
+}
+
+/** What a topic is called (see `topicsOf`). */
+export type TopicKind =
+  /** An Email Social user gave it a name (`email.topicLabel`). */
+  | "named"
+  /** No name; its root is an Email Social message or carries the carrier subject ("Message from …"). */
+  | "carrier"
+  /** Started by a fresh mail from any client; its subject is the root's base subject. */
+  | "plain";
+
+/** A thread inside a chat, identified by the Message-ID (EsMessage.id) of its root, never by its subject. */
+export interface Topic {
+  /** EsMessage.id of the root message. */
+  rootId: string;
+  /** The `email.topicLabel` of the oldest message of the topic that carries one, else null. */
+  label: string | null;
+  /** The root's base subject (`normalizeSubject`); "" when it has none. */
+  base: string;
+  kind: TopicKind;
+  /** Number of messages in the topic. */
+  count: number;
+}
+
+/** The topics of one chat (see `topicsOf`). */
+export interface ChatTopics {
+  /** In the order their roots appear. */
+  topics: Topic[];
+  /**
+   * Where each message was placed, by EsMessage.id: its topic's root, and
+   * whether it starts a run (the previous message belongs to another topic;
+   * true for the first).
+   */
+  of: Record<string, { rootId: string; topicStart: boolean }>;
+}
 
 /** Who a message comes from (see `classifyMessage`). */
 export type MessageKind = "person" | "list" | "automated";
 
-/** One message of a chat, with the base subject the client uses to mark subject changes. */
+/** One message of a chat, with its base subject. */
 export interface ChatEntry {
   /** EsMessage.id. */
   id: string;
-  /** Base subject of the message (see `normalizeSubject`); "" when it has none. */
+  /** Base subject of the message (see `normalizeSubject`); "" when it has none. Topics (`topicsOf`) are identified by their root, not by this. */
   subject: string;
 }
 
@@ -252,6 +306,12 @@ export interface EsOutgoing {
     requestReceipts?: ReceiptKind[];
     /** A did:es identifier to put in the ES part as metadata. */
     author?: string;
+    /** `email.topicRoot`: the Message-ID of the topic's root, or "self" when this message is the root (the new Message-ID is written). */
+    topicRoot?: string;
+    /** `email.topicLabel`: the topic's name, white space collapsed; left out when empty. */
+    topicLabel?: string;
+    /** `email.replyTo`: what a deliberate reply answers. */
+    replyTo?: EsReplyToCard;
   };
 }
 
@@ -275,7 +335,7 @@ export interface SerializeOptions {
   /**
    * Whether to attach the ES part (default true). False writes a plain
    * single-part text/plain message, e.g. for a recipient who has never sent
-   * an ES part; the ES fields of EsOutgoing (requestReceipts, author) are then
+   * an ES part; the ES fields of EsOutgoing (requestReceipts, author, topicRoot, topicLabel, replyTo) are then
    * not sent. Receipts ignore it: they always carry their ES part.
    */
   includeEsPart?: boolean;
