@@ -16,11 +16,11 @@ parseMessage(raw: string | Uint8Array): EsMessage                     // never t
 extractPart(raw, partId): EsPartContent | null                        // decoded bytes of one attachment (EsAttachment.partId)
 serializeMessage(out: EsOutgoing, { date, messageId, includeEsPart? }): string  // CRLF, 7-bit; text/plain first, then the ES part
 serializeReceipt(receipt: EsOutgoingReceipt, { date, messageId }): string  // a "delivered" or "read" receipt
-replyTargetOf(parent): ReplyTarget · replyContextOf(message, lookup, { previous? })  // headers for a reply · its quote card
+replyTargetOf(parent): ReplyTarget · replyContextOf(message, lookup, { previous? }) · quotedFragmentOf(message, parent)  // reply headers · quote card
 threadMessages(messages: EsMessage[]): Conversation[]                 // threads by references and subject, any input order
 groupByParticipants(messages, { self }): Chat[]                        // one chat per set of other people, any subjects
 classifyMessage(message): "person" | "list" | "automated"              // from List-*, Auto-Submitted, Precedence, Return-Path, no-reply
-splitQuoted(message): { fresh, quoted, signature }                     // what the sender wrote now; every line kept in one part
+splitQuoted(message): { fresh, quoted, signature } · isInterleaved · unquotedLines(quoted) · unquote · collapse(text)  // every line kept · quote marks off
 quoteForReply(parent, { maxLines?, timeZone? }): string                // "On … wrote:" + the parent's fresh text as "> " lines
 normalizeSubject(subject): { base, isReply, isForward } · canonicalAddress(address)  // strips Re:/AW:/Odp:/[list] · lowercases the domain
 deriveContacts(messages, { exclude? }): Contact[] · deriveDid(address) · formatDid · parseDid · isValidDid  // contacts; did:es as metadata

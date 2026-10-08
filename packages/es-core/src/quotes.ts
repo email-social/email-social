@@ -23,6 +23,7 @@
  */
 
 import type { EsPart, QuotedSplit } from "./types.js";
+import { collapse } from "./util/text.js";
 
 // ---------------------------------------------------------------- patterns
 
@@ -97,13 +98,17 @@ function attributionEndingAt(lines: readonly string[], end: number, strict: bool
     if (start < 0) continue;
     const window = lines.slice(start, end + 1);
     if (window.some((line) => isBlank(line) || isQuote(line))) continue;
-    const joined = window.map((line) => line.trim()).join(" ");
-    if (joined.length > 300 || !/[\d@]/u.test(joined)) continue;
-    const shaped = ATTRIBUTION_END.test(joined) || GERMAN_ATTRIBUTION.test(joined) || MUTT_ATTRIBUTION.test(joined);
-    if (!shaped) continue;
-    if ((count === 1 && !strict) || ATTRIBUTION_START.test(joined)) return count;
+    if (isAttribution(window, strict)) return count;
   }
   return 0;
+}
+
+/** Whether 1–3 consecutive non-blank lines form an attribution (see `attributionEndingAt`). */
+function isAttribution(window: readonly string[], strict: boolean): boolean {
+  const joined = window.map((line) => line.trim()).join(" ");
+  if (joined.length > 300 || !/[\d@]/u.test(joined)) return false;
+  const shaped = ATTRIBUTION_END.test(joined) || GERMAN_ATTRIBUTION.test(joined) || MUTT_ATTRIBUTION.test(joined);
+  return shaped && ((window.length === 1 && !strict) || ATTRIBUTION_START.test(joined));
 }
 
 /** Line index where an attribution ending at `end` starts, or -1. */
@@ -234,7 +239,19 @@ export function splitQuoted(message: { text: string; es?: EsPart | null }): Quot
   return { fresh: collect(lines, roles, "fresh"), quoted: collect(lines, roles, "quoted"), signature: collect(lines, roles, "signature") };
 }
 
-function assignRoles(lines: readonly string[], roles: Role[]): void {
+/**
+ * Whether the sender answered point by point: a quote with something they
+ * wrote both above and below it, which `splitQuoted` therefore keeps in
+ * `fresh`. Always false for an Email Social post.
+ */
+export function isInterleaved(message: { text: string; es?: EsPart | null }): boolean {
+  if (message.es?.$type === "es.social.post") return false;
+  const lines = message.text.replace(/\r\n?/g, "\n").split("\n");
+  return assignRoles(lines, lines.map((): Role => "fresh"));
+}
+
+/** Sets the role of every line; returns whether the reply is interleaved. */
+function assignRoles(lines: readonly string[], roles: Role[]): boolean {
   const tail = tailStart(lines);
   const limit = tail === -1 ? lines.length : tail;
   for (let i = limit; i < lines.length; i++) roles[i] = "quoted";
@@ -278,4 +295,98 @@ function assignRoles(lines: readonly string[], roles: Role[]): void {
       (!interleaved && !hasFreshBetween(0, block.start));
     if (quoted) for (let i = block.start; i < block.end; i++) roles[i] = "quoted";
   }
+  return interleaved;
+}
+
+// ---------------------------------------------------------------- unquoting
+
+/** One line of a quote: how many ">" it had and the text after them. */
+interface QuoteLine {
+  depth: number;
+  text: string;
+}
+
+/**
+ * Removes the quote marks of a line: ">" at any depth (">>", "> >"), the
+ * space or tab after the last one, and the U+FEFF iOS Mail writes before
+ * the quoted text.
+ */
+function stripQuoteMarks(line: string): QuoteLine {
+  const lead = /^[ \t\ufeff]{0,3}>/.exec(line);
+  if (lead === null) return { depth: 0, text: line };
+  let rest = line.slice(lead[0].length);
+  let depth = 1;
+  for (let more = /^[ \t]?>/.exec(rest); more !== null; more = /^[ \t]?>/.exec(rest)) {
+    rest = rest.slice(more[0].length);
+    depth++;
+  }
+  return { depth, text: rest.replace(/^[ \t]/, "").replace(/^\ufeff/, "") };
+}
+
+/** Index of the last label line of an Outlook header block starting at line `i` (all at one depth), or -1. */
+function headerBlockEnd(lines: readonly QuoteLine[], i: number): number {
+  const first = labelOf(lines[i]!.text);
+  if (first === null || !FROM_LABELS.has(first)) return -1;
+  const seen = new Set<string>();
+  let last = -1;
+  for (let j = i + 1; j < lines.length && j <= i + 7; j++) {
+    if (isBlank(lines[j]!.text) || lines[j]!.depth !== lines[i]!.depth) break;
+    const label = labelOf(lines[j]!.text);
+    if (label !== null && OTHER_LABELS.has(label)) {
+      seen.add(label);
+      last = j;
+    }
+  }
+  return seen.size >= 2 ? last : -1;
+}
+
+/** The number of lines (1–3, all at one depth) of an attribution ending at line `end`, or 0. */
+function quotedAttributionEndingAt(lines: readonly QuoteLine[], end: number): number {
+  for (let count = 3; count >= 1; count--) {
+    const start = end - count + 1;
+    if (start < 0) continue;
+    const window = lines.slice(start, end + 1);
+    if (window.some((line) => isBlank(line.text) || line.depth !== lines[end]!.depth)) continue;
+    if (isAttribution(window.map((line) => line.text), false)) return count;
+  }
+  return 0;
+}
+
+/**
+ * The lines of a quote (`QuotedSplit.quoted`) as the quoted message had
+ * them: ">" marks removed at any depth (with the U+FEFF of iOS Mail), and
+ * the lines mail clients add around a quote dropped: attribution lines
+ * ("On … wrote:", "Dne … napsal(a):", "Am … schrieb …:", "Le … a écrit :",
+ * wrapped too), Outlook header blocks (From/Sent/To/Subject in en, cs, de,
+ * fr) with the divider above them, and separators ("-----Original
+ * Message-----", forwarded-message lines). Blank lines are kept.
+ */
+export function unquotedLines(quoted: string): string[] {
+  const lines = quoted.replace(/\r\n?/g, "\n").split("\n").map(stripQuoteMarks);
+  const drop = lines.map(() => false);
+  for (let i = 0; i < lines.length; i++) {
+    const text = lines[i]!.text;
+    if (isBlank(text)) continue;
+    if (ORIGINAL_SEPARATOR.test(text) || FORWARD_SEPARATOR.test(text) || APPLE_FORWARD.test(text)) {
+      drop[i] = true;
+      continue;
+    }
+    const blockEnd = headerBlockEnd(lines, i);
+    if (blockEnd >= 0) {
+      for (let j = i; j <= blockEnd; j++) drop[j] = true;
+      let above = i - 1;
+      while (above >= 0 && isBlank(lines[above]!.text)) above--;
+      if (above >= 0 && DIVIDER.test(lines[above]!.text)) drop[above] = true;
+      i = blockEnd;
+      continue;
+    }
+    const count = quotedAttributionEndingAt(lines, i);
+    for (let j = i - count + 1; j <= i; j++) drop[j] = true;
+  }
+  return lines.filter((_, i) => !drop[i]).map((line) => line.text);
+}
+
+/** What a quote says, as one line: `unquotedLines` joined with spaces and collapsed. */
+export function unquote(quoted: string): string {
+  return collapse(unquotedLines(quoted).join(" "));
 }
