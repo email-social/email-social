@@ -92,10 +92,11 @@ export function MailView({ api, account, mode, tick, sync, connected, onRetry, o
     }
   };
 
-  const send = async (request: SendRequest): Promise<void> => {
+  const send = async (request: SendRequest): Promise<SendResult> => {
     const result = await api.call<SendResult>("/api/messages", { method: "POST", body: request });
     if (request.chatId === undefined) await go({ kind: "chat", id: result.chatId });
     else await refresh();
+    return result;
   };
 
   const selectedId = pane.kind === "chat" || pane.kind === "other" ? pane.id : null;
@@ -151,9 +152,9 @@ export function MailView({ api, account, mode, tick, sync, connected, onRetry, o
         </nav>
         <main class="thread-pane" onKeyDown={backToList}>
           {pane.kind === "new" ? (
-            <NewChat contacts={contacts} initial={pane.to} headingRef={heading} onSend={send} onCancel={() => void go({ kind: "none" })} />
+            <NewChat contacts={contacts} initial={pane.to} headingRef={heading} onSend={async (request) => void (await send(request))} onCancel={() => void go({ kind: "none" })} />
           ) : shown?.kind === "chat" ? (
-            <ChatPane view={shown.view} token={api.token} headingRef={heading} onPerson={person} onSend={(text) => send({ chatId: shown.view.chat.id, text })} />
+            <ChatPane key={shown.view.chat.id} view={shown.view} token={api.token} headingRef={heading} onPerson={person} onSend={(request) => send({ chatId: shown.view.chat.id, ...request })} />
           ) : shown?.kind === "other" ? (
             <OtherPane view={shown.view} token={api.token} headingRef={heading} onPerson={person} />
           ) : shown?.kind === "contact" ? (
