@@ -55,3 +55,25 @@ export function parseRecipient(input: string): string | null {
   const address = (bracketed === null ? text : bracketed[1]!).trim();
   return /^[^@\s<>(),;:"\\[\]]+@[A-Za-z0-9-]+(?:\.[A-Za-z0-9-]+)+$/.test(address) ? address : null;
 }
+
+/**
+ * The line Email Social adds, in the signature block, to every message it
+ * sends as plain e-mail (es-bridge session.ts FOOTER; test/footer.test.ts
+ * checks the two are the same).
+ */
+export const EMAIL_SOCIAL_FOOTER = "Sent with Email Social. Reply as you normally would; this is an ordinary e-mail.";
+
+/** How a topic is named on chips and in menus: its name, else its subject, else "Ongoing chat" (the implicit topic). */
+export function topicName(topic: { label: string | null; base: string; kind: "named" | "carrier" | "plain" }): string {
+  if (topic.label !== null) return topic.label;
+  return topic.kind === "carrier" || topic.base === "" ? "Ongoing chat" : topic.base;
+}
+
+/** The start of a message's text for the reply chip: white space collapsed, at most `max` characters. */
+export function shortExcerpt(text: string, max = 80): string {
+  const flat = text.replace(/\s+/g, " ").trim();
+  if (flat.length <= max) return flat;
+  const room = flat.slice(0, max - 1);
+  const space = room.lastIndexOf(" ");
+  return (space > 0 ? room.slice(0, space) : room).trimEnd() + "…";
+}

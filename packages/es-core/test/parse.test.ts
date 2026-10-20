@@ -499,7 +499,7 @@ describe("parseMessage: the ES part", () => {
       text: "Hi",
       via: "alice@example.com",
       createdAt: CREATED,
-      email: { messageId: "<m1@example.com>", subject: null, inReplyTo: null, references: [], textSha256: null },
+      email: { messageId: "<m1@example.com>", subject: null, inReplyTo: null, references: [], textSha256: null, topicRoot: null, topicLabel: null, replyTo: null },
       requestReceipts: [],
     });
     expect(m.attachments).toEqual([]);

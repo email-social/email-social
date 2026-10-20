@@ -2,8 +2,8 @@
 
 The local part of Email Social: a Node 22 service that reads and sends your
 own mail over IMAP and SMTP and serves the chat-like web client
-(`packages/es-web`) to your browser on `127.0.0.1`. The chats, quoted text,
-"Other mail" and contacts it shows are computed with `@email-social/es-core`.
+(`packages/es-web`) to your browser on `127.0.0.1`. The chats, topics, quote
+cards, "Other mail" and contacts it shows are computed with `@email-social/es-core`.
 
 ```sh
 npm ci && npm run build          # at the repository root
@@ -35,15 +35,16 @@ Seznam.cz and other providers: [`docs/TRY-IT.md`](../../docs/TRY-IT.md).
 - **Password.** In memory until the bridge stops, unless "Remember on this
   device" is ticked. Then settings and password go to the OS keychain
   (`@napi-rs/keyring`), never to a plain file.
-- **Chats.** Messages are grouped by the people in them
+- **Chats and topics.** Messages are grouped by the people in them
   (`groupByParticipants`), not by subject. Mail from lists and programs
   (`classifyMessage`: `List-*`, `Auto-Submitted`, `Precedence`, `Return-Path: <>`,
-  no-reply senders) goes to "Other mail", read-only. Each message is split
-  into what the sender wrote, the quoted text and the signature (`splitQuoted`),
-  and carries its quote card (`replyContextOf`): the message it answers,
-  looked up among everything the session holds, or its subject where a new
-  one starts or the answered message is not held. The web client shows the
-  card and the fresh text, never the quoted text.
+  no-reply senders) goes to "Other mail", read-only. Inside a chat every
+  message is placed in a topic identified by its root message (`topicsOf`).
+  Each message is split into what the sender wrote, the quoted text and the
+  signature (`splitQuoted`); it carries a quote card only when it is a
+  deliberate reply (`replyCardOf`), and a one-line subject note when an
+  ordinary client changed the subject (`subjectNoteOf`). The web client
+  shows the card and the fresh text, never the quoted text.
 - **Live.** New mail in INBOX arrives by IDLE; every folder (also the sent
   folder, for messages sent from other clients) is checked every 30 seconds.
   A lost connection is re-established with growing pauses (1 s to 60 s),
@@ -53,13 +54,44 @@ Seznam.cz and other providers: [`docs/TRY-IT.md`](../../docs/TRY-IT.md).
   for one arrives, and a Read receipt when you open its chat. Each is
   sent once per message (recorded as `$EsDelivered` / `$EsRead` keywords in
   the mailbox) and never to someone writing plain e-mail.
-- **Sending.** `POST /api/messages` replies in a chat (to everyone else in
-  it) or starts a new chat (recipients, optional subject; without one the
-  first line of the text, cut at 60 characters at a word boundary). The
-  Email Social part (`email-social.json`) is attached only when a recipient
-  has sent an Email Social message before; otherwise the message is plain
-  `text/plain` e-mail, and a reply then quotes the message it answers below
-  the text (`quoteForReply`), since the recipient's client shows no chat.
+- **Sending.** `POST /api/messages` writes into a chat (`chatId`) or to a
+  set of people (`to`: their chat, or a new one). It continues a topic
+  (`topic: { root }`, or the composer's default), names one (`topic:
+  { label }`: re-enters the topic with that subject or name, else starts it),
+  or answers one message deliberately (`replyTo`). The Email Social part
+  (`email-social.json`) is attached only when a recipient has sent an Email
+  Social message before; otherwise the message is plain `text/plain` e-mail.
+
+## What goes on the wire
+
+- **Subject.** A new topic's first message (its root) has no In-Reply-To or
+  References and the topic's name as its Subject, or, for a topic without a
+  name, the carrier subject: "Message from" and the account's name, plus
+  " to " and up to three other people (then "+N") in a group. Every later
+  message carries exactly `Re: ` + the root's base subject, whatever
+  prefixes other clients stacked on their replies, so Gmail and Outlook
+  keep the conversation together. A topic whose root has no subject gets a
+  new carrier root instead. The first line of the text is never used as a
+  subject.
+- **Threading.** A message typed without choosing a target answers the
+  newest message of its topic that has a Message-ID; a deliberate reply
+  answers its target. With an Email Social recipient the ES part carries
+  `email.topicRoot`, `email.topicLabel` (in a named topic) and, on a
+  deliberate reply, `email.replyTo` (the target's id, sender and the start of
+  its text).
+- **Quote.** Only a deliberate reply to people without Email Social quotes:
+  an attribution line and at most 5 lines of the message answered as `> `
+  lines (`quoteForReply`), so Outlook's Conversation Clean Up does not take
+  every earlier message for a duplicate. A continuation quotes nothing; a
+  message with the ES part never quotes.
+- **Footer.** Every message to people without Email Social ends with the
+  signature block line "Sent with Email Social. Reply as you normally would;
+  this is an ordinary e-mail.", after a `-- ` line, or as the last line of a
+  signature the user typed. The `-- ` line makes the body quoted-printable
+  (RFC 2045 §6.7); it still decodes to exactly the text.
+
+See `spec/DEVIATIONS.md` D23–D25 for the reasons and the client behaviour
+behind these rules.
 
 ## Local API
 

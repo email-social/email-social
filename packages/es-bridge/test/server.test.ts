@@ -149,7 +149,7 @@ describe("local API: the mailbox as chats", () => {
     expect(sent.status).toBe(201);
     expect(await json<SendResult>(sent)).toMatchObject({ chatId: first!.id, message: { mine: true, fresh: "On my way" } });
     const created = await json<SendResult>(await post({ to: ["zuzana@example.net"], text: "Hello Zuzana" }));
-    expect(created.message.subject).toBe("Hello Zuzana");
+    expect(created.message.subject).toBe("Message from Alice Dvořáková");
     // Both messages carry the test clock's time, so the order between the two chats is not the point here.
     expect((await json<ChatSummary[]>(await api(bridge, "/api/chats"))).find((c) => c.id === created.chatId)).toMatchObject({ lastLine: "Hello Zuzana", lastFromMe: true });
     expect((await post({ chatId: first!.id, text: "  " })).status).toBe(400);
@@ -160,6 +160,41 @@ describe("local API: the mailbox as chats", () => {
     expect((await post({ to: ["not an address"], text: "x" })).status).toBe(400);
     expect((await post({ chatId: first!.id, text: "x" }, { "content-type": "text/plain" })).status).toBe(415);
     expect((await post({ chatId: "chat-unknown", text: "x" })).status).toBe(404);
+  });
+
+  it("checks replyTo and topic: shape here, membership of the chat in the session", async () => {
+    const bridge = await demoBridge();
+    const chats = await json<ChatSummary[]>(await api(bridge, "/api/chats"));
+    const karel = await json<ChatView>(await api(bridge, `/api/chats/${chats.find((c) => c.title === "Karel Holub")!.id}`));
+    const bob = await json<ChatView>(await api(bridge, `/api/chats/${chats.find((c) => c.title === "Bob Svoboda")!.id}`));
+    const post = (body: unknown) => api(bridge, "/api/messages", { method: "POST", body: JSON.stringify(body) });
+    const error = async (body: unknown): Promise<[number, string]> => {
+      const res = await post(body);
+      return [res.status, ((await res.json()) as { error: string }).error];
+    };
+    // A reply target from another chat, a topic root of another chat.
+    expect((await error({ chatId: bob.chat.id, replyTo: karel.messages[0]!.id, text: "x" }))[0]).toBe(400);
+    expect((await error({ chatId: bob.chat.id, topic: { root: karel.messages[0]!.id }, text: "x" }))[0]).toBe(400);
+    // Shapes.
+    expect(await error({ chatId: bob.chat.id, topic: { root: bob.topics[0]!.rootId, label: "Trip" }, text: "x" })).toEqual([400, "topic must have either root or label"]);
+    expect(await error({ chatId: bob.chat.id, topic: {}, text: "x" })).toEqual([400, "topic must have either root or label"]);
+    expect((await error({ chatId: bob.chat.id, replyTo: bob.messages[0]!.id, topic: { label: "Trip" }, text: "x" }))[0]).toBe(400);
+    expect(await error({ chatId: bob.chat.id, topic: { label: " \u00a0 " }, text: "x" })).toEqual([400, "A topic name needs 1 to 200 characters"]);
+    expect((await error({ chatId: bob.chat.id, topic: { label: "x".repeat(201) }, text: "x" }))[0]).toBe(400);
+    expect((await error({ chatId: bob.chat.id, topic: "Trip", text: "x" }))[0]).toBe(400);
+    expect((await error({ chatId: bob.chat.id, replyTo: 5, text: "x" }))[0]).toBe(400);
+    expect((await error({ to: ["zuzana@example.net"], topic: { root: bob.topics[0]!.rootId }, text: "x" }))[0]).toBe(400);
+    expect((await error({ to: ["zuzana@example.net"], replyTo: bob.messages[0]!.id, text: "x" }))[0]).toBe(400);
+    // A subject is no longer part of the request; one sent anyway is ignored (Karel's chat, so Bob's composer is not moved).
+    expect((await error({ chatId: karel.chat.id, subject: "Ignored", text: "x" }))[0]).toBe(201);
+    // The accepted forms.
+    const reply = await json<SendResult>(await post({ chatId: bob.chat.id, replyTo: bob.messages[0]!.id, text: "Zaplaceno." }));
+    expect(reply.message.replyCard).toMatchObject({ messageId: bob.messages[0]!.id, clickable: true });
+    const named = await json<SendResult>(await post({ to: ["zuzana@example.net"], topic: { label: "Hory" }, text: "Pojedeš?" }));
+    expect(named.message.subject).toBe("Hory");
+    const view = await json<ChatView>(await api(bridge, `/api/chats/${bob.chat.id}`));
+    expect(view.composerTopic).toBe(bob.messages[0]!.id);
+    expect(view.topics.length).toBe(4);
   });
 
   it("serves attachments and originals as downloads, never as pages", async () => {

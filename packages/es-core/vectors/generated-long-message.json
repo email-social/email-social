@@ -52,7 +52,10 @@
         "subject": "Zápis z porady",
         "inReplyTo": null,
         "references": [],
-        "textSha256": "6cbc44600c5a08ae8f5c33e33ad3d12d63a78cc4c1cd88c051e572b80a57dda4"
+        "textSha256": "6cbc44600c5a08ae8f5c33e33ad3d12d63a78cc4c1cd88c051e572b80a57dda4",
+        "topicRoot": null,
+        "topicLabel": null,
+        "replyTo": null
       },
       "requestReceipts": []
     },

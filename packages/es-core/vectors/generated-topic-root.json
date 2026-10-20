@@ -1,0 +1,85 @@
+{
+  "description": "The root of a named topic written by es-core: Subject is the label, no threading headers, email.topicRoot is the message's own Message-ID and email.topicLabel the name.",
+  "source": "generated",
+  "input": {
+    "kind": "message",
+    "outgoing": {
+      "from": {
+        "name": "Alice Example",
+        "address": "alice@example.com"
+      },
+      "to": [
+        {
+          "name": "Bob",
+          "address": "bob@example.org"
+        }
+      ],
+      "subject": "Trip to the hills",
+      "text": "Shall we take the 7:40 train on Saturday?\n",
+      "es": {
+        "topicRoot": "self",
+        "topicLabel": "Trip to the hills"
+      }
+    },
+    "options": {
+      "date": "2026-03-03T08:00:00Z",
+      "messageId": "<es-vector-7@mail.example.com>"
+    }
+  },
+  "raw": "Date: Tue, 3 Mar 2026 08:00:00 +0000\r\nFrom: Alice Example <alice@example.com>\r\nTo: Bob <bob@example.org>\r\nSubject: Trip to the hills\r\nMessage-ID: <es-vector-7@mail.example.com>\r\nMIME-Version: 1.0\r\nContent-Type: multipart/mixed; boundary=\"=_es_1555dc8d87e214bef00dadca\"\r\n\r\nThis is a multi-part message in MIME format.\r\n\r\n--=_es_1555dc8d87e214bef00dadca\r\nContent-Type: text/plain; charset=utf-8\r\nContent-Transfer-Encoding: 7bit\r\n\r\nShall we take the 7:40 train on Saturday?\r\n\r\n--=_es_1555dc8d87e214bef00dadca\r\nContent-Type: application/vnd.email-social.message+json\r\nContent-Transfer-Encoding: base64\r\nContent-Disposition: attachment; filename=\"email-social.json\"\r\n\r\newogICIkdHlwZSI6ICJlcy5zb2NpYWwucG9zdCIsCiAgInZhbHVlIjogewogICAgInRleHQiOiAi\r\nU2hhbGwgd2UgdGFrZSB0aGUgNzo0MCB0cmFpbiBvbiBTYXR1cmRheT9cbiIsCiAgICAidmlhIjog\r\nImFsaWNlQGV4YW1wbGUuY29tIiwKICAgICJjcmVhdGVkQXQiOiAiMjAyNi0wMy0wM1QwODowMDow\r\nMC4wMDBaIiwKICAgICJlbWFpbCI6IHsKICAgICAgIm1lc3NhZ2VJZCI6ICI8ZXMtdmVjdG9yLTdA\r\nbWFpbC5leGFtcGxlLmNvbT4iLAogICAgICAic3ViamVjdCI6ICJUcmlwIHRvIHRoZSBoaWxscyIs\r\nCiAgICAgICJ0b3BpY1Jvb3QiOiAiPGVzLXZlY3Rvci03QG1haWwuZXhhbXBsZS5jb20+IiwKICAg\r\nICAgInRvcGljTGFiZWwiOiAiVHJpcCB0byB0aGUgaGlsbHMiCiAgICB9CiAgfQp9Cg==\r\n--=_es_1555dc8d87e214bef00dadca--\r\n",
+  "expected": {
+    "id": "<es-vector-7@mail.example.com>",
+    "from": {
+      "name": "Alice Example",
+      "address": "alice@example.com"
+    },
+    "to": [
+      {
+        "name": "Bob",
+        "address": "bob@example.org"
+      }
+    ],
+    "cc": [],
+    "replyTo": [],
+    "date": "2026-03-03T08:00:00.000Z",
+    "subject": "Trip to the hills",
+    "text": "Shall we take the 7:40 train on Saturday?\n",
+    "textSource": "plain",
+    "es": {
+      "$type": "es.social.post",
+      "author": null,
+      "text": "Shall we take the 7:40 train on Saturday?\n",
+      "via": "alice@example.com",
+      "createdAt": "2026-03-03T08:00:00.000Z",
+      "email": {
+        "messageId": "<es-vector-7@mail.example.com>",
+        "subject": "Trip to the hills",
+        "inReplyTo": null,
+        "references": [],
+        "textSha256": null,
+        "topicRoot": "<es-vector-7@mail.example.com>",
+        "topicLabel": "Trip to the hills",
+        "replyTo": null
+      },
+      "requestReceipts": []
+    },
+    "attachments": [],
+    "refs": {
+      "messageId": "<es-vector-7@mail.example.com>",
+      "inReplyTo": [],
+      "references": []
+    },
+    "delivery": {
+      "listHeaders": [],
+      "listId": null,
+      "autoSubmitted": null,
+      "precedence": null,
+      "returnPath": null
+    }
+  },
+  "split": {
+    "fresh": "Shall we take the 7:40 train on Saturday?",
+    "quoted": "",
+    "signature": ""
+  }
+}

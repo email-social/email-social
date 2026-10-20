@@ -15,7 +15,7 @@ import { readFile, realpath, stat } from "node:fs/promises";
 import { createServer, type IncomingMessage, type Server, type ServerResponse } from "node:http";
 import type { AddressInfo } from "node:net";
 import { extname, join, sep } from "node:path";
-import { canonicalAddress, parseMessage } from "@email-social/es-core";
+import { canonicalAddress, collapse, parseMessage } from "@email-social/es-core";
 import { WebSocketServer, type WebSocket } from "ws";
 import { ImapSmtpAdapter } from "./adapters/imap-smtp.js";
 import { MaildirAdapter } from "./adapters/maildir.js";
@@ -24,7 +24,7 @@ import type { LoginRequest, Person, SendRequest, ServerEvent, ServerSettings, Se
 import { MetadataCache } from "./cache.js";
 import { MemoryStore, type AccountConfig, type CredentialStore } from "./credentials.js";
 import { PRESETS } from "./providers.js";
-import { MailSession } from "./session.js";
+import { MailSession, TOPIC_LABEL_MAX } from "./session.js";
 
 export interface BridgeOptions {
   /** Directory of the built web client (index.html and assets/); null serves the API only. */
@@ -127,6 +127,27 @@ function loginConfig(body: unknown): { config: AccountConfig; remember: boolean 
     },
     remember: b.remember === true,
   };
+}
+
+/**
+ * The `topic` of POST /api/messages: undefined, { root } or { label }, with the
+ * label's white space collapsed; anything else is a 400. Whether the root is
+ * a topic of the chat is checked by the session.
+ */
+function checkTopic(value: unknown): SendRequest["topic"] {
+  if (value === undefined) return undefined;
+  if (typeof value !== "object" || value === null || Array.isArray(value)) throw new HttpError(400, "topic must be { root } or { label }");
+  const topic = value as Record<string, unknown>;
+  const hasRoot = topic.root !== undefined;
+  const hasLabel = topic.label !== undefined;
+  if (hasRoot === hasLabel) throw new HttpError(400, "topic must have either root or label");
+  if (hasRoot) {
+    if (typeof topic.root !== "string" || topic.root === "") throw new HttpError(400, "topic.root must be a message id");
+    return { root: topic.root };
+  }
+  const label = typeof topic.label === "string" ? collapse(topic.label) : "";
+  if (label === "" || label.length > TOPIC_LABEL_MAX) throw new HttpError(400, `A topic name needs 1 to ${TOPIC_LABEL_MAX} characters`);
+  return { label };
 }
 
 function send(res: ServerResponse, status: number, body: unknown): void {
@@ -397,13 +418,18 @@ export async function startBridge(options: BridgeOptions): Promise<RunningBridge
       if (typeof body?.text !== "string" || body.text.trim() === "") throw new HttpError(400, "The message is empty");
       if (body.chatId !== undefined && typeof body.chatId !== "string") throw new HttpError(400, "chatId must be a string");
       if (body.to !== undefined && (!Array.isArray(body.to) || body.to.some((a) => typeof a !== "string"))) throw new HttpError(400, "to must be a list of addresses");
-      if (body.subject !== undefined && typeof body.subject !== "string") throw new HttpError(400, "subject must be a string");
       if ((body.chatId === undefined) === (body.to === undefined)) throw new HttpError(400, "Send either chatId (a reply) or to (a new chat)");
+      if (body.replyTo !== undefined && typeof body.replyTo !== "string") throw new HttpError(400, "replyTo must be a message id");
+      const topic = checkTopic(body.topic);
+      if (topic !== undefined && "root" in topic && body.to !== undefined) throw new HttpError(400, "A new chat takes only a topic name");
+      if (body.replyTo !== undefined && body.to !== undefined) throw new HttpError(400, "A new chat has nothing to reply to");
+      if (body.replyTo !== undefined && topic !== undefined) throw new HttpError(400, "A reply continues the topic of the message it answers; send replyTo or topic, not both");
       const request: SendRequest = {
         text: body.text,
         ...(body.chatId !== undefined ? { chatId: body.chatId } : {}),
         ...(body.to !== undefined ? { to: body.to } : {}),
-        ...(body.subject !== undefined ? { subject: body.subject } : {}),
+        ...(body.replyTo !== undefined ? { replyTo: body.replyTo } : {}),
+        ...(topic !== undefined ? { topic } : {}),
       };
       if (request.chatId !== undefined && (await ready().chat(request.chatId)) === null) throw new HttpError(404, "No such chat");
       return send(res, 201, await ready().send(request));

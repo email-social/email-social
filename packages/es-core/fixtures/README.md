@@ -58,8 +58,8 @@ whole corpus threaded into conversations).
 
 How ordinary clients quote the message they answer, one reply per format, for
 `splitQuoted` (expected `fresh` text in `test/split-quoted.test.ts`). The
-quoted original is always a message from Alice; the replies come from
-invented people. The same rules as above apply (reconstructed, example
+quoted original is a message from Alice (the two `*-fragment` files answer
+messages of the corpus above); the replies come from invented people. The same rules as above apply (reconstructed, example
 domains only, CRLF, byte-exact). The replies in the corpus above
 (`gmail-web-reply`, `ios-mail-reply`, `outlook-*`, `apple-mail-fr-forward`,
 `seznam-webmail`, `mutt-iso-8859-2`, `mailing-list-footer`,
@@ -77,7 +77,8 @@ with a remote domain set to HTML-only MIME; they test the HTML path
 | `replies/gmail-web-de.eml` | Gmail web, German UI | `Am Di., 3. März 2026 um 10:15 Uhr schrieb Name <` / `address>:` (name after the verb, wrapped inside the address) | German Gmail word order |
 | `replies/gmail-web-fr.eml` | Gmail web, French UI | `Le mar. 3 mars 2026 à 10:15, Name <address> a` / `écrit :` with the French space before the colon | French Gmail attribution |
 | `replies/gmail-app-en.eml` | Gmail app for Android | one-line answer; `On Tue, 3 Mar 2026, 10:15 Name, <address> wrote:` | the app's attribution has a comma after the name |
-| `replies/gmail-long-quote.eml` | Gmail web, English UI | a two-line answer above an attribution and 40 quoted lines (a long agenda); the quote card and "Open original" end-to-end case | Gmail quotes the whole message it answers |
+| `replies/gmail-long-quote.eml` | Gmail web, English UI | a two-line answer above an attribution and 40 quoted lines (a long agenda): a whole-message quote (no card) and the "Open original" end-to-end case | Gmail quotes the whole message it answers |
+| `replies/gmail-web-fragment.eml` | Gmail web, English UI, reply to `thunderbird-flowed.eml` | the quote cut down to one interior sentence of the original (`> Jana už říkala, že by šla taky.`) under a wrapped attribution: a deliberate reply, so `quotedFragmentOf` returns the sentence and `replyCardOf` draws a card | Gmail quotes only the text selected when Reply is pressed; the same layout results when the sender deletes the rest of the quote |
 | `replies/gmail-web-signature.eml` | Gmail web with a signature | `-- ` signature above the quote (Gmail puts the signature before the quoted text) | text/plain as Gmail generates it |
 | `replies/gmail-quote-html-only.eml` | Gmail web, HTML part only | `gmail_signature_prefix`/`gmail_signature`, the `gmail_quote` container with `gmail_attr` and `<blockquote class="gmail_quote">` | Gmail's current class names |
 | `replies/outlook-desktop-en.eml` | Outlook (Microsoft 365), English | header block `From:`/`Sent:`/`To:`/`Subject:` without prefix, original not quoted; trailing space after the From address | text/plain alternative Outlook writes for an HTML reply |
@@ -86,6 +87,7 @@ with a remote domain set to HTML-only MIME; they test the HTML path
 | `replies/outlook-desktop-de.eml` | Outlook (Microsoft 365), German | `Von:`/`Gesendet:`/`An:`/`Cc:`/`Betreff:`; `AW:` subject | German Outlook labels |
 | `replies/outlook-desktop-fr.eml` | Outlook (Microsoft 365), French | `De :`/`Envoyé :`/`À :`/`Objet :` with spaces before the colons; `RE :` subject | French Outlook labels |
 | `replies/outlook-desktop-html-only.eml` | Outlook (Microsoft 365), HTML part only | Word HTML: the `border-top` divider `<div>` and `<b>From:</b>` labels, `<o:p>&nbsp;</o:p>` paragraphs | Word's filtered HTML without the Microsoft namespace URLs |
+| `replies/outlook-desktop-fragment.eml` | Outlook (Microsoft 365), Czech, reply to `gmail-web-attachment.eml` | a Czech header block followed by one interior sentence of the original instead of all of it; the original has a PDF attachment, which the card names | Outlook does not prefix the original; a sender who keeps one sentence under the header block leaves exactly this |
 | `replies/outlook-web.eml` | Outlook on the web / new Outlook | a line of 32 underscores directly above the header block | text/plain alternative of Outlook on the web |
 | `replies/outlook-web-html-only.eml` | Outlook on the web, HTML part only | `elementToProof` divs, `<div id="appendonsend">`, `<hr>`, `<div id="divRplyFwdMsg">` with bold labels | Outlook on the web's element ids |
 | `replies/outlook-ios.eml` | Outlook for iOS | one-word answer, `Get Outlook for iOS` mobile signature, underscore divider | the app appends its signature line above the divider |

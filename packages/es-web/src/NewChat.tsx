@@ -1,6 +1,7 @@
 import type { ContactView, SendRequest } from "@email-social/es-bridge/api";
 import type { Ref } from "preact";
 import { useState } from "preact/hooks";
+import { TopicControl } from "./ChatPane.js";
 import { parseRecipient } from "./format.js";
 
 interface Props {
@@ -13,12 +14,18 @@ interface Props {
   initial?: readonly string[];
 }
 
-/** A new chat: recipients (suggested from contacts, any address accepted), an optional subject, the text. */
+/**
+ * A new chat: recipients (suggested from contacts, any address accepted), the
+ * text, and optionally a topic name (the same "+ Topic" control as in a chat).
+ * There is no subject field: without a name the bridge writes the carrier
+ * subject, "Message from" and the account's name.
+ */
 export function NewChat({ contacts, onSend, onCancel, headingRef, initial = [] }: Props) {
   const [recipients, setRecipients] = useState<string[]>([...initial]);
   const [pending, setPending] = useState("");
   const [status, setStatus] = useState("");
   const [busy, setBusy] = useState(false);
+  const [topic, setTopic] = useState<string | null>(null);
   const names = new Map(contacts.map((c) => [c.address, c.name]));
 
   /** Adds what is typed; returns the recipients, or null (with a message) when it is not an address. */
@@ -51,11 +58,11 @@ export function NewChat({ contacts, onSend, onCancel, headingRef, initial = [] }
       setStatus("Write a message first.");
       return;
     }
-    const subject = String(data.get("subject") ?? "").trim();
+    const label = topic === null ? "" : topic.replace(/\s+/g, " ").trim();
     setBusy(true);
     setStatus("Sending…");
     try {
-      await onSend({ to, text, ...(subject !== "" ? { subject } : {}) });
+      await onSend({ to, text, ...(label !== "" ? { topic: { label } } : {}) });
     } catch (e) {
       setStatus(`Not sent: ${e instanceof Error ? e.message : String(e)}`);
     } finally {
@@ -103,13 +110,9 @@ export function NewChat({ contacts, onSend, onCancel, headingRef, initial = [] }
           <option key={c.address} value={`${c.name} <${c.address}>`} />
         ))}
       </datalist>
-      <label for="subject">Subject (optional)</label>
-      <input id="subject" name="subject" aria-describedby="subject-hint" />
-      <p id="subject-hint" class="hint">
-        Without one, the first line of the message is used.
-      </p>
       <label for="text">Message</label>
       <textarea id="text" name="text" rows={5} />
+      <TopicControl id="new-chat" topics={[]} bound={null} label={topic} onLabel={setTopic} onBind={() => undefined} />
       <p class="actions">
         <button type="submit" disabled={busy}>
           Send

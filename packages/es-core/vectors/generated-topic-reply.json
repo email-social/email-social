@@ -1,0 +1,111 @@
+{
+  "description": "A deliberate reply inside that topic written by es-core: Subject \"Re: \" + the root's base subject, In-Reply-To/References to the message answered, email.topicRoot and email.topicLabel, and email.replyTo with the answered message's id, sender and excerpt.",
+  "source": "generated",
+  "input": {
+    "kind": "message",
+    "outgoing": {
+      "from": {
+        "name": "Bob",
+        "address": "bob@example.org"
+      },
+      "to": [
+        {
+          "name": "Alice Example",
+          "address": "alice@example.com"
+        }
+      ],
+      "subject": "Re: Trip to the hills",
+      "text": "Yes, 7:40 works. I'll bring the map.\n",
+      "inReplyTo": {
+        "messageId": "<es-vector-7@mail.example.com>",
+        "references": [],
+        "subject": "Trip to the hills"
+      },
+      "es": {
+        "topicRoot": "<es-vector-7@mail.example.com>",
+        "topicLabel": "Trip to the hills",
+        "replyTo": {
+          "messageId": "<es-vector-7@mail.example.com>",
+          "from": {
+            "name": "Alice Example",
+            "address": "alice@example.com"
+          },
+          "excerpt": "Shall we take the 7:40 train on Saturday?"
+        }
+      }
+    },
+    "options": {
+      "date": "2026-03-03T08:20:00Z",
+      "messageId": "<es-vector-8@mail.example.org>"
+    }
+  },
+  "raw": "Date: Tue, 3 Mar 2026 08:20:00 +0000\r\nFrom: Bob <bob@example.org>\r\nTo: Alice Example <alice@example.com>\r\nSubject: Re: Trip to the hills\r\nMessage-ID: <es-vector-8@mail.example.org>\r\nIn-Reply-To: <es-vector-7@mail.example.com>\r\nReferences: <es-vector-7@mail.example.com>\r\nMIME-Version: 1.0\r\nContent-Type: multipart/mixed; boundary=\"=_es_187bc6dd0b056b1a23741d6c\"\r\n\r\nThis is a multi-part message in MIME format.\r\n\r\n--=_es_187bc6dd0b056b1a23741d6c\r\nContent-Type: text/plain; charset=utf-8\r\nContent-Transfer-Encoding: 7bit\r\n\r\nYes, 7:40 works. I'll bring the map.\r\n\r\n--=_es_187bc6dd0b056b1a23741d6c\r\nContent-Type: application/vnd.email-social.message+json\r\nContent-Transfer-Encoding: base64\r\nContent-Disposition: attachment; filename=\"email-social.json\"\r\n\r\newogICIkdHlwZSI6ICJlcy5zb2NpYWwucG9zdCIsCiAgInZhbHVlIjogewogICAgInRleHQiOiAi\r\nWWVzLCA3OjQwIHdvcmtzLiBJJ2xsIGJyaW5nIHRoZSBtYXAuXG4iLAogICAgInZpYSI6ICJib2JA\r\nZXhhbXBsZS5vcmciLAogICAgImNyZWF0ZWRBdCI6ICIyMDI2LTAzLTAzVDA4OjIwOjAwLjAwMFoi\r\nLAogICAgImVtYWlsIjogewogICAgICAibWVzc2FnZUlkIjogIjxlcy12ZWN0b3ItOEBtYWlsLmV4\r\nYW1wbGUub3JnPiIsCiAgICAgICJzdWJqZWN0IjogIlJlOiBUcmlwIHRvIHRoZSBoaWxscyIsCiAg\r\nICAgICJpblJlcGx5VG8iOiAiPGVzLXZlY3Rvci03QG1haWwuZXhhbXBsZS5jb20+IiwKICAgICAg\r\nInJlZmVyZW5jZXMiOiBbCiAgICAgICAgIjxlcy12ZWN0b3ItN0BtYWlsLmV4YW1wbGUuY29tPiIK\r\nICAgICAgXSwKICAgICAgInRvcGljUm9vdCI6ICI8ZXMtdmVjdG9yLTdAbWFpbC5leGFtcGxlLmNv\r\nbT4iLAogICAgICAidG9waWNMYWJlbCI6ICJUcmlwIHRvIHRoZSBoaWxscyIsCiAgICAgICJyZXBs\r\neVRvIjogewogICAgICAgICJtZXNzYWdlSWQiOiAiPGVzLXZlY3Rvci03QG1haWwuZXhhbXBsZS5j\r\nb20+IiwKICAgICAgICAiZnJvbSI6IHsKICAgICAgICAgICJuYW1lIjogIkFsaWNlIEV4YW1wbGUi\r\nLAogICAgICAgICAgImFkZHJlc3MiOiAiYWxpY2VAZXhhbXBsZS5jb20iCiAgICAgICAgfSwKICAg\r\nICAgICAiZXhjZXJwdCI6ICJTaGFsbCB3ZSB0YWtlIHRoZSA3OjQwIHRyYWluIG9uIFNhdHVyZGF5\r\nPyIKICAgICAgfQogICAgfQogIH0KfQo=\r\n--=_es_187bc6dd0b056b1a23741d6c--\r\n",
+  "expected": {
+    "id": "<es-vector-8@mail.example.org>",
+    "from": {
+      "name": "Bob",
+      "address": "bob@example.org"
+    },
+    "to": [
+      {
+        "name": "Alice Example",
+        "address": "alice@example.com"
+      }
+    ],
+    "cc": [],
+    "replyTo": [],
+    "date": "2026-03-03T08:20:00.000Z",
+    "subject": "Re: Trip to the hills",
+    "text": "Yes, 7:40 works. I'll bring the map.\n",
+    "textSource": "plain",
+    "es": {
+      "$type": "es.social.post",
+      "author": null,
+      "text": "Yes, 7:40 works. I'll bring the map.\n",
+      "via": "bob@example.org",
+      "createdAt": "2026-03-03T08:20:00.000Z",
+      "email": {
+        "messageId": "<es-vector-8@mail.example.org>",
+        "subject": "Re: Trip to the hills",
+        "inReplyTo": "<es-vector-7@mail.example.com>",
+        "references": [
+          "<es-vector-7@mail.example.com>"
+        ],
+        "textSha256": null,
+        "topicRoot": "<es-vector-7@mail.example.com>",
+        "topicLabel": "Trip to the hills",
+        "replyTo": {
+          "messageId": "<es-vector-7@mail.example.com>",
+          "from": {
+            "name": "Alice Example",
+            "address": "alice@example.com"
+          },
+          "excerpt": "Shall we take the 7:40 train on Saturday?"
+        }
+      },
+      "requestReceipts": []
+    },
+    "attachments": [],
+    "refs": {
+      "messageId": "<es-vector-8@mail.example.org>",
+      "inReplyTo": [
+        "<es-vector-7@mail.example.com>"
+      ],
+      "references": [
+        "<es-vector-7@mail.example.com>"
+      ]
+    },
+    "delivery": {
+      "listHeaders": [],
+      "listId": null,
+      "autoSubmitted": null,
+      "precedence": null,
+      "returnPath": null
+    }
+  },
+  "split": {
+    "fresh": "Yes, 7:40 works. I'll bring the map.",
+    "quoted": "",
+    "signature": ""
+  }
+}

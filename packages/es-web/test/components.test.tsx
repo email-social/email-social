@@ -3,12 +3,13 @@ import { describe, expect, it } from "vitest";
 import type { ChatSummary, ChatView, ContactDetail, MessageView, OtherSummary, ProviderPreset } from "@email-social/es-bridge/api";
 import { Bubble } from "../src/Bubble.js";
 import { ChatList } from "../src/ChatList.js";
-import { ChatPane } from "../src/ChatPane.js";
+import { ChatPane, Composer, Messages, TopicControl, TopicsFilter } from "../src/ChatPane.js";
 import { ContactPage } from "../src/ContactPage.js";
 import { LoginForm } from "../src/LoginForm.js";
 import { NewChat } from "../src/NewChat.js";
 import { OtherMail } from "../src/OtherMail.js";
 import { SigningIn, StatusBar } from "../src/Status.js";
+import { topicName } from "../src/format.js";
 import { VerificationBadgeSlot } from "../src/VerificationBadgeSlot.js";
 
 const NOW = new Date("2026-03-20T18:30:00Z");
@@ -59,7 +60,11 @@ const theirs: MessageView = {
   originalPath: "/api/messages/inbox%3Aa.eml/original",
   status: null,
   emailSocial: false,
-  replyContext: { kind: "parent", messageId: "<k1@example.com>", from: "Alice Dvořáková", fromMe: true, excerpt: "Jedeš o víkendu na chatu?", attachment: null },
+  topic: { rootId: "<k1@example.com>", label: null, kind: "plain" },
+  topicStart: false,
+  replyCard: { messageId: "<k1@example.com>", from: "Alice Dvořáková", fromMe: true, excerpt: "Jedeš o víkendu na chatu?", attachment: null, clickable: true },
+  subjectNote: null,
+  interleaved: false,
 };
 
 const mine: MessageView = {
@@ -75,7 +80,8 @@ const mine: MessageView = {
   textSource: "plain",
   attachments: [],
   status: "read",
-  replyContext: { kind: "subject", subject: "Víkend na chatě" },
+  topicStart: true,
+  replyCard: null,
 };
 
 describe("chat list", () => {
@@ -123,7 +129,8 @@ describe("Other mail", () => {
 });
 
 describe("message bubbles", () => {
-  const bubble = (message: MessageView) => render(<Bubble message={message} token="tok" group={false} onPerson={noop} onQuote={noop} now={NOW} />);
+  const bubble = (message: MessageView, extra: { onReply?: (m: MessageView) => void; topicChip?: string } = {}) =>
+    render(<Bubble message={message} token="tok" group={false} onPerson={noop} onQuote={noop} now={NOW} {...extra} />);
 
   it("shows only what the sender wrote, as text: no quoted text anywhere, the signature collapsed", () => {
     const html = bubble(theirs);
@@ -135,21 +142,26 @@ describe("message bubbles", () => {
     expect(html).toMatch(/<details class="signature"><summary>Show signature<\/summary><p class="text">-- \nBob<\/p>/);
   });
 
-  it("puts a quote card above the text: who is answered in bold, the excerpt muted, a button to the answered message", () => {
+  it("puts a quote card above a deliberate reply: who is answered in bold, the excerpt muted, a button to the answered message", () => {
     const html = bubble(theirs);
     expect(html).toMatch(
       /<button type="button" class="quote-card" data-target="&lt;k1@example.com>" title="Show the message this answers"><span class="sr-only">In reply to <\/span><span class="quote-from">You<\/span><span class="quote-excerpt">Jedeš o víkendu na chatu\?<\/span><\/button><p class="text">/,
     );
-    const named = bubble({ ...theirs, replyContext: { kind: "parent", messageId: "<x@example.org>", from: "Karel Holub", fromMe: false, excerpt: "Fotky jsou v příloze.", attachment: "výlet.zip" } });
+    const named = bubble({ ...theirs, replyCard: { messageId: "<x@example.org>", from: "Karel Holub", fromMe: false, excerpt: "Fotky jsou v příloze.", attachment: "výlet.zip", clickable: true } });
     expect(named).toContain('<span class="quote-from">Karel Holub</span>');
     expect(named).toContain('<span class="quote-attachment"><span aria-hidden="true">📎 </span><span class="sr-only">Attachment: </span>výlet.zip</span>');
   });
 
-  it("shows a subject card with the subject alone, not as a button", () => {
+  it("shows a card whose message is not in this chat (or not in the mailbox) as text, not as a button", () => {
+    const html = bubble({ ...theirs, replyCard: { messageId: null, from: "Karel Holub", fromMe: false, excerpt: "Kdy dorazíš?", attachment: null, clickable: false } });
+    expect(html).toContain('<p class="quote-card"><span class="sr-only">In reply to </span><span class="quote-from">Karel Holub</span><span class="quote-excerpt">Kdy dorazíš?</span></p>');
+    expect(html).not.toContain("data-target");
+  });
+
+  it("shows no card for a continuation, and never a subject card", () => {
     const html = bubble(mine);
-    expect(html).toContain('<p class="quote-card subject"><span class="quote-excerpt">Víkend na chatě</span></p>');
-    expect(html).not.toContain('class="quote-card"><span class="quote-from"');
-    expect(bubble({ ...mine, replyContext: null })).not.toContain("quote-card");
+    expect(html).not.toContain("quote-card");
+    expect(html).not.toContain("Víkend na chatě");
   });
 
   it("makes the sender's name a button that opens the contact page, and leaves the verification slot empty", () => {
@@ -164,9 +176,11 @@ describe("message bubbles", () => {
     expect(html).toContain("Read");
   });
 
-  it("offers the original message in the ⋯ menu, as a download through the bridge", () => {
-    const html = bubble(mine);
-    expect(html).toMatch(/<details class="message-menu"><summary aria-label="Message actions">⋯<\/summary><ul><li><a href="\/api\/messages\/inbox%3Aa.eml\/original\?token=tok" download>Open original<\/a><\/li><\/ul><\/details>/);
+  it("offers Reply (in a chat) and the original message in the ⋯ menu, as a download through the bridge", () => {
+    expect(bubble(mine, { onReply: noop })).toMatch(
+      /<details class="message-menu"><summary aria-label="Message actions">⋯<\/summary><ul><li><button type="button" class="menu-reply">Reply<\/button><\/li><li><a href="\/api\/messages\/inbox%3Aa.eml\/original\?token=tok" download>Open original<\/a><\/li><\/ul><\/details>/,
+    );
+    expect(bubble(mine)).toMatch(/<details class="message-menu"><summary aria-label="Message actions">⋯<\/summary><ul><li><a href="\/api\/messages\/inbox%3Aa.eml\/original\?token=tok" download>Open original<\/a><\/li><\/ul><\/details>/);
   });
 
   it("lists attachments as named download links and notes HTML-only mail", () => {
@@ -182,33 +196,85 @@ describe("message bubbles", () => {
     expect(html).toContain('<p class="text empty-text">(no new text; the full message is under ⋯ → Open original)</p>');
     expect(html).not.toContain("wrote:");
   });
+
+  it("shows a changed subject as one small line, and nothing else changes", () => {
+    const html = bubble({ ...theirs, subjectNote: "Invoice 114 [EXTERNAL]" });
+    expect(html).toContain('<p class="note subject-note">Subject: Invoice 114 [EXTERNAL]</p>');
+    expect(bubble(theirs)).not.toContain("subject-note");
+  });
+
+  it("renders a point-by-point answer line by line, the quoted lines muted without their '>', under a note", () => {
+    const html = bubble({ ...theirs, interleaved: true, fresh: "> Kdy dorazíš?\nV deset.\n>> Vlakem?\nAno." });
+    expect(html).toContain('<p class="note">answered point by point</p>');
+    expect(html).toContain(
+      '<p class="text interleaved"><span class="quoted-line">Kdy dorazíš?</span>\n<span class="plain-line">V deset.</span>\n<span class="quoted-line">Vlakem?</span>\n<span class="plain-line">Ano.</span></p>',
+    );
+    expect(bubble({ ...theirs, fresh: "> not interleaved" })).not.toContain("quoted-line");
+  });
+
+  it("hides Show signature on own messages whose signature is, or ends with, the Email Social footer", () => {
+    const footer = "Sent with Email Social. Reply as you normally would; this is an ordinary e-mail.";
+    expect(bubble({ ...mine, signature: `-- \n${footer}` })).not.toContain("Show signature");
+    expect(bubble({ ...mine, signature: `-- \nAlice\n${footer}` })).not.toContain("Show signature");
+    expect(bubble({ ...mine, signature: "-- \nAlice" })).toContain("Show signature");
+    expect(bubble({ ...theirs, signature: `-- \n${footer}` })).toContain("Show signature");
+  });
+
+  it("shows the topic chip it is given, as text", () => {
+    expect(bubble(mine, { topicChip: "Výlet" })).toContain('<p class="topic-run"><span class="sr-only">Topic: </span>Výlet</p>');
+    expect(bubble(mine)).not.toContain("topic-run");
+  });
 });
 
 describe("chat pane", () => {
+  const plainTopic = { rootId: "<1@x>", label: null, base: "Kdy dorazíš?", kind: "carrier" as const, count: 2 };
+  const named = { rootId: "<3@x>", label: "Fotky z hor", base: "Fotky z hor", kind: "named" as const, count: 2 };
   const view: ChatView = {
     chat: chats[0]!,
     messages: [
-      { ...mine, key: "1", id: "<1@x>", subject: "Kdy dorazíš?", replyContext: { kind: "subject", subject: "Kdy dorazíš?" } },
-      { ...theirs, key: "2", id: "<2@x>", subject: "Kdy dorazíš?", replyContext: { kind: "parent", messageId: "<1@x>", from: "Alice", fromMe: true, excerpt: "Kdy?", attachment: null } },
-      { ...theirs, key: "3", id: "<3@x>", subject: "Fotky", replyContext: { kind: "subject", subject: "Fotky" } },
-      { ...theirs, key: "4", id: "<4@x>", subject: "Fotky", replyContext: null },
+      { ...mine, key: "1", id: "<1@x>", subject: "Kdy dorazíš?", topic: { rootId: "<1@x>", label: null, kind: "carrier" }, topicStart: true, replyCard: null },
+      { ...theirs, key: "2", id: "<2@x>", subject: "Kdy dorazíš?", topic: { rootId: "<1@x>", label: null, kind: "carrier" }, topicStart: false, replyCard: { messageId: "<1@x>", from: "Alice", fromMe: true, excerpt: "Kdy?", attachment: null, clickable: true } },
+      { ...theirs, key: "3", id: "<3@x>", subject: "Fotky z hor", topic: { rootId: "<3@x>", label: "Fotky z hor", kind: "named" }, topicStart: true, replyCard: null },
+      { ...theirs, key: "4", id: "<4@x>", subject: "Fotky z hor", topic: { rootId: "<3@x>", label: "Fotky z hor", kind: "named" }, topicStart: false, replyCard: null },
     ],
+    topics: [plainTopic, named],
+    composerTopic: "<1@x>",
   };
-  const pane = (v: ChatView) => render(<ChatPane view={v} token="tok" headingRef={{ current: null }} onSend={asyncNoop} onPerson={noop} now={NOW} />);
+  const single: ChatView = { ...view, messages: view.messages.slice(0, 2), topics: [plainTopic] };
+  const pane = (v: ChatView) => render(<ChatPane view={v} token="tok" headingRef={{ current: null }} onSend={async () => ({ chatId: "", message: mine })} onPerson={noop} now={NOW} />);
 
-  it("has no subject separators: subjects appear only in cards", () => {
+  it("has no separators or subject cards: a topic chip on the first bubble of each run, when the chat has more than one topic", () => {
     const html = pane(view);
     expect(html).not.toContain("subject-separator");
+    expect(html).not.toContain("quote-card subject");
     expect(html.match(/class="bubble /g)).toHaveLength(4);
-    expect([...html.matchAll(/<p class="quote-card subject"><span class="quote-excerpt">([^<]*)<\/span><\/p>/g)].map((m) => m[1])).toEqual(["Kdy dorazíš?", "Fotky"]);
+    expect([...html.matchAll(/<p class="topic-run"><span class="sr-only">Topic: <\/span>([^<]*)<\/p>/g)].map((m) => m[1])).toEqual(["Ongoing chat", "Fotky z hor"]);
     expect(html.match(/data-target=/g)).toHaveLength(1);
+  });
+
+  it("shows a chat with a single topic without chips or a topic filter, and offers '+ Topic' beside the text box", () => {
+    const html = pane(single);
+    expect(html).not.toContain("topic-run");
+    expect(html).not.toContain("All topics");
+    expect(html).toContain('<button type="button" class="topic-chip">+ Topic</button>');
+  });
+
+  it("with more topics, names the bound topic on the composer chip and offers All topics in the header", () => {
+    const html = pane(view);
+    expect(html).toMatch(/<button type="button" class="topic-chip" aria-expanded="false" aria-controls="reply-topics"><span class="sr-only">Topic: <\/span>Ongoing chat <span aria-hidden="true">▾<\/span><\/button>/);
+    expect(html).toMatch(/<button type="button" class="topics-button" aria-expanded="false" aria-controls="topics-filter-list">All topics <span aria-hidden="true">▾<\/span><\/button>/);
+    expect(pane({ ...view, composerTopic: "<3@x>" })).toMatch(/class="topic-chip"[^>]*><span class="sr-only">Topic: <\/span>Fotky z hor </);
+  });
+
+  it("offers Reply on every bubble of a chat", () => {
+    expect(pane(view).match(/class="menu-reply">Reply</g)).toHaveLength(4);
   });
 
   it("marks every bubble with its message id, so a card can scroll to it", () => {
     expect(pane(view)).toMatch(/<li class="bubble mine" data-side="right" data-message-id="&lt;1@x>" tabIndex="-1"|<li class="bubble mine" data-side="right" data-message-id="&lt;1@x>" tabindex="-1"/);
   });
 
-  it("names the people in the heading as buttons and says how a reply is sent", () => {
+  it("names the people in the heading as buttons and says how a message is sent", () => {
     const html = pane(view);
     expect(html).toMatch(/<h2[^>]*>Karel Holub<\/h2>/);
     expect(html).toContain('<label for="reply">Message to Karel Holub</label>');
@@ -216,7 +282,48 @@ describe("chat pane", () => {
     const plain = pane({ ...view, chat: chats[1]! });
     expect(plain).toContain("Group of 3");
     expect(plain).toMatch(/<button type="button" class="person" data-address="jana@example.net">Jana Nováková<\/button>/);
-    expect(plain).toContain("sent as an ordinary e-mail, with the message you answer quoted below it");
+    expect(plain).toContain("sent as an ordinary e-mail");
+    expect(plain).toContain("choose Reply in its ⋯ menu");
+  });
+});
+
+describe("timeline pieces", () => {
+  const topics = [
+    { rootId: "<1@x>", label: null, base: "Kdy dorazíš?", kind: "carrier" as const, count: 1 },
+    { rootId: "<3@x>", label: "Fotky", base: "Fotky", kind: "named" as const, count: 1 },
+  ];
+  const runs = [
+    { ...mine, key: "1", id: "<1@x>", topic: { rootId: "<1@x>", label: null, kind: "carrier" as const }, topicStart: true },
+    { ...theirs, key: "3", id: "<3@x>", topic: { rootId: "<3@x>", label: "Fotky", kind: "named" as const }, topicStart: true },
+  ];
+
+  it("shows no run chips while the timeline is filtered to one topic", () => {
+    expect(render(<Messages messages={runs} token="tok" group={false} onPerson={noop} now={NOW} topics={topics} showRuns={true} />)).toContain("topic-run");
+    expect(render(<Messages messages={runs.slice(1)} token="tok" group={false} onPerson={noop} now={NOW} topics={topics} showRuns={false} />)).not.toContain("topic-run");
+  });
+
+  it("names the filtered topic in the header button", () => {
+    expect(render(<TopicsFilter topics={topics} filter="<3@x>" onFilter={noop} />)).toContain('class="topics-button" aria-expanded="false" aria-controls="topics-filter-list">Fotky <span aria-hidden="true">▾</span>');
+  });
+
+  it("shows the reply chip above the text box with the name and the excerpt, and a ✕ to cancel", () => {
+    const html = render(<Composer id="reply" label="Message" hint="" onSend={asyncNoop} replying={{ name: "Bob Svoboda", excerpt: "Jedu! Dřevo se hodí." }} onCancelReply={noop} />);
+    expect(html).toContain('<p class="reply-chip"><span>Replying to <strong>Bob Svoboda</strong> — Jedu! Dřevo se hodí.</span><button type="button" class="reply-cancel" aria-label="Cancel the reply">✕</button></p>');
+    expect(html.indexOf("reply-chip")).toBeLessThan(html.indexOf("<textarea"));
+  });
+
+  it("opens a short name field for a new topic, labelled, with what an empty name means", () => {
+    const html = render(<TopicControl id="reply" topics={[]} bound={null} label="" onLabel={noop} onBind={noop} />);
+    expect(html).toContain('<label for="reply-topic">Topic</label>');
+    expect(html).toMatch(/<input id="reply-topic" class="topic-name" value maxlength="200" autocomplete="off" aria-describedby="reply-topic-hint"\/>/);
+    expect(html).toContain("A name for this thread; leave empty for the ongoing chat.");
+  });
+
+  it("names topics by label, else subject, else 'Ongoing chat'", () => {
+    expect(topicName({ label: "Výlet", base: "Message from Alice", kind: "named" })).toBe("Výlet");
+    expect(topicName({ label: null, base: "Invoice 114", kind: "plain" })).toBe("Invoice 114");
+    expect(topicName({ label: null, base: "Message from Alice", kind: "carrier" })).toBe("Ongoing chat");
+    expect(topicName({ label: null, base: "", kind: "plain" })).toBe("Ongoing chat");
   });
 });
 
@@ -227,12 +334,13 @@ describe("new chat", () => {
   ];
   const html = render(<NewChat contacts={contacts} onSend={async () => undefined} onCancel={noop} />);
 
-  it("labels the recipient, subject and message fields, and suggests contacts", () => {
-    for (const id of ["recipient", "subject", "text"]) expect(html, id).toContain(`for="${id}"`);
+  it("labels the recipient and message fields, suggests contacts, and offers a topic instead of a subject", () => {
+    for (const id of ["recipient", "text"]) expect(html, id).toContain(`for="${id}"`);
     expect(html).toMatch(/<input[^>]*id="recipient"[^>]*list="contact-options"/);
     expect(html).toContain('<datalist id="contact-options"><option value="Karel Holub &lt;karel@example.org>"></option>');
     expect(html).toContain("Several recipients make a group");
-    expect(html).toContain("(optional)");
+    expect(html).not.toMatch(/subject/i);
+    expect(html).toContain('<button type="button" class="topic-chip">+ Topic</button>');
   });
 });
 

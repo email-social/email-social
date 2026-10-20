@@ -31,7 +31,10 @@
         "subject": "Hello Email.Social!",
         "inReplyTo": null,
         "references": [],
-        "textSha256": null
+        "textSha256": null,
+        "topicRoot": null,
+        "topicLabel": null,
+        "replyTo": null
       },
       "requestReceipts": []
     },

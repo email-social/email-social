@@ -15,25 +15,35 @@
 import { createHash } from "node:crypto";
 import {
   canonicalAddress,
+  carrierSubject,
   classifyMessage,
+  collapse,
   deriveContacts,
   extractPart,
   groupByParticipants,
+  isInterleaved,
   normalizeSubject,
   parseMessage,
   quoteForReply,
-  replyContextOf,
+  replyCardOf,
   replyTargetOf,
   serializeMessage,
   serializeReceipt,
   splitQuoted,
+  subjectKey,
+  subjectNoteOf,
+  topicsOf,
   type Chat,
+  type ChatTopics,
   type EsAddress,
   type EsMessage,
+  type EsOutgoing,
   type EsPartContent,
+  type EsReplyToCard,
   type MessageKind,
   type QuotedSplit,
   type ReceiptKind,
+  type Topic,
 } from "@email-social/es-core";
 import { DELIVERED_SENT, READ_SENT, SEEN, type ConnectionStatus, type MailboxAdapter, type MailEntry, type MailRef } from "./adapters/types.js";
 import type {
@@ -45,7 +55,7 @@ import type {
   OtherSummary,
   OtherView,
   Person,
-  ReplyContextView,
+  ReplyCardView,
   SendRequest,
   SendResult,
   StartProgress,
@@ -96,6 +106,14 @@ interface OtherGroup {
   messageIds: string[];
 }
 
+/** What the views of one chat's messages share: its topics and which messages are in it. */
+interface ChatContext {
+  topics: ChatTopics;
+  byRoot: Map<string, Topic>;
+  /** EsMessage.id of every message of the chat. */
+  inChat: Set<string>;
+}
+
 interface Model {
   chats: Chat[];
   others: OtherGroup[];
@@ -108,6 +126,15 @@ interface Model {
 }
 
 export const DEFAULT_STALL_MS = 45_000;
+
+/** The last line of every message to a chat where nobody has sent an Email Social message, in its signature block. */
+export const FOOTER = "Sent with Email Social. Reply as you normally would; this is an ordinary e-mail.";
+/** At most this many lines of the target are quoted under a deliberate reply to people without Email Social. */
+const REPLY_QUOTE_LINES = 5;
+/** The longest topic name accepted (characters, after white space is collapsed). */
+export const TOPIC_LABEL_MAX = 200;
+/** The longest excerpt a reply card carries (characters, "…" included). */
+const EXCERPT_MAX = 140;
 const DEFAULT_FIRST_BATCH = 50;
 
 const encoder = new TextEncoder();
@@ -126,17 +153,26 @@ export function firstLine(text: string, max = 140): string {
   return "";
 }
 
-/** The subject of a new chat without one: the first line of the text, cut at 60 characters at a word boundary. */
-export function subjectFromText(text: string, max = 60): string {
-  const line = firstLine(text, Number.MAX_SAFE_INTEGER).replace(/\s+/g, " ");
-  if (line.length <= max) return line;
-  const cut = line.lastIndexOf(" ", max);
-  return (cut > 0 ? line.slice(0, cut) : line.slice(0, max)).trimEnd();
-}
-
 /** A syntactically plausible address (the mail server decides the rest). */
 export function isAddress(value: string): boolean {
   return /^[^@\s<>(),;:"\\[\]]+@[A-Za-z0-9-]+(?:\.[A-Za-z0-9-]+)+$/.test(value);
+}
+
+/** `text` with white space collapsed, cut at a word boundary with "…" to at most 140 characters (the excerpt of a reply card). */
+export function cardExcerpt(text: string): string {
+  const flat = collapse(text);
+  if (flat.length <= EXCERPT_MAX) return flat;
+  let room = flat.slice(0, EXCERPT_MAX - 1);
+  const space = room.lastIndexOf(" ");
+  if (space > 0) room = room.slice(0, space);
+  else if (/[\ud800-\udbff]$/.test(room)) room = room.slice(0, -1);
+  return room.trimEnd() + "…";
+}
+
+/** The Message-ID a message answers: the first In-Reply-To id, else the last References id; never its own. */
+function answeredId(message: EsMessage): string | null {
+  const id = message.refs.inReplyTo[0] ?? message.refs.references[message.refs.references.length - 1] ?? null;
+  return id === null || id === message.id ? null : id;
 }
 
 function person(a: EsAddress): Person {
@@ -606,46 +642,69 @@ export class MailSession {
     return model.copies.has(id) ? this.shown(model, id) : null;
   }
 
-  /**
-   * The quote card of a message: the message it answers when the session
-   * holds it (in any folder), else its subject where one starts. `previous`
-   * is the message before it in its chat.
-   */
-  private context(model: Model, stored: Stored, previous: EsMessage | null): ReplyContextView | null {
-    let parent: Stored | null = null;
-    const context = replyContextOf(
+  /** The topics of a chat whose messages are `shown` (oldest first, as groupByParticipants orders them). */
+  private chatContext(shown: readonly Stored[]): ChatContext {
+    const topics = topicsOf(shown.map((s) => s.message));
+    return { topics, byRoot: new Map(topics.topics.map((t) => [t.rootId, t])), inChat: new Set(shown.map((s) => s.message.id)) };
+  }
+
+  /** The topic a message is placed in, or null (outside a chat, Auto-Submitted). */
+  private topicOf(context: ChatContext, id: string): Topic | null {
+    const placed = context.topics.of[id];
+    return placed === undefined ? null : (context.byRoot.get(placed.rootId) ?? null);
+  }
+
+  /** The composer's binding when a chat is opened: the topic of the account's own newest message, else the newest topic. */
+  private composerTopic(context: ChatContext, shown: readonly Stored[]): string | null {
+    for (let i = shown.length - 1; i >= 0; i--) {
+      const s = shown[i]!;
+      const placed = context.topics.of[s.message.id];
+      if (placed !== undefined && this.isMine(s)) return placed.rootId;
+    }
+    return context.topics.topics[context.topics.topics.length - 1]?.rootId ?? null;
+  }
+
+  /** The quote card of a message of a chat (es-core replyCardOf), with whether the answered message is the account's own. */
+  private card(model: Model, stored: Stored, context: ChatContext): ReplyCardView | null {
+    const found: { target: Stored | null } = { target: null };
+    const self = this.isMine(stored) && stored.message.from !== null ? [this.me, stored.message.from.address] : this.me;
+    const card = replyCardOf(
       stored.message,
       (id) => {
-        parent = this.held(model, id);
-        return parent?.message ?? null;
+        found.target = this.held(model, id);
+        return found.target?.message ?? null;
       },
-      { previous },
+      { inChat: context.inChat, self },
     );
-    if (context === null || context.kind === "subject") return context;
-    return { ...context, fromMe: parent !== null && this.isMine(parent) };
+    if (card === null) return null;
+    const carried = stored.message.es?.$type === "es.social.post" ? stored.message.es.email.replyTo : null;
+    const fromMe = found.target !== null ? this.isMine(found.target) : carried !== null && canonicalAddress(carried.from.address) === this.me;
+    return { ...card, fromMe };
   }
 
-  /** Views of the messages of one chat (or Other mail sender), oldest first, with their quote cards. */
-  private async views(model: Model, shown: Stored[]): Promise<MessageView[]> {
+  /** Views of the messages of one chat (with `context`) or of an Other mail sender (null), oldest first. */
+  private async views(model: Model, shown: Stored[], context: ChatContext | null): Promise<MessageView[]> {
     await this.ensureText(shown);
-    // The cards quote the answered messages: their text must be there too.
-    const parents: Stored[] = [];
-    for (const s of shown) {
-      replyContextOf(s.message, (id) => {
-        const parent = this.held(model, id);
+    if (context !== null) {
+      // Cards quote the messages answered: fetch their text now, so a card does not appear only on a later render.
+      const parents: Stored[] = [];
+      for (const s of shown) {
+        const es = s.message.es;
+        const id = es?.$type === "es.social.post" ? (es.email.replyTo?.messageId ?? null) : this.split(s.message).quoted !== "" ? answeredId(s.message) : null;
+        const parent = id === null ? null : this.held(model, id);
         if (parent !== null) parents.push(parent);
-        return null;
-      });
+      }
+      await this.ensureText(parents);
     }
-    await this.ensureText(parents);
-    return shown.map((s, i) => this.view(model, s, i === 0 ? null : shown[i - 1]!.message));
+    return shown.map((s) => this.view(model, s, context));
   }
 
-  private view(model: Model, stored: Stored, previous: EsMessage | null): MessageView {
+  private view(model: Model, stored: Stored, context: ChatContext | null): MessageView {
     const mine = this.isMine(stored);
     const kinds = model.receipts.get(stored.message.id);
     const key = encodeURIComponent(stored.key);
     const split = this.split(stored.message);
+    const topic = context === null ? null : this.topicOf(context, stored.message.id);
     return {
       key: stored.key,
       id: stored.message.id,
@@ -668,7 +727,11 @@ export class MailSession {
       originalPath: `/api/messages/${key}/original`,
       status: !mine ? null : kinds?.has("read") ? "read" : kinds?.has("delivered") ? "delivered" : "sent",
       emailSocial: stored.message.es !== null,
-      replyContext: this.context(model, stored, previous),
+      topic: topic === null ? null : { rootId: topic.rootId, label: topic.label, kind: topic.kind },
+      topicStart: topic !== null && context!.topics.of[stored.message.id]!.topicStart,
+      replyCard: context === null || topic === null ? null : this.card(model, stored, context),
+      subjectNote: topic === null ? null : subjectNoteOf(stored.message, topic),
+      interleaved: topic !== null && isInterleaved(stored.message),
     };
   }
 
@@ -677,7 +740,14 @@ export class MailSession {
     const chat = model.chats.find((c) => c.id === chatId);
     if (chat === undefined) return null;
     const shown = chat.messages.map((m) => this.shown(model, m.id));
-    return { chat: this.chatSummary(model, chat), messages: await this.views(model, shown) };
+    await this.ensureText(shown);
+    const context = this.chatContext(shown);
+    return {
+      chat: this.chatSummary(model, chat),
+      messages: await this.views(model, shown, context),
+      topics: context.topics.topics.map((t) => ({ ...t })),
+      composerTopic: this.composerTopic(context, shown),
+    };
   }
 
   private otherSummary(model: Model, group: OtherGroup): OtherSummary {
@@ -707,7 +777,7 @@ export class MailSession {
     const group = model.others.find((g) => g.summaryId === id);
     if (group === undefined) return null;
     const shown = group.messageIds.map((m) => this.shown(model, m));
-    return { sender: this.otherSummary(model, group), messages: await this.views(model, shown) };
+    return { sender: this.otherSummary(model, group), messages: await this.views(model, shown, null) };
   }
 
   private messageIdsOf(model: Model, id: string): string[] | null {
@@ -789,50 +859,123 @@ export class MailSession {
   }
 
   /**
-   * Sends a message: a reply in a chat (to everyone else in it) or the first
-   * message of a new chat (to the given addresses). It carries the ES part,
-   * and asks for receipts, only when a recipient has sent an ES part before;
-   * otherwise it is plain text/plain e-mail. A reply in a chat where nobody
-   * has sent an ES part quotes the message it answers below the text, since
-   * the recipient's mail client shows no chat history.
+   * Sends a message into a chat (to everyone else in it), or to a set of
+   * people (the chat with exactly them, existing or new).
+   *
+   * Every message belongs to a topic, the thread inside a chat:
+   * - with `replyTo`, the topic of the message answered (a deliberate reply);
+   * - with `topic.root`, that topic;
+   * - with `topic.label`, the topic whose base subject (or name) equals the
+   *   name, else a new root with the name as its Subject;
+   * - otherwise the topic of the account's own newest message in the chat,
+   *   else its newest topic, else (a new chat) a new root with the carrier
+   *   subject (es-core carrierSubject).
+   * A message in a topic answers the target of a deliberate reply, or else
+   * the topic's newest message that has a Message-ID, with the Subject
+   * "Re: " + the root's base subject. A topic whose root has no subject gets
+   * a new carrier root instead.
+   *
+   * It carries the ES part (with topicRoot, topicLabel and, on a deliberate
+   * reply, replyTo), and asks for receipts, only when a recipient has sent an
+   * ES part before; otherwise it is plain text/plain e-mail, which quotes the
+   * target of a deliberate reply (at most 5 lines) and ends with the footer.
    */
   async send(request: SendRequest): Promise<SendResult> {
     const text = request.text;
     if (typeof text !== "string" || text.trim() === "") throw new RangeError("The message is empty");
     const model = this.build();
-    const subject = typeof request.subject === "string" ? request.subject.replace(/\s+/g, " ").trim() : "";
+    const label = request.topic !== undefined && "label" in request.topic ? collapse(String(request.topic.label)) : null;
+    const root = request.topic !== undefined && "root" in request.topic ? String(request.topic.root) : null;
+    if (label !== null && (label === "" || label.length > TOPIC_LABEL_MAX)) throw new RangeError(`A topic name needs 1 to ${TOPIC_LABEL_MAX} characters`);
+    if (request.replyTo !== undefined && request.topic !== undefined) throw new RangeError("A reply continues the topic of the message it answers; send replyTo or topic, not both");
+
     let recipients: string[];
-    let answered: EsMessage | null = null;
+    let chat: Chat | undefined;
     if (request.chatId !== undefined) {
-      const chat = model.chats.find((c) => c.id === request.chatId);
+      chat = model.chats.find((c) => c.id === request.chatId);
       if (chat === undefined) throw new RangeError("No such chat");
       recipients = chat.participants.map((p) => p.address);
-      const shown = chat.messages.map((m) => this.shown(model, m.id));
-      await this.ensureText(shown);
-      const fromOthers = shown.filter((s) => !this.isMine(s));
-      answered = (fromOthers[fromOthers.length - 1] ?? shown[shown.length - 1])!.message;
     } else {
+      if (request.replyTo !== undefined || root !== null) throw new RangeError("A new chat takes only a topic name");
       const to = (request.to ?? []).map((a) => (typeof a === "string" ? a.trim() : ""));
       if (to.length === 0) throw new RangeError("Add at least one recipient");
       const invalid = to.filter((a) => !isAddress(a));
       if (invalid.length > 0) throw new RangeError(`Not an e-mail address: ${invalid.join(", ")}`);
       recipients = [...new Set(to.map(canonicalAddress))].filter((a) => a !== this.me);
+      const key = [...recipients].sort().join("\n");
+      chat = model.chats.find((c) => c.participants.map((p) => p.address).join("\n") === key);
     }
+
+    const shown = chat === undefined ? [] : chat.messages.map((m) => this.shown(model, m.id));
+    await this.ensureText(shown);
+    const context = this.chatContext(shown);
+
+    // The target of a deliberate reply, and the topic the message goes to (null: a new root).
+    let target: Stored | null = null;
+    let topic: Topic | null;
+    if (request.replyTo !== undefined) {
+      target = shown.find((s) => s.message.id === request.replyTo) ?? null;
+      if (target === null) throw new RangeError("The message to reply to is not in this chat");
+      topic = this.topicOf(context, target.message.id);
+    } else if (root !== null) {
+      topic = context.byRoot.get(root) ?? null;
+      if (topic === null) throw new RangeError("No such topic in this chat");
+    } else if (label !== null) {
+      const key = subjectKey(normalizeSubject(label).base);
+      topic = context.topics.topics.findLast((t) => t.kind !== "carrier" && ((t.base !== "" && subjectKey(t.base) === key) || (t.label !== null && subjectKey(t.label) === key))) ?? null;
+    } else {
+      const bound = this.composerTopic(context, shown);
+      topic = bound === null ? null : (context.byRoot.get(bound) ?? null);
+    }
+
     const names = this.names();
-    const toList: EsAddress[] = recipients.length > 0 ? recipients.map((address) => ({ name: names.get(address) ?? "", address })) : [{ name: "", address: this.me }];
+    const others: EsAddress[] = recipients.map((address) => ({ name: names.get(address) ?? "", address }));
+    const toList: EsAddress[] = others.length > 0 ? others : [{ name: "", address: this.me }];
+    const account: EsAddress = { name: this.options.account.name, address: this.me };
     const emailSocial = recipients.some((a) => model.esSenders.has(canonicalAddress(a)));
-    const reply = answered !== null && subject === "";
-    const body = reply && !emailSocial ? joinQuote(text, quoteForReply(answered!, { maxLines: 40, timeZone: this.options.timeZone ?? Intl.DateTimeFormat().resolvedOptions().timeZone })) : text;
+
+    // Subject, threading and the ES topic fields.
+    let subject: string;
+    let parent: Stored | null = null;
+    let topicRoot: string | null = null;
+    let topicLabel: string | null = null;
+    if (topic === null || (topic.base === "" && target === null)) {
+      // A new root: no In-Reply-To, no References; the name, or the carrier subject.
+      subject = label ?? carrierSubject(account, others);
+      topicRoot = "self";
+      topicLabel = label;
+    } else {
+      const inTopic = shown.filter((s) => context.topics.of[s.message.id]?.rootId === topic.rootId);
+      parent = target !== null && target.message.refs.messageId !== null ? target : (inTopic.findLast((s) => s.message.refs.messageId !== null) ?? null);
+      subject = topic.base === "" ? carrierSubject(account, others) : `Re: ${topic.base}`;
+      topicRoot = topic.rootId.startsWith("sha256:") ? null : topic.rootId;
+      topicLabel = topic.label;
+    }
+
+    const quote =
+      target !== null && !emailSocial
+        ? quoteForReply(target.message, { maxLines: REPLY_QUOTE_LINES, timeZone: this.options.timeZone ?? Intl.DateTimeFormat().resolvedOptions().timeZone })
+        : "";
+    const body = emailSocial ? text : composeBody(text, quote, FOOTER);
+    const replyTo: EsReplyToCard | null =
+      target !== null && target.message.from !== null
+        ? { messageId: target.message.refs.messageId, from: { name: target.message.from.name, address: target.message.from.address }, excerpt: cardExcerpt(this.split(target.message).fresh) }
+        : null;
+    const es: NonNullable<EsOutgoing["es"]> = {
+      requestReceipts: ["delivered", "read"],
+      ...(topicRoot !== null ? { topicRoot } : {}),
+      ...(topicLabel !== null ? { topicLabel } : {}),
+      ...(replyTo !== null ? { replyTo } : {}),
+    };
     const messageId = this.newMessageId();
     const raw = serializeMessage(
       {
-        from: { name: this.options.account.name, address: this.me },
+        from: account,
         to: toList,
+        subject,
         text: body,
-        ...(reply && answered!.refs.messageId !== null
-          ? { inReplyTo: replyTargetOf(answered!) }
-          : { subject: subject !== "" ? subject : reply ? `Re: ${normalizeSubject(answered!.subject).base}` : subjectFromText(text) }),
-        ...(emailSocial ? { es: { requestReceipts: ["delivered", "read"] as ReceiptKind[] } } : {}),
+        ...(parent !== null ? { inReplyTo: replyTargetOf(parent.message) } : {}),
+        ...(emailSocial ? { es } : {}),
       },
       { date: this.clock(), messageId, includeEsPart: emailSocial },
     );
@@ -851,10 +994,11 @@ export class MailSession {
     await this.saveCache();
     this.mailChanged.flush();
     const after = this.build();
-    const chat = after.chats.find((c) => c.messages.some((m) => m.id === stored.message.id));
-    const index = chat?.messages.findIndex((m) => m.id === stored.message.id) ?? -1;
-    const previous = chat !== undefined && index > 0 ? this.shown(after, chat.messages[index - 1]!.id).message : null;
-    return { chatId: chat?.id ?? "", message: this.view(after, stored, previous) };
+    const placed = after.chats.find((c) => c.messages.some((m) => m.id === stored.message.id));
+    if (placed === undefined) return { chatId: "", message: this.view(after, stored, null) };
+    const now = placed.messages.map((m) => this.shown(after, m.id));
+    await this.ensureText(now);
+    return { chatId: placed.id, message: this.view(after, stored, this.chatContext(now)) };
   }
 
   contacts(): ContactView[] {
@@ -930,7 +1074,21 @@ export class MailSession {
   }
 }
 
-/** The text, a blank line, and the quote (for replies to people without Email Social). */
-function joinQuote(text: string, quote: string): string {
-  return quote === "" ? text : `${text.replace(/\s+$/, "")}\n\n${quote}`;
+/** A line that starts a signature block: "-- " (RFC 3676 §4.3), or "--" as editors that strip trailing spaces leave it. */
+const SIGNATURE_DELIMITER = /^--[ \t]?$/;
+
+/**
+ * The body of a plain message: what was typed, a blank line, the quote of a
+ * deliberate reply, a blank line, and the signature block, whose last line is
+ * the footer. A signature the user typed (after a "-- " line) keeps its
+ * place at the end and gets the footer as its last line, so a message never
+ * carries two "-- " lines; without one, "-- " and the footer are added.
+ */
+export function composeBody(typed: string, quote: string, footer: string): string {
+  const lines = typed.replace(/\r\n?/g, "\n").replace(/\s+$/, "").split("\n");
+  let delimiter = -1;
+  for (let i = 0; i < lines.length; i++) if (SIGNATURE_DELIMITER.test(lines[i]!)) delimiter = i;
+  const main = (delimiter === -1 ? lines : lines.slice(0, delimiter)).join("\n").replace(/\s+$/, "");
+  const signature = delimiter === -1 ? `-- \n${footer}` : `${lines.slice(delimiter).join("\n")}\n${footer}`;
+  return [main, quote, signature].filter((part) => part !== "").join("\n\n");
 }

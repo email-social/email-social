@@ -51,6 +51,11 @@ const CASES: Record<string, Case> = {
     fresh: "Sure, Thursday it is!",
     quotedFrom: "On Tue, 3 Mar 2026, 10:15 Alice Dvořáková, <alice@example.com> wrote:",
   },
+  "replies/gmail-web-fragment.eml": {
+    client: "Gmail web, the quote cut down to one sentence of the original",
+    fresh: lines("Super, ať jde taky. Stůl zarezervuju pro tři.", "", "Bob"),
+    quotedFrom: `On Mon, Mar 2, 2026 at 10:15${NNBSP}AM Alice Dvořáková <alice@example.com>`,
+  },
   "replies/gmail-long-quote.eml": {
     client: "Gmail web, a two-line answer above 40 quoted lines",
     fresh: lines("Looks good, I'll bring the tent.", "", "Bob"),
@@ -109,6 +114,11 @@ const CASES: Record<string, Case> = {
     client: "Outlook desktop HTML only: the border-top divider and bold labels",
     fresh: lines("Hi Alice,", "", "the signed contract is attached.", "", "Bob"),
     quotedFrom: "From: Alice Dvořáková <alice@example.com>",
+  },
+  "replies/outlook-desktop-fragment.eml": {
+    client: "Outlook desktop, Czech, one sentence of the original kept under the header block",
+    fresh: lines("Ahoj Bobe,", "", "článek 4 jsem prošla, termíny bych posunula o týden.", "", "Alice"),
+    quotedFrom: "Od: Bob Svoboda <bob@example.org> ",
   },
   "replies/outlook-web.eml": {
     client: "Outlook on the web: underscore divider above the header block",

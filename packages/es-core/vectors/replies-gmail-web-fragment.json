@@ -1,0 +1,47 @@
+{
+  "description": "Gmail web, English UI, reply to thunderbird-flowed.eml: the quote cut down to one interior sentence of the original (> Jana už říkala, že by šla taky.) under a wrapped attribution: a deliberate reply, so quotedFragmentOf returns the sentence and replyCardOf draws a card",
+  "source": "fixtures/replies/gmail-web-fragment.eml",
+  "raw": "MIME-Version: 1.0\r\nReferences: <3f2a9c1e-6b4d-4e8a-9f1c-2d7e5b8a0c34@example.com>\r\nIn-Reply-To: <3f2a9c1e-6b4d-4e8a-9f1c-2d7e5b8a0c34@example.com>\r\nFrom: Bob Svoboda <bob@example.org>\r\nDate: Mon, 2 Mar 2026 11:40:05 +0100\r\nMessage-ID: <CAH7x9kZ0aB2dE4gH6jL9nP1rT3vX5zB7dI0kM2oQ4sU6wY8aE@mail.example.com>\r\nSubject: =?UTF-8?B?UmU6IE9ixJtkIHYgcMOhdGVr?=\r\nTo: =?UTF-8?Q?Alice_Dvo=C5=99=C3=A1kov=C3=A1?= <alice@example.com>\r\nContent-Type: multipart/alternative; boundary=\"000000000000ca790ab2de469135\"\r\n\r\n--000000000000ca790ab2de469135\r\nContent-Type: text/plain; charset=\"UTF-8\"\r\nContent-Transfer-Encoding: quoted-printable\r\n\r\nSuper, a=C5=A5 jde taky. St=C5=AFl zarezervuju pro t=C5=99i.\r\n\r\nBob\r\n\r\nOn Mon, Mar 2, 2026 at 10:15=E2=80=AFAM Alice Dvo=C5=99=C3=A1kov=C3=A1 <ali=\r\nce@example.com>\r\nwrote:\r\n\r\n> Jana u=C5=BE =C5=99=C3=ADkala, =C5=BEe by =C5=A1la taky.\r\n\r\n\r\n--000000000000ca790ab2de469135\r\nContent-Type: text/html; charset=\"UTF-8\"\r\nContent-Transfer-Encoding: quoted-printable\r\n\r\n<div dir=3D\"ltr\"><div>Super, a=C5=A5 jde taky. St=C5=AFl zarezervuju pro t=\r\n=C5=99i.</div><div><br></div><div>Bob</div></div><br><div class=3D\"gmail_qu=\r\note gmail_quote_container\"><div dir=3D\"ltr\" class=3D\"gmail_attr\">On Mon, Ma=\r\nr 2, 2026 at 10:15=E2=80=AFAM Alice Dvo=C5=99=C3=A1kov=C3=A1 &lt;<a href=3D=\r\n\"mailto:alice@example.com\">alice@example.com</a>&gt; wrote:<br></div><block=\r\nquote class=3D\"gmail_quote\" style=3D\"margin:0px 0px 0px 0.8ex;border-left:1=\r\npx solid rgb(204,204,204);padding-left:1ex\"><div dir=3D\"ltr\">Jana u=C5=BE =\r\n=C5=99=C3=ADkala, =C5=BEe by =C5=A1la taky.</div></blockquote></div>\r\n\r\n--000000000000ca790ab2de469135--\r\n",
+  "expected": {
+    "id": "<CAH7x9kZ0aB2dE4gH6jL9nP1rT3vX5zB7dI0kM2oQ4sU6wY8aE@mail.example.com>",
+    "from": {
+      "name": "Bob Svoboda",
+      "address": "bob@example.org"
+    },
+    "to": [
+      {
+        "name": "Alice Dvořáková",
+        "address": "alice@example.com"
+      }
+    ],
+    "cc": [],
+    "replyTo": [],
+    "date": "2026-03-02T10:40:05.000Z",
+    "subject": "Re: Oběd v pátek",
+    "text": "Super, ať jde taky. Stůl zarezervuju pro tři.\n\nBob\n\nOn Mon, Mar 2, 2026 at 10:15 AM Alice Dvořáková <alice@example.com>\nwrote:\n\n> Jana už říkala, že by šla taky.\n\n",
+    "textSource": "plain",
+    "es": null,
+    "attachments": [],
+    "refs": {
+      "messageId": "<CAH7x9kZ0aB2dE4gH6jL9nP1rT3vX5zB7dI0kM2oQ4sU6wY8aE@mail.example.com>",
+      "inReplyTo": [
+        "<3f2a9c1e-6b4d-4e8a-9f1c-2d7e5b8a0c34@example.com>"
+      ],
+      "references": [
+        "<3f2a9c1e-6b4d-4e8a-9f1c-2d7e5b8a0c34@example.com>"
+      ]
+    },
+    "delivery": {
+      "listHeaders": [],
+      "listId": null,
+      "autoSubmitted": null,
+      "precedence": null,
+      "returnPath": null
+    }
+  },
+  "split": {
+    "fresh": "Super, ať jde taky. Stůl zarezervuju pro tři.\n\nBob",
+    "quoted": "On Mon, Mar 2, 2026 at 10:15 AM Alice Dvořáková <alice@example.com>\nwrote:\n\n> Jana už říkala, že by šla taky.",
+    "signature": ""
+  }
+}
