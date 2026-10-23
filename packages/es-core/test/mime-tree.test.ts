@@ -254,6 +254,12 @@ describe("parseMimeTree: multipart bodies (RFC 2046 §5.1.1)", () => {
     expect(text(root)).toContain("Hello");
   });
 
+  it("keeps a multipart whose first delimiter line is the close delimiter as a leaf of its own type, with no parts", () => {
+    const root = parseMimeTree(crlf("Content-Type: multipart/mixed; boundary=zzz", "", "preamble", "--zzz--", "--zzz", "", "late", ""));
+    expect(root.contentType).toBe("multipart/mixed");
+    expect(root.children).toEqual([]);
+  });
+
   it("gives a part without headers the default type, and a part without an empty line its whole content as body", () => {
     const root = parseMimeTree(
       crlf("Content-Type: multipart/mixed; boundary=b", "", "--b", "", "no headers", "--b", "Just text, no header", "line 2", "--b--"),
