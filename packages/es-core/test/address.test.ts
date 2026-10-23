@@ -22,6 +22,12 @@ describe("parsing address lists (RFC 5322 §3.4)", () => {
     expect(parseAddressList("Alice <alice@example.com> (ignored comment)")).toEqual([addr("Alice", "alice@example.com")]);
   });
 
+  it("does not nest groups, and names a bare address by its comment only when the comment has text (spec 6.2)", () => {
+    expect(parseAddressList("Team: Sub: alice@example.com; bob@example.org")).toEqual([addr("Sub", "alice@example.com"), addr("", "bob@example.org")]);
+    expect(parseAddressList("Alice alice@example.com ()")).toEqual([addr("Alice", "alice@example.com")]);
+    expect(parseAddressList("Alice <alice@example.com>: bob@example.org")).toEqual([addr("Alice", "alice@example.com"), addr("", "bob@example.org")]);
+  });
+
   it("flattens groups and drops empty groups (§3.4)", () => {
     expect(parseAddressList("Team: alice@example.com, Bob <bob@example.org>;, carol@example.net")).toEqual([
       addr("", "alice@example.com"),

@@ -1,6 +1,6 @@
 # Deviations from the ES v2 draft excerpt
 
-This file lists the places where `spec/es-protocol-v2-excerpt.md` (chapters 1, 2 and 4) disagrees with what real mail software sends, accepts or changes. It also lists the places where `packages/es-core` does something other than the draft on purpose. CLAUDE.md says that when the spec and reality disagree, reality wins and the deviation is written down here with its evidence. Task 3, which writes the English public spec, should start from these entries.
+This file lists the places where `spec/es-protocol-v2-excerpt.md` (chapters 1, 2 and 4) disagrees with what real mail software sends, accepts or changes. It also lists the places where `packages/es-core` does something other than the draft on purpose. CLAUDE.md says that when the spec and reality disagree, reality wins and the deviation is written down here with its evidence. The English specification, [`es-protocol.md`](es-protocol.md), describes what the implementation does; each entry here gives the reason and the evidence for one difference from the draft, and section 12 of the specification maps every entry to the section that specifies the behaviour. Whatever the draft says that the implementation does differently is in one of these entries.
 
 - **Section A** covers real-world mail against the draft. Each entry gives what the draft says, what really happens, what es-core does, and which tests cover it.
 - **Section B** covers deliberate implementation choices. Each entry gives what the draft says, what es-core does, why, and which tests cover it.
@@ -401,6 +401,24 @@ Quotations from the draft are translated from Czech where the draft is in Czech.
   - An ES post without `replyTo` never gets a card, whatever its In-Reply-To says: no shipped client can express a target any other way, so an unmarked ES message is a continuation.
 - **Why:** with an ES part the target of a deliberate reply cannot be inferred from a quote (an ES post quotes nothing, D23), and a topic must survive subjects other clients change; both need ids, and the mailbox is the only storage (rule 2).
 - **Covered by:** `test/es-schema.test.ts`, `test/serialize.test.ts`, `test/reply-card.test.ts`, `test/topics.test.ts`, the vectors `generated-topic-root.json` and `generated-topic-reply.json`.
+
+### D26. Parts of the draft that this repository does not implement
+
+- **Draft says:**
+  - §1.2–§1.4: DID documents with keys and service endpoints, handle resolution, and moving an account between ES servers.
+  - §2.1–§2.2: a repository per user at `at://<did>`, with collections (`es.social.post`, `es.social.reaction`, `es.social.follow`, `es.social.profile`, `es.social.thread`, `es.moderation.report`) and record URIs `at://<did>/<collection>/<rkey>`; §2.3.1 gives posts the record key type `tid`.
+  - §2.3.2–§2.3.4: the lexicons `es.social.reaction`, `es.social.follow` and `es.social.profile`.
+  - §2.4: content identifiers (CIDs) computed over DAG-CBOR.
+  - §2.5 and §4.1: a signature over every record; §4.2: DKIM validation followed by an ES signature check, DID resolution and a timestamp check.
+- **es-core does:** none of these.
+  - A reader takes only `es.social.post` and `es.social.receipt` records. A record of any other `$type`, such as `es.social.reaction`, is no ES part, and its MIME part is listed as an ordinary attachment.
+  - A `signature` field is ignored (D18); keys, DID documents and resolution do not exist here (D13, D20).
+  - Nothing reads DKIM signatures or the results a mailbox provider adds on delivery.
+- **Why:**
+  - There is no ES server and no storage outside the mailbox (CLAUDE.md rule 2): repositories, record URIs and account moves have nothing to live on, and resolution needs the network (D13).
+  - Reactions, follows and profiles belong to features outside this repository's scope (CLAUDE.md: no feeds, reactions or hashtags).
+  - CIDs address records in repositories and are what the draft signs; signatures, keys and their checks are out of scope (CLAUDE.md rule 5). `VerificationBadgeSlot` in the web client is the only extension point.
+- **Covered by:** `test/es-schema.test.ts` ("rejects records without required fields, unknown types and invalid JSON", where an `es.social.reaction` record is rejected; "accepts the draft record envelope (spec 4.1) and ignores uri, cid and signature"), `test/parse.test.ts` ("lists an ES part with invalid JSON or an unknown record as an attachment").
 
 ## Sources
 

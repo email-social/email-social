@@ -83,6 +83,9 @@ describe("parsing Date headers (RFC 5322 §3.3, §4.3)", () => {
       "Mon, 15 Jan 2024",
       "2024-13-01T00:00:00Z",
       "2024-02-30T00:00:00Z",
+      "Mon, 15 Jan 2024 09:30:00 +0100 junk!",
+      "Mon, 15 Jan 2024 09:30:00 +0100!",
+      "Mon, 15 Jan 2024 09:30:00 +010",
     ]) {
       expect(parseDate(bad), bad).toBeNull();
     }

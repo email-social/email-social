@@ -152,6 +152,10 @@ describe("ES part JSON", () => {
     });
   });
 
+  it("removes a byte order mark before reading the JSON (spec 5.1)", () => {
+    expect(parseEsJson("﻿" + formatEsJson(post))).toEqual(post);
+  });
+
   it("rejects records without required fields, unknown types and invalid JSON", () => {
     const base = { $type: "es.social.post", value: { text: "x", via: "a@example.com", createdAt: "2026-01-01T00:00:00Z" } };
     expect(parseEsJson(JSON.stringify(base))).not.toBeNull();
@@ -257,6 +261,8 @@ describe("addresses and message ids", () => {
     expect(parseMessageIds("<long-id-folded\r\n @example.com>")).toEqual(["<long-id-folded@example.com>"]);
     expect(parseMessageIds("d@example.com (comment)")).toEqual(["<d@example.com>"]);
     expect(parseMessageIds("")).toEqual([]);
+    // A "<…>" group contains no "<" or ">": the innermost brackets win (spec 3.2).
+    expect(parseMessageIds("<broken<e@example.com> <f@example.c <g@example.net>")).toEqual(["<e@example.com>", "<g@example.net>"]);
     expect(normalizeMessageId(" <x@example.com> ")).toBe("<x@example.com>");
     expect(isValidMessageId("<x.1+2=3@mail.example.com>")).toBe(true);
     expect(isValidMessageId("x@example.com")).toBe(false);
