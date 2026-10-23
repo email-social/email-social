@@ -13,13 +13,14 @@
     "node": ">=22.12.0"
   },
   "scripts": {
-    "test": "npm test --workspaces --if-present",
+    "test": "npm run docs:check && npm test --workspaces --if-present",
     "typecheck": "npm run typecheck --workspaces --if-present",
     "build": "npm run build --workspaces --if-present",
     "test:browser": "npm run test:browser --workspaces --if-present",
     "test:e2e": "npm run test:e2e --workspaces --if-present",
     "vectors:check": "npm run vectors:check --workspaces --if-present",
     "license:check": "node scripts/license-check.mjs",
+    "docs:check": "node scripts/docs-check.mjs",
     "start": "email-social"
   }
 }
