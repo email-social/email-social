@@ -368,7 +368,8 @@ describe("email-social in a browser, on the seeded maildir", () => {
     expect(await page.textContent(".reply-chip span")).toMatch(/^Replying to Anna Becker — Hallo Alice, anbei die Projektübersicht für das zweite Quartal\./);
     expect(await page.evaluate(() => document.activeElement?.id)).toBe("reply");
     const raw = await reply("Danke, Anna!");
-    expect(await page.locator(".reply-chip").count()).toBe(0);
+    // The new bubble can arrive through the change event before the send's own answer clears the chip.
+    await page.locator(".reply-chip").waitFor({ state: "detached", timeout: 3000 });
     const message = parseMessage(raw);
     expect(message.es).toBeNull();
     expect(extractPart(raw, "1")?.contentType).toBe("text/plain");
