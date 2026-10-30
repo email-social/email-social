@@ -1,0 +1,45 @@
+{
+  "description": "Shop's order confirmation: Auto-Submitted: auto-generated, no List-Unsubscribe; multipart/alternative with base64 HTML; automated, never a story",
+  "source": "fixtures/stories/order-confirmation.eml",
+  "raw": "Return-Path: <orders-bounce@shop.example.org>\r\nDate: Thu, 19 Mar 2026 12:25:00 +0000\r\nFrom: Shoe Shop <orders@shop.example.org>\r\nTo: alice@example.com\r\nSubject: Your order 10-4471 is confirmed\r\nMessage-ID: <order-10-4471.confirm@shop.example.org>\r\nAuto-Submitted: auto-generated\r\nMIME-Version: 1.0\r\nContent-Type: multipart/alternative; boundary=\"----=_Part_4471_1958271331.1710851100000\"\r\n\r\n------=_Part_4471_1958271331.1710851100000\r\nContent-Type: text/plain; charset=UTF-8\r\nContent-Transfer-Encoding: quoted-printable\r\n\r\nThank you for your order 10-4471.\r\n\r\n1 x Trail runner \"Ridge\", size 39      42.00 EUR\r\nShipping                                  0.00 EUR\r\nTotal                                    42.00 EUR\r\n\r\nWe will send the parcel on Monday. Track it at\r\nhttps://shop.example.org/orders/10-4471\r\n------=_Part_4471_1958271331.1710851100000\r\nContent-Type: text/html; charset=UTF-8\r\nContent-Transfer-Encoding: base64\r\n\r\nPGh0bWw+PGJvZHk+PGgyPlRoYW5rIHlvdSBmb3IgeW91ciBvcmRlciAxMC00NDcxLjwvaDI+DQo8\r\ndGFibGU+PHRyPjx0ZD4xICZ0aW1lczsgVHJhaWwgcnVubmVyICZxdW90O1JpZGdlJnF1b3Q7LCBz\r\naXplIDM5PC90ZD48dGQ+NDIuMDAgRVVSPC90ZD48L3RyPg0KPHRyPjx0ZD5TaGlwcGluZzwvdGQ+\r\nPHRkPjAuMDAgRVVSPC90ZD48L3RyPjx0cj48dGQ+PGI+VG90YWw8L2I+PC90ZD48dGQ+PGI+NDIu\r\nMDAgRVVSPC9iPjwvdGQ+PC90cj48L3RhYmxlPg0KPHA+V2Ugd2lsbCBzZW5kIHRoZSBwYXJjZWwg\r\nb24gTW9uZGF5LiA8YSBocmVmPSJodHRwczovL3Nob3AuZXhhbXBsZS5vcmcvb3JkZXJzLzEwLTQ0\r\nNzEiPlRyYWNrIGl0PC9hPi48L3A+DQo8aW1nIHNyYz0iaHR0cHM6Ly9pbWcuc2hvcC5leGFtcGxl\r\nLm9yZy9sb2dvLnBuZyIgYWx0PSJTaG9lIFNob3AiPjwvYm9keT48L2h0bWw+DQo=\r\n------=_Part_4471_1958271331.1710851100000--\r\n",
+  "expected": {
+    "id": "<order-10-4471.confirm@shop.example.org>",
+    "from": {
+      "name": "Shoe Shop",
+      "address": "orders@shop.example.org"
+    },
+    "to": [
+      {
+        "name": "",
+        "address": "alice@example.com"
+      }
+    ],
+    "cc": [],
+    "replyTo": [],
+    "date": "2026-03-19T12:25:00.000Z",
+    "subject": "Your order 10-4471 is confirmed",
+    "text": "Thank you for your order 10-4471.\n\n1 x Trail runner \"Ridge\", size 39      42.00 EUR\nShipping                                  0.00 EUR\nTotal                                    42.00 EUR\n\nWe will send the parcel on Monday. Track it at\nhttps://shop.example.org/orders/10-4471",
+    "textSource": "plain",
+    "es": null,
+    "attachments": [],
+    "refs": {
+      "messageId": "<order-10-4471.confirm@shop.example.org>",
+      "inReplyTo": [],
+      "references": []
+    },
+    "delivery": {
+      "listHeaders": [],
+      "listId": null,
+      "autoSubmitted": "auto-generated",
+      "precedence": null,
+      "returnPath": "orders-bounce@shop.example.org",
+      "listUnsubscribe": null
+    }
+  },
+  "split": {
+    "fresh": "Thank you for your order 10-4471.\n\n1 x Trail runner \"Ridge\", size 39      42.00 EUR\nShipping                                  0.00 EUR\nTotal                                    42.00 EUR\n\nWe will send the parcel on Monday. Track it at\nhttps://shop.example.org/orders/10-4471",
+    "quoted": "",
+    "signature": ""
+  },
+  "story": null
+}

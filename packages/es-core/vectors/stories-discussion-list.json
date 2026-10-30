@@ -1,0 +1,58 @@
+{
+  "description": "Mailman 3 discussion list post: List-Id, List-Post, List-Unsubscribe, List-Help, Archived-At, Precedence: list, [hiking] tag; written by a person; never a story (List-Post)",
+  "source": "fixtures/stories/discussion-list.eml",
+  "raw": "Return-Path: <hiking-bounces@lists.example.net>\r\nDate: Fri, 20 Mar 2026 20:12:44 +0100\r\nFrom: Petr Dvorak <petr.dvorak@example.org>\r\nTo: hiking@lists.example.net\r\nSubject: [hiking] Ridge path after the storm?\r\nMessage-ID: <a1b2c3d4@mail.example.org>\r\nMessage-ID-Hash: QW3XK7ZP2LMN4R5T6V7Y8B9C0D1F2G3H\r\nX-Mailman-Version: 3.3.9\r\nPrecedence: list\r\nList-Id: Hiking talk <hiking.lists.example.net>\r\nArchived-At: <https://lists.example.net/archives/list/hiking@lists.example.net/message/QW3XK7ZP/>\r\nList-Archive: <https://lists.example.net/archives/list/hiking@lists.example.net/>\r\nList-Help: <mailto:hiking-request@lists.example.net?subject=help>\r\nList-Owner: <mailto:hiking-owner@lists.example.net>\r\nList-Post: <mailto:hiking@lists.example.net>\r\nList-Subscribe: <mailto:hiking-join@lists.example.net>\r\nList-Unsubscribe: <mailto:hiking-leave@lists.example.net>\r\nMIME-Version: 1.0\r\nContent-Type: text/plain; charset=\"us-ascii\"\r\nContent-Transfer-Encoding: 7bit\r\n\r\nHas anyone walked the ridge path since the storm? I heard the\r\nupper part is closed.\r\n\r\nPetr\r\n_______________________________________________\r\nhiking mailing list -- hiking@lists.example.net\r\nTo unsubscribe send an email to hiking-leave@lists.example.net\r\n",
+  "expected": {
+    "id": "<a1b2c3d4@mail.example.org>",
+    "from": {
+      "name": "Petr Dvorak",
+      "address": "petr.dvorak@example.org"
+    },
+    "to": [
+      {
+        "name": "",
+        "address": "hiking@lists.example.net"
+      }
+    ],
+    "cc": [],
+    "replyTo": [],
+    "date": "2026-03-20T19:12:44.000Z",
+    "subject": "[hiking] Ridge path after the storm?",
+    "text": "Has anyone walked the ridge path since the storm? I heard the\nupper part is closed.\n\nPetr\n_______________________________________________\nhiking mailing list -- hiking@lists.example.net\nTo unsubscribe send an email to hiking-leave@lists.example.net\n",
+    "textSource": "plain",
+    "es": null,
+    "attachments": [],
+    "refs": {
+      "messageId": "<a1b2c3d4@mail.example.org>",
+      "inReplyTo": [],
+      "references": []
+    },
+    "delivery": {
+      "listHeaders": [
+        "list-archive",
+        "list-help",
+        "list-id",
+        "list-owner",
+        "list-post",
+        "list-subscribe",
+        "list-unsubscribe"
+      ],
+      "listId": "hiking.lists.example.net",
+      "autoSubmitted": null,
+      "precedence": "list",
+      "returnPath": "hiking-bounces@lists.example.net",
+      "listUnsubscribe": {
+        "uris": [
+          "mailto:hiking-leave@lists.example.net"
+        ],
+        "oneClick": false
+      }
+    }
+  },
+  "split": {
+    "fresh": "Has anyone walked the ridge path since the storm? I heard the\nupper part is closed.\n\nPetr",
+    "quoted": "",
+    "signature": "_______________________________________________\nhiking mailing list -- hiking@lists.example.net\nTo unsubscribe send an email to hiking-leave@lists.example.net"
+  },
+  "story": null
+}

@@ -1,6 +1,6 @@
 # Deviations from the ES v2 draft excerpt
 
-This file lists the places where `spec/es-protocol-v2-excerpt.md` (chapters 1, 2 and 4) disagrees with what real mail software sends, accepts or changes. It also lists the places where `packages/es-core` does something other than the draft on purpose. CLAUDE.md says that when the spec and reality disagree, reality wins and the deviation is written down here with its evidence. The English specification, [`es-protocol.md`](es-protocol.md), describes what the implementation does; each entry here gives the reason and the evidence for one difference from the draft, and section 12 of the specification maps every entry to the section that specifies the behaviour. Whatever the draft says that the implementation does differently is in one of these entries.
+This file lists the places where `spec/es-protocol-v2-excerpt.md` (chapters 1, 2 and 4) disagrees with what real mail software sends, accepts or changes. It also lists the places where `packages/es-core` does something other than the draft on purpose. CLAUDE.md says that when the spec and reality disagree, reality wins and the deviation is written down here with its evidence. The English specification, [`es-protocol.md`](es-protocol.md), describes what the implementation does; each entry here gives the reason and the evidence for one difference from the draft, and section 13 of the specification maps every entry to the section that specifies the behaviour. Whatever the draft says that the implementation does differently is in one of these entries.
 
 - **Section A** covers real-world mail against the draft. Each entry gives what the draft says, what really happens, what es-core does, and which tests cover it.
 - **Section B** covers deliberate implementation choices. Each entry gives what the draft says, what es-core does, why, and which tests cover it.
@@ -352,7 +352,7 @@ Quotations from the draft are translated from Czech where the draft is in Czech.
     - a short English plain text that says what happened;
     - the ES part.
   - Receipts never request receipts, just as RFC 8098 §2.1 forbids an MDN in answer to an MDN.
-  - es-core only builds and parses receipts. Whether and when to send one is left to the client: es-bridge follows `es-protocol.md` section 11.2, and the account owner chooses which kinds it sends with `--receipts all|delivered|none` (section 14, RC-8).
+  - es-core only builds and parses receipts. Whether and when to send one is left to the client: es-bridge follows `es-protocol.md` section 11.2, and the account owner chooses which kinds it sends with `--receipts all|delivered|none` (section 15, RC-8).
 - **Why:**
   - The task requires the receipt to be in the ES part.
   - An MDN request is honoured unevenly (D15), and an ordinary message with a text part is readable everywhere (rule 1).
@@ -411,7 +411,7 @@ Quotations from the draft are translated from Czech where the draft is in Czech.
   - §2.4: content identifiers (CIDs) computed over DAG-CBOR.
   - §2.5 and §4.1: a signature over every record; §4.2: DKIM validation followed by an ES signature check, DID resolution and a timestamp check.
 - **es-core does:** none of these.
-  - A reader takes only `es.social.post` and `es.social.receipt` records. A record of any other `$type`, such as `es.social.reaction`, is no ES part, and its MIME part is listed as an ordinary attachment.
+  - A reader takes only `es.social.post`, `es.social.receipt` and `es.social.story` (D27) records. A record of any other `$type`, such as `es.social.reaction`, is no ES part, and its MIME part is listed as an ordinary attachment.
   - A `signature` field is ignored (D18); keys, DID documents and resolution do not exist here (D13, D20).
   - Nothing reads DKIM signatures or the results a mailbox provider adds on delivery.
 - **Why:**
@@ -419,6 +419,18 @@ Quotations from the draft are translated from Czech where the draft is in Czech.
   - Reactions, follows and profiles belong to features outside this repository's scope (CLAUDE.md: no feeds, reactions or hashtags).
   - CIDs address records in repositories and are what the draft signs; signatures, keys and their checks are out of scope (CLAUDE.md rule 5). `VerificationBadgeSlot` in the web client is the only extension point.
 - **Covered by:** `test/es-schema.test.ts` ("rejects records without required fields, unknown types and invalid JSON", where an `es.social.reaction` record is rejected; "accepts the draft record envelope (spec 4.1) and ignores uri, cid and signature"), `test/parse.test.ts` ("lists an ES part with invalid JSON or an unknown record as an attachment").
+
+### D27. Newsletters as stories, and the `es.social.story` record
+
+- **Draft says:** nothing about newsletters or promotions. Its lexicons (§2.3) have no record for them, and its §4.3 threads every message the same way.
+- **What really happens:** newsletters and promotions make up much of a personal mailbox. They say what they are only through header fields: `List-Unsubscribe` (RFC 2369 §3.2), since February 2024 usually with an RFC 8058 one-click request, which Gmail and Yahoo ask of bulk senders. The same field also appears on order confirmations and password resets, which are not newsletters; RFC 3834 §5 `Auto-Submitted` marks some of these. Discussion lists carry `List-Unsubscribe` too, with `List-Post`. The fixtures in `fixtures/stories/` reconstruct each of these formats.
+- **es-core does:**
+  - `storyOf` takes a message as a story from its header fields (section 12.1 of the specification): `List-Unsubscribe` present, no `List-Post`, `Auto-Submitted` absent or `no`, a Return-Path other than `<>`, a sender who is not the account owner. `Precedence: bulk` alone is not enough. A story is shown for seven days after its `Date`.
+  - It finds one way to unsubscribe (section 12.3): one-click only with an https URI as RFC 8058 §3.1 requires, else a `mailto:` URI, else a page for the reader to open.
+  - It adds an `es.social.story` record (section 12.4), written by `writeStory` and read by `readRecord`, for a sender that marks a message as a story itself. The record carries a title, an optional earlier expiry and an optional unsubscribe address; it never requests receipts, and no client sends a receipt for any story (ST-7).
+  - `delivery` gains `listUnsubscribe` (section 6.9), so every vector's `expected` carries it: `null` for a message without the field.
+- **Why:** a newsletter is not a conversation. Showing it as a chat buries the people the account owner writes with; showing it apart for a limited time keeps the chat list for people, and the message itself stays in the mailbox and under "Other mail". Everything comes from fields the message already carries, so nothing is fetched to decide it (CLAUDE.md rule 2), and a newsletter's sender learns nothing from the reader's client. The record is optional: a message without it is read the same way by every client (CLAUDE.md rule 1).
+- **Covered by:** `test/story.test.ts` (every rule of sections 12.1 to 12.3, and the story fixtures), `test/story-record.test.ts` ("writes the record's fields in a fixed order and leaves optional ones out", "never asks for receipts", "reads back what writeStory wrote, through parseMessage"), `test/vectors.test.ts` ("storyOf(expected) equals story") on `vectors/stories-*.json`.
 
 ## Sources
 
@@ -431,6 +443,7 @@ The following were read as search-result excerpts; the pages themselves could no
 - RFC 8098, Message Disposition Notification: https://www.rfc-editor.org/rfc/rfc8098.html
 - Postfix `smtp_line_length_limit` ("Longer lines are broken by inserting <CR><LF><SPACE>"): https://www.postfix.org/postconf.5.html#smtp_line_length_limit and https://github.com/bokysan/docker-postfix/issues/142
 - Thunderbird `mail.strictly_mime` default: https://bugzilla.mozilla.org/show_bug.cgi?id=1379096
+- Gmail and Yahoo bulk-sender requirements for RFC 8058 one-click unsubscribe from February 2024, as summarised by deliverability vendors: https://www.mailgun.com/blog/deliverability/what-is-rfc-8058/ and https://glockapps.com/blog/rfc-8058-explained/
 - Amazon SES header fields ("If you provide a Message-ID header, Amazon SES overrides the header with its own value"): https://docs.aws.amazon.com/ses/latest/dg/header-fields.html
 - Mailman DMARC mitigations: https://wiki.list.org/DEV/DMARC and https://docs.mailman3.org/projects/mailman/en/latest/src/mailman/handlers/docs/dmarc-mitigations.html
 - Mailman content filtering (default pass types, `collapse_alternatives`): https://docs.mailman3.org/projects/mailman/en/latest/src/mailman/handlers/docs/filtering.html

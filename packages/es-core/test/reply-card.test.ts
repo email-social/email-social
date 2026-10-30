@@ -263,7 +263,7 @@ describe("replyCardOf and topicsOf on records written by serializeMessage", () =
 describe("replyCardOf: what it leaves out", () => {
   it("an Auto-Submitted message gets no card, whatever it quotes or carries", () => {
     const parent = msg({ id: mid("p"), from: "Alice <alice@example.com>", date: t(0), subject: "Plan", text: "Hi.\nCould you bring the projector?\nThanks." });
-    const auto = { ...msg({ id: mid("a"), from: "Bob <bob@example.org>", date: t(1), subject: "Re: Plan", inReplyTo: mid("p"), text: "Away.\n\n> Could you bring the projector?" }), delivery: { listHeaders: [], listId: null, autoSubmitted: "auto-replied", precedence: null, returnPath: null } };
+    const auto = { ...msg({ id: mid("a"), from: "Bob <bob@example.org>", date: t(1), subject: "Re: Plan", inReplyTo: mid("p"), text: "Away.\n\n> Could you bring the projector?" }), delivery: { listHeaders: [], listId: null, autoSubmitted: "auto-replied", precedence: null, returnPath: null, listUnsubscribe: null } };
     expect(replyCardOf(auto, holding(parent), { inChat: chatOf(parent, auto), self: "alice@example.com" })).toBeNull();
   });
 

@@ -34,7 +34,8 @@
       "listId": null,
       "autoSubmitted": null,
       "precedence": null,
-      "returnPath": "Lukas.Weber@example.net"
+      "returnPath": "Lukas.Weber@example.net",
+      "listUnsubscribe": null
     }
   },
   "split": {

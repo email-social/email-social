@@ -102,10 +102,51 @@ export interface EsReceiptPart {
   createdAt: string;
 }
 
+/** How a story's sender says it can be unsubscribed from, as written in its record (`value.unsubscribe`). */
+export type EsStoryUnsubscribe = { mailto: string } | { url: string };
+
+/**
+ * A promotion an Email Social sender marked explicitly: the parsed
+ * `es.social.story` record (spec section "Stories"). It never asks for
+ * receipts, and none is ever sent for it.
+ */
+export interface EsStoryPart {
+  $type: "es.social.story";
+  author: string | null;
+  /** Canonical sending address. */
+  via: string;
+  /** RFC 3339 timestamp as written by the sender. */
+  createdAt: string;
+  email: {
+    /** The message's own Message-ID, in angle brackets. */
+    messageId: string;
+    /** Lowercase hex SHA-256 of the text when the text is left out of the record (over ES_TEXT_MAX_BYTES), else null. */
+    textSha256: string | null;
+  };
+  /** At most ES_STORY_TITLE_MAX_BYTES UTF-8 bytes. */
+  title: string;
+  /** RFC 3339 timestamp after which the story is gone, or null. */
+  expiresAt: string | null;
+  unsubscribe: EsStoryUnsubscribe | null;
+  /** The text, or null when it is longer than ES_TEXT_MAX_BYTES (then `email.textSha256` is set). */
+  text: string | null;
+}
+
 /** The structured ES part of a message. */
-export type EsPart = EsPostPart | EsReceiptPart;
+export type EsPart = EsPostPart | EsReceiptPart | EsStoryPart;
 
 /** The decoded content of one MIME leaf part (see `extractPart`). */
+/** What a story shows (storyContent). */
+export interface EsStoryContent {
+  /** The message text, as EsMessage.text. */
+  text: string;
+  textSource: TextSource;
+  /** The HTML body reduced to an allow-list, image sources in data-src / data-srcset; null without HTML. */
+  html: string | null;
+  /** Images whose loading was held back. */
+  images: number;
+}
+
 export interface EsPartContent {
   /** Lowercased media type, as in EsAttachment.contentType. */
   contentType: string;
@@ -133,6 +174,41 @@ export interface EsDelivery {
   precedence: string | null;
   /** The Return-Path address (RFC 5322 §3.6.7) in canonical form; "" for the null path "<>"; null when absent. */
   returnPath: string | null;
+  /** The first List-Unsubscribe field (RFC 2369 §3.2) and whether List-Unsubscribe-Post asks for one-click (RFC 8058 §3.1); null when absent. */
+  listUnsubscribe: EsListUnsubscribe | null;
+}
+
+/** What List-Unsubscribe and List-Unsubscribe-Post say. */
+export interface EsListUnsubscribe {
+  /** The URIs in angle brackets, in order, white space removed, each once ("mailto:…", "https://…", …). */
+  uris: string[];
+  /** List-Unsubscribe-Post is "List-Unsubscribe=One-Click" (RFC 8058 §3.1). */
+  oneClick: boolean;
+}
+
+/** How to unsubscribe from a story, as the reader's client would do it. */
+export type EsUnsubscribe =
+  /** One POST with the body "List-Unsubscribe=One-Click" to this https URL (RFC 8058). */
+  | { oneClick: string }
+  /** One message to this address with this subject and an empty body (RFC 2369 §3.2, RFC 6068). */
+  | { mailto: string; subject: string }
+  /** A page the reader opens in the browser; nothing is sent by the client. */
+  | { link: string };
+
+/**
+ * A newsletter or promotion shown as a story (see `storyOf`): one per
+ * message, gone `expiresAt`.
+ */
+export interface EsStory {
+  sender: EsAddress;
+  title: string;
+  /** The message's Date, as EsMessage.date. */
+  receivedAt: string;
+  /** receivedAt + 7 days, or the record's earlier `expiresAt`. ISO 8601 UTC with milliseconds. */
+  expiresAt: string;
+  unsubscribe: EsUnsubscribe | null;
+  /** True when the message carries an accepted es.social.story record; false when it was recognised by its header fields. */
+  explicit: boolean;
 }
 
 /** A parsed e-mail message, as Email Social sees it. */
@@ -313,6 +389,22 @@ export interface EsOutgoing {
     /** `email.replyTo`: what a deliberate reply answers. */
     replyTo?: EsReplyToCard;
   };
+}
+
+/** A story to write with `writeStory`: an ordinary message whose ES part is an es.social.story record. */
+export interface EsOutgoingStory {
+  from: EsAddress;
+  to: EsAddress[];
+  cc?: EsAddress[];
+  /** Also the Subject header; white space collapsed; at most ES_STORY_TITLE_MAX_BYTES UTF-8 bytes. */
+  title: string;
+  text: string;
+  /** When the story is gone: a Date or an RFC 3339 string, written in UTC. */
+  expiresAt?: Date | string;
+  /** Also written as List-Unsubscribe, so ordinary clients offer it too. */
+  unsubscribe?: EsStoryUnsubscribe;
+  /** A did:es identifier to put in the ES part as metadata. */
+  author?: string;
 }
 
 /** A receipt to send back to the author of `original`. */

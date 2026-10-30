@@ -1,0 +1,34 @@
+Return-Path: <news-bounce@garden.example.com>
+Date: Fri, 13 Mar 2026 06:00:00 +0000
+From: Garden Centre <news@garden.example.com>
+To: alice@example.com
+Subject: Seeds and seedlings for April
+Message-ID: <newsletter-2026-11@garden.example.com>
+List-Unsubscribe: <https://garden.example.com/leave?id=55>
+List-Unsubscribe-Post: List-Unsubscribe=One-Click
+MIME-Version: 1.0
+Content-Type: multipart/alternative; boundary="b1_6a5c2e9d1f0e4b3a8c7d6e5f4a3b2c1d"
+
+--b1_6a5c2e9d1f0e4b3a8c7d6e5f4a3b2c1d
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+
+Seeds and seedlings for April
+
+Our tomato and pepper seedlings are ready to order. Pick-up from
+1 April at the garden centre.
+
+Order: https://garden.example.com/seedlings
+Unsubscribe: https://garden.example.com/leave?id=55
+--b1_6a5c2e9d1f0e4b3a8c7d6e5f4a3b2c1d
+Content-Type: text/html; charset=us-ascii
+Content-Transfer-Encoding: quoted-printable
+
+<html><body><h1>Seeds and seedlings for April</h1>
+<p>Our tomato and pepper seedlings are ready to order. Pick-up from 1&nbsp;=
+April at the garden centre.</p>
+<p><a href=3D"https://garden.example.com/seedlings"><img src=3D"https://gar=
+den.example.com/img/seedlings.jpg" alt=3D"Seedlings"></a></p>
+<p><a href=3D"https://garden.example.com/leave?id=3D55">Unsubscribe</a></p>=
+</body></html>
+--b1_6a5c2e9d1f0e4b3a8c7d6e5f4a3b2c1d--

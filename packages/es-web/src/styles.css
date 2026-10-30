@@ -69,6 +69,9 @@ button[type="submit"],
 .sign-out button,
 .new-chat-button,
 .actions button,
+.story-nav button,
+.story-images button,
+.story-actions button,
 .retry {
   background: var(--accent);
   color: var(--accent-text);
@@ -774,4 +777,110 @@ button.secondary {
 
 .groups {
   padding-left: 1.1rem;
+}
+
+/* Stories: newsletters above the chat list, one circle per sender */
+.stories {
+  border-bottom: 1px solid var(--border);
+  padding: 0.6rem 0.4rem;
+}
+
+.stories ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  gap: 0.4rem;
+  overflow-x: auto;
+}
+
+.story-circle {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.2rem;
+  width: 4.5rem;
+  padding: 0.2rem;
+  background: transparent;
+  color: var(--text);
+  border: 0;
+}
+
+.story-circle .initials {
+  display: grid;
+  place-items: center;
+  width: 3.2rem;
+  height: 3.2rem;
+  border-radius: 50%;
+  background: var(--bg);
+  border: 2px solid var(--border);
+  font-weight: 600;
+}
+
+.story-circle.unseen .initials {
+  border: 3px solid var(--accent);
+  box-shadow: 0 0 0 2px var(--bg), 0 0 0 4px var(--accent);
+}
+
+.story-circle[aria-current="true"] .initials {
+  background: var(--selected-bg);
+}
+
+.story-circle .story-name {
+  font-size: 0.75rem;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: var(--muted);
+}
+
+.story-viewer {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+  padding: 0.8rem 1rem;
+  gap: 0.6rem;
+}
+
+.story-head h2 {
+  margin: 0;
+}
+
+.story-head p {
+  margin: 0;
+}
+
+.story-sender .address,
+.story-meta {
+  color: var(--muted);
+}
+
+.story-nav {
+  display: flex;
+  gap: 0.4rem;
+  margin-top: 0.4rem !important;
+}
+
+.story-frame {
+  flex: 1;
+  min-height: 20rem;
+  width: 100%;
+  border: 1px solid var(--border);
+  background: #ffffff;
+}
+
+.story-text {
+  flex: 1;
+  overflow-y: auto;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  border: 1px solid var(--border);
+  padding: 0.8rem;
+}
+
+.story-images p,
+.story-actions p {
+  margin: 0;
 }

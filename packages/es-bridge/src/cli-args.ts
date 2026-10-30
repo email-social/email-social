@@ -12,7 +12,8 @@ export interface CliOptions {
   name: string | null;
   cacheDir: string | null;
   maxMessages: number;
-  receipts: ReceiptSetting;
+  /** Given on the command line (and then stored in the account's settings), else null: the stored setting, "all" by default. */
+  receipts: ReceiptSetting | null;
 }
 
 export const USAGE = `Usage: email-social [options]
@@ -24,17 +25,19 @@ Without options you sign in to your IMAP/SMTP account in the page.
   --maildir <dir>        use a folder of .eml files (INBOX/, Sent/) instead of an account
   --address <address>    your address in that folder (required with --maildir)
   --name <name>          your display name (with --maildir)
-  --cache-dir <dir>      keep message metadata (never bodies) there to start faster
+  --cache-dir <dir>      keep message metadata (never bodies) there to start faster;
+                         the account's settings are kept there too
   --port <number>        listen on this port instead of a random one
   --no-open              do not open the browser
   --max-messages <n>     newest messages to load per IMAP folder (default 500)
   --receipts <which>     receipts this account sends to Email Social users who ask:
-                         all (default), delivered (never "read") or none
+                         all (default), delivered (never "read") or none;
+                         remembered in the account's settings for the next start
   --help                 show this text
 `;
 
 export function parseArgs(argv: readonly string[]): CliOptions {
-  const options: CliOptions = { demo: false, open: true, port: 0, help: false, maildir: null, address: null, name: null, cacheDir: null, maxMessages: 500, receipts: "all" };
+  const options: CliOptions = { demo: false, open: true, port: 0, help: false, maildir: null, address: null, name: null, cacheDir: null, maxMessages: 500, receipts: null };
   const args = argv.flatMap((a) => (a.startsWith("--") && a.includes("=") ? [a.slice(0, a.indexOf("=")), a.slice(a.indexOf("=") + 1)] : [a]));
   const value = (i: number, name: string): string => {
     const v = args[i + 1];

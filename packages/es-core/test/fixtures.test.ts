@@ -32,7 +32,7 @@ const karel: EsAddress = { name: "Karel Holub", address: "karel@example.org" };
 const daniel: EsAddress = { name: "Daniel Brooks", address: "daniel@example.com" };
 
 /** Delivery headers of a message a person sent directly (no list or automation fields), with its Return-Path if any. */
-const person = (returnPath: string | null = null): EsDelivery => ({ listHeaders: [], listId: null, autoSubmitted: null, precedence: null, returnPath });
+const person = (returnPath: string | null = null): EsDelivery => ({ listHeaders: [], listId: null, autoSubmitted: null, precedence: null, returnPath, listUnsubscribe: null });
 
 // ---------------------------------------------------------------- message ids
 
@@ -699,7 +699,14 @@ const CASES: Record<string, Case> = {
       es: null,
       attachments: [],
       refs: { messageId: ID.newsletter, inReplyTo: [], references: [] },
-      delivery: { listHeaders: ["list-unsubscribe"], listId: null, autoSubmitted: null, precedence: "bulk", returnPath: "bounce-7f3a2c@news.example.org" },
+      delivery: {
+        listHeaders: ["list-unsubscribe"],
+        listId: null,
+        autoSubmitted: null,
+        precedence: "bulk",
+        returnPath: "bounce-7f3a2c@news.example.org",
+        listUnsubscribe: { uris: ["https://news.example.org/u/abc123", "mailto:unsubscribe@news.example.org?subject=abc123"], oneClick: true },
+      },
     },
   },
 
@@ -742,6 +749,10 @@ const CASES: Record<string, Case> = {
         autoSubmitted: null,
         precedence: "list",
         returnPath: "dev-list-bounces@lists.example.org",
+        listUnsubscribe: {
+          uris: ["https://lists.example.org/mailman/options/dev-list", "mailto:dev-list-request@lists.example.org?subject=unsubscribe"],
+          oneClick: false,
+        },
       },
     },
   },

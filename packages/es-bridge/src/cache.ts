@@ -13,7 +13,8 @@ import type { EsMessage } from "@email-social/es-core";
 import type { MailEntry } from "./adapters/types.js";
 
 interface CacheFile {
-  version: 2;
+  /** 3: messages carry delivery.listUnsubscribe; older files are read as no cache. */
+  version: 3;
   messages: { key: string; entry: MailEntry; message: EsMessage }[];
 }
 
@@ -23,7 +24,7 @@ export function withoutBodies(message: EsMessage): EsMessage {
   return {
     ...message,
     text: "",
-    es: es?.$type === "es.social.post" ? { ...es, text: null } : es,
+    es: es?.$type === "es.social.post" || es?.$type === "es.social.story" ? { ...es, text: null } : es,
   };
 }
 
@@ -42,7 +43,7 @@ export class MetadataCache {
     const out = new Map<string, { entry: MailEntry; message: EsMessage }>();
     try {
       const data = JSON.parse(await readFile(this.file, "utf8")) as CacheFile;
-      if (data.version !== 2 || !Array.isArray(data.messages)) return out;
+      if (data.version !== 3 || !Array.isArray(data.messages)) return out;
       for (const m of data.messages) out.set(m.key, { entry: m.entry, message: withoutBodies(m.message) });
     } catch {
       // No cache yet, or an unreadable one: start from the mailbox.
@@ -52,7 +53,7 @@ export class MetadataCache {
 
   async save(messages: Iterable<{ key: string; entry: MailEntry; message: EsMessage }>): Promise<void> {
     const data: CacheFile = {
-      version: 2,
+      version: 3,
       messages: [...messages].map((m) => ({ key: m.key, entry: m.entry, message: withoutBodies(m.message) })),
     };
     await mkdir(this.dir, { recursive: true, mode: 0o700 });

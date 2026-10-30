@@ -95,6 +95,10 @@ describe("local API: where and to whom it answers", () => {
     expect(csp).toContain("default-src 'self'");
     expect(csp).toContain(`connect-src 'self' ws://127.0.0.1:${bridge.port} ws://localhost:${bridge.port}`);
     expect(csp).toContain("frame-ancestors 'none'");
+    // What a story frame needs (it inherits this policy): its style attributes, and images once the reader asks.
+    expect(csp).toContain("style-src-attr 'unsafe-inline'");
+    expect(csp).toContain("img-src 'self' data: https:");
+    expect(csp).toContain("script-src 'self'");
     expect(page.headers.get("referrer-policy")).toBe("no-referrer");
     const script = await fetch(`http://127.0.0.1:${bridge.port}/assets/app.js`);
     expect(script.headers.get("content-type")).toMatch(/^text\/javascript/);

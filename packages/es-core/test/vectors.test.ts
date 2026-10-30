@@ -15,8 +15,9 @@ import { fileURLToPath } from "node:url";
 import { describe, expect, it } from "vitest";
 import { parseMessage } from "../src/parse.js";
 import { splitQuoted } from "../src/quotes.js";
-import { serializeMessage, serializeReceipt } from "../src/serialize.js";
-import type { EsMessage, EsOutgoing, EsOutgoingReceipt, QuotedSplit, SerializeOptions } from "../src/types.js";
+import { serializeMessage, serializeReceipt, writeStory } from "../src/serialize.js";
+import { storyOf } from "../src/story.js";
+import type { EsMessage, EsOutgoing, EsOutgoingReceipt, EsOutgoingStory, EsStory, QuotedSplit, SerializeOptions } from "../src/types.js";
 import { FIXTURES_DIR, listAllFixtures, readFixture } from "./helpers/fixtures.js";
 
 const VECTORS_DIR = fileURLToPath(new URL("../vectors/", import.meta.url));
@@ -24,7 +25,8 @@ const UPDATE = process.env.ES_UPDATE_VECTORS === "1";
 
 type GeneratedInput =
   | { kind: "message"; outgoing: EsOutgoing; options: SerializeOptions }
-  | { kind: "receipt"; receipt: EsOutgoingReceipt; options: SerializeOptions };
+  | { kind: "receipt"; receipt: EsOutgoingReceipt; options: SerializeOptions }
+  | { kind: "story"; story: EsOutgoingStory; options: SerializeOptions };
 
 interface Vector {
   description: string;
@@ -39,7 +41,12 @@ interface Vector {
   expected: EsMessage;
   /** splitQuoted(expected): what the sender wrote now, what was quoted, the signature. */
   split: QuotedSplit;
+  /** Only in stories-*.json: storyOf(expected), the story the message is (null: none). */
+  story?: EsStory | null;
 }
+
+/** Story vectors (from fixtures/stories/ and the generated story) also carry `story`. */
+const isStoryVector = (name: string): boolean => name.startsWith("stories-");
 
 const GENERATED: Record<string, { description: string; input: GeneratedInput }> = {
   "generated-message.json": {
@@ -144,6 +151,22 @@ const GENERATED: Record<string, { description: string; input: GeneratedInput }> 
       options: { date: "2026-03-03T08:20:00Z", messageId: "<es-vector-8@mail.example.org>" },
     },
   },
+  "stories-explicit-record.json": {
+    description:
+      "A story written by es-core (writeStory): text/plain first, then an es.social.story record with its title, expiresAt and unsubscribe address; List-Unsubscribe carries the same address for ordinary clients.",
+    input: {
+      kind: "story",
+      story: {
+        from: { name: "Shoe Shop", address: "news@shop.example.org" },
+        to: [{ name: "Alice Example", address: "alice@example.com" }],
+        title: "Spring sale: shoes from 20 €",
+        text: "Spring sale: walking shoes, trail runners and sandals from 20 €, until Sunday.\n\nhttps://shop.example.org/sale\n",
+        expiresAt: "2026-03-22T23:00:00Z",
+        unsubscribe: { mailto: "leave@shop.example.org" },
+      },
+      options: { date: "2026-03-18T08:00:00Z", messageId: "<es-vector-9@shop.example.org>" },
+    },
+  },
   "generated-receipt-delivered.json": {
     description: "A Delivered receipt (es.social.receipt, kind delivered) answering the first generated message.",
     input: {
@@ -173,12 +196,12 @@ const GENERATED: Record<string, { description: string; input: GeneratedInput }> 
 };
 
 function serialize(input: GeneratedInput): string {
-  return input.kind === "message"
-    ? serializeMessage(input.outgoing, input.options)
-    : serializeReceipt(input.receipt, input.options);
+  if (input.kind === "message") return serializeMessage(input.outgoing, input.options);
+  if (input.kind === "story") return writeStory(input.story, input.options);
+  return serializeReceipt(input.receipt, input.options);
 }
 
-/** "name.eml" → "name.json"; "replies/name.eml" → "replies-name.json". */
+/** "name.eml" → "name.json"; "replies/name.eml" → "replies-name.json"; "stories/name.eml" → "stories-name.json". */
 function vectorName(fixture: string): string {
   return fixture.replace(/\//g, "-").replace(/\.eml$/, ".json");
 }
@@ -223,12 +246,13 @@ if (UPDATE) {
       ...encodeRaw(bytes),
       expected,
       split: splitQuoted(expected),
+      ...(isStoryVector(vectorName(fixture)) ? { story: storyOf(expected) } : {}),
     });
   }
   for (const [name, { description, input }] of Object.entries(GENERATED)) {
     const raw = serialize(input);
     const expected = parseMessage(raw);
-    write(name, { description, source: "generated", input, raw, expected, split: splitQuoted(expected) });
+    write(name, { description, source: "generated", input, raw, expected, split: splitQuoted(expected), ...(isStoryVector(name) ? { story: storyOf(expected) } : {}) });
   }
 }
 
@@ -263,6 +287,15 @@ describe("test vectors (vectors/*.json)", () => {
 
   it.each(vectors)("%s: splitQuoted(expected) equals split", (_, vector) => {
     expect(splitQuoted(vector.expected)).toEqual(vector.split);
+  });
+
+  it("gives every story vector a story field and no other vector one", () => {
+    for (const [name, vector] of vectors) expect("story" in vector, name).toBe(isStoryVector(name));
+    expect(vectors.filter(([name]) => isStoryVector(name)).length).toBe(8);
+  });
+
+  it.each(vectors.filter(([name]) => isStoryVector(name)))("%s: storyOf(expected) equals story", (_, vector) => {
+    expect(storyOf(vector.expected)).toEqual(vector.story);
   });
 
   it.each(Object.keys(GENERATED))("%s: serialising the input gives the raw message byte for byte", (name) => {

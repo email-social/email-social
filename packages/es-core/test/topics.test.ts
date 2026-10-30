@@ -171,8 +171,8 @@ describe("topicsOf: kinds, counts and what it ignores", () => {
 
   it("leaves out Auto-Submitted messages (other than 'no'), which neither start nor join a topic", () => {
     const a = msg({ id: mid("a"), from: BOB, to: ALICE, date: t(0), subject: "Invoice 114" });
-    const auto = { ...msg({ id: mid("v"), from: BOB, to: ALICE, date: t(1), subject: "Out of office" }), delivery: { listHeaders: [], listId: null, autoSubmitted: "auto-replied", precedence: null, returnPath: null } };
-    const no = { ...msg({ id: mid("n"), from: BOB, to: ALICE, date: t(2), subject: "Re: Invoice 114", inReplyTo: mid("a") }), delivery: { listHeaders: [], listId: null, autoSubmitted: "no", precedence: null, returnPath: null } };
+    const auto = { ...msg({ id: mid("v"), from: BOB, to: ALICE, date: t(1), subject: "Out of office" }), delivery: { listHeaders: [], listId: null, autoSubmitted: "auto-replied", precedence: null, returnPath: null, listUnsubscribe: null } };
+    const no = { ...msg({ id: mid("n"), from: BOB, to: ALICE, date: t(2), subject: "Re: Invoice 114", inReplyTo: mid("a") }), delivery: { listHeaders: [], listId: null, autoSubmitted: "no", precedence: null, returnPath: null, listUnsubscribe: null } };
     const result = topicsOf([a, auto, no]);
     expect(Object.keys(result.of).sort()).toEqual([mid("a"), mid("n")].sort());
     expect(result.topics).toEqual([{ rootId: mid("a"), label: null, base: "Invoice 114", kind: "plain", count: 2 }]);
@@ -237,7 +237,7 @@ describe("subjectNoteOf", () => {
   });
 
   it("an Auto-Submitted message → null", () => {
-    const auto = { ...msg({ id: mid("a"), from: BOB, date: t(1), subject: "Automatic reply: Invoice 114" }), delivery: { listHeaders: [], listId: null, autoSubmitted: "auto-replied", precedence: null, returnPath: null } };
+    const auto = { ...msg({ id: mid("a"), from: BOB, date: t(1), subject: "Automatic reply: Invoice 114" }), delivery: { listHeaders: [], listId: null, autoSubmitted: "auto-replied", precedence: null, returnPath: null, listUnsubscribe: null } };
     expect(subjectNoteOf(auto, topic)).toBeNull();
   });
 });

@@ -36,7 +36,8 @@
       "listId": null,
       "autoSubmitted": null,
       "precedence": null,
-      "returnPath": "office@example.com"
+      "returnPath": "office@example.com",
+      "listUnsubscribe": null
     }
   },
   "split": {

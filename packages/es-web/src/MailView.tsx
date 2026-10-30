@@ -1,4 +1,19 @@
-import type { ChatSummary, ChatView, ContactDetail, ContactView, OtherSummary, OtherView, Person, SendRequest, SendResult, SyncStatus } from "@email-social/es-bridge/api";
+import type {
+  ChatSummary,
+  ChatView,
+  ContactDetail,
+  ContactView,
+  OtherSummary,
+  OtherView,
+  Person,
+  SendRequest,
+  SendResult,
+  StorySender,
+  StoryView,
+  SyncStatus,
+  UnsubscribeResult,
+  UnsubscribeTarget,
+} from "@email-social/es-bridge/api";
 import { useEffect, useRef, useState } from "preact/hooks";
 import type { Api } from "./api.js";
 import { ChatList } from "./ChatList.js";
@@ -7,6 +22,7 @@ import { ContactPage } from "./ContactPage.js";
 import { NewChat } from "./NewChat.js";
 import { OtherMail } from "./OtherMail.js";
 import { StatusBar } from "./Status.js";
+import { StoriesStrip, StoryViewer, stripSenders } from "./Stories.js";
 
 interface Props {
   api: Api;
@@ -23,13 +39,23 @@ interface Props {
 }
 
 /** What the right-hand pane shows. */
-type Pane = { kind: "none" } | { kind: "chat"; id: string } | { kind: "other"; id: string } | { kind: "new"; to: string[] } | { kind: "contact"; address: string };
+type Pane =
+  | { kind: "none" }
+  | { kind: "chat"; id: string }
+  | { kind: "other"; id: string }
+  | { kind: "new"; to: string[] }
+  | { kind: "contact"; address: string }
+  | { kind: "story"; messageId: string };
 
-type Shown = { kind: "chat"; view: ChatView } | { kind: "other"; view: OtherView } | { kind: "contact"; contact: ContactDetail } | null;
+type Shown = { kind: "chat"; view: ChatView } | { kind: "other"; view: OtherView } | { kind: "contact"; contact: ContactDetail } | { kind: "story"; view: StoryView } | null;
 
 export function MailView({ api, account, mode, tick, sync, connected, onRetry, onSignOut, remembered }: Props) {
   const [chats, setChats] = useState<ChatSummary[] | null>(null);
   const [others, setOthers] = useState<OtherSummary[]>([]);
+  const [stories, setStories] = useState<StorySender[]>([]);
+  /** The story whose images the reader asked for; never carried over to another story. */
+  const [imagesFor, setImagesFor] = useState<string | null>(null);
+  const [notice, setNotice] = useState<string | null>(null);
   const [contacts, setContacts] = useState<ContactView[]>([]);
   const [pane, setPane] = useState<Pane>({ kind: "none" });
   const [shown, setShown] = useState<Shown>(null);
@@ -49,15 +75,20 @@ export function MailView({ api, account, mode, tick, sync, connected, onRetry, o
     } else if (target.kind === "contact") {
       const contact = await api.call<ContactDetail>(`/api/contacts/${encodeURIComponent(target.address)}`).catch(() => null);
       next = contact === null ? null : { kind: "contact", contact };
+    } else if (target.kind === "story") {
+      // Opening marks the message seen; it sends no receipt and loads nothing from the sender.
+      const view = await api.call<StoryView>("/api/stories/open", { method: "POST", body: { messageId: target.messageId } }).catch(() => null);
+      next = view === null ? null : { kind: "story", view };
     }
     if (paneRef.current === target) setShown(next);
   };
 
   const refresh = async (): Promise<void> => {
     try {
-      const [c, o] = await Promise.all([api.call<ChatSummary[]>("/api/chats"), api.call<OtherSummary[]>("/api/other")]);
+      const [c, o, s] = await Promise.all([api.call<ChatSummary[]>("/api/chats"), api.call<OtherSummary[]>("/api/other"), api.call<StorySender[]>("/api/stories")]);
       setChats(c);
       setOthers(o);
+      setStories(s);
       await loadPane(paneRef.current);
       setError(null);
     } catch (e) {
@@ -78,6 +109,8 @@ export function MailView({ api, account, mode, tick, sync, connected, onRetry, o
     setPane(target);
     paneRef.current = target;
     setShown(null);
+    setNotice(null);
+    if (target.kind !== "story" || target.messageId !== imagesFor) setImagesFor(null);
     if (target.kind === "new") {
       setContacts(await api.call<ContactView[]>("/api/contacts").catch(() => []));
       heading.current?.focus();
@@ -105,6 +138,37 @@ export function MailView({ api, account, mode, tick, sync, connected, onRetry, o
     document.querySelector<HTMLButtonElement>(`button[data-id="${CSS.escape(selectedId)}"]`)?.focus();
   };
   const person = (address: string): void => void go({ kind: "contact", address });
+
+  // Stories in strip order, each sender's newest first: what left and right move through.
+  const storyOrder = stripSenders(stories).flatMap((s) => s.stories.map((story) => story.messageId));
+  const storyAt = (offset: number): (() => void) | null => {
+    if (pane.kind !== "story") return null;
+    const index = storyOrder.indexOf(pane.messageId);
+    const next = index < 0 ? (offset > 0 ? storyOrder[0] : undefined) : storyOrder[index + offset];
+    return next === undefined ? null : () => void go({ kind: "story", messageId: next });
+  };
+  const unsubscribe = async (messageId: string, target: UnsubscribeTarget): Promise<void> => {
+    // A page opens in its own window, without this page as referrer; the bridge makes no request for it.
+    if (target.kind === "link") window.open(target.url, "_blank", "noopener,noreferrer");
+    try {
+      const result = await api.call<UnsubscribeResult>("/api/stories/unsubscribe", { method: "POST", body: { messageId } });
+      const done =
+        result.done === "oneClick" ? `Unsubscribe request sent to ${result.host}.` : result.done === "mailto" ? `Unsubscribe e-mail sent to ${result.address}.` : "The unsubscribe page opened in a new window.";
+      setNotice(`${done} This sender's stories are hidden; their messages stay under Other mail.`);
+    } catch (e) {
+      setNotice(`Could not unsubscribe: ${e instanceof Error ? e.message : String(e)}`);
+    }
+    await refresh();
+  };
+  const hide = async (address: string): Promise<void> => {
+    try {
+      await api.call("/api/stories/hide", { method: "POST", body: { sender: address } });
+      setNotice("This sender's stories are hidden; their messages stay under Other mail.");
+    } catch (e) {
+      setNotice(`Could not hide the sender: ${e instanceof Error ? e.message : String(e)}`);
+    }
+    await refresh();
+  };
 
   return (
     <div class="app">
@@ -145,6 +209,7 @@ export function MailView({ api, account, mode, tick, sync, connected, onRetry, o
             <p class="empty">Loading your mailbox…</p>
           ) : (
             <>
+              <StoriesStrip senders={stories} open={pane.kind === "story" ? pane.messageId : null} onOpen={(messageId) => void go({ kind: "story", messageId })} />
               <ChatList chats={chats} selected={pane.kind === "chat" ? pane.id : null} onSelect={(id) => void go({ kind: "chat", id })} now={new Date()} />
               <OtherMail senders={others} selected={pane.kind === "other" ? pane.id : null} onSelect={(id) => void go({ kind: "other", id })} now={new Date()} />
             </>
@@ -157,6 +222,21 @@ export function MailView({ api, account, mode, tick, sync, connected, onRetry, o
             <ChatPane key={shown.view.chat.id} view={shown.view} token={api.token} headingRef={heading} onPerson={person} onSend={(request) => send({ chatId: shown.view.chat.id, ...request })} />
           ) : shown?.kind === "other" ? (
             <OtherPane view={shown.view} token={api.token} headingRef={heading} onPerson={person} />
+          ) : shown?.kind === "story" ? (
+            <StoryViewer
+              key={shown.view.messageId}
+              view={shown.view}
+              now={new Date()}
+              headingRef={heading}
+              images={imagesFor === shown.view.messageId}
+              onLoadImages={() => setImagesFor(shown.view.messageId)}
+              onUnsubscribe={(target) => unsubscribe(shown.view.messageId, target)}
+              onHide={() => hide(shown.view.sender.address)}
+              onPrevious={storyAt(-1)}
+              onNext={storyAt(1)}
+              onClose={() => void go({ kind: "none" })}
+              notice={notice}
+            />
           ) : shown?.kind === "contact" ? (
             <ContactPage
               contact={shown.contact}

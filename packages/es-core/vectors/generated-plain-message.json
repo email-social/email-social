@@ -59,7 +59,8 @@
       "listId": null,
       "autoSubmitted": null,
       "precedence": null,
-      "returnPath": null
+      "returnPath": null,
+      "listUnsubscribe": null
     }
   },
   "split": {

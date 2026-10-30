@@ -14,7 +14,7 @@ function raw(extra: string[], from = "Bob Svoboda <bob@example.org>"): string {
 const kind = (extra: string[], from?: string): string => classifyMessage(parseMessage(raw(extra, from)));
 
 describe("delivery headers in EsMessage", () => {
-  it("records the list header fields, the List-Id, Auto-Submitted, Precedence and Return-Path", () => {
+  it("records the list header fields, the List-Id, Auto-Submitted, Precedence, Return-Path and List-Unsubscribe", () => {
     const m = parseMessage(readFixture("mailing-list-footer.eml"));
     expect(m.delivery).toEqual({
       listHeaders: ["list-archive", "list-help", "list-id", "list-post", "list-subscribe", "list-unsubscribe"],
@@ -22,6 +22,10 @@ describe("delivery headers in EsMessage", () => {
       autoSubmitted: null,
       precedence: "list",
       returnPath: "dev-list-bounces@lists.example.org",
+      listUnsubscribe: {
+        uris: ["https://lists.example.org/mailman/options/dev-list", "mailto:dev-list-request@lists.example.org?subject=unsubscribe"],
+        oneClick: false,
+      },
     });
     expect(parseMessage(raw(["Return-Path: <>", "Auto-Submitted: Auto-Replied (vacation); owner-email=\"bob@example.org\""])).delivery).toEqual({
       listHeaders: [],
@@ -29,8 +33,9 @@ describe("delivery headers in EsMessage", () => {
       autoSubmitted: "auto-replied",
       precedence: null,
       returnPath: "",
+      listUnsubscribe: null,
     });
-    expect(parseMessage(raw([])).delivery).toEqual({ listHeaders: [], listId: null, autoSubmitted: null, precedence: null, returnPath: null });
+    expect(parseMessage(raw([])).delivery).toEqual({ listHeaders: [], listId: null, autoSubmitted: null, precedence: null, returnPath: null, listUnsubscribe: null });
   });
 });
 

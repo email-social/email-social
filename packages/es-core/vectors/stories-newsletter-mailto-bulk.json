@@ -1,0 +1,65 @@
+{
+  "description": "A club's weekly newsletter sent from its own server: text/plain only, 8bit UTF-8; Precedence: bulk; List-Unsubscribe with a mailto URI whose percent-encoded subject is the one to send; a story unsubscribed by e-mail",
+  "source": "fixtures/stories/newsletter-mailto-bulk.eml",
+  "raw": "Return-Path: <club-news-bounces@club.example.net>\r\nDate: Fri, 20 Mar 2026 18:05:00 +0100\r\nFrom: Hiking Club <news@club.example.net>\r\nTo: alice@example.com\r\nSubject: Weekend walks, 21-22 March\r\nMessage-ID: <weekly-2026-12@club.example.net>\r\nPrecedence: bulk\r\nList-Unsubscribe: <mailto:leave@club.example.net?subject=unsubscribe%20weekly>\r\nMIME-Version: 1.0\r\nContent-Type: text/plain; charset=utf-8\r\nContent-Transfer-Encoding: 8bit\r\n\r\nWeekend walks, 21–22 March\r\n\r\nSaturday: Ridge path, 14 km, meet 9:00 at the station.\r\nSunday: River loop, 8 km, meet 10:30 at the bridge.\r\n\r\nBring water and a rain jacket.\r\n\r\nHiking Club\r\nTo stop this weekly mail, reply with \"unsubscribe\" or write to\r\nleave@club.example.net.\r\n",
+  "expected": {
+    "id": "<weekly-2026-12@club.example.net>",
+    "from": {
+      "name": "Hiking Club",
+      "address": "news@club.example.net"
+    },
+    "to": [
+      {
+        "name": "",
+        "address": "alice@example.com"
+      }
+    ],
+    "cc": [],
+    "replyTo": [],
+    "date": "2026-03-20T17:05:00.000Z",
+    "subject": "Weekend walks, 21-22 March",
+    "text": "Weekend walks, 21–22 March\n\nSaturday: Ridge path, 14 km, meet 9:00 at the station.\nSunday: River loop, 8 km, meet 10:30 at the bridge.\n\nBring water and a rain jacket.\n\nHiking Club\nTo stop this weekly mail, reply with \"unsubscribe\" or write to\nleave@club.example.net.\n",
+    "textSource": "plain",
+    "es": null,
+    "attachments": [],
+    "refs": {
+      "messageId": "<weekly-2026-12@club.example.net>",
+      "inReplyTo": [],
+      "references": []
+    },
+    "delivery": {
+      "listHeaders": [
+        "list-unsubscribe"
+      ],
+      "listId": null,
+      "autoSubmitted": null,
+      "precedence": "bulk",
+      "returnPath": "club-news-bounces@club.example.net",
+      "listUnsubscribe": {
+        "uris": [
+          "mailto:leave@club.example.net?subject=unsubscribe%20weekly"
+        ],
+        "oneClick": false
+      }
+    }
+  },
+  "split": {
+    "fresh": "Weekend walks, 21–22 March\n\nSaturday: Ridge path, 14 km, meet 9:00 at the station.\nSunday: River loop, 8 km, meet 10:30 at the bridge.\n\nBring water and a rain jacket.\n\nHiking Club\nTo stop this weekly mail, reply with \"unsubscribe\" or write to\nleave@club.example.net.",
+    "quoted": "",
+    "signature": ""
+  },
+  "story": {
+    "sender": {
+      "name": "Hiking Club",
+      "address": "news@club.example.net"
+    },
+    "title": "Weekend walks, 21-22 March",
+    "receivedAt": "2026-03-20T17:05:00.000Z",
+    "expiresAt": "2026-03-27T17:05:00.000Z",
+    "unsubscribe": {
+      "mailto": "leave@club.example.net",
+      "subject": "unsubscribe weekly"
+    },
+    "explicit": false
+  }
+}

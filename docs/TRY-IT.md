@@ -55,8 +55,10 @@ it; by default both receipts are sent. Start with `--receipts delivered` to
 never send Read receipts, or `--receipts none` to send no receipts at all
 (this works the same with `--demo`, `--maildir` and an account you sign in
 to). Receipts others send you are still shown either way. The web client
-has no settings view, so this is set on the command line each time you
-start `email-social`:
+has no settings view; the option is remembered in the account's settings
+file (in the `--cache-dir` folder when you give one, else in your
+configuration folder, `~/.config/email-social` on Linux and macOS), so the
+next start without it keeps your choice:
 
 ```sh
 npx email-social --receipts none
@@ -64,6 +66,48 @@ npx email-social --receipts none
 
 `./my-mail/INBOX/*.eml` are received messages and `./my-mail/Sent/*.eml`
 yours.
+
+### 2a. Newsletters as stories
+
+Newsletters and promotions are not chats. Those received in the last seven
+days are shown as **stories**: a row of circles at the top of the chat list,
+one per sender, with the sender's initials and a ring while there is one you
+have not opened. The demo's own newsletter is from March 2026, so it is past
+its seven days and appears only under **Other mail** (where every newsletter
+stays). To see stories, copy a newsletter with today's date into the demo
+folder printed in the terminal (`DEMO` below), from the repository root:
+
+```sh
+DEMO=/path/printed/by/email-social
+sed "s/^Date: .*/Date: $(date -R)/" packages/es-core/fixtures/stories/newsletter-one-click.eml > "$DEMO/INBOX/news-shoes.eml"
+sed "s/^Date: .*/Date: $(date -R)/" packages/es-core/fixtures/stories/newsletter-mailto-bulk.eml > "$DEMO/INBOX/news-club.eml"
+sed "s/^Date: .*/Date: $(date -R)/" packages/es-core/fixtures/stories/order-confirmation.eml > "$DEMO/INBOX/order.eml"
+```
+
+What you should see:
+
+- Within a few seconds two circles appear, "SS" (Shoe Shop) and "HC"
+  (Hiking Club), the newest first. The order confirmation is not a story: it
+  is under **Other mail** only.
+- Pressing a circle opens the story in the right-hand pane and its ring goes.
+  The shoe shop's HTML is shown without its images; the club's text-only
+  newsletter as text. **←** and **→** (or the arrow keys) move between
+  stories.
+- **Load images** first shows one line: "Loading images tells the sender
+  that you opened this message." Only after you press **Load images** again
+  are that story's images fetched, and only for that story.
+- **Unsubscribe** says how it works (one tap, by e-mail, or opens a page)
+  and asks before doing anything, naming where the request goes. In the demo,
+  "by e-mail" writes the unsubscribe message into `Outbox/`; "one tap" fails
+  with an error because `shop.example.org` does not exist. Either way the
+  sender's stories are hidden afterwards, and their messages stay under
+  **Other mail**.
+- **Hide sender** removes the circle without unsubscribing. The hidden
+  senders are kept in the same settings file as the receipt choice.
+
+Reading a story makes no request to its sender or to anyone else. Loading
+images and unsubscribing are the only requests to the sender, and each
+happens only when you explicitly ask for it.
 
 ## 3. Manual smoke test with a real mailbox
 
@@ -120,6 +164,7 @@ The page shows **Sign in to your mailbox**.
 | Sign in | "Signing in as …" with a number that changes: seconds while connecting, then "Loading messages: 23 of 540". The chats appear once the newest 50 messages are in; a line at the top then shows "Loading older messages: … of …" until the rest is there. Nothing stays on "Signing in…" without a changing number. A wrong password shows the server's error in red above the form, and the password is not shown anywhere. If the server does not answer, the error and **Try again** appear within a minute. |
 | Chat list | One row per person or group (at most the 500 newest messages of the inbox and of the sent folder), newest first, with names, the first line of what was last written (no quoted text) and an unread count that matches the unread messages from those people in your webmail's inbox. Someone who wrote under several subjects is one chat. |
 | Other mail | Mailing lists, newsletters and automated senders (notifications, no-reply senders, delivery reports) are not chats: they are under the collapsed **Other mail**, read-only. |
+| Stories | Newsletters of the last seven days appear as circles above the chats (see 2a), one per sender; order confirmations, password resets and mailing-list discussions do not. Opening one loads no images; **Load images** and **Unsubscribe** each ask first. After a one-tap unsubscribe, note in the result whether the newsletter's sender confirmed it (some show a page or send a last message). |
 | Open a chat | Bubbles in date order: your messages (from the sent folder) on the right labelled "You", the others on the left with the sender's name. Each bubble shows only what its sender wrote: no quoted text, not even behind a control (a reply written point by point keeps its quoted lines, greyed, under "answered point by point"); **Show signature** reveals the signature, and the **⋯** menu of a bubble offers **Reply** and **Open original**, which downloads the whole message as `.eml`. The unread count drops to 0, and the messages show as read in your webmail too. HTML-only mail shows as text with "Shown as plain text. Open original". |
 | Quote card | A card appears only above a deliberate reply, with a coloured bar on the left: the name of the person answered in bold ("You" for your own message), what of their message was answered, and a 📎 with the file name when that message had an attachment. Pressing the card scrolls to that message and outlines it for a second. Cards appear above: your own replies made with **Reply**; replies from ordinary mail clients whose quote was cut down to a few lines of the message they answer; and Email Social messages whose sender chose **Reply** (also when the answered message is not in your mailbox; then the card cannot be pressed). A normal reply from Gmail, Outlook or another client, which quotes the whole message, has no card. There are no subject cards. |
 | Topics | A chat with several threads shows a small chip on the first message of each run ("Ongoing chat" for the thread without a name) and **All topics ▾** in its header with the number of messages in each; choosing one shows only its messages and sets the text box to it. A chat with one thread shows neither. When someone's mail client changed the subject of a reply (for example a gateway adding "[EXTERNAL]"), that message shows one small "Subject: …" line and stays where it was. |
