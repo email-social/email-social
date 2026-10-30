@@ -1,0 +1,48 @@
+{
+  "description": "Gmail web, sk: attribution \"ut 3. 3. 2026 o 10:15 Alice Dvořáková <alice@example.com> napísal(a):\"",
+  "source": "fixtures/replies/gmail-web-sk.eml",
+  "raw": "MIME-Version: 1.0\r\nReferences: <CAKx4m3yb7wQ12EDo1bK9vfmsFwbW8zgih4O2DBMFRb0CoISp@mail.example.com>\r\nIn-Reply-To: <CAKx4m3yb7wQ12EDo1bK9vfmsFwbW8zgih4O2DBMFRb0CoISp@mail.example.com>\r\nFrom: =?UTF-8?Q?Martina_Kov=C3=A1=C4=8Dov=C3=A1?= <martina.kovacova@example.net>\r\nDate: Tue, 3 Mar 2026 12:30:05 +0100\r\nMessage-ID: <CAH7x9kCRS1fwZjpW6Gz6ohiUCIQFzl7a5HPvWahjoshiA1TX8@mail.example.com>\r\nSubject: =?UTF-8?B?UmU6IEZvdGt5IHogdsO9bGV0dQ==?=\r\nTo: =?UTF-8?Q?Alice_Dvo=C5=99=C3=A1kov=C3=A1?= <alice@example.com>\r\nContent-Type: multipart/alternative; boundary=\"000000000000817b9072811e922b\"\r\n\r\n--000000000000817b9072811e922b\r\nContent-Type: text/plain; charset=\"UTF-8\"\r\nContent-Transfer-Encoding: quoted-printable\r\n\r\nAhoj Alice,\r\n\r\nfotky som nahrala do zdie=C4=BEan=C3=A9ho albumu, odkaz po=C5=A1lem ve=C4=\r\n=8Der.\r\n\r\nMartina\r\n\r\nut 3. 3. 2026 o 10:15 Alice Dvo=C5=99=C3=A1kov=C3=A1 <alice@example.com> na=\r\np=C3=ADsal(a):\r\n\r\n> Ahoj Martina,\r\n>\r\n> po=C5=A1le=C5=A1 mi, pros=C3=ADm, fotky z v=C3=BDletu? Chcem ich da=C5=A5=\r\n do albumu.\r\n>\r\n> V=C4=8Faka,\r\n> Alice\r\n\r\n\r\n--000000000000817b9072811e922b\r\nContent-Type: text/html; charset=\"UTF-8\"\r\nContent-Transfer-Encoding: quoted-printable\r\n\r\n<div dir=3D\"ltr\"><div>Ahoj Alice,</div><div><br></div><div>fotky som nahral=\r\na do zdie=C4=BEan=C3=A9ho albumu, odkaz po=C5=A1lem ve=C4=8Der.</div><div><=\r\nbr></div><div>Martina</div></div><br><div class=3D\"gmail_quote gmail_quote_=\r\ncontainer\"><div dir=3D\"ltr\" class=3D\"gmail_attr\">ut 3. 3. 2026 o 10:15 Alic=\r\ne Dvo=C5=99=C3=A1kov=C3=A1 &lt;<a href=3D\"mailto:alice@example.com\">alice@e=\r\nxample.com</a>&gt; nap=C3=ADsal(a):<br></div><blockquote class=3D\"gmail_quo=\r\nte\" style=3D\"margin:0px 0px 0px 0.8ex;border-left:1px solid rgb(204,204,204=\r\n);padding-left:1ex\"><div dir=3D\"ltr\">Ahoj Martina,<br><br>po=C5=A1le=C5=A1 =\r\nmi, pros=C3=ADm, fotky z v=C3=BDletu? Chcem ich da=C5=A5 do albumu.<br><br>=\r\nV=C4=8Faka,<br>Alice</div></blockquote></div>\r\n\r\n--000000000000817b9072811e922b--\r\n",
+  "expected": {
+    "id": "<CAH7x9kCRS1fwZjpW6Gz6ohiUCIQFzl7a5HPvWahjoshiA1TX8@mail.example.com>",
+    "from": {
+      "name": "Martina Kováčová",
+      "address": "martina.kovacova@example.net"
+    },
+    "to": [
+      {
+        "name": "Alice Dvořáková",
+        "address": "alice@example.com"
+      }
+    ],
+    "cc": [],
+    "replyTo": [],
+    "date": "2026-03-03T11:30:05.000Z",
+    "subject": "Re: Fotky z výletu",
+    "text": "Ahoj Alice,\n\nfotky som nahrala do zdieľaného albumu, odkaz pošlem večer.\n\nMartina\n\nut 3. 3. 2026 o 10:15 Alice Dvořáková <alice@example.com> napísal(a):\n\n> Ahoj Martina,\n>\n> pošleš mi, prosím, fotky z výletu? Chcem ich dať do albumu.\n>\n> Vďaka,\n> Alice\n\n",
+    "textSource": "plain",
+    "es": null,
+    "attachments": [],
+    "refs": {
+      "messageId": "<CAH7x9kCRS1fwZjpW6Gz6ohiUCIQFzl7a5HPvWahjoshiA1TX8@mail.example.com>",
+      "inReplyTo": [
+        "<CAKx4m3yb7wQ12EDo1bK9vfmsFwbW8zgih4O2DBMFRb0CoISp@mail.example.com>"
+      ],
+      "references": [
+        "<CAKx4m3yb7wQ12EDo1bK9vfmsFwbW8zgih4O2DBMFRb0CoISp@mail.example.com>"
+      ]
+    },
+    "delivery": {
+      "listHeaders": [],
+      "listId": null,
+      "autoSubmitted": null,
+      "precedence": null,
+      "returnPath": null,
+      "listUnsubscribe": null
+    }
+  },
+  "split": {
+    "fresh": "Ahoj Alice,\n\nfotky som nahrala do zdieľaného albumu, odkaz pošlem večer.\n\nMartina",
+    "quoted": "ut 3. 3. 2026 o 10:15 Alice Dvořáková <alice@example.com> napísal(a):\n\n> Ahoj Martina,\n>\n> pošleš mi, prosím, fotky z výletu? Chcem ich dať do albumu.\n>\n> Vďaka,\n> Alice",
+    "signature": ""
+  }
+}

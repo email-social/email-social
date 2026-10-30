@@ -1,0 +1,50 @@
+{
+  "description": "Gmail web, en: reply to a reply: two attribution blocks, the inner one at depth 2 (> >)",
+  "source": "fixtures/replies/gmail-nested-reply-en.eml",
+  "raw": "MIME-Version: 1.0\r\nReferences: <CAKx4m59VhiUyyeXHhuCEQuWduQXH9zhs9WbTTMlxZp5LPThR@mail.example.com> <CAH7x9kTGyAUho6AQpvv7fYKmvmL7pROYtRYqgdvl7W2poPhSb@mail.example.com> <CAKx4mytrLIkP10yGJSsbWUgCTUHQI0nPPkedzmEakpDF72rp@mail.example.com>\r\nIn-Reply-To: <CAKx4mytrLIkP10yGJSsbWUgCTUHQI0nPPkedzmEakpDF72rp@mail.example.com>\r\nFrom: Bob Svoboda <bob@example.org>\r\nDate: Wed, 4 Mar 2026 09:30:44 +0100\r\nMessage-ID: <CAH7x9ksnsWhSXtDchRVWzDboprYY6Iy2CVXOnhXVci0laI2Dj@mail.example.com>\r\nSubject: Re: Train on Friday\r\nTo: =?UTF-8?Q?Alice_Dvo=C5=99=C3=A1kov=C3=A1?= <alice@example.com>\r\nContent-Type: multipart/alternative; boundary=\"000000000000b06faeb378735256\"\r\n\r\n--000000000000b06faeb378735256\r\nContent-Type: text/plain; charset=\"UTF-8\"\r\nContent-Transfer-Encoding: quoted-printable\r\n\r\nGreat, I'll bring the map too.\r\n\r\nBob\r\n\r\nOn Wed, Mar 4, 2026 at 9:02=E2=80=AFAM Alice Dvo=C5=99=C3=A1kov=C3=A1 <alic=\r\ne@example.com>\r\nwrote:\r\n\r\n> Perfect, thanks! Could you also bring the map?\r\n>\r\n> Alice\r\n>\r\n> On Tue, Mar 3, 2026 at 6:40=E2=80=AFPM Bob Svoboda <bob@example.org> wrot=\r\ne:\r\n>\r\n> > Train tickets are booked, the 7:40 from the main station.\r\n> >\r\n> > Bob\r\n\r\n\r\n--000000000000b06faeb378735256\r\nContent-Type: text/html; charset=\"UTF-8\"\r\nContent-Transfer-Encoding: quoted-printable\r\n\r\n<div dir=3D\"ltr\"><div>Great, I'll bring the map too.</div><div><br></div><d=\r\niv>Bob</div></div><br><div class=3D\"gmail_quote gmail_quote_container\"><div=\r\n dir=3D\"ltr\" class=3D\"gmail_attr\">On Wed, Mar 4, 2026 at 9:02=E2=80=AFAM Al=\r\nice Dvo=C5=99=C3=A1kov=C3=A1 &lt;<a href=3D\"mailto:alice@example.com\">alice=\r\n@example.com</a>&gt; wrote:<br></div><blockquote class=3D\"gmail_quote\" styl=\r\ne=3D\"margin:0px 0px 0px 0.8ex;border-left:1px solid rgb(204,204,204);paddin=\r\ng-left:1ex\"><div dir=3D\"ltr\">Perfect, thanks! Could you also bring the map?=\r\n<br><br>Alice</div><br><div class=3D\"gmail_quote gmail_quote_container\"><di=\r\nv dir=3D\"ltr\" class=3D\"gmail_attr\">On Tue, Mar 3, 2026 at 6:40=E2=80=AFPM B=\r\nob Svoboda &lt;<a href=3D\"mailto:bob@example.org\">bob@example.org</a>&gt; w=\r\nrote:<br></div><blockquote class=3D\"gmail_quote\" style=3D\"margin:0px 0px 0p=\r\nx 0.8ex;border-left:1px solid rgb(204,204,204);padding-left:1ex\"><div dir=\r\n=3D\"ltr\">Train tickets are booked, the 7:40 from the main station.<br><br>B=\r\nob</div></blockquote></div></blockquote></div>\r\n\r\n--000000000000b06faeb378735256--\r\n",
+  "expected": {
+    "id": "<CAH7x9ksnsWhSXtDchRVWzDboprYY6Iy2CVXOnhXVci0laI2Dj@mail.example.com>",
+    "from": {
+      "name": "Bob Svoboda",
+      "address": "bob@example.org"
+    },
+    "to": [
+      {
+        "name": "Alice Dvořáková",
+        "address": "alice@example.com"
+      }
+    ],
+    "cc": [],
+    "replyTo": [],
+    "date": "2026-03-04T08:30:44.000Z",
+    "subject": "Re: Train on Friday",
+    "text": "Great, I'll bring the map too.\n\nBob\n\nOn Wed, Mar 4, 2026 at 9:02 AM Alice Dvořáková <alice@example.com>\nwrote:\n\n> Perfect, thanks! Could you also bring the map?\n>\n> Alice\n>\n> On Tue, Mar 3, 2026 at 6:40 PM Bob Svoboda <bob@example.org> wrote:\n>\n> > Train tickets are booked, the 7:40 from the main station.\n> >\n> > Bob\n\n",
+    "textSource": "plain",
+    "es": null,
+    "attachments": [],
+    "refs": {
+      "messageId": "<CAH7x9ksnsWhSXtDchRVWzDboprYY6Iy2CVXOnhXVci0laI2Dj@mail.example.com>",
+      "inReplyTo": [
+        "<CAKx4mytrLIkP10yGJSsbWUgCTUHQI0nPPkedzmEakpDF72rp@mail.example.com>"
+      ],
+      "references": [
+        "<CAKx4m59VhiUyyeXHhuCEQuWduQXH9zhs9WbTTMlxZp5LPThR@mail.example.com>",
+        "<CAH7x9kTGyAUho6AQpvv7fYKmvmL7pROYtRYqgdvl7W2poPhSb@mail.example.com>",
+        "<CAKx4mytrLIkP10yGJSsbWUgCTUHQI0nPPkedzmEakpDF72rp@mail.example.com>"
+      ]
+    },
+    "delivery": {
+      "listHeaders": [],
+      "listId": null,
+      "autoSubmitted": null,
+      "precedence": null,
+      "returnPath": null,
+      "listUnsubscribe": null
+    }
+  },
+  "split": {
+    "fresh": "Great, I'll bring the map too.\n\nBob",
+    "quoted": "On Wed, Mar 4, 2026 at 9:02 AM Alice Dvořáková <alice@example.com>\nwrote:\n\n> Perfect, thanks! Could you also bring the map?\n>\n> Alice\n>\n> On Tue, Mar 3, 2026 at 6:40 PM Bob Svoboda <bob@example.org> wrote:\n>\n> > Train tickets are booked, the 7:40 from the main station.\n> >\n> > Bob",
+    "signature": ""
+  }
+}

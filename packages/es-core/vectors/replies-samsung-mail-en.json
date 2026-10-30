@@ -1,0 +1,48 @@
+{
+  "description": "Samsung Email, en: signature \"Sent from my Galaxy\" above \"-------- Original message --------\" and a header block with trailing spaces; base64",
+  "source": "fixtures/replies/samsung-mail-en.eml",
+  "raw": "Message-ID: <q109flst7unjh0lceuh6ej5m7427vwa9pm4o@email.android.example.net>\r\nDate: Tue, 03 Mar 2026 11:30:27 +0100\r\nSubject: Re: Contract draft\r\nIn-Reply-To: <CAKx4m05gAs3TCXZVlT6Vn9GRhzhb7ciQoxwAfChQfUJ8OXbZ@mail.example.com>\r\nReferences: <CAKx4m05gAs3TCXZVlT6Vn9GRhzhb7ciQoxwAfChQfUJ8OXbZ@mail.example.com>\r\nFrom: Bob Svoboda <bob@example.org>\r\nTo: =?UTF-8?Q?Alice_Dvo=C5=99=C3=A1kov=C3=A1?= <alice@example.com>\r\nMIME-Version: 1.0\r\nContent-Type: multipart/alternative; boundary=\"--_com.samsung.android.email_365840035516545504\"\r\n\r\n----_com.samsung.android.email_365840035516545504\r\nContent-Type: text/plain; charset=utf-8\r\nContent-Transfer-Encoding: base64\r\n\r\nU3VyZSwgSSdsbCBzZW5kIGl0IG9uIFRodXJzZGF5LgoKCgpTZW50IGZyb20gbXkgR2FsYXh5CgoK\r\nLS0tLS0tLS0gT3JpZ2luYWwgbWVzc2FnZSAtLS0tLS0tLQpGcm9tOiBBbGljZSBEdm/FmcOha292\r\nw6EgPGFsaWNlQGV4YW1wbGUuY29tPiAKRGF0ZTogMy8zLzI2IDEwOjE1IChHTVQrMDE6MDApIApU\r\nbzogQm9iIFN2b2JvZGEgPGJvYkBleGFtcGxlLm9yZz4gClN1YmplY3Q6IENvbnRyYWN0IGRyYWZ0\r\nIAoKSGkgQm9iLAoKY291bGQgeW91IHNlbmQgbWUgdGhlIGNvbnRyYWN0IGRyYWZ0IGJ5IEZyaWRh\r\neT8KClRoYW5rcywKQWxpY2UK\r\n----_com.samsung.android.email_365840035516545504\r\nContent-Type: text/html; charset=utf-8\r\nContent-Transfer-Encoding: base64\r\n\r\nPGh0bWw+PGhlYWQ+PG1ldGEgaHR0cC1lcXVpdj0iQ29udGVudC1UeXBlIiBjb250ZW50PSJ0ZXh0\r\nL2h0bWw7IGNoYXJzZXQ9VVRGLTgiPjwvaGVhZD48Ym9keT48ZGl2IGRpcj0iYXV0byI+PGRpdiBk\r\naXI9ImF1dG8iPlN1cmUsIEknbGwgc2VuZCBpdCBvbiBUaHVyc2RheS48L2Rpdj48L2Rpdj48ZGl2\r\nIGRpcj0iYXV0byI+PGJyPjwvZGl2PjxkaXYgZGlyPSJhdXRvIj48YnI+PC9kaXY+PGRpdiBpZD0i\r\nY29tcG9zZXJfc2lnbmF0dXJlIiBkaXI9ImF1dG8iPjxkaXYgc3R5bGU9ImZvbnQtc2l6ZToxMnB4\r\nO2NvbG9yOiM1NzU3NTciIGRpcj0iYXV0byI+U2VudCBmcm9tIG15IEdhbGF4eTwvZGl2PjwvZGl2\r\nPjxkaXYgZGlyPSJhdXRvIj48YnI+PC9kaXY+PGRpdj48YnI+PC9kaXY+PGRpdiBhbGlnbj0ibGVm\r\ndCIgZGlyPSJhdXRvIiBzdHlsZT0iZm9udC1zaXplOjEwMCU7Y29sb3I6IzAwMDAwMCI+PGRpdj4t\r\nLS0tLS0tLSBPcmlnaW5hbCBtZXNzYWdlIC0tLS0tLS0tPC9kaXY+PGRpdj5Gcm9tOiBBbGljZSBE\r\ndm/FmcOha292w6EgJmx0O2FsaWNlQGV4YW1wbGUuY29tJmd0OyA8L2Rpdj48ZGl2PkRhdGU6IDMv\r\nMy8yNiAxMDoxNSAoR01UKzAxOjAwKSA8L2Rpdj48ZGl2PlRvOiBCb2IgU3ZvYm9kYSAmbHQ7Ym9i\r\nQGV4YW1wbGUub3JnJmd0OyA8L2Rpdj48ZGl2PlN1YmplY3Q6IENvbnRyYWN0IGRyYWZ0IDwvZGl2\r\nPjxkaXY+PGJyPjwvZGl2PjwvZGl2PjxkaXY+SGkgQm9iLDwvZGl2PjxkaXY+PGJyPjwvZGl2Pjxk\r\naXY+Y291bGQgeW91IHNlbmQgbWUgdGhlIGNvbnRyYWN0IGRyYWZ0IGJ5IEZyaWRheT88L2Rpdj48\r\nZGl2Pjxicj48L2Rpdj48ZGl2PlRoYW5rcyw8L2Rpdj48ZGl2PkFsaWNlPC9kaXY+PC9ib2R5Pjwv\r\naHRtbD4=\r\n----_com.samsung.android.email_365840035516545504--\r\n",
+  "expected": {
+    "id": "<q109flst7unjh0lceuh6ej5m7427vwa9pm4o@email.android.example.net>",
+    "from": {
+      "name": "Bob Svoboda",
+      "address": "bob@example.org"
+    },
+    "to": [
+      {
+        "name": "Alice Dvořáková",
+        "address": "alice@example.com"
+      }
+    ],
+    "cc": [],
+    "replyTo": [],
+    "date": "2026-03-03T10:30:27.000Z",
+    "subject": "Re: Contract draft",
+    "text": "Sure, I'll send it on Thursday.\n\n\n\nSent from my Galaxy\n\n\n-------- Original message --------\nFrom: Alice Dvořáková <alice@example.com> \nDate: 3/3/26 10:15 (GMT+01:00) \nTo: Bob Svoboda <bob@example.org> \nSubject: Contract draft \n\nHi Bob,\n\ncould you send me the contract draft by Friday?\n\nThanks,\nAlice\n",
+    "textSource": "plain",
+    "es": null,
+    "attachments": [],
+    "refs": {
+      "messageId": "<q109flst7unjh0lceuh6ej5m7427vwa9pm4o@email.android.example.net>",
+      "inReplyTo": [
+        "<CAKx4m05gAs3TCXZVlT6Vn9GRhzhb7ciQoxwAfChQfUJ8OXbZ@mail.example.com>"
+      ],
+      "references": [
+        "<CAKx4m05gAs3TCXZVlT6Vn9GRhzhb7ciQoxwAfChQfUJ8OXbZ@mail.example.com>"
+      ]
+    },
+    "delivery": {
+      "listHeaders": [],
+      "listId": null,
+      "autoSubmitted": null,
+      "precedence": null,
+      "returnPath": null,
+      "listUnsubscribe": null
+    }
+  },
+  "split": {
+    "fresh": "Sure, I'll send it on Thursday.",
+    "quoted": "-------- Original message --------\nFrom: Alice Dvořáková <alice@example.com> \nDate: 3/3/26 10:15 (GMT+01:00) \nTo: Bob Svoboda <bob@example.org> \nSubject: Contract draft \n\nHi Bob,\n\ncould you send me the contract draft by Friday?\n\nThanks,\nAlice",
+    "signature": "Sent from my Galaxy"
+  }
+}

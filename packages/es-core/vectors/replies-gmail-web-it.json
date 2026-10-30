@@ -1,0 +1,48 @@
+{
+  "description": "Gmail web, it: attribution \"Il giorno mar 3 mar 2026 alle ore 10:15 Alice Dvořáková <alice@example.com> ha scritto:\", wrapped onto 2 lines",
+  "source": "fixtures/replies/gmail-web-it.eml",
+  "raw": "MIME-Version: 1.0\r\nReferences: <CAKx4mIXCRRZ4WFQ4yDMfExs2O0emYhhUXne2xr6m53yGxvFm@mail.example.com>\r\nIn-Reply-To: <CAKx4mIXCRRZ4WFQ4yDMfExs2O0emYhhUXne2xr6m53yGxvFm@mail.example.com>\r\nFrom: Giulia Romano <giulia.romano@example.org>\r\nDate: Tue, 3 Mar 2026 12:33:05 +0100\r\nMessage-ID: <CAH7x9kKGzluMz8JaUMRL1irreHy4iXKugcuE4sGIsKFbhCSJs@mail.example.com>\r\nSubject: Re: Bozza del contratto\r\nTo: =?UTF-8?Q?Alice_Dvo=C5=99=C3=A1kov=C3=A1?= <alice@example.com>\r\nContent-Type: multipart/alternative; boundary=\"0000000000009777d519b82592d5\"\r\n\r\n--0000000000009777d519b82592d5\r\nContent-Type: text/plain; charset=\"UTF-8\"\r\nContent-Transfer-Encoding: quoted-printable\r\n\r\nCiao Alice,\r\n\r\nla bozza =C3=A8 quasi pronta, te la mando gioved=C3=AC.\r\n\r\nGiulia\r\n\r\nIl giorno mar 3 mar 2026 alle ore 10:15 Alice Dvo=C5=99=C3=A1kov=C3=A1 <\r\nalice@example.com> ha scritto:\r\n\r\n> Ciao Giulia,\r\n>\r\n> mi mandi la bozza del contratto entro venerd=C3=AC?\r\n>\r\n> Grazie,\r\n> Alice\r\n\r\n\r\n--0000000000009777d519b82592d5\r\nContent-Type: text/html; charset=\"UTF-8\"\r\nContent-Transfer-Encoding: quoted-printable\r\n\r\n<div dir=3D\"ltr\"><div>Ciao Alice,</div><div><br></div><div>la bozza =C3=A8 =\r\nquasi pronta, te la mando gioved=C3=AC.</div><div><br></div><div>Giulia</di=\r\nv></div><br><div class=3D\"gmail_quote gmail_quote_container\"><div dir=3D\"lt=\r\nr\" class=3D\"gmail_attr\">Il giorno mar 3 mar 2026 alle ore 10:15 Alice Dvo=\r\n=C5=99=C3=A1kov=C3=A1 &lt;<a href=3D\"mailto:alice@example.com\">alice@exampl=\r\ne.com</a>&gt; ha scritto:<br></div><blockquote class=3D\"gmail_quote\" style=\r\n=3D\"margin:0px 0px 0px 0.8ex;border-left:1px solid rgb(204,204,204);padding=\r\n-left:1ex\"><div dir=3D\"ltr\">Ciao Giulia,<br><br>mi mandi la bozza del contr=\r\natto entro venerd=C3=AC?<br><br>Grazie,<br>Alice</div></blockquote></div>\r\n\r\n--0000000000009777d519b82592d5--\r\n",
+  "expected": {
+    "id": "<CAH7x9kKGzluMz8JaUMRL1irreHy4iXKugcuE4sGIsKFbhCSJs@mail.example.com>",
+    "from": {
+      "name": "Giulia Romano",
+      "address": "giulia.romano@example.org"
+    },
+    "to": [
+      {
+        "name": "Alice Dvořáková",
+        "address": "alice@example.com"
+      }
+    ],
+    "cc": [],
+    "replyTo": [],
+    "date": "2026-03-03T11:33:05.000Z",
+    "subject": "Re: Bozza del contratto",
+    "text": "Ciao Alice,\n\nla bozza è quasi pronta, te la mando giovedì.\n\nGiulia\n\nIl giorno mar 3 mar 2026 alle ore 10:15 Alice Dvořáková <\nalice@example.com> ha scritto:\n\n> Ciao Giulia,\n>\n> mi mandi la bozza del contratto entro venerdì?\n>\n> Grazie,\n> Alice\n\n",
+    "textSource": "plain",
+    "es": null,
+    "attachments": [],
+    "refs": {
+      "messageId": "<CAH7x9kKGzluMz8JaUMRL1irreHy4iXKugcuE4sGIsKFbhCSJs@mail.example.com>",
+      "inReplyTo": [
+        "<CAKx4mIXCRRZ4WFQ4yDMfExs2O0emYhhUXne2xr6m53yGxvFm@mail.example.com>"
+      ],
+      "references": [
+        "<CAKx4mIXCRRZ4WFQ4yDMfExs2O0emYhhUXne2xr6m53yGxvFm@mail.example.com>"
+      ]
+    },
+    "delivery": {
+      "listHeaders": [],
+      "listId": null,
+      "autoSubmitted": null,
+      "precedence": null,
+      "returnPath": null,
+      "listUnsubscribe": null
+    }
+  },
+  "split": {
+    "fresh": "Ciao Alice,\n\nla bozza è quasi pronta, te la mando giovedì.\n\nGiulia",
+    "quoted": "Il giorno mar 3 mar 2026 alle ore 10:15 Alice Dvořáková <\nalice@example.com> ha scritto:\n\n> Ciao Giulia,\n>\n> mi mandi la bozza del contratto entro venerdì?\n>\n> Grazie,\n> Alice",
+    "signature": ""
+  }
+}

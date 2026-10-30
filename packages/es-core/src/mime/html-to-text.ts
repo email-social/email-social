@@ -98,6 +98,9 @@ export function tagEnd(html: string, start: number): number {
 
 const TAG_NAME = /<(\/?)([A-Za-z][A-Za-z0-9:_-]*)/y;
 
+/** Deepest <blockquote> nesting that gets its own "> " mark; deeper quotes are drawn at this depth. */
+const MAX_QUOTE_DEPTH = 32;
+
 /**
  * Builds the text: collapses white space, applies pending line breaks lazily
  * so nested blocks add no blank lines. Output goes into chunks and only the
@@ -112,7 +115,11 @@ class TextWriter {
   /** Line breaks required before the next visible text: 0, 1 (new line) or 2 (blank line). */
   private pending = 0;
   private bullet = false;
-  /** Number of enclosing <blockquote> elements: each line inside starts with that many "> ". */
+  /**
+   * Number of enclosing <blockquote> elements, at most MAX_QUOTE_DEPTH: each
+   * line inside starts with that many "> ". The cap keeps the output linear
+   * in the input; without it, n nested quotes each holding a line write n²/2 marks.
+   */
   private quoteDepth = 0;
 
   requestBreak(lines: 1 | 2): void {
@@ -124,7 +131,7 @@ class TextWriter {
   }
 
   setQuoteDepth(depth: number): void {
-    this.quoteDepth = depth;
+    this.quoteDepth = Math.min(depth, MAX_QUOTE_DEPTH);
   }
 
   toString(): string {

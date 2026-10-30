@@ -1,0 +1,48 @@
+{
+  "description": "new Outlook for Windows, cs: divider + Od:/Odesláno:/Komu:/Kopie:/Předmět: (Cc line in the block)",
+  "source": "fixtures/replies/outlook-new-windows-cs-cc.eml",
+  "raw": "From: Karel Holub <karel@example.org>\r\nTo: =?UTF-8?Q?Alice_Dvo=C5=99=C3=A1kov=C3=A1?= <alice@example.com>\r\nSubject: =?utf-8?Q?Odp=3A_Fotky_z_v=C3=BDletu?=\r\nThread-Topic: =?utf-8?Q?Fotky_z_v=C3=BDletu?=\r\nThread-Index: AQHcqvFw0wn2gpXjuQzycziWPrKV==\r\nDate: Tue, 3 Mar 2026 11:20:45 +0000\r\nMessage-ID: <PAXPR02MB28981AB2BF666C9B1225A9393E73F2F6D4AE2@PAXPR02MB28981AB2BF666C9B1225A9393E73F2F6D4AE2.eurprd02.prod.outlook.example.com>\r\nReferences: <CAKx4m1mhpaZhtp0Vqtht9stJafqMvcn6L13ZD9HrghrN74D3@mail.example.com>\r\nIn-Reply-To: <CAKx4m1mhpaZhtp0Vqtht9stJafqMvcn6L13ZD9HrghrN74D3@mail.example.com>\r\nAccept-Language: cs-CZ, en-US\r\nContent-Language: cs-CZ\r\nX-MS-Has-Attach:\r\nX-MS-TNEF-Correlator:\r\nContent-Type: multipart/alternative;\r\n\tboundary=\"_000_PAXPR02MB28981AB2BF666C9B1225A9393E73F2F6D_\"\r\nMIME-Version: 1.0\r\n\r\n--_000_PAXPR02MB28981AB2BF666C9B1225A9393E73F2F6D_\r\nContent-Type: text/plain; charset=\"utf-8\"\r\nContent-Transfer-Encoding: quoted-printable\r\n\r\nDobr=C3=BD den,\r\n\r\nfotky z v=C3=BDletu jsou nahran=C3=A9, zbytek dod=C3=A1 Eva.\r\n\r\nS pozdravem\r\nKarel Holub\r\n________________________________\r\nOd: Alice Dvo=C5=99=C3=A1kov=C3=A1 <alice@example.com>\r\nOdesl=C3=A1no: =C3=BAter=C3=BD 3. b=C5=99ezna 2026 10:15\r\nKomu: Karel Holub <karel@example.org>\r\nKopie: Eva Mal=C3=A1 <eva.mala@example.net>\r\nP=C5=99edm=C4=9Bt: Fotky z v=C3=BDletu\r\n\r\nAhoj Karle,\r\n\r\npo=C5=A1le=C5=A1 mi pros=C3=ADm fotky z v=C3=BDletu? Chci je d=C3=A1t do al=\r\nba.\r\n\r\nD=C3=ADky,\r\nAlice\r\n\r\n\r\n--_000_PAXPR02MB28981AB2BF666C9B1225A9393E73F2F6D_\r\nContent-Type: text/html; charset=\"utf-8\"\r\nContent-Transfer-Encoding: quoted-printable\r\n\r\n<html>\r\n<head>\r\n<meta http-equiv=3D\"Content-Type\" content=3D\"text/html; charset=3Dutf-8\">\r\n<style type=3D\"text/css\" style=3D\"display:none;\"> P {margin-top:0;margin-bo=\r\nttom:0;} </style>\r\n</head>\r\n<body dir=3D\"ltr\">\r\n<div class=3D\"elementToProof\" style=3D\"font-family: Aptos, Aptos_EmbeddedFo=\r\nnt, Aptos_MSFontService, Calibri, Helvetica, sans-serif; font-size: 12pt; c=\r\nolor: rgb(0, 0, 0);\">Dobr=C3=BD den,</div>\r\n<div class=3D\"elementToProof\" style=3D\"font-family: Aptos, Aptos_EmbeddedFo=\r\nnt, Aptos_MSFontService, Calibri, Helvetica, sans-serif; font-size: 12pt; c=\r\nolor: rgb(0, 0, 0);\"><br></div>\r\n<div class=3D\"elementToProof\" style=3D\"font-family: Aptos, Aptos_EmbeddedFo=\r\nnt, Aptos_MSFontService, Calibri, Helvetica, sans-serif; font-size: 12pt; c=\r\nolor: rgb(0, 0, 0);\">fotky z v=C3=BDletu jsou nahran=C3=A9, zbytek dod=C3=\r\n=A1 Eva.</div>\r\n<div class=3D\"elementToProof\" style=3D\"font-family: Aptos, Aptos_EmbeddedFo=\r\nnt, Aptos_MSFontService, Calibri, Helvetica, sans-serif; font-size: 12pt; c=\r\nolor: rgb(0, 0, 0);\"><br></div>\r\n<div class=3D\"elementToProof\" style=3D\"font-family: Aptos, Aptos_EmbeddedFo=\r\nnt, Aptos_MSFontService, Calibri, Helvetica, sans-serif; font-size: 12pt; c=\r\nolor: rgb(0, 0, 0);\">S pozdravem</div>\r\n<div class=3D\"elementToProof\" style=3D\"font-family: Aptos, Aptos_EmbeddedFo=\r\nnt, Aptos_MSFontService, Calibri, Helvetica, sans-serif; font-size: 12pt; c=\r\nolor: rgb(0, 0, 0);\">Karel Holub</div>\r\n<div id=3D\"appendonsend\"></div>\r\n<hr style=3D\"display:inline-block;width:98%\" tabindex=3D\"-1\">\r\n<div id=3D\"divRplyFwdMsg\" dir=3D\"ltr\"><font face=3D\"Calibri, sans-serif\" st=\r\nyle=3D\"font-size:11pt\" color=3D\"#000000\"><b>Od:</b> Alice Dvo=C5=99=C3=A1ko=\r\nv=C3=A1 &lt;alice@example.com&gt;<br>=0D\r\n<b>Odesl=C3=A1no:</b> =C3=BAter=C3=BD 3. b=C5=99ezna 2026 10:15<br>=0D\r\n<b>Komu:</b> Karel Holub &lt;karel@example.org&gt;<br>=0D\r\n<b>Kopie:</b> Eva Mal=C3=A1 &lt;eva.mala@example.net&gt;<br>=0D\r\n<b>P=C5=99edm=C4=9Bt:</b> Fotky z v=C3=BDletu</font>\r\n<div>&nbsp;</div>\r\n</div>\r\n<div class=3D\"BodyFragment\"><font size=3D\"2\"><span style=3D\"font-size:11pt;=\r\n\">\r\n<div class=3D\"PlainText\">Ahoj Karle,<br>\r\n<br>\r\npo=C5=A1le=C5=A1 mi pros=C3=ADm fotky z v=C3=BDletu? Chci je d=C3=A1t do al=\r\nba.<br>\r\n<br>\r\nD=C3=ADky,<br>\r\nAlice</div>\r\n</span></font></div>\r\n</body>\r\n</html>\r\n\r\n--_000_PAXPR02MB28981AB2BF666C9B1225A9393E73F2F6D_--\r\n",
+  "expected": {
+    "id": "<PAXPR02MB28981AB2BF666C9B1225A9393E73F2F6D4AE2@PAXPR02MB28981AB2BF666C9B1225A9393E73F2F6D4AE2.eurprd02.prod.outlook.example.com>",
+    "from": {
+      "name": "Karel Holub",
+      "address": "karel@example.org"
+    },
+    "to": [
+      {
+        "name": "Alice Dvořáková",
+        "address": "alice@example.com"
+      }
+    ],
+    "cc": [],
+    "replyTo": [],
+    "date": "2026-03-03T11:20:45.000Z",
+    "subject": "Odp: Fotky z výletu",
+    "text": "Dobrý den,\n\nfotky z výletu jsou nahrané, zbytek dodá Eva.\n\nS pozdravem\nKarel Holub\n________________________________\nOd: Alice Dvořáková <alice@example.com>\nOdesláno: úterý 3. března 2026 10:15\nKomu: Karel Holub <karel@example.org>\nKopie: Eva Malá <eva.mala@example.net>\nPředmět: Fotky z výletu\n\nAhoj Karle,\n\npošleš mi prosím fotky z výletu? Chci je dát do alba.\n\nDíky,\nAlice\n\n",
+    "textSource": "plain",
+    "es": null,
+    "attachments": [],
+    "refs": {
+      "messageId": "<PAXPR02MB28981AB2BF666C9B1225A9393E73F2F6D4AE2@PAXPR02MB28981AB2BF666C9B1225A9393E73F2F6D4AE2.eurprd02.prod.outlook.example.com>",
+      "inReplyTo": [
+        "<CAKx4m1mhpaZhtp0Vqtht9stJafqMvcn6L13ZD9HrghrN74D3@mail.example.com>"
+      ],
+      "references": [
+        "<CAKx4m1mhpaZhtp0Vqtht9stJafqMvcn6L13ZD9HrghrN74D3@mail.example.com>"
+      ]
+    },
+    "delivery": {
+      "listHeaders": [],
+      "listId": null,
+      "autoSubmitted": null,
+      "precedence": null,
+      "returnPath": null,
+      "listUnsubscribe": null
+    }
+  },
+  "split": {
+    "fresh": "Dobrý den,\n\nfotky z výletu jsou nahrané, zbytek dodá Eva.\n\nS pozdravem\nKarel Holub",
+    "quoted": "________________________________\nOd: Alice Dvořáková <alice@example.com>\nOdesláno: úterý 3. března 2026 10:15\nKomu: Karel Holub <karel@example.org>\nKopie: Eva Malá <eva.mala@example.net>\nPředmět: Fotky z výletu\n\nAhoj Karle,\n\npošleš mi prosím fotky z výletu? Chci je dát do alba.\n\nDíky,\nAlice",
+    "signature": ""
+  }
+}

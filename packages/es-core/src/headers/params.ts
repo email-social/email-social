@@ -140,6 +140,8 @@ function assemble(pieces: Piece[]): string {
 function collect(raw: readonly RawParam[]): Record<string, string> {
   const plain = new Map<string, string>();
   const extended = new Map<string, Piece[]>();
+  // Section numbers already taken per name; a Set so that thousands of fragments stay linear.
+  const taken = new Map<string, Set<number>>();
   for (const { name, value } of raw) {
     const match = /^(.*?)\*(?:(\d+)(\*)?|)$/.exec(name);
     if (match === null || match[1] === "") {
@@ -150,8 +152,13 @@ function collect(raw: readonly RawParam[]): Record<string, string> {
     const index = match[2] === undefined ? 0 : Number(match[2]);
     const isExtended = match[2] === undefined || match[3] === "*";
     const pieces = extended.get(base) ?? [];
-    if (!pieces.some((p) => p.index === index)) pieces.push({ index, extended: isExtended, value });
+    const indices = taken.get(base) ?? new Set<number>();
+    if (!indices.has(index)) {
+      indices.add(index);
+      pieces.push({ index, extended: isExtended, value });
+    }
     extended.set(base, pieces);
+    taken.set(base, indices);
   }
   const params = new Map<string, string>();
   for (const [name, pieces] of extended) {

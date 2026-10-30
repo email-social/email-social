@@ -1,0 +1,77 @@
+{
+  "description": "Section 7.3: Outlook's single quotes around a name, a name that only repeats the address, white space in names, the From name preferred over To and Cc names, names most recent first, the domain folded and the local part kept, an undated message read first, and a contact never seen in a dated message sorted last.",
+  "covers": [
+    "TH-6"
+  ],
+  "owner": {
+    "name": "Alice Example",
+    "addresses": [
+      "alice@example.com"
+    ]
+  },
+  "messages": [
+    {
+      "raw": "From: 'Anna Becker' <anna@Example.NET>\r\nTo: Alice Example <alice@example.com>, Zed <zed@example.net>\r\nSubject: Hello\r\nMessage-ID: <c1@example.net>\r\nMIME-Version: 1.0\r\nContent-Type: text/plain; charset=utf-8\r\nContent-Transfer-Encoding: 8bit\r\n\r\nUndated.\r\n"
+    },
+    {
+      "raw": "From: \"anna@example.net\" <anna@example.net>\r\nTo: Alice Example <alice@example.com>\r\nCc: Ann B. <anna@example.net>\r\nSubject: Again\r\nDate: Fri, 06 Mar 2026 09:00:00 GMT\r\nMessage-ID: <c2@example.net>\r\nMIME-Version: 1.0\r\nContent-Type: text/plain; charset=utf-8\r\nContent-Transfer-Encoding: 8bit\r\n\r\nThe From name is the address.\r\n"
+    },
+    {
+      "raw": "From: Bob Svoboda <bob@example.org>\r\nTo: \"Anna   Becker-Novak\" <anna@example.net>\r\nCc: alice <alice@example.com>\r\nSubject: Names\r\nDate: Fri, 06 Mar 2026 10:00:00 GMT\r\nMessage-ID: <c3@example.org>\r\nMIME-Version: 1.0\r\nContent-Type: text/plain; charset=utf-8\r\nContent-Transfer-Encoding: 8bit\r\n\r\nWhite space in a To name.\r\n"
+    },
+    {
+      "raw": "From: Alice E. <alice@example.com>\r\nTo: Bob@example.org\r\nSubject: Case\r\nDate: Fri, 06 Mar 2026 11:00:00 GMT\r\nMessage-ID: <c4@example.com>\r\nMIME-Version: 1.0\r\nContent-Type: text/plain; charset=utf-8\r\nContent-Transfer-Encoding: 8bit\r\n\r\nThe local part's case is kept.\r\n"
+    }
+  ],
+  "expected": {
+    "contacts": [
+      {
+        "address": "Bob@example.org",
+        "name": "",
+        "names": [],
+        "lastSeen": "2026-03-06T11:00:00.000Z",
+        "count": 1
+      },
+      {
+        "address": "alice@example.com",
+        "name": "Alice E.",
+        "names": [
+          "Alice E.",
+          "alice",
+          "Alice Example"
+        ],
+        "lastSeen": "2026-03-06T11:00:00.000Z",
+        "count": 4
+      },
+      {
+        "address": "anna@example.net",
+        "name": "Anna Becker",
+        "names": [
+          "Anna Becker-Novak",
+          "Ann B.",
+          "Anna Becker"
+        ],
+        "lastSeen": "2026-03-06T10:00:00.000Z",
+        "count": 3
+      },
+      {
+        "address": "bob@example.org",
+        "name": "Bob Svoboda",
+        "names": [
+          "Bob Svoboda"
+        ],
+        "lastSeen": "2026-03-06T10:00:00.000Z",
+        "count": 1
+      },
+      {
+        "address": "zed@example.net",
+        "name": "Zed",
+        "names": [
+          "Zed"
+        ],
+        "lastSeen": null,
+        "count": 1
+      }
+    ]
+  }
+}

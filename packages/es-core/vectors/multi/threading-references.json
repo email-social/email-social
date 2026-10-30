@@ -1,0 +1,123 @@
+{
+  "description": "Section 7.1 steps 2, 3 and 5: a thread whose root is not in the mailbox (a placeholder root names the conversation), a reply with only In-Reply-To, an Outlook reply whose References names the root and whose In-Reply-To names the parent, a two-message reference loop, a message that references itself, and a message without a Message-ID (its sha256: id is the root id).",
+  "covers": [
+    "TH-2",
+    "TH-4"
+  ],
+  "owner": {
+    "name": "Alice Example",
+    "addresses": [
+      "alice@example.com"
+    ]
+  },
+  "messages": [
+    {
+      "raw": "From: Bob Svoboda <bob@example.org>\r\nTo: Alice Example <alice@example.com>\r\nSubject: Re: Plan\r\nDate: Tue, 03 Mar 2026 09:00:00 GMT\r\nMessage-ID: <r2@example.org>\r\nIn-Reply-To: <r1@example.com>\r\nReferences: <r1@example.com>\r\nMIME-Version: 1.0\r\nContent-Type: text/plain; charset=utf-8\r\nContent-Transfer-Encoding: 8bit\r\n\r\nThe root <r1@example.com> is not in this mailbox.\r\n"
+    },
+    {
+      "raw": "From: Alice Example <alice@example.com>\r\nTo: Bob Svoboda <bob@example.org>\r\nSubject: Re: Plan\r\nDate: Tue, 03 Mar 2026 10:00:00 GMT\r\nMessage-ID: <r3@example.com>\r\nIn-Reply-To: <r2@example.org>\r\nMIME-Version: 1.0\r\nContent-Type: text/plain; charset=utf-8\r\nContent-Transfer-Encoding: 8bit\r\n\r\nOnly In-Reply-To here.\r\n"
+    },
+    {
+      "raw": "From: Bob Svoboda <bob@example.org>\r\nTo: Alice Example <alice@example.com>\r\nSubject: RE: Plan\r\nDate: Tue, 03 Mar 2026 11:00:00 GMT\r\nMessage-ID: <r4@example.org>\r\nIn-Reply-To: <r3@example.com>\r\nReferences: <r1@example.com>\r\nMIME-Version: 1.0\r\nContent-Type: text/plain; charset=utf-8\r\nContent-Transfer-Encoding: 8bit\r\n\r\nOutlook: References names the root, In-Reply-To the parent.\r\n"
+    },
+    {
+      "raw": "From: Carol Novak <carol@example.net>\r\nTo: Bob Svoboda <bob@example.org>\r\nSubject: Loop\r\nDate: Tue, 03 Mar 2026 09:30:00 GMT\r\nMessage-ID: <l1@example.net>\r\nReferences: <l2@example.net>\r\nMIME-Version: 1.0\r\nContent-Type: text/plain; charset=utf-8\r\nContent-Transfer-Encoding: 8bit\r\n\r\nReferences the next message.\r\n"
+    },
+    {
+      "raw": "From: Bob Svoboda <bob@example.org>\r\nTo: Carol Novak <carol@example.net>\r\nSubject: Re: Loop\r\nDate: Tue, 03 Mar 2026 09:45:00 GMT\r\nMessage-ID: <l2@example.net>\r\nReferences: <l1@example.net>\r\nMIME-Version: 1.0\r\nContent-Type: text/plain; charset=utf-8\r\nContent-Transfer-Encoding: 8bit\r\n\r\nReferences the previous one.\r\n"
+    },
+    {
+      "raw": "From: Dan <dan@example.net>\r\nTo: Alice Example <alice@example.com>\r\nSubject: Notes\r\nDate: Tue, 03 Mar 2026 12:00:00 GMT\r\nMessage-ID: <s1@example.net>\r\nIn-Reply-To: <s1@example.net>\r\nReferences: <s1@example.net>\r\nMIME-Version: 1.0\r\nContent-Type: text/plain; charset=utf-8\r\nContent-Transfer-Encoding: 8bit\r\n\r\nReferences itself.\r\n"
+    },
+    {
+      "raw": "From: Dan <dan@example.net>\r\nTo: Alice Example <alice@example.com>\r\nSubject: No Message-ID\r\nDate: Tue, 03 Mar 2026 13:00:00 GMT\r\nMIME-Version: 1.0\r\nContent-Type: text/plain; charset=utf-8\r\nContent-Transfer-Encoding: 8bit\r\n\r\nThis message has no Message-ID field.\r\n"
+    }
+  ],
+  "expected": {
+    "conversations": [
+      {
+        "id": "conv-0321ec10f2c5fa6bf544c910b91abe6c",
+        "rootMessageId": "sha256:9484e5eff58547bfa28adbda5040ed11f2753048f054e9742910e7d7187c2930",
+        "subject": "No Message-ID",
+        "participants": [
+          {
+            "name": "Alice Example",
+            "address": "alice@example.com"
+          },
+          {
+            "name": "Dan",
+            "address": "dan@example.net"
+          }
+        ],
+        "messageIds": [
+          "sha256:9484e5eff58547bfa28adbda5040ed11f2753048f054e9742910e7d7187c2930"
+        ],
+        "firstDate": "2026-03-03T13:00:00.000Z",
+        "lastDate": "2026-03-03T13:00:00.000Z"
+      },
+      {
+        "id": "conv-e9c2b8650d0c2d97a9843292e25f16bd",
+        "rootMessageId": "<s1@example.net>",
+        "subject": "Notes",
+        "participants": [
+          {
+            "name": "Alice Example",
+            "address": "alice@example.com"
+          },
+          {
+            "name": "Dan",
+            "address": "dan@example.net"
+          }
+        ],
+        "messageIds": [
+          "<s1@example.net>"
+        ],
+        "firstDate": "2026-03-03T12:00:00.000Z",
+        "lastDate": "2026-03-03T12:00:00.000Z"
+      },
+      {
+        "id": "conv-0b5dcaa20d0696ee10ccb8b61cd144c4",
+        "rootMessageId": "<r1@example.com>",
+        "subject": "Plan",
+        "participants": [
+          {
+            "name": "Alice Example",
+            "address": "alice@example.com"
+          },
+          {
+            "name": "Bob Svoboda",
+            "address": "bob@example.org"
+          }
+        ],
+        "messageIds": [
+          "<r2@example.org>",
+          "<r3@example.com>",
+          "<r4@example.org>"
+        ],
+        "firstDate": "2026-03-03T09:00:00.000Z",
+        "lastDate": "2026-03-03T11:00:00.000Z"
+      },
+      {
+        "id": "conv-daf9e3007a3821af3b01ddfa10f82ce5",
+        "rootMessageId": "<l2@example.net>",
+        "subject": "Loop",
+        "participants": [
+          {
+            "name": "Bob Svoboda",
+            "address": "bob@example.org"
+          },
+          {
+            "name": "Carol Novak",
+            "address": "carol@example.net"
+          }
+        ],
+        "messageIds": [
+          "<l1@example.net>",
+          "<l2@example.net>"
+        ],
+        "firstDate": "2026-03-03T09:30:00.000Z",
+        "lastDate": "2026-03-03T09:45:00.000Z"
+      }
+    ]
+  }
+}

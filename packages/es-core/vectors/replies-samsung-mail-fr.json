@@ -1,0 +1,48 @@
+{
+  "description": "Samsung Email, fr: signature \"Envoyé depuis mon appareil Galaxy\" above \"-------- Message d'origine --------\" and a header block with trailing spaces; base64",
+  "source": "fixtures/replies/samsung-mail-fr.eml",
+  "raw": "Message-ID: <kpot2ctyhuj3b2sg4a8maayh603osryxzshn@email.android.example.net>\r\nDate: Tue, 03 Mar 2026 11:32:27 +0100\r\nSubject: Re: Compte rendu\r\nIn-Reply-To: <CAKx4mLvo0y3UXBY2Zu0PpC8Z2tXCdwkqIll1SYuJ8DvQFNGh@mail.example.com>\r\nReferences: <CAKx4mLvo0y3UXBY2Zu0PpC8Z2tXCdwkqIll1SYuJ8DvQFNGh@mail.example.com>\r\nFrom: =?UTF-8?Q?Camille_Lef=C3=A8vre?= <camille@example.org>\r\nTo: =?UTF-8?Q?Alice_Dvo=C5=99=C3=A1kov=C3=A1?= <alice@example.com>\r\nMIME-Version: 1.0\r\nContent-Type: multipart/alternative; boundary=\"--_com.samsung.android.email_570520844206193108\"\r\n\r\n----_com.samsung.android.email_570520844206193108\r\nContent-Type: text/plain; charset=utf-8\r\nContent-Transfer-Encoding: base64\r\n\r\nRCdhY2NvcmQsIGplIGwnZW52b2llIGpldWRpLgoKCgpFbnZvecOpIGRlcHVpcyBtb24gYXBwYXJl\r\naWwgR2FsYXh5CgoKLS0tLS0tLS0gTWVzc2FnZSBkJ29yaWdpbmUgLS0tLS0tLS0KRGUgOiBBbGlj\r\nZSBEdm/FmcOha292w6EgPGFsaWNlQGV4YW1wbGUuY29tPiAKRGF0ZSA6IDAzLzAzLzIwMjYgMTA6\r\nMTUgKEdNVCswMTowMCkgCsOAIDogQ2FtaWxsZSBMZWbDqHZyZSA8Y2FtaWxsZUBleGFtcGxlLm9y\r\nZz4gCk9iamV0IDogQ29tcHRlIHJlbmR1IAoKQm9uam91ciBDYW1pbGxlLAoKcGV1eC10dSBtJ2Vu\r\ndm95ZXIgbGUgY29tcHRlIHJlbmR1IGRlIGxhIHLDqXVuaW9uIGF2YW50IHZlbmRyZWRpID8KCk1l\r\ncmNpLApBbGljZQo=\r\n----_com.samsung.android.email_570520844206193108\r\nContent-Type: text/html; charset=utf-8\r\nContent-Transfer-Encoding: base64\r\n\r\nPGh0bWw+PGhlYWQ+PG1ldGEgaHR0cC1lcXVpdj0iQ29udGVudC1UeXBlIiBjb250ZW50PSJ0ZXh0\r\nL2h0bWw7IGNoYXJzZXQ9VVRGLTgiPjwvaGVhZD48Ym9keT48ZGl2IGRpcj0iYXV0byI+PGRpdiBk\r\naXI9ImF1dG8iPkQnYWNjb3JkLCBqZSBsJ2Vudm9pZSBqZXVkaS48L2Rpdj48L2Rpdj48ZGl2IGRp\r\ncj0iYXV0byI+PGJyPjwvZGl2PjxkaXYgZGlyPSJhdXRvIj48YnI+PC9kaXY+PGRpdiBpZD0iY29t\r\ncG9zZXJfc2lnbmF0dXJlIiBkaXI9ImF1dG8iPjxkaXYgc3R5bGU9ImZvbnQtc2l6ZToxMnB4O2Nv\r\nbG9yOiM1NzU3NTciIGRpcj0iYXV0byI+RW52b3nDqSBkZXB1aXMgbW9uIGFwcGFyZWlsIEdhbGF4\r\neTwvZGl2PjwvZGl2PjxkaXYgZGlyPSJhdXRvIj48YnI+PC9kaXY+PGRpdj48YnI+PC9kaXY+PGRp\r\ndiBhbGlnbj0ibGVmdCIgZGlyPSJhdXRvIiBzdHlsZT0iZm9udC1zaXplOjEwMCU7Y29sb3I6IzAw\r\nMDAwMCI+PGRpdj4tLS0tLS0tLSBNZXNzYWdlIGQnb3JpZ2luZSAtLS0tLS0tLTwvZGl2PjxkaXY+\r\nRGUgOiBBbGljZSBEdm/FmcOha292w6EgJmx0O2FsaWNlQGV4YW1wbGUuY29tJmd0OyA8L2Rpdj48\r\nZGl2PkRhdGUgOiAwMy8wMy8yMDI2IDEwOjE1IChHTVQrMDE6MDApIDwvZGl2PjxkaXY+w4AgOiBD\r\nYW1pbGxlIExlZsOodnJlICZsdDtjYW1pbGxlQGV4YW1wbGUub3JnJmd0OyA8L2Rpdj48ZGl2Pk9i\r\namV0IDogQ29tcHRlIHJlbmR1IDwvZGl2PjxkaXY+PGJyPjwvZGl2PjwvZGl2PjxkaXY+Qm9uam91\r\nciBDYW1pbGxlLDwvZGl2PjxkaXY+PGJyPjwvZGl2PjxkaXY+cGV1eC10dSBtJ2Vudm95ZXIgbGUg\r\nY29tcHRlIHJlbmR1IGRlIGxhIHLDqXVuaW9uIGF2YW50IHZlbmRyZWRpID88L2Rpdj48ZGl2Pjxi\r\ncj48L2Rpdj48ZGl2Pk1lcmNpLDwvZGl2PjxkaXY+QWxpY2U8L2Rpdj48L2JvZHk+PC9odG1sPg==\r\n----_com.samsung.android.email_570520844206193108--\r\n",
+  "expected": {
+    "id": "<kpot2ctyhuj3b2sg4a8maayh603osryxzshn@email.android.example.net>",
+    "from": {
+      "name": "Camille Lefèvre",
+      "address": "camille@example.org"
+    },
+    "to": [
+      {
+        "name": "Alice Dvořáková",
+        "address": "alice@example.com"
+      }
+    ],
+    "cc": [],
+    "replyTo": [],
+    "date": "2026-03-03T10:32:27.000Z",
+    "subject": "Re: Compte rendu",
+    "text": "D'accord, je l'envoie jeudi.\n\n\n\nEnvoyé depuis mon appareil Galaxy\n\n\n-------- Message d'origine --------\nDe : Alice Dvořáková <alice@example.com> \nDate : 03/03/2026 10:15 (GMT+01:00) \nÀ : Camille Lefèvre <camille@example.org> \nObjet : Compte rendu \n\nBonjour Camille,\n\npeux-tu m'envoyer le compte rendu de la réunion avant vendredi ?\n\nMerci,\nAlice\n",
+    "textSource": "plain",
+    "es": null,
+    "attachments": [],
+    "refs": {
+      "messageId": "<kpot2ctyhuj3b2sg4a8maayh603osryxzshn@email.android.example.net>",
+      "inReplyTo": [
+        "<CAKx4mLvo0y3UXBY2Zu0PpC8Z2tXCdwkqIll1SYuJ8DvQFNGh@mail.example.com>"
+      ],
+      "references": [
+        "<CAKx4mLvo0y3UXBY2Zu0PpC8Z2tXCdwkqIll1SYuJ8DvQFNGh@mail.example.com>"
+      ]
+    },
+    "delivery": {
+      "listHeaders": [],
+      "listId": null,
+      "autoSubmitted": null,
+      "precedence": null,
+      "returnPath": null,
+      "listUnsubscribe": null
+    }
+  },
+  "split": {
+    "fresh": "D'accord, je l'envoie jeudi.",
+    "quoted": "-------- Message d'origine --------\nDe : Alice Dvořáková <alice@example.com> \nDate : 03/03/2026 10:15 (GMT+01:00) \nÀ : Camille Lefèvre <camille@example.org> \nObjet : Compte rendu \n\nBonjour Camille,\n\npeux-tu m'envoyer le compte rendu de la réunion avant vendredi ?\n\nMerci,\nAlice",
+    "signature": "Envoyé depuis mon appareil Galaxy"
+  }
+}

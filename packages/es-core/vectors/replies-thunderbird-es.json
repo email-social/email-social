@@ -1,0 +1,48 @@
+{
+  "description": "Thunderbird, es: answer below the quote; attribution \"El 3/3/26 a las 10:15, Alice Dvořáková escribió:\"",
+  "source": "fixtures/replies/thunderbird-es.eml",
+  "raw": "Message-ID: <b1e7bb5c-58a9-4664-91b5-8710b0ec225b@example.net>\r\nDate: Tue, 3 Mar 2026 11:02:13 +0100\r\nMIME-Version: 1.0\r\nUser-Agent: Mozilla Thunderbird\r\nContent-Language: es-ES\r\nTo: =?UTF-8?Q?Alice_Dvo=C5=99=C3=A1kov=C3=A1?= <alice@example.com>\r\nFrom: =?UTF-8?Q?Luc=C3=ADa_Ortega?= <lucia.ortega@example.net>\r\nSubject: Re: Borrador del contrato\r\nReferences: <CAKx4mx5j8c1V3Whx29ihAnYbgbTFYNjkvohPj1MTtGgZNx8w@mail.example.com>\r\nIn-Reply-To: <CAKx4mx5j8c1V3Whx29ihAnYbgbTFYNjkvohPj1MTtGgZNx8w@mail.example.com>\r\nContent-Type: text/plain; charset=UTF-8; format=flowed\r\nContent-Transfer-Encoding: 8bit\r\n\r\nEl 3/3/26 a las 10:15, Alice Dvořáková escribió:\r\n> Hola Lucía,\r\n>\r\n> ¿me puedes enviar el borrador del contrato antes del viernes?\r\n>\r\n> Gracias,\r\n> Alice\r\n\r\nHola Alice,\r\n\r\nte lo envío esta tarde.\r\n\r\nLucía\r\n",
+  "expected": {
+    "id": "<b1e7bb5c-58a9-4664-91b5-8710b0ec225b@example.net>",
+    "from": {
+      "name": "Lucía Ortega",
+      "address": "lucia.ortega@example.net"
+    },
+    "to": [
+      {
+        "name": "Alice Dvořáková",
+        "address": "alice@example.com"
+      }
+    ],
+    "cc": [],
+    "replyTo": [],
+    "date": "2026-03-03T10:02:13.000Z",
+    "subject": "Re: Borrador del contrato",
+    "text": "El 3/3/26 a las 10:15, Alice Dvořáková escribió:\n> Hola Lucía,\n>\n> ¿me puedes enviar el borrador del contrato antes del viernes?\n>\n> Gracias,\n> Alice\n\nHola Alice,\n\nte lo envío esta tarde.\n\nLucía\n",
+    "textSource": "plain",
+    "es": null,
+    "attachments": [],
+    "refs": {
+      "messageId": "<b1e7bb5c-58a9-4664-91b5-8710b0ec225b@example.net>",
+      "inReplyTo": [
+        "<CAKx4mx5j8c1V3Whx29ihAnYbgbTFYNjkvohPj1MTtGgZNx8w@mail.example.com>"
+      ],
+      "references": [
+        "<CAKx4mx5j8c1V3Whx29ihAnYbgbTFYNjkvohPj1MTtGgZNx8w@mail.example.com>"
+      ]
+    },
+    "delivery": {
+      "listHeaders": [],
+      "listId": null,
+      "autoSubmitted": null,
+      "precedence": null,
+      "returnPath": null,
+      "listUnsubscribe": null
+    }
+  },
+  "split": {
+    "fresh": "Hola Alice,\n\nte lo envío esta tarde.\n\nLucía",
+    "quoted": "El 3/3/26 a las 10:15, Alice Dvořáková escribió:\n> Hola Lucía,\n>\n> ¿me puedes enviar el borrador del contrato antes del viernes?\n>\n> Gracias,\n> Alice",
+    "signature": ""
+  }
+}

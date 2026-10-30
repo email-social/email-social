@@ -1,0 +1,42 @@
+{
+  "description": "Section 9.4: the quote below a reply to each message, with at most 5 lines and the date in UTC: a named sender with a signature left out, an undated sender whose name is its address, a message without From, seven lines cut to five, a message that only quotes (its whole text is quoted again), and a message without text.",
+  "covers": [
+    "QT-5"
+  ],
+  "owner": {
+    "name": "Alice Example",
+    "addresses": [
+      "alice@example.com"
+    ]
+  },
+  "messages": [
+    {
+      "raw": "From: Bob Svoboda <bob@example.org>\r\nTo: Alice Example <alice@example.com>\r\nSubject: Time\r\nDate: Tue, 03 Mar 2026 10:15:00 GMT\r\nMessage-ID: <q1@example.org>\r\nMIME-Version: 1.0\r\nContent-Type: text/plain; charset=utf-8\r\nContent-Transfer-Encoding: 8bit\r\n\r\nSee you at 10:15.\r\n\r\nBob\r\n-- \r\nBob Svoboda, example.org\r\n"
+    },
+    {
+      "raw": "From: \"carol@example.net\" <carol@example.net>\r\nTo: Alice Example <alice@example.com>\r\nSubject: Undated\r\nMessage-ID: <q2@example.net>\r\nMIME-Version: 1.0\r\nContent-Type: text/plain; charset=utf-8\r\nContent-Transfer-Encoding: 8bit\r\n\r\nNo date here.\r\n"
+    },
+    {
+      "raw": "To: Alice Example <alice@example.com>\r\nSubject: Anonymous\r\nDate: Tue, 03 Mar 2026 11:00:00 GMT\r\nMessage-ID: <q3@example.net>\r\nMIME-Version: 1.0\r\nContent-Type: text/plain; charset=utf-8\r\nContent-Transfer-Encoding: 8bit\r\n\r\nNobody signed this.\r\n"
+    },
+    {
+      "raw": "From: Bob Svoboda <bob@example.org>\r\nTo: Alice Example <alice@example.com>\r\nSubject: List\r\nDate: Tue, 03 Mar 2026 12:00:00 GMT\r\nMessage-ID: <q4@example.org>\r\nMIME-Version: 1.0\r\nContent-Type: text/plain; charset=utf-8\r\nContent-Transfer-Encoding: 8bit\r\n\r\none\r\ntwo\r\n\r\nfour\r\nfive\r\nsix\r\nseven\r\n"
+    },
+    {
+      "raw": "From: Bob Svoboda <bob@example.org>\r\nTo: Alice Example <alice@example.com>\r\nSubject: Fwd\r\nDate: Tue, 03 Mar 2026 13:00:00 GMT\r\nMessage-ID: <q5@example.org>\r\nMIME-Version: 1.0\r\nContent-Type: text/plain; charset=utf-8\r\nContent-Transfer-Encoding: 8bit\r\n\r\nOn Tue, 3 Mar 2026 at 08:00, Carol Novak <carol@example.net> wrote:\r\n> Is the hall free?\r\n"
+    },
+    {
+      "raw": "From: Bob Svoboda <bob@example.org>\r\nTo: Alice Example <alice@example.com>\r\nSubject: Empty\r\nDate: Tue, 03 Mar 2026 14:00:00 GMT\r\nMessage-ID: <q6@example.org>\r\nMIME-Version: 1.0\r\nContent-Type: text/plain; charset=utf-8\r\nContent-Transfer-Encoding: 8bit\r\n\r\n"
+    }
+  ],
+  "expected": {
+    "replyQuotes": {
+      "<q1@example.org>": "On Tue, 3 Mar 2026 at 10:15, Bob Svoboda <bob@example.org> wrote:\n> See you at 10:15.\n>\n> Bob",
+      "<q2@example.net>": "carol@example.net wrote:\n> No date here.",
+      "<q3@example.net>": "On Tue, 3 Mar 2026 at 11:00, an unknown sender wrote:\n> Nobody signed this.",
+      "<q4@example.org>": "On Tue, 3 Mar 2026 at 12:00, Bob Svoboda <bob@example.org> wrote:\n> one\n> two\n>\n> four\n> five\n> [...]",
+      "<q5@example.org>": "On Tue, 3 Mar 2026 at 13:00, Bob Svoboda <bob@example.org> wrote:\n> On Tue, 3 Mar 2026 at 08:00, Carol Novak <carol@example.net> wrote:\n> > Is the hall free?",
+      "<q6@example.org>": ""
+    }
+  }
+}

@@ -1,0 +1,48 @@
+{
+  "description": "Gmail web, en: a reply quoting a Gmail forward: > ---------- Forwarded message --------- inside the quote",
+  "source": "fixtures/replies/gmail-forward-in-reply-en.eml",
+  "raw": "MIME-Version: 1.0\r\nReferences: <CAKx4m2p7V8o7e4UideJJwOPkreszFzdCKPYMLKfqtE9KzkLd@mail.example.com>\r\nIn-Reply-To: <CAKx4m2p7V8o7e4UideJJwOPkreszFzdCKPYMLKfqtE9KzkLd@mail.example.com>\r\nFrom: Bob Svoboda <bob@example.org>\r\nDate: Tue, 3 Mar 2026 13:01:17 +0100\r\nMessage-ID: <CAH7x9ksflI3An14fk2olPiwcfDYpHoz6Mzq362mAGXDIOs4fK@mail.example.com>\r\nSubject: Re: Fwd: Cabin booking\r\nTo: =?UTF-8?Q?Alice_Dvo=C5=99=C3=A1kov=C3=A1?= <alice@example.com>\r\nContent-Type: multipart/alternative; boundary=\"00000000000075f76640a7f82349\"\r\n\r\n--00000000000075f76640a7f82349\r\nContent-Type: text/plain; charset=\"UTF-8\"\r\nContent-Transfer-Encoding: quoted-printable\r\n\r\nThanks, I'll call them tomorrow and confirm the dates.\r\n\r\nBob\r\n\r\nOn Tue, Mar 3, 2026 at 10:15=E2=80=AFAM Alice Dvo=C5=99=C3=A1kov=C3=A1 <ali=\r\nce@example.com>\r\nwrote:\r\n\r\n> FYI, see below. Can you confirm with them?\r\n>\r\n> ---------- Forwarded message ---------\r\n> From: Eva Mal=C3=A1 <eva.mala@example.net>\r\n> Date: Mon, Mar 2, 2026 at 4:12=E2=80=AFPM\r\n> Subject: Cabin booking\r\n> To: Alice Dvo=C5=99=C3=A1kov=C3=A1 <alice@example.com>\r\n>\r\n>\r\n> Hi Alice,\r\n>\r\n> the cabin is yours from Friday to Sunday.\r\n>\r\n> Eva\r\n\r\n\r\n--00000000000075f76640a7f82349\r\nContent-Type: text/html; charset=\"UTF-8\"\r\nContent-Transfer-Encoding: quoted-printable\r\n\r\n<div dir=3D\"ltr\"><div>Thanks, I'll call them tomorrow and confirm the dates=\r\n.</div><div><br></div><div>Bob</div></div><br><div class=3D\"gmail_quote gma=\r\nil_quote_container\"><div dir=3D\"ltr\" class=3D\"gmail_attr\">On Tue, Mar 3, 20=\r\n26 at 10:15=E2=80=AFAM Alice Dvo=C5=99=C3=A1kov=C3=A1 &lt;<a href=3D\"mailto=\r\n:alice@example.com\">alice@example.com</a>&gt; wrote:<br></div><blockquote c=\r\nlass=3D\"gmail_quote\" style=3D\"margin:0px 0px 0px 0.8ex;border-left:1px soli=\r\nd rgb(204,204,204);padding-left:1ex\"><div dir=3D\"ltr\">FYI, see below. Can y=\r\nou confirm with them?<br><br>---------- Forwarded message ---------<br>From=\r\n: Eva Mal=C3=A1 &lt;eva.mala@example.net&gt;<br>Date: Mon, Mar 2, 2026 at 4=\r\n:12=E2=80=AFPM<br>Subject: Cabin booking<br>To: Alice Dvo=C5=99=C3=A1kov=C3=\r\n=A1 &lt;alice@example.com&gt;<br><br><br>Hi Alice,<br><br>the cabin is your=\r\ns from Friday to Sunday.<br><br>Eva</div></blockquote></div>\r\n\r\n--00000000000075f76640a7f82349--\r\n",
+  "expected": {
+    "id": "<CAH7x9ksflI3An14fk2olPiwcfDYpHoz6Mzq362mAGXDIOs4fK@mail.example.com>",
+    "from": {
+      "name": "Bob Svoboda",
+      "address": "bob@example.org"
+    },
+    "to": [
+      {
+        "name": "Alice Dvořáková",
+        "address": "alice@example.com"
+      }
+    ],
+    "cc": [],
+    "replyTo": [],
+    "date": "2026-03-03T12:01:17.000Z",
+    "subject": "Re: Fwd: Cabin booking",
+    "text": "Thanks, I'll call them tomorrow and confirm the dates.\n\nBob\n\nOn Tue, Mar 3, 2026 at 10:15 AM Alice Dvořáková <alice@example.com>\nwrote:\n\n> FYI, see below. Can you confirm with them?\n>\n> ---------- Forwarded message ---------\n> From: Eva Malá <eva.mala@example.net>\n> Date: Mon, Mar 2, 2026 at 4:12 PM\n> Subject: Cabin booking\n> To: Alice Dvořáková <alice@example.com>\n>\n>\n> Hi Alice,\n>\n> the cabin is yours from Friday to Sunday.\n>\n> Eva\n\n",
+    "textSource": "plain",
+    "es": null,
+    "attachments": [],
+    "refs": {
+      "messageId": "<CAH7x9ksflI3An14fk2olPiwcfDYpHoz6Mzq362mAGXDIOs4fK@mail.example.com>",
+      "inReplyTo": [
+        "<CAKx4m2p7V8o7e4UideJJwOPkreszFzdCKPYMLKfqtE9KzkLd@mail.example.com>"
+      ],
+      "references": [
+        "<CAKx4m2p7V8o7e4UideJJwOPkreszFzdCKPYMLKfqtE9KzkLd@mail.example.com>"
+      ]
+    },
+    "delivery": {
+      "listHeaders": [],
+      "listId": null,
+      "autoSubmitted": null,
+      "precedence": null,
+      "returnPath": null,
+      "listUnsubscribe": null
+    }
+  },
+  "split": {
+    "fresh": "Thanks, I'll call them tomorrow and confirm the dates.\n\nBob",
+    "quoted": "On Tue, Mar 3, 2026 at 10:15 AM Alice Dvořáková <alice@example.com>\nwrote:\n\n> FYI, see below. Can you confirm with them?\n>\n> ---------- Forwarded message ---------\n> From: Eva Malá <eva.mala@example.net>\n> Date: Mon, Mar 2, 2026 at 4:12 PM\n> Subject: Cabin booking\n> To: Alice Dvořáková <alice@example.com>\n>\n>\n> Hi Alice,\n>\n> the cabin is yours from Friday to Sunday.\n>\n> Eva",
+    "signature": ""
+  }
+}

@@ -1,0 +1,79 @@
+{
+  "description": "Section 7.1 step 1: the messages are given out of order; one Message-ID is held twice (an INBOX and a Sent copy that differ only in a Received field); two messages share a date and are ordered by id; one has no date and comes last.",
+  "covers": [
+    "TH-1"
+  ],
+  "owner": {
+    "name": "Alice Example",
+    "addresses": [
+      "alice@example.com"
+    ]
+  },
+  "messages": [
+    {
+      "raw": "From: Bob Svoboda <bob@example.org>\r\nTo: Alice Example <alice@example.com>\r\nSubject: Re: Picnic\r\nMessage-ID: <o4@example.org>\r\nIn-Reply-To: <o2@example.com>\r\nReferences: <o1@example.org> <o2@example.com>\r\nMIME-Version: 1.0\r\nContent-Type: text/plain; charset=utf-8\r\nContent-Transfer-Encoding: 8bit\r\n\r\nUndated, so it sorts last.\r\n"
+    },
+    {
+      "raw": "From: Bob Svoboda <bob@example.org>\r\nTo: Alice Example <alice@example.com>\r\nSubject: Re: Picnic\r\nDate: Mon, 02 Mar 2026 10:00:00 GMT\r\nMessage-ID: <o3@example.org>\r\nIn-Reply-To: <o1@example.org>\r\nReferences: <o1@example.org>\r\nMIME-Version: 1.0\r\nContent-Type: text/plain; charset=utf-8\r\nContent-Transfer-Encoding: 8bit\r\n\r\nSame time as Alice's answer.\r\n"
+    },
+    {
+      "raw": "From: Carol Novak <carol@example.net>\r\nTo: Alice Example <alice@example.com>\r\nSubject: Concert\r\nDate: Mon, 02 Mar 2026 08:00:00 GMT\r\nMessage-ID: <o5@example.net>\r\nReceived: from mx1.example.net by mx.example.com; Mon, 2 Mar 2026 08:00:01 +0000\r\nMIME-Version: 1.0\r\nContent-Type: text/plain; charset=utf-8\r\nContent-Transfer-Encoding: 8bit\r\n\r\nTickets for Friday?\r\n"
+    },
+    {
+      "raw": "From: Alice Example <alice@example.com>\r\nTo: Bob Svoboda <bob@example.org>\r\nSubject: Re: Picnic\r\nDate: Mon, 02 Mar 2026 10:00:00 GMT\r\nMessage-ID: <o2@example.com>\r\nIn-Reply-To: <o1@example.org>\r\nReferences: <o1@example.org>\r\nMIME-Version: 1.0\r\nContent-Type: text/plain; charset=utf-8\r\nContent-Transfer-Encoding: 8bit\r\n\r\nSaturday works.\r\n"
+    },
+    {
+      "raw": "From: Bob Svoboda <bob@example.org>\r\nTo: Alice Example <alice@example.com>\r\nSubject: Picnic\r\nDate: Mon, 02 Mar 2026 09:00:00 GMT\r\nMessage-ID: <o1@example.org>\r\nMIME-Version: 1.0\r\nContent-Type: text/plain; charset=utf-8\r\nContent-Transfer-Encoding: 8bit\r\n\r\nPicnic on Saturday?\r\n"
+    },
+    {
+      "raw": "From: Carol Novak <carol@example.net>\r\nTo: Alice Example <alice@example.com>\r\nSubject: Concert\r\nDate: Mon, 02 Mar 2026 08:00:00 GMT\r\nMessage-ID: <o5@example.net>\r\nReceived: from mx2.example.net by mx.example.com; Mon, 2 Mar 2026 08:00:02 +0000\r\nMIME-Version: 1.0\r\nContent-Type: text/plain; charset=utf-8\r\nContent-Transfer-Encoding: 8bit\r\n\r\nTickets for Friday?\r\n"
+    }
+  ],
+  "expected": {
+    "conversations": [
+      {
+        "id": "conv-3456c5420b6bfa8ae3106abaff1a30f5",
+        "rootMessageId": "<o1@example.org>",
+        "subject": "Picnic",
+        "participants": [
+          {
+            "name": "Alice Example",
+            "address": "alice@example.com"
+          },
+          {
+            "name": "Bob Svoboda",
+            "address": "bob@example.org"
+          }
+        ],
+        "messageIds": [
+          "<o1@example.org>",
+          "<o2@example.com>",
+          "<o3@example.org>",
+          "<o4@example.org>"
+        ],
+        "firstDate": "2026-03-02T09:00:00.000Z",
+        "lastDate": "2026-03-02T10:00:00.000Z"
+      },
+      {
+        "id": "conv-8e22e8fe9cf993b45f3348ad9b298350",
+        "rootMessageId": "<o5@example.net>",
+        "subject": "Concert",
+        "participants": [
+          {
+            "name": "Alice Example",
+            "address": "alice@example.com"
+          },
+          {
+            "name": "Carol Novak",
+            "address": "carol@example.net"
+          }
+        ],
+        "messageIds": [
+          "<o5@example.net>"
+        ],
+        "firstDate": "2026-03-02T08:00:00.000Z",
+        "lastDate": "2026-03-02T08:00:00.000Z"
+      }
+    ]
+  }
+}

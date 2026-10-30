@@ -1,0 +1,120 @@
+{
+  "description": "Section 8.3 and the rule that list and automated mail is not shown as chats: list fields, Precedence, Auto-Submitted, the null Return-Path and no-reply senders are classified; a local part that only starts like noreply is a person; the owner's own message is a person whatever its fields. The chats view groups only the person messages.",
+  "covers": [
+    "CH-2",
+    "CH-3"
+  ],
+  "owner": {
+    "name": "Alice Example",
+    "addresses": [
+      "alice@example.com"
+    ]
+  },
+  "messages": [
+    {
+      "raw": "From: Bob Svoboda <bob@example.org>\r\nTo: Team <team@lists.example.org>\r\nSubject: [team] Agenda\r\nDate: Sun, 08 Mar 2026 09:00:00 GMT\r\nMessage-ID: <k1@example.org>\r\nList-Id: Team <team.lists.example.org>\r\nList-Post: <mailto:team@lists.example.org>\r\nMIME-Version: 1.0\r\nContent-Type: text/plain; charset=utf-8\r\nContent-Transfer-Encoding: 8bit\r\n\r\nMailing list post.\r\n"
+    },
+    {
+      "raw": "From: Club <club@example.org>\r\nTo: Alice Example <alice@example.com>\r\nSubject: Club news\r\nDate: Sun, 08 Mar 2026 09:01:00 GMT\r\nMessage-ID: <k2@example.org>\r\nPrecedence: list\r\nMIME-Version: 1.0\r\nContent-Type: text/plain; charset=utf-8\r\nContent-Transfer-Encoding: 8bit\r\n\r\nPrecedence: list.\r\n"
+    },
+    {
+      "raw": "From: Shop <news@example.net>\r\nTo: Alice Example <alice@example.com>\r\nSubject: Offers\r\nDate: Sun, 08 Mar 2026 09:02:00 GMT\r\nMessage-ID: <k3@example.net>\r\nPrecedence: bulk\r\nMIME-Version: 1.0\r\nContent-Type: text/plain; charset=utf-8\r\nContent-Transfer-Encoding: 8bit\r\n\r\nNewsletter.\r\n"
+    },
+    {
+      "raw": "From: Bob Svoboda <bob@example.org>\r\nTo: Alice Example <alice@example.com>\r\nSubject: Out of office\r\nDate: Sun, 08 Mar 2026 09:03:00 GMT\r\nMessage-ID: <k4@example.org>\r\nAuto-Submitted: auto-replied\r\nMIME-Version: 1.0\r\nContent-Type: text/plain; charset=utf-8\r\nContent-Transfer-Encoding: 8bit\r\n\r\nI am away.\r\n"
+    },
+    {
+      "raw": "From: Mail Delivery System <MAILER-DAEMON@example.net>\r\nTo: Alice Example <alice@example.com>\r\nSubject: Undelivered Mail\r\nDate: Sun, 08 Mar 2026 09:04:00 GMT\r\nMessage-ID: <k5@example.net>\r\nReturn-Path: <>\r\nMIME-Version: 1.0\r\nContent-Type: text/plain; charset=utf-8\r\nContent-Transfer-Encoding: 8bit\r\n\r\nBounce.\r\n"
+    },
+    {
+      "raw": "From: Billing <noreply+billing@example.com>\r\nTo: Alice Example <alice@example.com>\r\nSubject: Invoice\r\nDate: Sun, 08 Mar 2026 09:05:00 GMT\r\nMessage-ID: <k6@example.com>\r\nMIME-Version: 1.0\r\nContent-Type: text/plain; charset=utf-8\r\nContent-Transfer-Encoding: 8bit\r\n\r\nNo-reply sender.\r\n"
+    },
+    {
+      "raw": "From: Do-Not-Reply@example.com\r\nTo: Alice Example <alice@example.com>\r\nSubject: Notice\r\nDate: Sun, 08 Mar 2026 09:06:00 GMT\r\nMessage-ID: <k7@example.com>\r\nMIME-Version: 1.0\r\nContent-Type: text/plain; charset=utf-8\r\nContent-Transfer-Encoding: 8bit\r\n\r\nUpper case no-reply sender.\r\n"
+    },
+    {
+      "raw": "From: Noreplyer <noreplyer@example.net>\r\nTo: Alice Example <alice@example.com>\r\nSubject: Hello\r\nDate: Sun, 08 Mar 2026 09:07:00 GMT\r\nMessage-ID: <k8@example.net>\r\nMIME-Version: 1.0\r\nContent-Type: text/plain; charset=utf-8\r\nContent-Transfer-Encoding: 8bit\r\n\r\nOnly starts like noreply.\r\n"
+    },
+    {
+      "raw": "From: Carol Novak <carol@example.net>\r\nTo: Alice Example <alice@example.com>\r\nSubject: Holiday\r\nDate: Sun, 08 Mar 2026 09:08:00 GMT\r\nMessage-ID: <k9@example.net>\r\nAuto-Submitted: no\r\nMIME-Version: 1.0\r\nContent-Type: text/plain; charset=utf-8\r\nContent-Transfer-Encoding: 8bit\r\n\r\nAuto-Submitted: no is a person.\r\n"
+    },
+    {
+      "raw": "From: Alice Example <alice@example.com>\r\nTo: Bob Svoboda <bob@example.org>\r\nSubject: Minutes\r\nDate: Sun, 08 Mar 2026 09:09:00 GMT\r\nMessage-ID: <k10@example.com>\r\nPrecedence: bulk\r\nAuto-Submitted: auto-generated\r\nMIME-Version: 1.0\r\nContent-Type: text/plain; charset=utf-8\r\nContent-Transfer-Encoding: 8bit\r\n\r\nThe owner's own message.\r\n"
+    },
+    {
+      "raw": "From: Bob Svoboda <bob@example.org>\r\nTo: Alice Example <alice@example.com>\r\nSubject: Coffee?\r\nDate: Sun, 08 Mar 2026 09:10:00 GMT\r\nMessage-ID: <k11@example.org>\r\nMIME-Version: 1.0\r\nContent-Type: text/plain; charset=utf-8\r\nContent-Transfer-Encoding: 8bit\r\n\r\nA person.\r\n"
+    }
+  ],
+  "expected": {
+    "kinds": {
+      "<k10@example.com>": "person",
+      "<k11@example.org>": "person",
+      "<k1@example.org>": "list",
+      "<k2@example.org>": "list",
+      "<k3@example.net>": "automated",
+      "<k4@example.org>": "automated",
+      "<k5@example.net>": "automated",
+      "<k6@example.com>": "automated",
+      "<k7@example.com>": "automated",
+      "<k8@example.net>": "person",
+      "<k9@example.net>": "person"
+    },
+    "chats": [
+      {
+        "id": "chat-686b5e4cf4f963adf8f51468a48028ef",
+        "participants": [
+          {
+            "name": "Bob Svoboda",
+            "address": "bob@example.org"
+          }
+        ],
+        "messages": [
+          {
+            "id": "<k10@example.com>",
+            "subject": "Minutes"
+          },
+          {
+            "id": "<k11@example.org>",
+            "subject": "Coffee?"
+          }
+        ],
+        "firstDate": "2026-03-08T09:09:00.000Z",
+        "lastDate": "2026-03-08T09:10:00.000Z"
+      },
+      {
+        "id": "chat-c4fcf4f743a2924a8396b40d609fb406",
+        "participants": [
+          {
+            "name": "Carol Novak",
+            "address": "carol@example.net"
+          }
+        ],
+        "messages": [
+          {
+            "id": "<k9@example.net>",
+            "subject": "Holiday"
+          }
+        ],
+        "firstDate": "2026-03-08T09:08:00.000Z",
+        "lastDate": "2026-03-08T09:08:00.000Z"
+      },
+      {
+        "id": "chat-2cd472d0b0bbdcfdb91b678e8c3065d2",
+        "participants": [
+          {
+            "name": "Noreplyer",
+            "address": "noreplyer@example.net"
+          }
+        ],
+        "messages": [
+          {
+            "id": "<k8@example.net>",
+            "subject": "Hello"
+          }
+        ],
+        "firstDate": "2026-03-08T09:07:00.000Z",
+        "lastDate": "2026-03-08T09:07:00.000Z"
+      }
+    ]
+  }
+}

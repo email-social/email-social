@@ -1,0 +1,48 @@
+{
+  "description": "Yahoo Mail (web), en: indented attribution with trailing spaces, original not prefixed with > but indented by one space",
+  "source": "fixtures/replies/yahoo-mail-web-en.eml",
+  "raw": "Date: Tue, 3 Mar 2026 09:52:18 +0000 (UTC)\r\nFrom: Bob Svoboda <bob@example.org>\r\nTo: =?UTF-8?Q?Alice_Dvo=C5=99=C3=A1kov=C3=A1?= <alice@example.com>\r\nMessage-ID: <4317742195.8326660.1772532655557@mail.yahoo.example.com>\r\nIn-Reply-To: <CAKx4mj78NthxdzfxJ2iE3rzpVpabDNM9zAix4wFGkR6xwkyo@mail.example.com>\r\nReferences: <CAKx4mj78NthxdzfxJ2iE3rzpVpabDNM9zAix4wFGkR6xwkyo@mail.example.com>\r\nSubject: Re: Contract draft\r\nMIME-Version: 1.0\r\nContent-Type: multipart/alternative; \r\n\tboundary=\"----=_Part_6444843_238836853.1772532610520\"\r\n\r\n------=_Part_6444843_238836853.1772532610520\r\nContent-Type: text/plain; charset=UTF-8\r\nContent-Transfer-Encoding: quoted-printable\r\n\r\nHi Alice,\r\n\r\nFriday works, I'll send the draft on Thursday.\r\n\r\nBob\r\n\r\n    On Tuesday, March 3, 2026 at 10:15:00 AM GMT+1, Alice Dvo=C5=99=C3=A1ko=\r\nv=C3=A1 <alice@example.com> wrote: =20\r\n=20\r\n Hi Bob,\r\n=20\r\n could you send me the contract draft by Friday?\r\n=20\r\n Thanks,\r\n Alice\r\n=20\r\n------=_Part_6444843_238836853.1772532610520\r\nContent-Type: text/html; charset=UTF-8\r\nContent-Transfer-Encoding: quoted-printable\r\n\r\n<html><head></head><body><div class=3D\"ydp3c1e9f7byahoo-style-wrap\" style=\r\n=3D\"font-family:Helvetica Neue, Helvetica, Arial, sans-serif;font-size:16px=\r\n;\"><div dir=3D\"ltr\" data-setdir=3D\"false\">Hi Alice,</div><div dir=3D\"ltr\" d=\r\nata-setdir=3D\"false\"><br></div><div dir=3D\"ltr\" data-setdir=3D\"false\">Frida=\r\ny works, I'll send the draft on Thursday.</div><div dir=3D\"ltr\" data-setdir=\r\n=3D\"false\"><br></div><div dir=3D\"ltr\" data-setdir=3D\"false\">Bob</div><div><=\r\nbr></div></div><div id=3D\"ydp3c1e9f7byahoo_quoted_1234567890\" class=3D\"ydp3=\r\nc1e9f7byahoo_quoted\"><div style=3D\"font-family:'Helvetica Neue', Helvetica,=\r\n Arial, sans-serif;font-size:13px;color:#26282a;\"><div>On Tuesday, March 3,=\r\n 2026 at 10:15:00 AM GMT+1, Alice Dvo=C5=99=C3=A1kov=C3=A1 &lt;alice@exampl=\r\ne.com&gt; wrote:</div><div><br></div><div><br></div><div><div dir=3D\"ltr\">H=\r\ni Bob,<br><br>could you send me the contract draft by Friday?<br><br>Thanks=\r\n,<br>Alice</div></div></div></div></body></html>\r\n------=_Part_6444843_238836853.1772532610520--\r\n",
+  "expected": {
+    "id": "<4317742195.8326660.1772532655557@mail.yahoo.example.com>",
+    "from": {
+      "name": "Bob Svoboda",
+      "address": "bob@example.org"
+    },
+    "to": [
+      {
+        "name": "Alice Dvořáková",
+        "address": "alice@example.com"
+      }
+    ],
+    "cc": [],
+    "replyTo": [],
+    "date": "2026-03-03T09:52:18.000Z",
+    "subject": "Re: Contract draft",
+    "text": "Hi Alice,\n\nFriday works, I'll send the draft on Thursday.\n\nBob\n\n    On Tuesday, March 3, 2026 at 10:15:00 AM GMT+1, Alice Dvořáková <alice@example.com> wrote:  \n \n Hi Bob,\n \n could you send me the contract draft by Friday?\n \n Thanks,\n Alice\n ",
+    "textSource": "plain",
+    "es": null,
+    "attachments": [],
+    "refs": {
+      "messageId": "<4317742195.8326660.1772532655557@mail.yahoo.example.com>",
+      "inReplyTo": [
+        "<CAKx4mj78NthxdzfxJ2iE3rzpVpabDNM9zAix4wFGkR6xwkyo@mail.example.com>"
+      ],
+      "references": [
+        "<CAKx4mj78NthxdzfxJ2iE3rzpVpabDNM9zAix4wFGkR6xwkyo@mail.example.com>"
+      ]
+    },
+    "delivery": {
+      "listHeaders": [],
+      "listId": null,
+      "autoSubmitted": null,
+      "precedence": null,
+      "returnPath": null,
+      "listUnsubscribe": null
+    }
+  },
+  "split": {
+    "fresh": "Hi Alice,\n\nFriday works, I'll send the draft on Thursday.\n\nBob",
+    "quoted": "    On Tuesday, March 3, 2026 at 10:15:00 AM GMT+1, Alice Dvořáková <alice@example.com> wrote:  \n \n Hi Bob,\n \n could you send me the contract draft by Friday?\n \n Thanks,\n Alice",
+    "signature": ""
+  }
+}

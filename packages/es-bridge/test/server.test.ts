@@ -383,3 +383,31 @@ describe("local API: signing in to an IMAP account", () => {
     }
   });
 });
+
+describe("local API: a malformed WebSocket frame", () => {
+  /** Opens the events socket, writes `frame` as raw bytes under it, and resolves with the close code. */
+  async function closeCodeAfter(bridge: RunningBridge, frame: Buffer): Promise<number> {
+    const ws = new WebSocket(`ws://127.0.0.1:${bridge.port}/api/events?token=${bridge.token}`, { origin: `http://127.0.0.1:${bridge.port}` });
+    await new Promise((resolve, reject) => {
+      ws.once("open", resolve);
+      ws.once("error", reject);
+    });
+    ws.on("error", () => undefined);
+    const closed = new Promise<number>((resolve) => ws.once("close", (code) => resolve(code)));
+    (ws as unknown as { _socket: { write(b: Buffer): void } })._socket.write(frame);
+    return closed;
+  }
+
+  it("closes that connection (1002, 1009) and keeps the bridge running", async () => {
+    const bridge = await demoBridge();
+    // RFC 6455 §5.1: a client frame must be masked; this one is not. Before, ws emitted "error" with no listener: the process ended.
+    expect(await closeCodeAfter(bridge, Buffer.from([0x81, 0x02, 0x68, 0x69]))).toBe(1002);
+    // A masked frame that announces 1 MB: the page never sends, so anything over 4 KB is refused.
+    const header = Buffer.alloc(14);
+    header[0] = 0x82;
+    header[1] = 0x80 | 127;
+    header.writeBigUInt64BE(1n << 20n, 2);
+    expect(await closeCodeAfter(bridge, header)).toBe(1009);
+    expect((await api(bridge, "/api/session")).status).toBe(200);
+  });
+});

@@ -1,0 +1,44 @@
+{
+  "description": "Thunderbird, inline forward, de: forward: -------- Weitergeleitete Nachricht -------- and the tab-separated header table",
+  "source": "fixtures/replies/thunderbird-de-forward.eml",
+  "raw": "Message-ID: <eb5ad621-fb65-4ee0-9015-04f8df76d1a6@example.net>\r\nDate: Tue, 3 Mar 2026 14:22:30 +0100\r\nMIME-Version: 1.0\r\nUser-Agent: Mozilla Thunderbird\r\nContent-Language: de-DE\r\nTo: Lukas Weber <lukas.weber@example.net>\r\nFrom: Anna Becker <anna.becker@example.net>\r\nSubject: =?UTF-8?Q?Fwd=3A_Projekt=C3=BCbersicht?=\r\nContent-Type: text/plain; charset=UTF-8; format=flowed\r\nContent-Transfer-Encoding: 8bit\r\n\r\nHallo Lukas,\r\n\r\nzur Info, siehe unten.\r\n\r\nAnna\r\n\r\n\r\n-------- Weitergeleitete Nachricht --------\r\nBetreff: \tProjektübersicht\r\nDatum: \tTue, 3 Mar 2026 10:15:00 +0100\r\nVon: \tAlice Dvořáková <alice@example.com>\r\nAn: \tAnna Becker <anna.becker@example.net>\r\n\r\n\r\n\r\nHallo Anna,\r\n\r\nkannst du mir die Projektübersicht bis Freitag schicken?\r\n\r\nViele Grüße\r\nAlice\r\n\r\n",
+  "expected": {
+    "id": "<eb5ad621-fb65-4ee0-9015-04f8df76d1a6@example.net>",
+    "from": {
+      "name": "Anna Becker",
+      "address": "anna.becker@example.net"
+    },
+    "to": [
+      {
+        "name": "Lukas Weber",
+        "address": "lukas.weber@example.net"
+      }
+    ],
+    "cc": [],
+    "replyTo": [],
+    "date": "2026-03-03T13:22:30.000Z",
+    "subject": "Fwd: Projektübersicht",
+    "text": "Hallo Lukas,\n\nzur Info, siehe unten.\n\nAnna\n\n\n-------- Weitergeleitete Nachricht --------\nBetreff: \tProjektübersicht\nDatum: \tTue, 3 Mar 2026 10:15:00 +0100\nVon: \tAlice Dvořáková <alice@example.com>\nAn: \tAnna Becker <anna.becker@example.net>\n\n\n\nHallo Anna,\n\nkannst du mir die Projektübersicht bis Freitag schicken?\n\nViele Grüße\nAlice\n\n",
+    "textSource": "plain",
+    "es": null,
+    "attachments": [],
+    "refs": {
+      "messageId": "<eb5ad621-fb65-4ee0-9015-04f8df76d1a6@example.net>",
+      "inReplyTo": [],
+      "references": []
+    },
+    "delivery": {
+      "listHeaders": [],
+      "listId": null,
+      "autoSubmitted": null,
+      "precedence": null,
+      "returnPath": null,
+      "listUnsubscribe": null
+    }
+  },
+  "split": {
+    "fresh": "Hallo Lukas,\n\nzur Info, siehe unten.\n\nAnna",
+    "quoted": "-------- Weitergeleitete Nachricht --------\nBetreff: \tProjektübersicht\nDatum: \tTue, 3 Mar 2026 10:15:00 +0100\nVon: \tAlice Dvořáková <alice@example.com>\nAn: \tAnna Becker <anna.becker@example.net>\n\n\n\nHallo Anna,\n\nkannst du mir die Projektübersicht bis Freitag schicken?\n\nViele Grüße\nAlice",
+    "signature": ""
+  }
+}

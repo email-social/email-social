@@ -1,0 +1,224 @@
+{
+  "description": "Section 7.2: reply and forward prefixes in several languages, counters, list tags, (fwd) trailers, [fwd: …] wrappers, the full-width colon, a combining caron, NBSP and narrow NBSP; single-letter tokens and tags with nothing after them are kept. The chats view lists every message's base subject.",
+  "covers": [
+    "TH-5"
+  ],
+  "owner": {
+    "name": "Alice Example",
+    "addresses": [
+      "alice@example.com"
+    ]
+  },
+  "messages": [
+    {
+      "raw": "From: Bob Svoboda <bob@example.org>\r\nTo: Alice Example <alice@example.com>\r\nSubject: Plan\r\nDate: Thu, 05 Mar 2026 09:00:00 GMT\r\nMessage-ID: <b01@example.org>\r\nMIME-Version: 1.0\r\nContent-Type: text/plain; charset=utf-8\r\nContent-Transfer-Encoding: 8bit\r\n\r\n1\r\n"
+    },
+    {
+      "raw": "From: Bob Svoboda <bob@example.org>\r\nTo: Alice Example <alice@example.com>\r\nSubject: Re: [team] AW: Fwd: Plan (fwd)\r\nDate: Thu, 05 Mar 2026 09:01:00 GMT\r\nMessage-ID: <b02@example.org>\r\nMIME-Version: 1.0\r\nContent-Type: text/plain; charset=utf-8\r\nContent-Transfer-Encoding: 8bit\r\n\r\n2\r\n"
+    },
+    {
+      "raw": "From: Bob Svoboda <bob@example.org>\r\nTo: Alice Example <alice@example.com>\r\nSubject: [fwd: Re: Plan]\r\nDate: Thu, 05 Mar 2026 09:02:00 GMT\r\nMessage-ID: <b03@example.org>\r\nMIME-Version: 1.0\r\nContent-Type: text/plain; charset=utf-8\r\nContent-Transfer-Encoding: 8bit\r\n\r\n3\r\n"
+    },
+    {
+      "raw": "From: Bob Svoboda <bob@example.org>\r\nTo: Alice Example <alice@example.com>\r\nSubject: RE : Plan\r\nDate: Thu, 05 Mar 2026 09:03:00 GMT\r\nMessage-ID: <b04@example.org>\r\nMIME-Version: 1.0\r\nContent-Type: text/plain; charset=utf-8\r\nContent-Transfer-Encoding: 8bit\r\n\r\n4\r\n"
+    },
+    {
+      "raw": "From: Bob Svoboda <bob@example.org>\r\nTo: Alice Example <alice@example.com>\r\nSubject: Re[2]: plan\r\nDate: Thu, 05 Mar 2026 09:04:00 GMT\r\nMessage-ID: <b05@example.org>\r\nMIME-Version: 1.0\r\nContent-Type: text/plain; charset=utf-8\r\nContent-Transfer-Encoding: 8bit\r\n\r\n5\r\n"
+    },
+    {
+      "raw": "From: Bob Svoboda <bob@example.org>\r\nTo: Alice Example <alice@example.com>\r\nSubject: =?utf-8?B?UFLMjDogUGxhbg==?=\r\nDate: Thu, 05 Mar 2026 09:05:00 GMT\r\nMessage-ID: <b06@example.org>\r\nMIME-Version: 1.0\r\nContent-Type: text/plain; charset=utf-8\r\nContent-Transfer-Encoding: 8bit\r\n\r\n6\r\n"
+    },
+    {
+      "raw": "From: Bob Svoboda <bob@example.org>\r\nTo: Alice Example <alice@example.com>\r\nSubject: =?utf-8?B?5Zue5aSN77yaUGxhbg==?=\r\nDate: Thu, 05 Mar 2026 09:06:00 GMT\r\nMessage-ID: <b07@example.org>\r\nMIME-Version: 1.0\r\nContent-Type: text/plain; charset=utf-8\r\nContent-Transfer-Encoding: 8bit\r\n\r\n7\r\n"
+    },
+    {
+      "raw": "From: Bob Svoboda <bob@example.org>\r\nTo: Alice Example <alice@example.com>\r\nSubject: R: Ciao\r\nDate: Thu, 05 Mar 2026 09:07:00 GMT\r\nMessage-ID: <b08@example.org>\r\nMIME-Version: 1.0\r\nContent-Type: text/plain; charset=utf-8\r\nContent-Transfer-Encoding: 8bit\r\n\r\n8\r\n"
+    },
+    {
+      "raw": "From: Bob Svoboda <bob@example.org>\r\nTo: Alice Example <alice@example.com>\r\nSubject: Re: [list]\r\nDate: Thu, 05 Mar 2026 09:08:00 GMT\r\nMessage-ID: <b09@example.org>\r\nMIME-Version: 1.0\r\nContent-Type: text/plain; charset=utf-8\r\nContent-Transfer-Encoding: 8bit\r\n\r\n9\r\n"
+    },
+    {
+      "raw": "From: Bob Svoboda <bob@example.org>\r\nTo: Alice Example <alice@example.com>\r\nSubject: Rescue plan\r\nDate: Thu, 05 Mar 2026 09:09:00 GMT\r\nMessage-ID: <b10@example.org>\r\nMIME-Version: 1.0\r\nContent-Type: text/plain; charset=utf-8\r\nContent-Transfer-Encoding: 8bit\r\n\r\n10\r\n"
+    },
+    {
+      "raw": "From: Bob Svoboda <bob@example.org>\r\nTo: Alice Example <alice@example.com>\r\nSubject: =?utf-8?B?UmU6wqDCoFBsYW7igK90cmlw?=\r\nDate: Thu, 05 Mar 2026 09:10:00 GMT\r\nMessage-ID: <b11@example.org>\r\nMIME-Version: 1.0\r\nContent-Type: text/plain; charset=utf-8\r\nContent-Transfer-Encoding: 8bit\r\n\r\n11\r\n"
+    },
+    {
+      "raw": "From: Bob Svoboda <bob@example.org>\r\nTo: Alice Example <alice@example.com>\r\nSubject: Réf. : Plan\r\nDate: Thu, 05 Mar 2026 09:11:00 GMT\r\nMessage-ID: <b12@example.org>\r\nMIME-Version: 1.0\r\nContent-Type: text/plain; charset=utf-8\r\nContent-Transfer-Encoding: 8bit\r\n\r\n12\r\n"
+    }
+  ],
+  "expected": {
+    "chats": [
+      {
+        "id": "chat-686b5e4cf4f963adf8f51468a48028ef",
+        "participants": [
+          {
+            "name": "Bob Svoboda",
+            "address": "bob@example.org"
+          }
+        ],
+        "messages": [
+          {
+            "id": "<b01@example.org>",
+            "subject": "Plan"
+          },
+          {
+            "id": "<b02@example.org>",
+            "subject": "Plan"
+          },
+          {
+            "id": "<b03@example.org>",
+            "subject": "Plan"
+          },
+          {
+            "id": "<b04@example.org>",
+            "subject": "Plan"
+          },
+          {
+            "id": "<b05@example.org>",
+            "subject": "plan"
+          },
+          {
+            "id": "<b06@example.org>",
+            "subject": "Plan"
+          },
+          {
+            "id": "<b07@example.org>",
+            "subject": "Plan"
+          },
+          {
+            "id": "<b08@example.org>",
+            "subject": "R: Ciao"
+          },
+          {
+            "id": "<b09@example.org>",
+            "subject": "[list]"
+          },
+          {
+            "id": "<b10@example.org>",
+            "subject": "Rescue plan"
+          },
+          {
+            "id": "<b11@example.org>",
+            "subject": "Plan trip"
+          },
+          {
+            "id": "<b12@example.org>",
+            "subject": "Plan"
+          }
+        ],
+        "firstDate": "2026-03-05T09:00:00.000Z",
+        "lastDate": "2026-03-05T09:11:00.000Z"
+      }
+    ],
+    "conversations": [
+      {
+        "id": "conv-6335784b53279112db03fdc441c450b5",
+        "rootMessageId": "<b01@example.org>",
+        "subject": "Plan",
+        "participants": [
+          {
+            "name": "Alice Example",
+            "address": "alice@example.com"
+          },
+          {
+            "name": "Bob Svoboda",
+            "address": "bob@example.org"
+          }
+        ],
+        "messageIds": [
+          "<b01@example.org>",
+          "<b02@example.org>",
+          "<b03@example.org>",
+          "<b04@example.org>",
+          "<b05@example.org>",
+          "<b06@example.org>",
+          "<b07@example.org>",
+          "<b12@example.org>"
+        ],
+        "firstDate": "2026-03-05T09:00:00.000Z",
+        "lastDate": "2026-03-05T09:11:00.000Z"
+      },
+      {
+        "id": "conv-9b775cbdc4413e31add1d87d30ceec5c",
+        "rootMessageId": "<b11@example.org>",
+        "subject": "Plan trip",
+        "participants": [
+          {
+            "name": "Alice Example",
+            "address": "alice@example.com"
+          },
+          {
+            "name": "Bob Svoboda",
+            "address": "bob@example.org"
+          }
+        ],
+        "messageIds": [
+          "<b11@example.org>"
+        ],
+        "firstDate": "2026-03-05T09:10:00.000Z",
+        "lastDate": "2026-03-05T09:10:00.000Z"
+      },
+      {
+        "id": "conv-6a82bc27110d4a146fa9280dd4e9a8e5",
+        "rootMessageId": "<b10@example.org>",
+        "subject": "Rescue plan",
+        "participants": [
+          {
+            "name": "Alice Example",
+            "address": "alice@example.com"
+          },
+          {
+            "name": "Bob Svoboda",
+            "address": "bob@example.org"
+          }
+        ],
+        "messageIds": [
+          "<b10@example.org>"
+        ],
+        "firstDate": "2026-03-05T09:09:00.000Z",
+        "lastDate": "2026-03-05T09:09:00.000Z"
+      },
+      {
+        "id": "conv-e90f7a32bd10d710926de8f22bbcde62",
+        "rootMessageId": "<b09@example.org>",
+        "subject": "[list]",
+        "participants": [
+          {
+            "name": "Alice Example",
+            "address": "alice@example.com"
+          },
+          {
+            "name": "Bob Svoboda",
+            "address": "bob@example.org"
+          }
+        ],
+        "messageIds": [
+          "<b09@example.org>"
+        ],
+        "firstDate": "2026-03-05T09:08:00.000Z",
+        "lastDate": "2026-03-05T09:08:00.000Z"
+      },
+      {
+        "id": "conv-6e40cafb05630d3bd157e0865021ff2e",
+        "rootMessageId": "<b08@example.org>",
+        "subject": "R: Ciao",
+        "participants": [
+          {
+            "name": "Alice Example",
+            "address": "alice@example.com"
+          },
+          {
+            "name": "Bob Svoboda",
+            "address": "bob@example.org"
+          }
+        ],
+        "messageIds": [
+          "<b08@example.org>"
+        ],
+        "firstDate": "2026-03-05T09:07:00.000Z",
+        "lastDate": "2026-03-05T09:07:00.000Z"
+      }
+    ]
+  }
+}

@@ -1,0 +1,84 @@
+{
+  "description": "Section 8.2, Auto-Submitted: the owner's own automatic reply is in the chat (the owner's mail is always a person's) but is left out of topics, gets no reply card although it quotes, and no subject note although its subject differs; a reply to it is placed by its References; Auto-Submitted: no is placed as usual.",
+  "covers": [
+    "TP-2"
+  ],
+  "owner": {
+    "name": "Alice Example",
+    "addresses": [
+      "alice@example.com"
+    ]
+  },
+  "messages": [
+    {
+      "raw": "From: Bob Svoboda <bob@example.org>\r\nTo: Alice Example <alice@example.com>\r\nSubject: Report\r\nDate: Tue, 10 Mar 2026 09:00:00 GMT\r\nMessage-ID: <a1@example.org>\r\nMIME-Version: 1.0\r\nContent-Type: text/plain; charset=utf-8\r\nContent-Transfer-Encoding: 8bit\r\n\r\nHere is the report.\r\nPlease have a look.\r\nThanks.\r\nBob\r\n"
+    },
+    {
+      "raw": "From: Alice Example <alice@example.com>\r\nTo: Bob Svoboda <bob@example.org>\r\nSubject: Automatic reply: Report\r\nDate: Tue, 10 Mar 2026 09:01:00 GMT\r\nMessage-ID: <a2@example.com>\r\nIn-Reply-To: <a1@example.org>\r\nReferences: <a1@example.org>\r\nAuto-Submitted: auto-replied\r\nMIME-Version: 1.0\r\nContent-Type: text/plain; charset=utf-8\r\nContent-Transfer-Encoding: 8bit\r\n\r\nI am away until Monday.\r\n\r\nOn Tue, 10 Mar 2026 at 09:00, Bob Svoboda <bob@example.org> wrote:\r\n> Please have a look.\r\n"
+    },
+    {
+      "raw": "From: Bob Svoboda <bob@example.org>\r\nTo: Alice Example <alice@example.com>\r\nSubject: Re: Automatic reply: Report\r\nDate: Tue, 10 Mar 2026 09:02:00 GMT\r\nMessage-ID: <a3@example.org>\r\nIn-Reply-To: <a2@example.com>\r\nReferences: <a1@example.org> <a2@example.com>\r\nAuto-Submitted: no\r\nMIME-Version: 1.0\r\nContent-Type: text/plain; charset=utf-8\r\nContent-Transfer-Encoding: 8bit\r\n\r\nEnjoy the holiday.\r\n"
+    }
+  ],
+  "expected": {
+    "chats": [
+      {
+        "id": "chat-686b5e4cf4f963adf8f51468a48028ef",
+        "participants": [
+          {
+            "name": "Bob Svoboda",
+            "address": "bob@example.org"
+          }
+        ],
+        "messages": [
+          {
+            "id": "<a1@example.org>",
+            "subject": "Report"
+          },
+          {
+            "id": "<a2@example.com>",
+            "subject": "Automatic reply: Report"
+          },
+          {
+            "id": "<a3@example.org>",
+            "subject": "Automatic reply: Report"
+          }
+        ],
+        "firstDate": "2026-03-10T09:00:00.000Z",
+        "lastDate": "2026-03-10T09:02:00.000Z"
+      }
+    ],
+    "topics": {
+      "chat-686b5e4cf4f963adf8f51468a48028ef": {
+        "topics": [
+          {
+            "rootId": "<a1@example.org>",
+            "label": null,
+            "base": "Report",
+            "kind": "plain",
+            "count": 2
+          }
+        ],
+        "of": {
+          "<a1@example.org>": {
+            "rootId": "<a1@example.org>",
+            "topicStart": true
+          },
+          "<a3@example.org>": {
+            "rootId": "<a1@example.org>",
+            "topicStart": false
+          }
+        }
+      }
+    },
+    "replyCards": {
+      "<a1@example.org>": null,
+      "<a2@example.com>": null,
+      "<a3@example.org>": null
+    },
+    "subjectNotes": {
+      "<a1@example.org>": null,
+      "<a3@example.org>": "Automatic reply: Report"
+    }
+  }
+}

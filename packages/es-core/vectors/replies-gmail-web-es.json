@@ -1,0 +1,48 @@
+{
+  "description": "Gmail web, es: attribution \"El mar, 3 mar 2026 a las 10:15, Alice Dvořáková (<alice@example.com>) escribió:\", wrapped onto 2 lines",
+  "source": "fixtures/replies/gmail-web-es.eml",
+  "raw": "MIME-Version: 1.0\r\nReferences: <CAKx4mhK03WMdqPg76Vr6J18yWcHMEsoNP4qZxc2jdPDyHBOz@mail.example.com>\r\nIn-Reply-To: <CAKx4mhK03WMdqPg76Vr6J18yWcHMEsoNP4qZxc2jdPDyHBOz@mail.example.com>\r\nFrom: =?UTF-8?Q?Luc=C3=ADa_Ortega?= <lucia.ortega@example.net>\r\nDate: Tue, 3 Mar 2026 12:32:05 +0100\r\nMessage-ID: <CAH7x9kUiLblkiidj4TiEqYtkmRmHMIIjlZ0bge3VGZ2COTDAv@mail.example.com>\r\nSubject: Re: Borrador del contrato\r\nTo: =?UTF-8?Q?Alice_Dvo=C5=99=C3=A1kov=C3=A1?= <alice@example.com>\r\nContent-Type: multipart/alternative; boundary=\"0000000000001f7fe14d8a21d757\"\r\n\r\n--0000000000001f7fe14d8a21d757\r\nContent-Type: text/plain; charset=\"UTF-8\"\r\nContent-Transfer-Encoding: quoted-printable\r\n\r\nHola Alice,\r\n\r\nel borrador est=C3=A1 casi listo, te lo env=C3=ADo el jueves.\r\n\r\nLuc=C3=ADa\r\n\r\nEl mar, 3 mar 2026 a las 10:15, Alice Dvo=C5=99=C3=A1kov=C3=A1 (<alice@exam=\r\nple.com>)\r\nescribi=C3=B3:\r\n\r\n> Hola Luc=C3=ADa,\r\n>\r\n> =C2=BFme puedes enviar el borrador del contrato antes del viernes?\r\n>\r\n> Gracias,\r\n> Alice\r\n\r\n\r\n--0000000000001f7fe14d8a21d757\r\nContent-Type: text/html; charset=\"UTF-8\"\r\nContent-Transfer-Encoding: quoted-printable\r\n\r\n<div dir=3D\"ltr\"><div>Hola Alice,</div><div><br></div><div>el borrador est=\r\n=C3=A1 casi listo, te lo env=C3=ADo el jueves.</div><div><br></div><div>Luc=\r\n=C3=ADa</div></div><br><div class=3D\"gmail_quote gmail_quote_container\"><di=\r\nv dir=3D\"ltr\" class=3D\"gmail_attr\">El mar, 3 mar 2026 a las 10:15, Alice Dv=\r\no=C5=99=C3=A1kov=C3=A1 (&lt;<a href=3D\"mailto:alice@example.com\">alice@exam=\r\nple.com</a>&gt;) escribi=C3=B3:<br></div><blockquote class=3D\"gmail_quote\" =\r\nstyle=3D\"margin:0px 0px 0px 0.8ex;border-left:1px solid rgb(204,204,204);pa=\r\ndding-left:1ex\"><div dir=3D\"ltr\">Hola Luc=C3=ADa,<br><br>=C2=BFme puedes en=\r\nviar el borrador del contrato antes del viernes?<br><br>Gracias,<br>Alice</=\r\ndiv></blockquote></div>\r\n\r\n--0000000000001f7fe14d8a21d757--\r\n",
+  "expected": {
+    "id": "<CAH7x9kUiLblkiidj4TiEqYtkmRmHMIIjlZ0bge3VGZ2COTDAv@mail.example.com>",
+    "from": {
+      "name": "Lucía Ortega",
+      "address": "lucia.ortega@example.net"
+    },
+    "to": [
+      {
+        "name": "Alice Dvořáková",
+        "address": "alice@example.com"
+      }
+    ],
+    "cc": [],
+    "replyTo": [],
+    "date": "2026-03-03T11:32:05.000Z",
+    "subject": "Re: Borrador del contrato",
+    "text": "Hola Alice,\n\nel borrador está casi listo, te lo envío el jueves.\n\nLucía\n\nEl mar, 3 mar 2026 a las 10:15, Alice Dvořáková (<alice@example.com>)\nescribió:\n\n> Hola Lucía,\n>\n> ¿me puedes enviar el borrador del contrato antes del viernes?\n>\n> Gracias,\n> Alice\n\n",
+    "textSource": "plain",
+    "es": null,
+    "attachments": [],
+    "refs": {
+      "messageId": "<CAH7x9kUiLblkiidj4TiEqYtkmRmHMIIjlZ0bge3VGZ2COTDAv@mail.example.com>",
+      "inReplyTo": [
+        "<CAKx4mhK03WMdqPg76Vr6J18yWcHMEsoNP4qZxc2jdPDyHBOz@mail.example.com>"
+      ],
+      "references": [
+        "<CAKx4mhK03WMdqPg76Vr6J18yWcHMEsoNP4qZxc2jdPDyHBOz@mail.example.com>"
+      ]
+    },
+    "delivery": {
+      "listHeaders": [],
+      "listId": null,
+      "autoSubmitted": null,
+      "precedence": null,
+      "returnPath": null,
+      "listUnsubscribe": null
+    }
+  },
+  "split": {
+    "fresh": "Hola Alice,\n\nel borrador está casi listo, te lo envío el jueves.\n\nLucía",
+    "quoted": "El mar, 3 mar 2026 a las 10:15, Alice Dvořáková (<alice@example.com>)\nescribió:\n\n> Hola Lucía,\n>\n> ¿me puedes enviar el borrador del contrato antes del viernes?\n>\n> Gracias,\n> Alice",
+    "signature": ""
+  }
+}

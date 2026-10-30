@@ -1,0 +1,48 @@
+{
+  "description": "Thunderbird (reply and signature above the quote), cs: --  signature between the answer and the attribution",
+  "source": "fixtures/replies/thunderbird-cs-signature-above-quote.eml",
+  "raw": "Message-ID: <7fb59b10-ea3c-4a3c-99f4-17b988b5f8cd@example.org>\r\nDate: Tue, 3 Mar 2026 11:56:02 +0100\r\nMIME-Version: 1.0\r\nUser-Agent: Mozilla Thunderbird\r\nContent-Language: cs-CZ\r\nTo: =?UTF-8?Q?Alice_Dvo=C5=99=C3=A1kov=C3=A1?= <alice@example.com>\r\nFrom: Karel Holub <karel@example.org>\r\nSubject: =?UTF-8?Q?Re=3A_Fotky_z_v=C3=BDletu?=\r\nReferences: <CAKx4m7kzEzHGf2uclzqFwEjpB8jLFSsmqWOgfM3FYwsrh06c@mail.example.com>\r\nIn-Reply-To: <CAKx4m7kzEzHGf2uclzqFwEjpB8jLFSsmqWOgfM3FYwsrh06c@mail.example.com>\r\nContent-Type: text/plain; charset=UTF-8; format=flowed\r\nContent-Transfer-Encoding: 8bit\r\n\r\nAhoj Alice,\r\n\r\nfotky pošlu v pátek.\r\n\r\nKarel\r\n\r\n-- \r\nKarel Holub\r\nExample s.r.o.\r\n\r\nDne 03. 03. 26 v 10:15 Alice Dvořáková napsal(a):\r\n> Ahoj Karle,\r\n>\r\n> pošleš mi prosím fotky z výletu? Chci je dát do alba.\r\n>\r\n> Díky,\r\n> Alice\r\n\r\n",
+  "expected": {
+    "id": "<7fb59b10-ea3c-4a3c-99f4-17b988b5f8cd@example.org>",
+    "from": {
+      "name": "Karel Holub",
+      "address": "karel@example.org"
+    },
+    "to": [
+      {
+        "name": "Alice Dvořáková",
+        "address": "alice@example.com"
+      }
+    ],
+    "cc": [],
+    "replyTo": [],
+    "date": "2026-03-03T10:56:02.000Z",
+    "subject": "Re: Fotky z výletu",
+    "text": "Ahoj Alice,\n\nfotky pošlu v pátek.\n\nKarel\n\n-- \nKarel Holub\nExample s.r.o.\n\nDne 03. 03. 26 v 10:15 Alice Dvořáková napsal(a):\n> Ahoj Karle,\n>\n> pošleš mi prosím fotky z výletu? Chci je dát do alba.\n>\n> Díky,\n> Alice\n\n",
+    "textSource": "plain",
+    "es": null,
+    "attachments": [],
+    "refs": {
+      "messageId": "<7fb59b10-ea3c-4a3c-99f4-17b988b5f8cd@example.org>",
+      "inReplyTo": [
+        "<CAKx4m7kzEzHGf2uclzqFwEjpB8jLFSsmqWOgfM3FYwsrh06c@mail.example.com>"
+      ],
+      "references": [
+        "<CAKx4m7kzEzHGf2uclzqFwEjpB8jLFSsmqWOgfM3FYwsrh06c@mail.example.com>"
+      ]
+    },
+    "delivery": {
+      "listHeaders": [],
+      "listId": null,
+      "autoSubmitted": null,
+      "precedence": null,
+      "returnPath": null,
+      "listUnsubscribe": null
+    }
+  },
+  "split": {
+    "fresh": "Ahoj Alice,\n\nfotky pošlu v pátek.\n\nKarel",
+    "quoted": "Dne 03. 03. 26 v 10:15 Alice Dvořáková napsal(a):\n> Ahoj Karle,\n>\n> pošleš mi prosím fotky z výletu? Chci je dát do alba.\n>\n> Díky,\n> Alice",
+    "signature": "-- \nKarel Holub\nExample s.r.o."
+  }
+}

@@ -1,0 +1,48 @@
+{
+  "description": "Outlook on the web / new Outlook, cs: underscore divider + Od:/Odesláno:/Komu:/Předmět: header block, original not prefixed",
+  "source": "fixtures/replies/outlook-new-web-cs.eml",
+  "raw": "From: Karel Holub <karel@example.org>\r\nTo: =?UTF-8?Q?Alice_Dvo=C5=99=C3=A1kov=C3=A1?= <alice@example.com>\r\nSubject: =?utf-8?Q?Odp=3A_Fotky_z_v=C3=BDletu?=\r\nThread-Topic: =?utf-8?Q?Fotky_z_v=C3=BDletu?=\r\nThread-Index: AQHcqvGadZ6IQlHRG1kwdLWxUb2m==\r\nDate: Tue, 3 Mar 2026 10:40:12 +0000\r\nMessage-ID: <PAXPR02MB460296419EABD835AFEC8434E092FD78A2824@PAXPR02MB460296419EABD835AFEC8434E092FD78A2824.eurprd02.prod.outlook.example.com>\r\nReferences: <CAKx4mLhiyvLpWfBgDduTWYGnxVH87Jz1Kgnpi8rs7HRq8uRx@mail.example.com>\r\nIn-Reply-To: <CAKx4mLhiyvLpWfBgDduTWYGnxVH87Jz1Kgnpi8rs7HRq8uRx@mail.example.com>\r\nAccept-Language: cs-CZ, en-US\r\nContent-Language: cs-CZ\r\nX-MS-Has-Attach:\r\nX-MS-TNEF-Correlator:\r\nContent-Type: multipart/alternative;\r\n\tboundary=\"_000_PAXPR02MB460296419EABD835AFEC8434E092FD78A_\"\r\nMIME-Version: 1.0\r\n\r\n--_000_PAXPR02MB460296419EABD835AFEC8434E092FD78A_\r\nContent-Type: text/plain; charset=\"utf-8\"\r\nContent-Transfer-Encoding: quoted-printable\r\n\r\nAhoj Alice,\r\n\r\nfotky jsou ve sd=C3=ADlen=C3=A9m albu, odkaz ti po=C5=A1lu odpoledne.\r\n\r\nKarel\r\n________________________________\r\nOd: Alice Dvo=C5=99=C3=A1kov=C3=A1 <alice@example.com>\r\nOdesl=C3=A1no: =C3=BAter=C3=BD 3. b=C5=99ezna 2026 10:15\r\nKomu: Karel Holub <karel@example.org>\r\nP=C5=99edm=C4=9Bt: Fotky z v=C3=BDletu\r\n\r\nAhoj Karle,\r\n\r\npo=C5=A1le=C5=A1 mi pros=C3=ADm fotky z v=C3=BDletu? Chci je d=C3=A1t do al=\r\nba.\r\n\r\nD=C3=ADky,\r\nAlice\r\n\r\n\r\n--_000_PAXPR02MB460296419EABD835AFEC8434E092FD78A_\r\nContent-Type: text/html; charset=\"utf-8\"\r\nContent-Transfer-Encoding: quoted-printable\r\n\r\n<html>\r\n<head>\r\n<meta http-equiv=3D\"Content-Type\" content=3D\"text/html; charset=3Dutf-8\">\r\n<style type=3D\"text/css\" style=3D\"display:none;\"> P {margin-top:0;margin-bo=\r\nttom:0;} </style>\r\n</head>\r\n<body dir=3D\"ltr\">\r\n<div class=3D\"elementToProof\" style=3D\"font-family: Aptos, Aptos_EmbeddedFo=\r\nnt, Aptos_MSFontService, Calibri, Helvetica, sans-serif; font-size: 12pt; c=\r\nolor: rgb(0, 0, 0);\">Ahoj Alice,</div>\r\n<div class=3D\"elementToProof\" style=3D\"font-family: Aptos, Aptos_EmbeddedFo=\r\nnt, Aptos_MSFontService, Calibri, Helvetica, sans-serif; font-size: 12pt; c=\r\nolor: rgb(0, 0, 0);\"><br></div>\r\n<div class=3D\"elementToProof\" style=3D\"font-family: Aptos, Aptos_EmbeddedFo=\r\nnt, Aptos_MSFontService, Calibri, Helvetica, sans-serif; font-size: 12pt; c=\r\nolor: rgb(0, 0, 0);\">fotky jsou ve sd=C3=ADlen=C3=A9m albu, odkaz ti po=C5=\r\n=A1lu odpoledne.</div>\r\n<div class=3D\"elementToProof\" style=3D\"font-family: Aptos, Aptos_EmbeddedFo=\r\nnt, Aptos_MSFontService, Calibri, Helvetica, sans-serif; font-size: 12pt; c=\r\nolor: rgb(0, 0, 0);\"><br></div>\r\n<div class=3D\"elementToProof\" style=3D\"font-family: Aptos, Aptos_EmbeddedFo=\r\nnt, Aptos_MSFontService, Calibri, Helvetica, sans-serif; font-size: 12pt; c=\r\nolor: rgb(0, 0, 0);\">Karel</div>\r\n<div id=3D\"appendonsend\"></div>\r\n<hr style=3D\"display:inline-block;width:98%\" tabindex=3D\"-1\">\r\n<div id=3D\"divRplyFwdMsg\" dir=3D\"ltr\"><font face=3D\"Calibri, sans-serif\" st=\r\nyle=3D\"font-size:11pt\" color=3D\"#000000\"><b>Od:</b> Alice Dvo=C5=99=C3=A1ko=\r\nv=C3=A1 &lt;alice@example.com&gt;<br>=0D\r\n<b>Odesl=C3=A1no:</b> =C3=BAter=C3=BD 3. b=C5=99ezna 2026 10:15<br>=0D\r\n<b>Komu:</b> Karel Holub &lt;karel@example.org&gt;<br>=0D\r\n<b>P=C5=99edm=C4=9Bt:</b> Fotky z v=C3=BDletu</font>\r\n<div>&nbsp;</div>\r\n</div>\r\n<div class=3D\"BodyFragment\"><font size=3D\"2\"><span style=3D\"font-size:11pt;=\r\n\">\r\n<div class=3D\"PlainText\">Ahoj Karle,<br>\r\n<br>\r\npo=C5=A1le=C5=A1 mi pros=C3=ADm fotky z v=C3=BDletu? Chci je d=C3=A1t do al=\r\nba.<br>\r\n<br>\r\nD=C3=ADky,<br>\r\nAlice</div>\r\n</span></font></div>\r\n</body>\r\n</html>\r\n\r\n--_000_PAXPR02MB460296419EABD835AFEC8434E092FD78A_--\r\n",
+  "expected": {
+    "id": "<PAXPR02MB460296419EABD835AFEC8434E092FD78A2824@PAXPR02MB460296419EABD835AFEC8434E092FD78A2824.eurprd02.prod.outlook.example.com>",
+    "from": {
+      "name": "Karel Holub",
+      "address": "karel@example.org"
+    },
+    "to": [
+      {
+        "name": "Alice Dvořáková",
+        "address": "alice@example.com"
+      }
+    ],
+    "cc": [],
+    "replyTo": [],
+    "date": "2026-03-03T10:40:12.000Z",
+    "subject": "Odp: Fotky z výletu",
+    "text": "Ahoj Alice,\n\nfotky jsou ve sdíleném albu, odkaz ti pošlu odpoledne.\n\nKarel\n________________________________\nOd: Alice Dvořáková <alice@example.com>\nOdesláno: úterý 3. března 2026 10:15\nKomu: Karel Holub <karel@example.org>\nPředmět: Fotky z výletu\n\nAhoj Karle,\n\npošleš mi prosím fotky z výletu? Chci je dát do alba.\n\nDíky,\nAlice\n\n",
+    "textSource": "plain",
+    "es": null,
+    "attachments": [],
+    "refs": {
+      "messageId": "<PAXPR02MB460296419EABD835AFEC8434E092FD78A2824@PAXPR02MB460296419EABD835AFEC8434E092FD78A2824.eurprd02.prod.outlook.example.com>",
+      "inReplyTo": [
+        "<CAKx4mLhiyvLpWfBgDduTWYGnxVH87Jz1Kgnpi8rs7HRq8uRx@mail.example.com>"
+      ],
+      "references": [
+        "<CAKx4mLhiyvLpWfBgDduTWYGnxVH87Jz1Kgnpi8rs7HRq8uRx@mail.example.com>"
+      ]
+    },
+    "delivery": {
+      "listHeaders": [],
+      "listId": null,
+      "autoSubmitted": null,
+      "precedence": null,
+      "returnPath": null,
+      "listUnsubscribe": null
+    }
+  },
+  "split": {
+    "fresh": "Ahoj Alice,\n\nfotky jsou ve sdíleném albu, odkaz ti pošlu odpoledne.\n\nKarel",
+    "quoted": "________________________________\nOd: Alice Dvořáková <alice@example.com>\nOdesláno: úterý 3. března 2026 10:15\nKomu: Karel Holub <karel@example.org>\nPředmět: Fotky z výletu\n\nAhoj Karle,\n\npošleš mi prosím fotky z výletu? Chci je dát do alba.\n\nDíky,\nAlice",
+    "signature": ""
+  }
+}

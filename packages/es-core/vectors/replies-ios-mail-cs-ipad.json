@@ -1,0 +1,48 @@
+{
+  "description": "iOS Mail (iPad), cs: mobile signature \"Odesláno z iPadu\"; attribution \"> Dne 3. 3. 2026 v 10:15, Alice Dvořáková <alice@example.com> napsal(a):\"",
+  "source": "fixtures/replies/ios-mail-cs-ipad.eml",
+  "raw": "Content-Type: text/plain;\r\n\tcharset=utf-8\r\nContent-Transfer-Encoding: quoted-printable\r\nFrom: Karel Holub <karel@example.org>\r\nMime-Version: 1.0 (1.0)\r\nSubject: =?utf-8?Q?Re=3A_Fotky_z_v=C3=BDletu?=\r\nDate: Tue, 3 Mar 2026 10:20:10 +0100\r\nMessage-Id: <A2EFCBB9-6C69-44F1-94EE-587CE530A742@example.org>\r\nReferences: <CAKx4moeqTlIfNS7kDb46qqRt1mLpxuaGZgvUgALcYaidMLtr@mail.example.com>\r\nIn-Reply-To: <CAKx4moeqTlIfNS7kDb46qqRt1mLpxuaGZgvUgALcYaidMLtr@mail.example.com>\r\nTo: =?utf-8?Q?Alice_Dvo=C5=99=C3=A1kov=C3=A1?= <alice@example.com>\r\nX-Mailer: iPad Mail (22E240)\r\n\r\nJasn=C4=9B, po=C5=A1lu je ve=C4=8Der.\r\n\r\nOdesl=C3=A1no z iPadu\r\n\r\n> Dne 3. 3. 2026 v 10:15, Alice Dvo=C5=99=C3=A1kov=C3=A1 <alice@example.com=\r\n> napsal(a):\r\n>\r\n> =EF=BB=BFAhoj Karle,\r\n>\r\n> po=C5=A1le=C5=A1 mi pros=C3=ADm fotky z v=C3=BDletu? Chci je d=C3=A1t do =\r\nalba.\r\n>\r\n> D=C3=ADky,\r\n> Alice\r\n",
+  "expected": {
+    "id": "<A2EFCBB9-6C69-44F1-94EE-587CE530A742@example.org>",
+    "from": {
+      "name": "Karel Holub",
+      "address": "karel@example.org"
+    },
+    "to": [
+      {
+        "name": "Alice Dvořáková",
+        "address": "alice@example.com"
+      }
+    ],
+    "cc": [],
+    "replyTo": [],
+    "date": "2026-03-03T09:20:10.000Z",
+    "subject": "Re: Fotky z výletu",
+    "text": "Jasně, pošlu je večer.\n\nOdesláno z iPadu\n\n> Dne 3. 3. 2026 v 10:15, Alice Dvořáková <alice@example.com> napsal(a):\n>\n> ﻿Ahoj Karle,\n>\n> pošleš mi prosím fotky z výletu? Chci je dát do alba.\n>\n> Díky,\n> Alice\n",
+    "textSource": "plain",
+    "es": null,
+    "attachments": [],
+    "refs": {
+      "messageId": "<A2EFCBB9-6C69-44F1-94EE-587CE530A742@example.org>",
+      "inReplyTo": [
+        "<CAKx4moeqTlIfNS7kDb46qqRt1mLpxuaGZgvUgALcYaidMLtr@mail.example.com>"
+      ],
+      "references": [
+        "<CAKx4moeqTlIfNS7kDb46qqRt1mLpxuaGZgvUgALcYaidMLtr@mail.example.com>"
+      ]
+    },
+    "delivery": {
+      "listHeaders": [],
+      "listId": null,
+      "autoSubmitted": null,
+      "precedence": null,
+      "returnPath": null,
+      "listUnsubscribe": null
+    }
+  },
+  "split": {
+    "fresh": "Jasně, pošlu je večer.",
+    "quoted": "> Dne 3. 3. 2026 v 10:15, Alice Dvořáková <alice@example.com> napsal(a):\n>\n> ﻿Ahoj Karle,\n>\n> pošleš mi prosím fotky z výletu? Chci je dát do alba.\n>\n> Díky,\n> Alice",
+    "signature": "Odesláno z iPadu"
+  }
+}

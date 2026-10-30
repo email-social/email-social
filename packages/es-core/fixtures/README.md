@@ -101,6 +101,61 @@ with a remote domain set to HTML-only MIME; they test the HTML path
 | `replies/thunderbird-html-only-de.eml` | Thunderbird, German, HTML only | `moz-cite-prefix` (wrapped), `<blockquote type="cite" cite="mid:…">`, answer below, `<pre class="moz-signature">` | Thunderbird's HTML reply markup |
 | `replies/mutt-interleaved.eml` | mutt 2.2 | answers interleaved with the quoted questions; `-- ` signature | mutt's default attribution `On %d, %n wrote:` |
 | `replies/plain-no-quote.eml` | Thunderbird, new message | lines that only look like markers: `… wrote about the release:` (no date or address), a `From:` line with only one more label | nothing to recognise: everything is fresh |
+| `replies/outlook-new-web-cs.eml` | Outlook on the web / new Outlook, cs | underscore divider + Od:/Odesláno:/Komu:/Předmět: header block, original not prefixed | J4 reconstruction (confidence: high) |
+| `replies/outlook-new-web-de.eml` | Outlook on the web / new Outlook, de | underscore divider + Von:/Gesendet:/An:/Betreff: header block, original not prefixed | J4 reconstruction (confidence: high) |
+| `replies/outlook-new-web-fr.eml` | Outlook on the web / new Outlook, fr | underscore divider + De :/Envoyé :/À :/Objet : header block, original not prefixed | J4 reconstruction (confidence: high) |
+| `replies/outlook-new-web-sk.eml` | Outlook on the web / new Outlook, sk | underscore divider + Od:/Odoslané:/Komu:/Predmet: header block, original not prefixed | J4 reconstruction (confidence: high) |
+| `replies/outlook-new-web-pl.eml` | Outlook on the web / new Outlook, pl | underscore divider + Od:/Wysłane:/Do:/Temat: header block, original not prefixed | J4 reconstruction (confidence: high) |
+| `replies/outlook-new-web-es.eml` | Outlook on the web / new Outlook, es | underscore divider + De:/Enviado:/Para:/Asunto: header block, original not prefixed | J4 reconstruction (confidence: high) |
+| `replies/outlook-new-web-it.eml` | Outlook on the web / new Outlook, it | underscore divider + Da:/Inviato:/A:/Oggetto: header block, original not prefixed | J4 reconstruction (confidence: high) |
+| `replies/outlook-new-web-nl.eml` | Outlook on the web / new Outlook, nl | underscore divider + Van:/Verzonden:/Aan:/Onderwerp: header block, original not prefixed | J4 reconstruction (confidence: high) |
+| `replies/outlook-new-web-pt.eml` | Outlook on the web / new Outlook, pt | underscore divider + De:/Enviado:/Para:/Assunto: header block, original not prefixed | J4 reconstruction (confidence: high) |
+| `replies/outlook-new-windows-cs-cc.eml` | new Outlook for Windows, cs | divider + Od:/Odesláno:/Komu:/Kopie:/Předmět: (Cc line in the block) | J4 reconstruction (confidence: high) |
+| `replies/outlook-new-web-cs-html-only.eml` | Outlook on the web, HTML part only, cs | HTML only: `<hr>` + divRplyFwdMsg with bold Czech labels | J4 reconstruction (confidence: high) |
+| `replies/outlook-android-cs.eml` | Outlook for Android, cs | mobile signature "Získejte Outlook pro Android" above the divider and header block | J4 reconstruction (confidence: medium) |
+| `replies/outlook-android-de.eml` | Outlook for Android, de | mobile signature "Outlook für Android herunterladen" above the divider and header block | J4 reconstruction (confidence: medium) |
+| `replies/outlook-android-fr.eml` | Outlook for Android, fr | mobile signature "Obtenir Outlook pour Android" above the divider and header block | J4 reconstruction (confidence: medium) |
+| `replies/gmail-web-sk.eml` | Gmail web, sk | attribution "ut 3. 3. 2026 o 10:15 Alice Dvořáková <alice@example.com> napísal(a):" | J4 reconstruction (confidence: medium) |
+| `replies/gmail-web-pl.eml` | Gmail web, pl | attribution "wt., 3 mar 2026 o 10:15 Alice Dvořáková <alice@example.com> napisał(a):" | J4 reconstruction (confidence: high) |
+| `replies/gmail-web-es.eml` | Gmail web, es | attribution "El mar, 3 mar 2026 a las 10:15, Alice Dvořáková (<alice@example.com>) escribió:", wrapped onto 2 lines | J4 reconstruction (confidence: high) |
+| `replies/gmail-web-it.eml` | Gmail web, it | attribution "Il giorno mar 3 mar 2026 alle ore 10:15 Alice Dvořáková <alice@example.com> ha scritto:", wrapped onto 2 lines | J4 reconstruction (confidence: high) |
+| `replies/gmail-web-nl.eml` | Gmail web, nl | attribution "Op di 3 mrt 2026 om 10:15 schreef Alice Dvořáková <alice@example.com>:" | J4 reconstruction (confidence: high) |
+| `replies/gmail-web-pt.eml` | Gmail web, pt | attribution "Em ter., 3 de mar. de 2026 às 10:15, Alice Dvořáková <alice@example.com> escreveu:", wrapped onto 2 lines | J4 reconstruction (confidence: high) |
+| `replies/gmail-android-de.eml` | Gmail app for Android, de | one-line answer; unwrapped attribution "Alice Dvořáková <alice@example.com> schrieb am Di., 3. März 2026, 10:15:" | J4 reconstruction (confidence: medium) |
+| `replies/gmail-android-fr.eml` | Gmail app for Android, fr | one-line answer; unwrapped attribution "Le mar. 3 mars 2026, 10:15, Alice Dvořáková <alice@example.com> a écrit :" | J4 reconstruction (confidence: medium) |
+| `replies/gmail-ios-en.eml` | Gmail app for iOS, en | one-line answer; unwrapped attribution "On Tue, Mar 3, 2026 at 10:15 AM Alice Dvořáková <alice@example.com> wrote:" (U+202F before AM) | J4 reconstruction (confidence: medium) |
+| `replies/gmail-nested-reply-en.eml` | Gmail web, en | reply to a reply: two attribution blocks, the inner one at depth 2 (`> >`) | J4 reconstruction (confidence: high) |
+| `replies/gmail-interleaved-en.eml` | Gmail web, en | interleaved answers between quoted questions under a Gmail attribution; quoted sign-off left at the end | J4 reconstruction (confidence: high) |
+| `replies/gmail-forward-in-reply-en.eml` | Gmail web, en | a reply quoting a Gmail forward: `> ---------- Forwarded message ---------` inside the quote | J4 reconstruction (confidence: high) |
+| `replies/apple-mail-de.eml` | Apple Mail (macOS), de | attribution inside the quote, split by a QP soft line break: "> Am 03.03.2026 um 10:15 schrieb Alice Dvořáková <alice@example.com>:" | J4 reconstruction (confidence: high) |
+| `replies/apple-mail-fr.eml` | Apple Mail (macOS), fr | attribution inside the quote, split by a QP soft line break: "> Le 3 mars 2026 à 10:15, Alice Dvořáková <alice@example.com> a écrit :" | J4 reconstruction (confidence: high) |
+| `replies/ios-mail-cs-ipad.eml` | iOS Mail (iPad), cs | mobile signature "Odesláno z iPadu"; attribution "> Dne 3. 3. 2026 v 10:15, Alice Dvořáková <alice@example.com> napsal(a):" | J4 reconstruction (confidence: high) |
+| `replies/ios-mail-fr.eml` | iOS Mail (iPhone), fr | mobile signature "Envoyé de mon iPhone"; attribution "> Le 3 mars 2026 à 10:15, Alice Dvořáková <alice@example.com> a écrit :" | J4 reconstruction (confidence: high) |
+| `replies/ios-mail-sk.eml` | iOS Mail (iPhone), sk | mobile signature "Odoslané z iPhonu"; attribution "> Dňa 3. 3. 2026 o 10:15 používateľ Alice Dvořáková <alice@example.com> napísal:" | J4 reconstruction (confidence: medium) |
+| `replies/ios-mail-pl.eml` | iOS Mail (iPhone), pl | mobile signature "Wysłane z iPhone'a"; attribution "> Wiadomość napisana przez Alice Dvořáková <alice@example.com> w dniu 3 mar 2026, o godz. 10:15:" | J4 reconstruction (confidence: medium) |
+| `replies/ios-mail-es.eml` | iOS Mail (iPhone), es | mobile signature "Enviado desde mi iPhone"; attribution "> El 3 mar 2026, a las 10:15, Alice Dvořáková <alice@example.com> escribió:" | J4 reconstruction (confidence: high) |
+| `replies/ios-mail-it.eml` | iOS Mail (iPhone), it | mobile signature "Inviato da iPhone"; attribution "> Il giorno 3 mar 2026, alle ore 10:15, Alice Dvořáková <alice@example.com> ha scritto:" | J4 reconstruction (confidence: high) |
+| `replies/ios-mail-nl.eml` | iOS Mail (iPhone), nl | mobile signature "Verstuurd vanaf mijn iPhone"; attribution "> Op 3 mrt 2026 om 10:15 heeft Alice Dvořáková <alice@example.com> het volgende geschreven:" | J4 reconstruction (confidence: high) |
+| `replies/ios-mail-pt.eml` | iOS Mail (iPhone), pt | mobile signature "Enviado do meu iPhone"; attribution "> Em 3 de mar. de 2026, à(s) 10:15, Alice Dvořáková <alice@example.com> escreveu:" | J4 reconstruction (confidence: medium) |
+| `replies/thunderbird-sk.eml` | Thunderbird, sk | answer below the quote; attribution "Dňa 3. 3. 2026 o 10:15 Alice Dvořáková napísal(a):" | J4 reconstruction (confidence: medium) |
+| `replies/thunderbird-pl.eml` | Thunderbird, pl | answer below the quote; attribution "W dniu 3.03.2026 o 10:15, Alice Dvořáková pisze:"; the answer is a long format=flowed paragraph | J4 reconstruction (confidence: medium) |
+| `replies/thunderbird-es.eml` | Thunderbird, es | answer below the quote; attribution "El 3/3/26 a las 10:15, Alice Dvořáková escribió:" | J4 reconstruction (confidence: high) |
+| `replies/thunderbird-it.eml` | Thunderbird, it | answer below the quote; attribution "Il 03/03/26 10:15, Alice Dvořáková ha scritto:" | J4 reconstruction (confidence: high) |
+| `replies/thunderbird-nl.eml` | Thunderbird, nl | answer below the quote; attribution "Op 03-03-2026 om 10:15 schreef Alice Dvořáková:" | J4 reconstruction (confidence: medium) |
+| `replies/thunderbird-pt.eml` | Thunderbird, pt | answer below the quote; attribution "Em 03/03/2026 10:15, Alice Dvořáková escreveu:" | J4 reconstruction (confidence: medium) |
+| `replies/thunderbird-flowed-attribution.eml` | Thunderbird, en | format=flowed: the 79-character attribution and the long lines are soft-wrapped at 72 (trailing space) | J4 reconstruction (confidence: high) |
+| `replies/thunderbird-en-signature-above-quote.eml` | Thunderbird (reply and signature above the quote), en | `-- ` signature between the answer and the attribution | J4 reconstruction (confidence: high) |
+| `replies/thunderbird-cs-signature-above-quote.eml` | Thunderbird (reply and signature above the quote), cs | `-- ` signature between the answer and the attribution | J4 reconstruction (confidence: high) |
+| `replies/thunderbird-de-forward.eml` | Thunderbird, inline forward, de | forward: `-------- Weitergeleitete Nachricht --------` and the tab-separated header table | J4 reconstruction (confidence: high) |
+| `replies/samsung-mail-en.eml` | Samsung Email, en | signature "Sent from my Galaxy" above "-------- Original message --------" and a header block with trailing spaces; base64 | J4 reconstruction (confidence: high) |
+| `replies/samsung-mail-de.eml` | Samsung Email, de | signature "Von meinem Samsung Galaxy Smartphone gesendet." above "-------- Ursprüngliche Nachricht --------" and a header block with trailing spaces; base64 | J4 reconstruction (confidence: high) |
+| `replies/samsung-mail-fr.eml` | Samsung Email, fr | signature "Envoyé depuis mon appareil Galaxy" above "-------- Message d'origine --------" and a header block with trailing spaces; base64 | J4 reconstruction (confidence: medium) |
+| `replies/proton-mail-en.eml` | Proton Mail (web), en | Proton's one-line "Sent with Proton Mail …" footer above the attribution; base64 | J4 reconstruction (confidence: high) |
+| `replies/proton-mail-html-only.eml` | Proton Mail (web), HTML part only, en | HTML only: protonmail_signature_block, attribution in div.protonmail_quote, `<blockquote class="protonmail_quote">` | J4 reconstruction (confidence: medium) |
+| `replies/fastmail-en.eml` | Fastmail (web), en | attribution "On Tue, 3 Mar 2026, at 10:15, Alice Dvořáková wrote:" (no address) directly above the "> " lines | J4 reconstruction (confidence: medium) |
+| `replies/yahoo-mail-web-en.eml` | Yahoo Mail (web), en | indented attribution with trailing spaces, original not prefixed with `>` but indented by one space | J4 reconstruction (confidence: medium) |
+| `replies/yahoo-mail-android-en.eml` | Yahoo Mail for Android, en | "Sent from Yahoo Mail on Android"; attribution with no space before `<`, original indented, not prefixed | J4 reconstruction (confidence: medium) |
+| `replies/roundcube-en.eml` | Roundcube 1.6 (default: answer below the quote), en | attribution "On 2026-03-03 10:15, Alice Dvořáková wrote:" (ISO date, no address), answer below | J4 reconstruction (confidence: high) |
 
 ## Conversations in the corpus
 

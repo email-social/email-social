@@ -63,6 +63,21 @@ export function splitHeaderBody(bytes: Uint8Array): { header: Uint8Array; body: 
   return { header: bytes.subarray(start), body: bytes.subarray(bytes.length) };
 }
 
+const isWhiteSpace = (code: number): boolean => code === SPACE || code === TAB || code === CR || code === LF;
+
+/**
+ * The text without leading and trailing SP, HTAB, CR and LF. A loop, not
+ * /[ \t\r\n]+$/: that regex retries from every space of a long inner run,
+ * which is quadratic ("a" + 32 000 spaces + "b" took seconds).
+ */
+function trimWhiteSpace(text: string): string {
+  let start = 0;
+  let end = text.length;
+  while (start < end && isWhiteSpace(text.charCodeAt(start))) start++;
+  while (end > start && isWhiteSpace(text.charCodeAt(end - 1))) end--;
+  return text.slice(start, end);
+}
+
 /**
  * Parses a header section into fields. Folded lines are unfolded by removing
  * the CRLF or LF before white space (§2.2.3). Lines that neither start a
@@ -77,7 +92,7 @@ export function parseHeaderFields(header: Uint8Array): HeaderField[] {
       const match = FIELD_START.exec(unfolded);
       if (match !== null) {
         const name = match[1]!;
-        const value = unfolded.slice(match[0].length).replace(/^[ \t\r\n]+|[ \t\r\n]+$/g, "");
+        const value = trimWhiteSpace(unfolded.slice(match[0].length));
         fields.push({ name, key: name.toLowerCase(), value });
       }
     }

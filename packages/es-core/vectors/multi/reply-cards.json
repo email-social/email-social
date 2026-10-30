@@ -1,0 +1,172 @@
+{
+  "description": "Section 9.5: cards in a chat with Bob: a post whose replyTo is held (with the target's attachment), a post whose target is not held, a post without replyTo, a whole-message quote, a fragment quote, the owner's own quote of a whole message, a message answering itself, a parent in another chat, a parent not held, and a parent found through References.",
+  "covers": [
+    "QT-6"
+  ],
+  "owner": {
+    "name": "Alice Example",
+    "addresses": [
+      "alice@example.com"
+    ]
+  },
+  "messages": [
+    {
+      "raw": "From: Alice Example <alice@example.com>\r\nTo: Bob Svoboda <bob@example.org>\r\nSubject: Trip\r\nDate: Sun, 15 Mar 2026 09:00:00 GMT\r\nMessage-ID: <rc1@example.com>\r\nMIME-Version: 1.0\r\nContent-Type: multipart/mixed; boundary=\"part-boundary-1\"\r\n\r\n--part-boundary-1\r\nContent-Type: text/plain; charset=utf-8\r\nContent-Transfer-Encoding: 8bit\r\n\r\nShall we take the 7:40 train on Saturday?\r\nI can buy the tickets.\r\nBring a jacket.\r\nTell me by Friday.\r\n\r\n--part-boundary-1\r\nContent-Type: application/pdf; name=\"map.pdf\"\r\nContent-Disposition: attachment; filename=\"map.pdf\"\r\nContent-Transfer-Encoding: base64\r\n\r\nJVBERi0xLjQK\r\n--part-boundary-1--\r\n"
+    },
+    {
+      "raw": "Date: Sun, 15 Mar 2026 09:01:00 +0000\r\nFrom: Bob Svoboda <bob@example.org>\r\nTo: Alice Example <alice@example.com>\r\nSubject: Re: Trip\r\nMessage-ID: <rc2@example.org>\r\nIn-Reply-To: <rc1@example.com>\r\nReferences: <rc1@example.com>\r\nMIME-Version: 1.0\r\nContent-Type: multipart/mixed; boundary=\"=_es_e7df465c04912f499b22a19b\"\r\n\r\nThis is a multi-part message in MIME format.\r\n\r\n--=_es_e7df465c04912f499b22a19b\r\nContent-Type: text/plain; charset=utf-8\r\nContent-Transfer-Encoding: 7bit\r\n\r\nI'm in. 7:40 works.\r\n\r\n--=_es_e7df465c04912f499b22a19b\r\nContent-Type: application/vnd.email-social.message+json\r\nContent-Transfer-Encoding: base64\r\nContent-Disposition: attachment; filename=\"email-social.json\"\r\n\r\newogICIkdHlwZSI6ICJlcy5zb2NpYWwucG9zdCIsCiAgInZhbHVlIjogewogICAgInRleHQiOiAi\r\nSSdtIGluLiA3OjQwIHdvcmtzLlxuIiwKICAgICJ2aWEiOiAiYm9iQGV4YW1wbGUub3JnIiwKICAg\r\nICJjcmVhdGVkQXQiOiAiMjAyNi0wMy0xNVQwOTowMTowMC4wMDBaIiwKICAgICJlbWFpbCI6IHsK\r\nICAgICAgIm1lc3NhZ2VJZCI6ICI8cmMyQGV4YW1wbGUub3JnPiIsCiAgICAgICJzdWJqZWN0Ijog\r\nIlJlOiBUcmlwIiwKICAgICAgImluUmVwbHlUbyI6ICI8cmMxQGV4YW1wbGUuY29tPiIsCiAgICAg\r\nICJyZWZlcmVuY2VzIjogWwogICAgICAgICI8cmMxQGV4YW1wbGUuY29tPiIKICAgICAgXSwKICAg\r\nICAgInJlcGx5VG8iOiB7CiAgICAgICAgIm1lc3NhZ2VJZCI6ICI8cmMxQGV4YW1wbGUuY29tPiIs\r\nCiAgICAgICAgImZyb20iOiB7CiAgICAgICAgICAibmFtZSI6ICJBbGljZSBFeGFtcGxlIiwKICAg\r\nICAgICAgICJhZGRyZXNzIjogImFsaWNlQGV4YW1wbGUuY29tIgogICAgICAgIH0sCiAgICAgICAg\r\nImV4Y2VycHQiOiAiU2hhbGwgd2UgdGFrZSB0aGUgNzo0MCB0cmFpbiBvbiBTYXR1cmRheT8iCiAg\r\nICAgIH0KICAgIH0KICB9Cn0K\r\n--=_es_e7df465c04912f499b22a19b--\r\n"
+    },
+    {
+      "raw": "Date: Sun, 15 Mar 2026 09:02:00 +0000\r\nFrom: Bob Svoboda <bob@example.org>\r\nTo: Alice Example <alice@example.com>\r\nSubject: Re: Trip\r\nMessage-ID: <rc3@example.org>\r\nMIME-Version: 1.0\r\nContent-Type: multipart/mixed; boundary=\"=_es_42122d390dd19f69381fb744\"\r\n\r\nThis is a multi-part message in MIME format.\r\n\r\n--=_es_42122d390dd19f69381fb744\r\nContent-Type: text/plain; charset=utf-8\r\nContent-Transfer-Encoding: 7bit\r\n\r\nAbout your older message: yes.\r\n\r\n--=_es_42122d390dd19f69381fb744\r\nContent-Type: application/vnd.email-social.message+json\r\nContent-Transfer-Encoding: base64\r\nContent-Disposition: attachment; filename=\"email-social.json\"\r\n\r\newogICIkdHlwZSI6ICJlcy5zb2NpYWwucG9zdCIsCiAgInZhbHVlIjogewogICAgInRleHQiOiAi\r\nQWJvdXQgeW91ciBvbGRlciBtZXNzYWdlOiB5ZXMuXG4iLAogICAgInZpYSI6ICJib2JAZXhhbXBs\r\nZS5vcmciLAogICAgImNyZWF0ZWRBdCI6ICIyMDI2LTAzLTE1VDA5OjAyOjAwLjAwMFoiLAogICAg\r\nImVtYWlsIjogewogICAgICAibWVzc2FnZUlkIjogIjxyYzNAZXhhbXBsZS5vcmc+IiwKICAgICAg\r\nInN1YmplY3QiOiAiUmU6IFRyaXAiLAogICAgICAicmVwbHlUbyI6IHsKICAgICAgICAibWVzc2Fn\r\nZUlkIjogIjxnb25lQGV4YW1wbGUuY29tPiIsCiAgICAgICAgImZyb20iOiB7CiAgICAgICAgICAi\r\nbmFtZSI6ICIiLAogICAgICAgICAgImFkZHJlc3MiOiAiYWxpY2VAZXhhbXBsZS5jb20iCiAgICAg\r\nICAgfSwKICAgICAgICAiZXhjZXJwdCI6ICJUaGlzIG9sZGVyIG1lc3NhZ2UgaXMgbm8gbG9uZ2Vy\r\nIGluIHRoZSBtYWlsYm94LCBhbmQgaXRzIGV4Y2VycHQgaXMgbG9uZ2VyIHRoYW4gb25lIGh1bmRy\r\nZWQgYW5kIGZvcnR5IGNoYXJhY3RlcnMsIHNvIHRoZSBjYXJkIGN1dHMgaXQgYXQgYSB3b3JkIGJv\r\ndW5kYXJ5LiIKICAgICAgfQogICAgfQogIH0KfQo=\r\n--=_es_42122d390dd19f69381fb744--\r\n"
+    },
+    {
+      "raw": "Date: Sun, 15 Mar 2026 09:03:00 +0000\r\nFrom: Bob Svoboda <bob@example.org>\r\nTo: Alice Example <alice@example.com>\r\nSubject: Re: Trip\r\nMessage-ID: <rc4@example.org>\r\nIn-Reply-To: <rc1@example.com>\r\nReferences: <rc1@example.com>\r\nMIME-Version: 1.0\r\nContent-Type: multipart/mixed; boundary=\"=_es_23a0d5fce55ef3259d256f45\"\r\n\r\nThis is a multi-part message in MIME format.\r\n\r\n--=_es_23a0d5fce55ef3259d256f45\r\nContent-Type: text/plain; charset=utf-8\r\nContent-Transfer-Encoding: 7bit\r\n\r\nAlso, I'll bring sandwiches.\r\n\r\n--=_es_23a0d5fce55ef3259d256f45\r\nContent-Type: application/vnd.email-social.message+json\r\nContent-Transfer-Encoding: base64\r\nContent-Disposition: attachment; filename=\"email-social.json\"\r\n\r\newogICIkdHlwZSI6ICJlcy5zb2NpYWwucG9zdCIsCiAgInZhbHVlIjogewogICAgInRleHQiOiAi\r\nQWxzbywgSSdsbCBicmluZyBzYW5kd2ljaGVzLlxuIiwKICAgICJ2aWEiOiAiYm9iQGV4YW1wbGUu\r\nb3JnIiwKICAgICJjcmVhdGVkQXQiOiAiMjAyNi0wMy0xNVQwOTowMzowMC4wMDBaIiwKICAgICJl\r\nbWFpbCI6IHsKICAgICAgIm1lc3NhZ2VJZCI6ICI8cmM0QGV4YW1wbGUub3JnPiIsCiAgICAgICJz\r\ndWJqZWN0IjogIlJlOiBUcmlwIiwKICAgICAgImluUmVwbHlUbyI6ICI8cmMxQGV4YW1wbGUuY29t\r\nPiIsCiAgICAgICJyZWZlcmVuY2VzIjogWwogICAgICAgICI8cmMxQGV4YW1wbGUuY29tPiIKICAg\r\nICAgXQogICAgfQogIH0KfQo=\r\n--=_es_23a0d5fce55ef3259d256f45--\r\n"
+    },
+    {
+      "raw": "From: Bob Svoboda <bob@example.org>\r\nTo: Alice Example <alice@example.com>\r\nSubject: Re: Trip\r\nDate: Sun, 15 Mar 2026 09:04:00 GMT\r\nMessage-ID: <rc5@example.org>\r\nIn-Reply-To: <rc1@example.com>\r\nMIME-Version: 1.0\r\nContent-Type: text/plain; charset=utf-8\r\nContent-Transfer-Encoding: 8bit\r\n\r\nSounds good.\r\n\r\nOn Sun, 15 Mar 2026 at 09:00, Alice Example <alice@example.com> wrote:\r\n> Shall we take the 7:40 train on Saturday?\r\n> I can buy the tickets.\r\n> Bring a jacket.\r\n> Tell me by Friday.\r\n"
+    },
+    {
+      "raw": "From: Bob Svoboda <bob@example.org>\r\nTo: Alice Example <alice@example.com>\r\nSubject: Re: Trip\r\nDate: Sun, 15 Mar 2026 09:05:00 GMT\r\nMessage-ID: <rc6@example.org>\r\nIn-Reply-To: <rc1@example.com>\r\nMIME-Version: 1.0\r\nContent-Type: text/plain; charset=utf-8\r\nContent-Transfer-Encoding: 8bit\r\n\r\nI have one.\r\n\r\nOn Sun, 15 Mar 2026 at 09:00, Alice Example <alice@example.com> wrote:\r\n> Bring a jacket.\r\n"
+    },
+    {
+      "raw": "From: Alice Example <alice@example.com>\r\nTo: Bob Svoboda <bob@example.org>\r\nSubject: Re: Trip\r\nDate: Sun, 15 Mar 2026 09:06:00 GMT\r\nMessage-ID: <rc7@example.com>\r\nIn-Reply-To: <rc2@example.org>\r\nMIME-Version: 1.0\r\nContent-Type: text/plain; charset=utf-8\r\nContent-Transfer-Encoding: 8bit\r\n\r\nGreat.\r\n\r\nOn Sun, 15 Mar 2026 at 09:01, Bob Svoboda <bob@example.org> wrote:\r\n> I'm in. 7:40 works.\r\n"
+    },
+    {
+      "raw": "From: Bob Svoboda <bob@example.org>\r\nTo: Alice Example <alice@example.com>\r\nSubject: Re: Trip\r\nDate: Sun, 15 Mar 2026 09:07:00 GMT\r\nMessage-ID: <rc8@example.org>\r\nIn-Reply-To: <rc8@example.org>\r\nMIME-Version: 1.0\r\nContent-Type: text/plain; charset=utf-8\r\nContent-Transfer-Encoding: 8bit\r\n\r\nAnswers itself.\r\n\r\nOn Sun, 15 Mar 2026 at 09:00, Alice Example <alice@example.com> wrote:\r\n> Bring a jacket.\r\n"
+    },
+    {
+      "raw": "From: Carol Novak <carol@example.net>\r\nTo: Alice Example <alice@example.com>\r\nSubject: Hello\r\nDate: Sun, 15 Mar 2026 08:00:00 GMT\r\nMessage-ID: <cc1@example.net>\r\nMIME-Version: 1.0\r\nContent-Type: text/plain; charset=utf-8\r\nContent-Transfer-Encoding: 8bit\r\n\r\nHello Alice,\r\nthe hall is booked.\r\nThe band is confirmed.\r\nThe food is ordered.\r\nCarol\r\n"
+    },
+    {
+      "raw": "From: Bob Svoboda <bob@example.org>\r\nTo: Alice Example <alice@example.com>\r\nSubject: Re: Hello\r\nDate: Sun, 15 Mar 2026 09:08:00 GMT\r\nMessage-ID: <rc9@example.org>\r\nIn-Reply-To: <cc1@example.net>\r\nMIME-Version: 1.0\r\nContent-Type: text/plain; charset=utf-8\r\nContent-Transfer-Encoding: 8bit\r\n\r\nNice.\r\n\r\nOn Sun, 15 Mar 2026 at 08:00, Carol Novak <carol@example.net> wrote:\r\n> The band is confirmed.\r\n"
+    },
+    {
+      "raw": "From: Bob Svoboda <bob@example.org>\r\nTo: Alice Example <alice@example.com>\r\nSubject: Re: Trip\r\nDate: Sun, 15 Mar 2026 09:09:00 GMT\r\nMessage-ID: <rc10@example.org>\r\nIn-Reply-To: <missing@example.org>\r\nMIME-Version: 1.0\r\nContent-Type: text/plain; charset=utf-8\r\nContent-Transfer-Encoding: 8bit\r\n\r\nHm.\r\n\r\nOn Sun, 15 Mar 2026 at 09:00, Alice Example <alice@example.com> wrote:\r\n> Bring a jacket.\r\n"
+    },
+    {
+      "raw": "From: Bob Svoboda <bob@example.org>\r\nTo: Alice Example <alice@example.com>\r\nSubject: Re: Trip\r\nDate: Sun, 15 Mar 2026 09:10:00 GMT\r\nMessage-ID: <rc11@example.org>\r\nReferences: <x@example.net> <rc1@example.com>\r\nMIME-Version: 1.0\r\nContent-Type: text/plain; charset=utf-8\r\nContent-Transfer-Encoding: 8bit\r\n\r\nThanks!\r\n\r\nOn Sun, 15 Mar 2026 at 09:00, Alice Example <alice@example.com> wrote:\r\n> I can buy the tickets.\r\n"
+    }
+  ],
+  "expected": {
+    "chats": [
+      {
+        "id": "chat-686b5e4cf4f963adf8f51468a48028ef",
+        "participants": [
+          {
+            "name": "Bob Svoboda",
+            "address": "bob@example.org"
+          }
+        ],
+        "messages": [
+          {
+            "id": "<rc1@example.com>",
+            "subject": "Trip"
+          },
+          {
+            "id": "<rc2@example.org>",
+            "subject": "Trip"
+          },
+          {
+            "id": "<rc3@example.org>",
+            "subject": "Trip"
+          },
+          {
+            "id": "<rc4@example.org>",
+            "subject": "Trip"
+          },
+          {
+            "id": "<rc5@example.org>",
+            "subject": "Trip"
+          },
+          {
+            "id": "<rc6@example.org>",
+            "subject": "Trip"
+          },
+          {
+            "id": "<rc7@example.com>",
+            "subject": "Trip"
+          },
+          {
+            "id": "<rc8@example.org>",
+            "subject": "Trip"
+          },
+          {
+            "id": "<rc9@example.org>",
+            "subject": "Hello"
+          },
+          {
+            "id": "<rc10@example.org>",
+            "subject": "Trip"
+          },
+          {
+            "id": "<rc11@example.org>",
+            "subject": "Trip"
+          }
+        ],
+        "firstDate": "2026-03-15T09:00:00.000Z",
+        "lastDate": "2026-03-15T09:10:00.000Z"
+      },
+      {
+        "id": "chat-c4fcf4f743a2924a8396b40d609fb406",
+        "participants": [
+          {
+            "name": "Carol Novak",
+            "address": "carol@example.net"
+          }
+        ],
+        "messages": [
+          {
+            "id": "<cc1@example.net>",
+            "subject": "Hello"
+          }
+        ],
+        "firstDate": "2026-03-15T08:00:00.000Z",
+        "lastDate": "2026-03-15T08:00:00.000Z"
+      }
+    ],
+    "replyCards": {
+      "<rc1@example.com>": null,
+      "<rc2@example.org>": {
+        "messageId": "<rc1@example.com>",
+        "from": "Alice Example",
+        "excerpt": "Shall we take the 7:40 train on Saturday?",
+        "attachment": "map.pdf",
+        "clickable": true
+      },
+      "<rc3@example.org>": {
+        "messageId": null,
+        "from": "alice@example.com",
+        "excerpt": "This older message is no longer in the mailbox, and its excerpt is longer than one hundred and forty characters, so the card cuts it at a…",
+        "attachment": null,
+        "clickable": false
+      },
+      "<rc4@example.org>": null,
+      "<rc5@example.org>": null,
+      "<rc6@example.org>": {
+        "messageId": "<rc1@example.com>",
+        "from": "Alice Example",
+        "excerpt": "Bring a jacket.",
+        "attachment": "map.pdf",
+        "clickable": true
+      },
+      "<rc7@example.com>": {
+        "messageId": "<rc2@example.org>",
+        "from": "Bob Svoboda",
+        "excerpt": "I'm in. 7:40 works.",
+        "attachment": null,
+        "clickable": true
+      },
+      "<rc8@example.org>": null,
+      "<rc9@example.org>": null,
+      "<rc10@example.org>": null,
+      "<rc11@example.org>": {
+        "messageId": "<rc1@example.com>",
+        "from": "Alice Example",
+        "excerpt": "I can buy the tickets.",
+        "attachment": "map.pdf",
+        "clickable": true
+      },
+      "<cc1@example.net>": null
+    }
+  }
+}

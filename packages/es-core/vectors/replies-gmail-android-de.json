@@ -1,0 +1,48 @@
+{
+  "description": "Gmail app for Android, de: one-line answer; unwrapped attribution \"Alice Dvořáková <alice@example.com> schrieb am Di., 3. März 2026, 10:15:\"",
+  "source": "fixtures/replies/gmail-android-de.eml",
+  "raw": "MIME-Version: 1.0\r\nReferences: <CAKx4mLuU6BfT3tvPERH6Ymvn7Rnrc5a8UaA5XG1GusLL796j@mail.example.com>\r\nIn-Reply-To: <CAKx4mLuU6BfT3tvPERH6Ymvn7Rnrc5a8UaA5XG1GusLL796j@mail.example.com>\r\nFrom: Anna Becker <anna.becker@example.net>\r\nDate: Tue, 3 Mar 2026 10:50:31 +0100\r\nMessage-ID: <CAH7x9kl63Sr0xJ4R66Qi3JEWppPx8ae5DMx6P17Q8Gzf2TKcv@mail.example.com>\r\nSubject: =?UTF-8?B?UmU6IFByb2pla3TDvGJlcnNpY2h0?=\r\nTo: =?UTF-8?Q?Alice_Dvo=C5=99=C3=A1kov=C3=A1?= <alice@example.com>\r\nContent-Type: multipart/alternative; boundary=\"0000000000005c5189ef9245018d\"\r\n\r\n--0000000000005c5189ef9245018d\r\nContent-Type: text/plain; charset=\"UTF-8\"\r\nContent-Transfer-Encoding: quoted-printable\r\n\r\nMach ich, bis Freitag!\r\n\r\nAlice Dvo=C5=99=C3=A1kov=C3=A1 <alice@example.com> schrieb am Di., 3. M=C3=\r\n=A4rz 2026, 10:15:\r\n\r\n> Hallo Anna,\r\n>\r\n> kannst du mir die Projekt=C3=BCbersicht bis Freitag schicken?\r\n>\r\n> Viele Gr=C3=BC=C3=9Fe\r\n> Alice\r\n\r\n\r\n--0000000000005c5189ef9245018d\r\nContent-Type: text/html; charset=\"UTF-8\"\r\nContent-Transfer-Encoding: quoted-printable\r\n\r\n<div dir=3D\"auto\">Mach ich, bis Freitag!</div><br><div class=3D\"gmail_quote=\r\n gmail_quote_container\"><div dir=3D\"ltr\" class=3D\"gmail_attr\">Alice Dvo=C5=\r\n=99=C3=A1kov=C3=A1 &lt;alice@example.com&gt; schrieb am Di., 3. M=C3=A4rz 2=\r\n026, 10:15:<br></div><blockquote class=3D\"gmail_quote\" style=3D\"margin:0 0 =\r\n0 .8ex;border-left:1px #ccc solid;padding-left:1ex\"><div dir=3D\"ltr\">Hallo =\r\nAnna,<br><br>kannst du mir die Projekt=C3=BCbersicht bis Freitag schicken?<=\r\nbr><br>Viele Gr=C3=BC=C3=9Fe<br>Alice</div></blockquote></div>\r\n\r\n--0000000000005c5189ef9245018d--\r\n",
+  "expected": {
+    "id": "<CAH7x9kl63Sr0xJ4R66Qi3JEWppPx8ae5DMx6P17Q8Gzf2TKcv@mail.example.com>",
+    "from": {
+      "name": "Anna Becker",
+      "address": "anna.becker@example.net"
+    },
+    "to": [
+      {
+        "name": "Alice Dvořáková",
+        "address": "alice@example.com"
+      }
+    ],
+    "cc": [],
+    "replyTo": [],
+    "date": "2026-03-03T09:50:31.000Z",
+    "subject": "Re: Projektübersicht",
+    "text": "Mach ich, bis Freitag!\n\nAlice Dvořáková <alice@example.com> schrieb am Di., 3. März 2026, 10:15:\n\n> Hallo Anna,\n>\n> kannst du mir die Projektübersicht bis Freitag schicken?\n>\n> Viele Grüße\n> Alice\n\n",
+    "textSource": "plain",
+    "es": null,
+    "attachments": [],
+    "refs": {
+      "messageId": "<CAH7x9kl63Sr0xJ4R66Qi3JEWppPx8ae5DMx6P17Q8Gzf2TKcv@mail.example.com>",
+      "inReplyTo": [
+        "<CAKx4mLuU6BfT3tvPERH6Ymvn7Rnrc5a8UaA5XG1GusLL796j@mail.example.com>"
+      ],
+      "references": [
+        "<CAKx4mLuU6BfT3tvPERH6Ymvn7Rnrc5a8UaA5XG1GusLL796j@mail.example.com>"
+      ]
+    },
+    "delivery": {
+      "listHeaders": [],
+      "listId": null,
+      "autoSubmitted": null,
+      "precedence": null,
+      "returnPath": null,
+      "listUnsubscribe": null
+    }
+  },
+  "split": {
+    "fresh": "Mach ich, bis Freitag!",
+    "quoted": "Alice Dvořáková <alice@example.com> schrieb am Di., 3. März 2026, 10:15:\n\n> Hallo Anna,\n>\n> kannst du mir die Projektübersicht bis Freitag schicken?\n>\n> Viele Grüße\n> Alice",
+    "signature": ""
+  }
+}

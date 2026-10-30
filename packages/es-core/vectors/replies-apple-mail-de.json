@@ -1,0 +1,48 @@
+{
+  "description": "Apple Mail (macOS), de: attribution inside the quote, split by a QP soft line break: \"> Am 03.03.2026 um 10:15 schrieb Alice Dvořáková <alice@example.com>:\"",
+  "source": "fixtures/replies/apple-mail-de.eml",
+  "raw": "Content-Type: multipart/alternative;\r\n\tboundary=\"Apple-Mail=_724F28E3-CC31-4BA6-94FB-16C8665DB4BC\"\r\nMime-Version: 1.0 (Mac OS X Mail 16.0 \\(3826.400.131.1.6\\))\r\nSubject: =?utf-8?Q?Re=3A_Projekt=C3=BCbersicht?=\r\nFrom: Anna Becker <anna.becker@example.net>\r\nIn-Reply-To: <CAKx4mrvLsUUolKjVdhriz07pe333cK0ccgzz2hE2T7lCGBjJ@mail.example.com>\r\nDate: Tue, 3 Mar 2026 10:41:02 +0100\r\nMessage-Id: <CAE90616-6EE5-4B29-9B55-7C499D8FD1CD@example.net>\r\nReferences: <CAKx4mrvLsUUolKjVdhriz07pe333cK0ccgzz2hE2T7lCGBjJ@mail.example.com>\r\nTo: =?utf-8?Q?Alice_Dvo=C5=99=C3=A1kov=C3=A1?= <alice@example.com>\r\nX-Mailer: Apple Mail (2.3826.400.131.1.6)\r\n\r\n\r\n--Apple-Mail=_724F28E3-CC31-4BA6-94FB-16C8665DB4BC\r\nContent-Transfer-Encoding: quoted-printable\r\nContent-Type: text/plain;\r\n\tcharset=utf-8\r\n\r\nHallo Alice,\r\n\r\nklar, die =C3=9Cbersicht kommt bis Freitag.\r\n\r\nAnna\r\n\r\n> Am 03.03.2026 um 10:15 schrieb Alice Dvo=C5=99=C3=A1kov=C3=A1 <alice@exam=\r\nple.com>:\r\n>=20\r\n> Hallo Anna,\r\n>=20\r\n> kannst du mir die Projekt=C3=BCbersicht bis Freitag schicken?\r\n>=20\r\n> Viele Gr=C3=BC=C3=9Fe\r\n> Alice\r\n\r\n\r\n--Apple-Mail=_724F28E3-CC31-4BA6-94FB-16C8665DB4BC\r\nContent-Transfer-Encoding: quoted-printable\r\nContent-Type: text/html;\r\n\tcharset=utf-8\r\n\r\n<html><head><meta http-equiv=3D\"content-type\" content=3D\"text/html; charset=\r\n=3Dutf-8\"></head><body style=3D\"overflow-wrap: break-word; -webkit-nbsp-mod=\r\ne: space; line-break: after-white-space;\"><div>Hallo Alice,</div><div><br><=\r\n/div><div>klar, die =C3=9Cbersicht kommt bis Freitag.</div><div><br></div><=\r\ndiv>Anna</div><div><br><blockquote type=3D\"cite\"><div>Am 03.03.2026 um 10:1=\r\n5 schrieb Alice Dvo=C5=99=C3=A1kov=C3=A1 &lt;alice@example.com&gt;:</div><b=\r\nr class=3D\"Apple-interchange-newline\"><div><div>Hallo Anna,<br><br>kannst d=\r\nu mir die Projekt=C3=BCbersicht bis Freitag schicken?<br><br>Viele Gr=C3=BC=\r\n=C3=9Fe<br>Alice</div></div></blockquote></div><br></body></html>\r\n--Apple-Mail=_724F28E3-CC31-4BA6-94FB-16C8665DB4BC--\r\n",
+  "expected": {
+    "id": "<CAE90616-6EE5-4B29-9B55-7C499D8FD1CD@example.net>",
+    "from": {
+      "name": "Anna Becker",
+      "address": "anna.becker@example.net"
+    },
+    "to": [
+      {
+        "name": "Alice Dvořáková",
+        "address": "alice@example.com"
+      }
+    ],
+    "cc": [],
+    "replyTo": [],
+    "date": "2026-03-03T09:41:02.000Z",
+    "subject": "Re: Projektübersicht",
+    "text": "Hallo Alice,\n\nklar, die Übersicht kommt bis Freitag.\n\nAnna\n\n> Am 03.03.2026 um 10:15 schrieb Alice Dvořáková <alice@example.com>:\n> \n> Hallo Anna,\n> \n> kannst du mir die Projektübersicht bis Freitag schicken?\n> \n> Viele Grüße\n> Alice\n\n",
+    "textSource": "plain",
+    "es": null,
+    "attachments": [],
+    "refs": {
+      "messageId": "<CAE90616-6EE5-4B29-9B55-7C499D8FD1CD@example.net>",
+      "inReplyTo": [
+        "<CAKx4mrvLsUUolKjVdhriz07pe333cK0ccgzz2hE2T7lCGBjJ@mail.example.com>"
+      ],
+      "references": [
+        "<CAKx4mrvLsUUolKjVdhriz07pe333cK0ccgzz2hE2T7lCGBjJ@mail.example.com>"
+      ]
+    },
+    "delivery": {
+      "listHeaders": [],
+      "listId": null,
+      "autoSubmitted": null,
+      "precedence": null,
+      "returnPath": null,
+      "listUnsubscribe": null
+    }
+  },
+  "split": {
+    "fresh": "Hallo Alice,\n\nklar, die Übersicht kommt bis Freitag.\n\nAnna",
+    "quoted": "> Am 03.03.2026 um 10:15 schrieb Alice Dvořáková <alice@example.com>:\n> \n> Hallo Anna,\n> \n> kannst du mir die Projektübersicht bis Freitag schicken?\n> \n> Viele Grüße\n> Alice",
+    "signature": ""
+  }
+}

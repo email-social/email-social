@@ -1,15 +1,16 @@
 #!/usr/bin/env node
 /**
- * Checks that the specification and the root README make no claims
+ * Checks that the specification and the project documents make no claims
  * (CLAUDE.md rule 4, tasks/03): none of the forbidden words appears, in any
- * letter case, in a file under spec/ or in README.md.
+ * letter case, in a file under spec/ or docs/, or in README.md, SECURITY.md,
+ * CONTRIBUTING.md or sbom/README.md.
  *
  * One exception: the fenced code blocks of spec/es-protocol-v2-excerpt.md.
  * That file is the Czech working draft, kept unchanged for provenance; its
  * draft code names a JSON field and a variable "verified". Its prose is
  * checked like every other file.
  *
- *   node scripts/docs-check.mjs              check spec/ and README.md
+ *   node scripts/docs-check.mjs              check spec/, docs/ and the root documents
  *   node scripts/docs-check.mjs FILE...      check these files instead
  *   node scripts/docs-check.mjs --self-test  check the rules themselves
  */
@@ -30,6 +31,10 @@ export const FORBIDDEN = [
   "verified",
   "private by design",
 ];
+
+/** Directories checked in full, and single files (repository-relative paths). */
+export const CHECKED_DIRS = ["spec", "docs"];
+export const CHECKED_FILES = ["README.md", "SECURITY.md", "CONTRIBUTING.md", "sbom/README.md"];
 
 /** Files whose fenced code blocks are not checked (repository-relative paths). */
 export const CODE_EXEMPT = new Set(["spec/es-protocol-v2-excerpt.md"]);
@@ -95,7 +100,7 @@ if (process.argv[1] === fileURLToPath(import.meta.url)) {
   selfTest();
   if (!process.argv.includes("--self-test")) {
     const args = process.argv.slice(2);
-    const files = args.length > 0 ? args.map((a) => resolve(a)) : [...filesUnder(join(ROOT, "spec")), join(ROOT, "README.md")];
+    const files = args.length > 0 ? args.map((a) => resolve(a)) : [...CHECKED_DIRS.flatMap((dir) => filesUnder(join(ROOT, dir))), ...CHECKED_FILES.map((file) => join(ROOT, file))];
     const problems = files.flatMap((file) => checkFile(relative(ROOT, file).split("\\").join("/"), readFileSync(file, "utf8")));
     if (problems.length > 0) {
       for (const problem of problems) console.error(`✗ ${problem}`);

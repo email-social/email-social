@@ -1,0 +1,48 @@
+{
+  "description": "Thunderbird, sk: answer below the quote; attribution \"Dňa 3. 3. 2026 o 10:15 Alice Dvořáková napísal(a):\"",
+  "source": "fixtures/replies/thunderbird-sk.eml",
+  "raw": "Message-ID: <e7ef3b8f-4b08-4e60-9818-f3535b4b3858@example.net>\r\nDate: Tue, 3 Mar 2026 11:00:13 +0100\r\nMIME-Version: 1.0\r\nUser-Agent: Mozilla Thunderbird\r\nContent-Language: sk-SK\r\nTo: =?UTF-8?Q?Alice_Dvo=C5=99=C3=A1kov=C3=A1?= <alice@example.com>\r\nFrom: =?UTF-8?Q?Martina_Kov=C3=A1=C4=8Dov=C3=A1?= <martina.kovacova@example.net>\r\nSubject: =?UTF-8?Q?Re=3A_Fotky_z_v=C3=BDletu?=\r\nReferences: <CAKx4mTNA8W0X5oPEBvcSJocplFVUZ72VnafHVglxPzgPTqDq@mail.example.com>\r\nIn-Reply-To: <CAKx4mTNA8W0X5oPEBvcSJocplFVUZ72VnafHVglxPzgPTqDq@mail.example.com>\r\nContent-Type: text/plain; charset=UTF-8; format=flowed\r\nContent-Transfer-Encoding: 8bit\r\n\r\nDňa 3. 3. 2026 o 10:15 Alice Dvořáková napísal(a):\r\n> Ahoj Martina,\r\n>\r\n> pošleš mi, prosím, fotky z výletu? Chcem ich dať do albumu.\r\n>\r\n> Vďaka,\r\n> Alice\r\n\r\nAhoj Alice,\r\n\r\nfotky nahrám dnes večer.\r\n\r\nMartina\r\n",
+  "expected": {
+    "id": "<e7ef3b8f-4b08-4e60-9818-f3535b4b3858@example.net>",
+    "from": {
+      "name": "Martina Kováčová",
+      "address": "martina.kovacova@example.net"
+    },
+    "to": [
+      {
+        "name": "Alice Dvořáková",
+        "address": "alice@example.com"
+      }
+    ],
+    "cc": [],
+    "replyTo": [],
+    "date": "2026-03-03T10:00:13.000Z",
+    "subject": "Re: Fotky z výletu",
+    "text": "Dňa 3. 3. 2026 o 10:15 Alice Dvořáková napísal(a):\n> Ahoj Martina,\n>\n> pošleš mi, prosím, fotky z výletu? Chcem ich dať do albumu.\n>\n> Vďaka,\n> Alice\n\nAhoj Alice,\n\nfotky nahrám dnes večer.\n\nMartina\n",
+    "textSource": "plain",
+    "es": null,
+    "attachments": [],
+    "refs": {
+      "messageId": "<e7ef3b8f-4b08-4e60-9818-f3535b4b3858@example.net>",
+      "inReplyTo": [
+        "<CAKx4mTNA8W0X5oPEBvcSJocplFVUZ72VnafHVglxPzgPTqDq@mail.example.com>"
+      ],
+      "references": [
+        "<CAKx4mTNA8W0X5oPEBvcSJocplFVUZ72VnafHVglxPzgPTqDq@mail.example.com>"
+      ]
+    },
+    "delivery": {
+      "listHeaders": [],
+      "listId": null,
+      "autoSubmitted": null,
+      "precedence": null,
+      "returnPath": null,
+      "listUnsubscribe": null
+    }
+  },
+  "split": {
+    "fresh": "Ahoj Alice,\n\nfotky nahrám dnes večer.\n\nMartina",
+    "quoted": "Dňa 3. 3. 2026 o 10:15 Alice Dvořáková napísal(a):\n> Ahoj Martina,\n>\n> pošleš mi, prosím, fotky z výletu? Chcem ich dať do albumu.\n>\n> Vďaka,\n> Alice",
+    "signature": ""
+  }
+}

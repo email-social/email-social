@@ -1,0 +1,119 @@
+{
+  "description": "Section 8.1: everything exchanged with one person is one chat whatever the subject; the owner's alias and the case of its domain are removed wherever they appear; a group is a chat of its own; a message to oneself is the chat without participants; an undated chat is sorted last.",
+  "covers": [
+    "CH-1"
+  ],
+  "owner": {
+    "name": "Alice Example",
+    "addresses": [
+      "alice@example.com",
+      "alice.example@example.net"
+    ]
+  },
+  "messages": [
+    {
+      "raw": "From: Bob Svoboda <bob@example.org>\r\nTo: Alice Example <alice@example.com>\r\nSubject: Lunch\r\nDate: Sat, 07 Mar 2026 09:00:00 GMT\r\nMessage-ID: <h1@example.org>\r\nMIME-Version: 1.0\r\nContent-Type: text/plain; charset=utf-8\r\nContent-Transfer-Encoding: 8bit\r\n\r\nLunch?\r\n"
+    },
+    {
+      "raw": "From: Alice Example <alice@example.com>\r\nTo: Bob Svoboda <bob@example.org>\r\nSubject: Re: Lunch\r\nDate: Sat, 07 Mar 2026 10:00:00 GMT\r\nMessage-ID: <h2@example.com>\r\nIn-Reply-To: <h1@example.org>\r\nMIME-Version: 1.0\r\nContent-Type: text/plain; charset=utf-8\r\nContent-Transfer-Encoding: 8bit\r\n\r\nYes.\r\n"
+    },
+    {
+      "raw": "From: Bob Svoboda <bob@example.org>\r\nTo: Alice <alice.example@EXAMPLE.NET>\r\nSubject: Books\r\nDate: Sat, 07 Mar 2026 11:00:00 GMT\r\nMessage-ID: <h3@example.org>\r\nMIME-Version: 1.0\r\nContent-Type: text/plain; charset=utf-8\r\nContent-Transfer-Encoding: 8bit\r\n\r\nTo the alias.\r\n"
+    },
+    {
+      "raw": "From: Alice Example <alice@example.com>\r\nTo: Bob Svoboda <bob@example.org>, Carol Novak <carol@example.net>\r\nSubject: Party\r\nDate: Sat, 07 Mar 2026 12:00:00 GMT\r\nMessage-ID: <h4@example.com>\r\nMIME-Version: 1.0\r\nContent-Type: text/plain; charset=utf-8\r\nContent-Transfer-Encoding: 8bit\r\n\r\nParty on Friday.\r\n"
+    },
+    {
+      "raw": "From: Carol Novak <carol@example.net>\r\nTo: alice.example@example.net\r\nCc: Bob Svoboda <bob@example.org>, Alice Example <alice@example.com>\r\nSubject: Re: Party\r\nDate: Sat, 07 Mar 2026 13:00:00 GMT\r\nMessage-ID: <h5@example.net>\r\nMIME-Version: 1.0\r\nContent-Type: text/plain; charset=utf-8\r\nContent-Transfer-Encoding: 8bit\r\n\r\nI'll bring a cake.\r\n"
+    },
+    {
+      "raw": "From: Alice Example <alice@example.com>\r\nTo: Alice <alice@EXAMPLE.com>\r\nSubject: Note to self\r\nDate: Sat, 07 Mar 2026 14:00:00 GMT\r\nMessage-ID: <h6@example.com>\r\nMIME-Version: 1.0\r\nContent-Type: text/plain; charset=utf-8\r\nContent-Transfer-Encoding: 8bit\r\n\r\nBuy milk.\r\n"
+    },
+    {
+      "raw": "From: Carol Novak <carol@example.net>\r\nTo: Alice Example <alice@example.com>\r\nSubject: Hi\r\nMessage-ID: <h7@example.net>\r\nMIME-Version: 1.0\r\nContent-Type: text/plain; charset=utf-8\r\nContent-Transfer-Encoding: 8bit\r\n\r\nUndated.\r\n"
+    }
+  ],
+  "expected": {
+    "chats": [
+      {
+        "id": "chat-e3b0c44298fc1c149afbf4c8996fb924",
+        "participants": [],
+        "messages": [
+          {
+            "id": "<h6@example.com>",
+            "subject": "Note to self"
+          }
+        ],
+        "firstDate": "2026-03-07T14:00:00.000Z",
+        "lastDate": "2026-03-07T14:00:00.000Z"
+      },
+      {
+        "id": "chat-cc392c7624264b86e315fd86ba415802",
+        "participants": [
+          {
+            "name": "Bob Svoboda",
+            "address": "bob@example.org"
+          },
+          {
+            "name": "Carol Novak",
+            "address": "carol@example.net"
+          }
+        ],
+        "messages": [
+          {
+            "id": "<h4@example.com>",
+            "subject": "Party"
+          },
+          {
+            "id": "<h5@example.net>",
+            "subject": "Party"
+          }
+        ],
+        "firstDate": "2026-03-07T12:00:00.000Z",
+        "lastDate": "2026-03-07T13:00:00.000Z"
+      },
+      {
+        "id": "chat-686b5e4cf4f963adf8f51468a48028ef",
+        "participants": [
+          {
+            "name": "Bob Svoboda",
+            "address": "bob@example.org"
+          }
+        ],
+        "messages": [
+          {
+            "id": "<h1@example.org>",
+            "subject": "Lunch"
+          },
+          {
+            "id": "<h2@example.com>",
+            "subject": "Lunch"
+          },
+          {
+            "id": "<h3@example.org>",
+            "subject": "Books"
+          }
+        ],
+        "firstDate": "2026-03-07T09:00:00.000Z",
+        "lastDate": "2026-03-07T11:00:00.000Z"
+      },
+      {
+        "id": "chat-c4fcf4f743a2924a8396b40d609fb406",
+        "participants": [
+          {
+            "name": "Carol Novak",
+            "address": "carol@example.net"
+          }
+        ],
+        "messages": [
+          {
+            "id": "<h7@example.net>",
+            "subject": "Hi"
+          }
+        ],
+        "firstDate": null,
+        "lastDate": null
+      }
+    ]
+  }
+}

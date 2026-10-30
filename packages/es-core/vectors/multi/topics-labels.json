@@ -1,0 +1,173 @@
+{
+  "description": "Section 8.2, the topic fields: a plain topic, a carrier topic rooted by a post without a name, a label taken from the oldest message that carries one (not the root) with white space collapsed, a later different label ignored, a carrier subject written by a plain client, a subject that is only \"Message from\", a post without a name under an ordinary subject (carrier), counts, and topicStart where the topics alternate.",
+  "covers": [
+    "TP-3"
+  ],
+  "owner": {
+    "name": "Alice Example",
+    "addresses": [
+      "alice@example.com"
+    ]
+  },
+  "messages": [
+    {
+      "raw": "From: Bob Svoboda <bob@example.org>\r\nTo: Alice Example <alice@example.com>\r\nSubject: Garden\r\nDate: Wed, 11 Mar 2026 09:00:00 GMT\r\nMessage-ID: <g1@example.org>\r\nMIME-Version: 1.0\r\nContent-Type: text/plain; charset=utf-8\r\nContent-Transfer-Encoding: 8bit\r\n\r\nPlain topic.\r\n"
+    },
+    {
+      "raw": "Date: Wed, 11 Mar 2026 09:01:00 +0000\r\nFrom: Alice Example <alice@example.com>\r\nTo: Bob Svoboda <bob@example.org>\r\nSubject: Message from Alice Example\r\nMessage-ID: <g2@example.com>\r\nMIME-Version: 1.0\r\nContent-Type: multipart/mixed; boundary=\"=_es_c70cb79ce7058d5a27a2cd13\"\r\n\r\nThis is a multi-part message in MIME format.\r\n\r\n--=_es_c70cb79ce7058d5a27a2cd13\r\nContent-Type: text/plain; charset=utf-8\r\nContent-Transfer-Encoding: 7bit\r\n\r\nA post without a name.\r\n\r\n--=_es_c70cb79ce7058d5a27a2cd13\r\nContent-Type: application/vnd.email-social.message+json\r\nContent-Transfer-Encoding: base64\r\nContent-Disposition: attachment; filename=\"email-social.json\"\r\n\r\newogICIkdHlwZSI6ICJlcy5zb2NpYWwucG9zdCIsCiAgInZhbHVlIjogewogICAgInRleHQiOiAi\r\nQSBwb3N0IHdpdGhvdXQgYSBuYW1lLlxuIiwKICAgICJ2aWEiOiAiYWxpY2VAZXhhbXBsZS5jb20i\r\nLAogICAgImNyZWF0ZWRBdCI6ICIyMDI2LTAzLTExVDA5OjAxOjAwLjAwMFoiLAogICAgImVtYWls\r\nIjogewogICAgICAibWVzc2FnZUlkIjogIjxnMkBleGFtcGxlLmNvbT4iLAogICAgICAic3ViamVj\r\ndCI6ICJNZXNzYWdlIGZyb20gQWxpY2UgRXhhbXBsZSIsCiAgICAgICJ0b3BpY1Jvb3QiOiAiPGcy\r\nQGV4YW1wbGUuY29tPiIKICAgIH0KICB9Cn0K\r\n--=_es_c70cb79ce7058d5a27a2cd13--\r\n"
+    },
+    {
+      "raw": "Date: Wed, 11 Mar 2026 09:02:00 +0000\r\nFrom: Bob Svoboda <bob@example.org>\r\nTo: Alice Example <alice@example.com>\r\nSubject: Re: Message from Alice Example\r\nMessage-ID: <g3@example.org>\r\nIn-Reply-To: <g2@example.com>\r\nReferences: <g2@example.com>\r\nMIME-Version: 1.0\r\nContent-Type: multipart/mixed; boundary=\"=_es_d29d58196cc4d7ae9654ef53\"\r\n\r\nThis is a multi-part message in MIME format.\r\n\r\n--=_es_d29d58196cc4d7ae9654ef53\r\nContent-Type: text/plain; charset=utf-8\r\nContent-Transfer-Encoding: 7bit\r\n\r\nNames the topic.\r\n\r\n--=_es_d29d58196cc4d7ae9654ef53\r\nContent-Type: application/vnd.email-social.message+json\r\nContent-Transfer-Encoding: base64\r\nContent-Disposition: attachment; filename=\"email-social.json\"\r\n\r\newogICIkdHlwZSI6ICJlcy5zb2NpYWwucG9zdCIsCiAgInZhbHVlIjogewogICAgInRleHQiOiAi\r\nTmFtZXMgdGhlIHRvcGljLlxuIiwKICAgICJ2aWEiOiAiYm9iQGV4YW1wbGUub3JnIiwKICAgICJj\r\ncmVhdGVkQXQiOiAiMjAyNi0wMy0xMVQwOTowMjowMC4wMDBaIiwKICAgICJlbWFpbCI6IHsKICAg\r\nICAgIm1lc3NhZ2VJZCI6ICI8ZzNAZXhhbXBsZS5vcmc+IiwKICAgICAgInN1YmplY3QiOiAiUmU6\r\nIE1lc3NhZ2UgZnJvbSBBbGljZSBFeGFtcGxlIiwKICAgICAgImluUmVwbHlUbyI6ICI8ZzJAZXhh\r\nbXBsZS5jb20+IiwKICAgICAgInJlZmVyZW5jZXMiOiBbCiAgICAgICAgIjxnMkBleGFtcGxlLmNv\r\nbT4iCiAgICAgIF0sCiAgICAgICJ0b3BpY1Jvb3QiOiAiPGcyQGV4YW1wbGUuY29tPiIsCiAgICAg\r\nICJ0b3BpY0xhYmVsIjogIldlZWtlbmQgcGxhbnMiCiAgICB9CiAgfQp9Cg==\r\n--=_es_d29d58196cc4d7ae9654ef53--\r\n"
+    },
+    {
+      "raw": "Date: Wed, 11 Mar 2026 09:03:00 +0000\r\nFrom: Alice Example <alice@example.com>\r\nTo: Bob Svoboda <bob@example.org>\r\nSubject: Re: Message from Alice Example\r\nMessage-ID: <g4@example.com>\r\nIn-Reply-To: <g3@example.org>\r\nReferences: <g2@example.com> <g3@example.org>\r\nMIME-Version: 1.0\r\nContent-Type: multipart/mixed; boundary=\"=_es_8a0109a7f3ebd3cc3769d9d7\"\r\n\r\nThis is a multi-part message in MIME format.\r\n\r\n--=_es_8a0109a7f3ebd3cc3769d9d7\r\nContent-Type: text/plain; charset=utf-8\r\nContent-Transfer-Encoding: 7bit\r\n\r\nAnother name, too late.\r\n\r\n--=_es_8a0109a7f3ebd3cc3769d9d7\r\nContent-Type: application/vnd.email-social.message+json\r\nContent-Transfer-Encoding: base64\r\nContent-Disposition: attachment; filename=\"email-social.json\"\r\n\r\newogICIkdHlwZSI6ICJlcy5zb2NpYWwucG9zdCIsCiAgInZhbHVlIjogewogICAgInRleHQiOiAi\r\nQW5vdGhlciBuYW1lLCB0b28gbGF0ZS5cbiIsCiAgICAidmlhIjogImFsaWNlQGV4YW1wbGUuY29t\r\nIiwKICAgICJjcmVhdGVkQXQiOiAiMjAyNi0wMy0xMVQwOTowMzowMC4wMDBaIiwKICAgICJlbWFp\r\nbCI6IHsKICAgICAgIm1lc3NhZ2VJZCI6ICI8ZzRAZXhhbXBsZS5jb20+IiwKICAgICAgInN1Ympl\r\nY3QiOiAiUmU6IE1lc3NhZ2UgZnJvbSBBbGljZSBFeGFtcGxlIiwKICAgICAgImluUmVwbHlUbyI6\r\nICI8ZzNAZXhhbXBsZS5vcmc+IiwKICAgICAgInJlZmVyZW5jZXMiOiBbCiAgICAgICAgIjxnMkBl\r\neGFtcGxlLmNvbT4iLAogICAgICAgICI8ZzNAZXhhbXBsZS5vcmc+IgogICAgICBdLAogICAgICAi\r\ndG9waWNSb290IjogIjxnMkBleGFtcGxlLmNvbT4iLAogICAgICAidG9waWNMYWJlbCI6ICJPdGhl\r\nciBuYW1lIgogICAgfQogIH0KfQo=\r\n--=_es_8a0109a7f3ebd3cc3769d9d7--\r\n"
+    },
+    {
+      "raw": "From: Bob Svoboda <bob@example.org>\r\nTo: Alice Example <alice@example.com>\r\nSubject: Message from Bob\r\nDate: Wed, 11 Mar 2026 09:04:00 GMT\r\nMessage-ID: <g5@example.org>\r\nMIME-Version: 1.0\r\nContent-Type: text/plain; charset=utf-8\r\nContent-Transfer-Encoding: 8bit\r\n\r\nA carrier subject from a plain client.\r\n"
+    },
+    {
+      "raw": "From: Bob Svoboda <bob@example.org>\r\nTo: Alice Example <alice@example.com>\r\nSubject: Re: Garden\r\nDate: Wed, 11 Mar 2026 09:05:00 GMT\r\nMessage-ID: <g6@example.org>\r\nIn-Reply-To: <g1@example.org>\r\nMIME-Version: 1.0\r\nContent-Type: text/plain; charset=utf-8\r\nContent-Transfer-Encoding: 8bit\r\n\r\nBack to the garden.\r\n"
+    },
+    {
+      "raw": "From: Alice Example <alice@example.com>\r\nTo: Bob Svoboda <bob@example.org>\r\nSubject: Re: Garden\r\nDate: Wed, 11 Mar 2026 09:06:00 GMT\r\nMessage-ID: <g7@example.com>\r\nIn-Reply-To: <g6@example.org>\r\nMIME-Version: 1.0\r\nContent-Type: text/plain; charset=utf-8\r\nContent-Transfer-Encoding: 8bit\r\n\r\nStill the garden.\r\n"
+    },
+    {
+      "raw": "From: Bob Svoboda <bob@example.org>\r\nTo: Alice Example <alice@example.com>\r\nSubject: Message from\r\nDate: Wed, 11 Mar 2026 09:07:00 GMT\r\nMessage-ID: <g8@example.org>\r\nMIME-Version: 1.0\r\nContent-Type: text/plain; charset=utf-8\r\nContent-Transfer-Encoding: 8bit\r\n\r\nNothing after the prefix.\r\n"
+    },
+    {
+      "raw": "Date: Wed, 11 Mar 2026 09:08:00 +0000\r\nFrom: Bob Svoboda <bob@example.org>\r\nTo: Alice Example <alice@example.com>\r\nSubject: Photos\r\nMessage-ID: <g9@example.org>\r\nMIME-Version: 1.0\r\nContent-Type: multipart/mixed; boundary=\"=_es_6f1e411a2a9236b726073046\"\r\n\r\nThis is a multi-part message in MIME format.\r\n\r\n--=_es_6f1e411a2a9236b726073046\r\nContent-Type: text/plain; charset=utf-8\r\nContent-Transfer-Encoding: 7bit\r\n\r\nA post without a name and with an ordinary subject.\r\n\r\n--=_es_6f1e411a2a9236b726073046\r\nContent-Type: application/vnd.email-social.message+json\r\nContent-Transfer-Encoding: base64\r\nContent-Disposition: attachment; filename=\"email-social.json\"\r\n\r\newogICIkdHlwZSI6ICJlcy5zb2NpYWwucG9zdCIsCiAgInZhbHVlIjogewogICAgInRleHQiOiAi\r\nQSBwb3N0IHdpdGhvdXQgYSBuYW1lIGFuZCB3aXRoIGFuIG9yZGluYXJ5IHN1YmplY3QuXG4iLAog\r\nICAgInZpYSI6ICJib2JAZXhhbXBsZS5vcmciLAogICAgImNyZWF0ZWRBdCI6ICIyMDI2LTAzLTEx\r\nVDA5OjA4OjAwLjAwMFoiLAogICAgImVtYWlsIjogewogICAgICAibWVzc2FnZUlkIjogIjxnOUBl\r\neGFtcGxlLm9yZz4iLAogICAgICAic3ViamVjdCI6ICJQaG90b3MiLAogICAgICAidG9waWNSb290\r\nIjogIjxnOUBleGFtcGxlLm9yZz4iCiAgICB9CiAgfQp9Cg==\r\n--=_es_6f1e411a2a9236b726073046--\r\n"
+    }
+  ],
+  "expected": {
+    "chats": [
+      {
+        "id": "chat-686b5e4cf4f963adf8f51468a48028ef",
+        "participants": [
+          {
+            "name": "Bob Svoboda",
+            "address": "bob@example.org"
+          }
+        ],
+        "messages": [
+          {
+            "id": "<g1@example.org>",
+            "subject": "Garden"
+          },
+          {
+            "id": "<g2@example.com>",
+            "subject": "Message from Alice Example"
+          },
+          {
+            "id": "<g3@example.org>",
+            "subject": "Message from Alice Example"
+          },
+          {
+            "id": "<g4@example.com>",
+            "subject": "Message from Alice Example"
+          },
+          {
+            "id": "<g5@example.org>",
+            "subject": "Message from Bob"
+          },
+          {
+            "id": "<g6@example.org>",
+            "subject": "Garden"
+          },
+          {
+            "id": "<g7@example.com>",
+            "subject": "Garden"
+          },
+          {
+            "id": "<g8@example.org>",
+            "subject": "Message from"
+          },
+          {
+            "id": "<g9@example.org>",
+            "subject": "Photos"
+          }
+        ],
+        "firstDate": "2026-03-11T09:00:00.000Z",
+        "lastDate": "2026-03-11T09:08:00.000Z"
+      }
+    ],
+    "topics": {
+      "chat-686b5e4cf4f963adf8f51468a48028ef": {
+        "topics": [
+          {
+            "rootId": "<g1@example.org>",
+            "label": null,
+            "base": "Garden",
+            "kind": "plain",
+            "count": 3
+          },
+          {
+            "rootId": "<g2@example.com>",
+            "label": "Weekend plans",
+            "base": "Message from Alice Example",
+            "kind": "named",
+            "count": 3
+          },
+          {
+            "rootId": "<g5@example.org>",
+            "label": null,
+            "base": "Message from Bob",
+            "kind": "carrier",
+            "count": 1
+          },
+          {
+            "rootId": "<g8@example.org>",
+            "label": null,
+            "base": "Message from",
+            "kind": "plain",
+            "count": 1
+          },
+          {
+            "rootId": "<g9@example.org>",
+            "label": null,
+            "base": "Photos",
+            "kind": "carrier",
+            "count": 1
+          }
+        ],
+        "of": {
+          "<g1@example.org>": {
+            "rootId": "<g1@example.org>",
+            "topicStart": true
+          },
+          "<g2@example.com>": {
+            "rootId": "<g2@example.com>",
+            "topicStart": true
+          },
+          "<g3@example.org>": {
+            "rootId": "<g2@example.com>",
+            "topicStart": false
+          },
+          "<g4@example.com>": {
+            "rootId": "<g2@example.com>",
+            "topicStart": false
+          },
+          "<g5@example.org>": {
+            "rootId": "<g5@example.org>",
+            "topicStart": true
+          },
+          "<g6@example.org>": {
+            "rootId": "<g1@example.org>",
+            "topicStart": true
+          },
+          "<g7@example.com>": {
+            "rootId": "<g1@example.org>",
+            "topicStart": false
+          },
+          "<g8@example.org>": {
+            "rootId": "<g8@example.org>",
+            "topicStart": true
+          },
+          "<g9@example.org>": {
+            "rootId": "<g9@example.org>",
+            "topicStart": true
+          }
+        }
+      }
+    }
+  }
+}

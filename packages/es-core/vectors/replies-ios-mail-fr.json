@@ -1,0 +1,48 @@
+{
+  "description": "iOS Mail (iPhone), fr: mobile signature \"Envoyé de mon iPhone\"; attribution \"> Le 3 mars 2026 à 10:15, Alice Dvořáková <alice@example.com> a écrit :\"",
+  "source": "fixtures/replies/ios-mail-fr.eml",
+  "raw": "Content-Type: text/plain;\r\n\tcharset=utf-8\r\nContent-Transfer-Encoding: quoted-printable\r\nFrom: =?utf-8?Q?Camille_Lef=C3=A8vre?= <camille@example.org>\r\nMime-Version: 1.0 (1.0)\r\nSubject: =?utf-8?Q?Re=3A_Compte_rendu?=\r\nDate: Tue, 3 Mar 2026 10:21:10 +0100\r\nMessage-Id: <7672453F-FEE6-49D1-99A6-6AC910FEB465@example.org>\r\nReferences: <CAKx4mgRLxzxXnH76v5xc03gkL41zBZRBNv1Rpw6oHaKAgUEt@mail.example.com>\r\nIn-Reply-To: <CAKx4mgRLxzxXnH76v5xc03gkL41zBZRBNv1Rpw6oHaKAgUEt@mail.example.com>\r\nTo: =?utf-8?Q?Alice_Dvo=C5=99=C3=A1kov=C3=A1?= <alice@example.com>\r\nX-Mailer: iPhone Mail (22E240)\r\n\r\nOui, avant vendredi !\r\n\r\nEnvoy=C3=A9 de mon iPhone\r\n\r\n> Le 3 mars 2026 =C3=A0 10:15, Alice Dvo=C5=99=C3=A1kov=C3=A1 <alice@exampl=\r\ne.com> a =C3=A9crit :\r\n>\r\n> =EF=BB=BFBonjour Camille,\r\n>\r\n> peux-tu m'envoyer le compte rendu de la r=C3=A9union avant vendredi ?\r\n>\r\n> Merci,\r\n> Alice\r\n",
+  "expected": {
+    "id": "<7672453F-FEE6-49D1-99A6-6AC910FEB465@example.org>",
+    "from": {
+      "name": "Camille Lefèvre",
+      "address": "camille@example.org"
+    },
+    "to": [
+      {
+        "name": "Alice Dvořáková",
+        "address": "alice@example.com"
+      }
+    ],
+    "cc": [],
+    "replyTo": [],
+    "date": "2026-03-03T09:21:10.000Z",
+    "subject": "Re: Compte rendu",
+    "text": "Oui, avant vendredi !\n\nEnvoyé de mon iPhone\n\n> Le 3 mars 2026 à 10:15, Alice Dvořáková <alice@example.com> a écrit :\n>\n> ﻿Bonjour Camille,\n>\n> peux-tu m'envoyer le compte rendu de la réunion avant vendredi ?\n>\n> Merci,\n> Alice\n",
+    "textSource": "plain",
+    "es": null,
+    "attachments": [],
+    "refs": {
+      "messageId": "<7672453F-FEE6-49D1-99A6-6AC910FEB465@example.org>",
+      "inReplyTo": [
+        "<CAKx4mgRLxzxXnH76v5xc03gkL41zBZRBNv1Rpw6oHaKAgUEt@mail.example.com>"
+      ],
+      "references": [
+        "<CAKx4mgRLxzxXnH76v5xc03gkL41zBZRBNv1Rpw6oHaKAgUEt@mail.example.com>"
+      ]
+    },
+    "delivery": {
+      "listHeaders": [],
+      "listId": null,
+      "autoSubmitted": null,
+      "precedence": null,
+      "returnPath": null,
+      "listUnsubscribe": null
+    }
+  },
+  "split": {
+    "fresh": "Oui, avant vendredi !",
+    "quoted": "> Le 3 mars 2026 à 10:15, Alice Dvořáková <alice@example.com> a écrit :\n>\n> ﻿Bonjour Camille,\n>\n> peux-tu m'envoyer le compte rendu de la réunion avant vendredi ?\n>\n> Merci,\n> Alice",
+    "signature": "Envoyé de mon iPhone"
+  }
+}

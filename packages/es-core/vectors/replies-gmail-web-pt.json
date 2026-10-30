@@ -1,0 +1,48 @@
+{
+  "description": "Gmail web, pt: attribution \"Em ter., 3 de mar. de 2026 às 10:15, Alice Dvořáková <alice@example.com> escreveu:\", wrapped onto 2 lines",
+  "source": "fixtures/replies/gmail-web-pt.eml",
+  "raw": "MIME-Version: 1.0\r\nReferences: <CAKx4m1zbF04ocKaLEJgGYGLPeQiWab0ktT01clNE1NRzTFJj@mail.example.com>\r\nIn-Reply-To: <CAKx4m1zbF04ocKaLEJgGYGLPeQiWab0ktT01clNE1NRzTFJj@mail.example.com>\r\nFrom: =?UTF-8?Q?Jo=C3=A3o_Almeida?= <joao.almeida@example.org>\r\nDate: Tue, 3 Mar 2026 12:35:05 +0100\r\nMessage-ID: <CAH7x9ktXswdLaxVKAYno504b9hhafpUQFkj2V2CW8uJ9u2XLX@mail.example.com>\r\nSubject: Re: Rascunho do contrato\r\nTo: =?UTF-8?Q?Alice_Dvo=C5=99=C3=A1kov=C3=A1?= <alice@example.com>\r\nContent-Type: multipart/alternative; boundary=\"000000000000a3761aa0abbb6aab\"\r\n\r\n--000000000000a3761aa0abbb6aab\r\nContent-Type: text/plain; charset=\"UTF-8\"\r\nContent-Transfer-Encoding: quoted-printable\r\n\r\nOi Alice,\r\n\r\no rascunho est=C3=A1 quase pronto, mando na quinta.\r\n\r\nJo=C3=A3o\r\n\r\nEm ter., 3 de mar. de 2026 =C3=A0s 10:15, Alice Dvo=C5=99=C3=A1kov=C3=A1 <a=\r\nlice@example.com>\r\nescreveu:\r\n\r\n> Oi Jo=C3=A3o,\r\n>\r\n> voc=C3=AA pode me mandar o rascunho do contrato at=C3=A9 sexta?\r\n>\r\n> Obrigada,\r\n> Alice\r\n\r\n\r\n--000000000000a3761aa0abbb6aab\r\nContent-Type: text/html; charset=\"UTF-8\"\r\nContent-Transfer-Encoding: quoted-printable\r\n\r\n<div dir=3D\"ltr\"><div>Oi Alice,</div><div><br></div><div>o rascunho est=C3=\r\n=A1 quase pronto, mando na quinta.</div><div><br></div><div>Jo=C3=A3o</div>=\r\n</div><br><div class=3D\"gmail_quote gmail_quote_container\"><div dir=3D\"ltr\"=\r\n class=3D\"gmail_attr\">Em ter., 3 de mar. de 2026 =C3=A0s 10:15, Alice Dvo=\r\n=C5=99=C3=A1kov=C3=A1 &lt;<a href=3D\"mailto:alice@example.com\">alice@exampl=\r\ne.com</a>&gt; escreveu:<br></div><blockquote class=3D\"gmail_quote\" style=3D=\r\n\"margin:0px 0px 0px 0.8ex;border-left:1px solid rgb(204,204,204);padding-le=\r\nft:1ex\"><div dir=3D\"ltr\">Oi Jo=C3=A3o,<br><br>voc=C3=AA pode me mandar o ra=\r\nscunho do contrato at=C3=A9 sexta?<br><br>Obrigada,<br>Alice</div></blockqu=\r\note></div>\r\n\r\n--000000000000a3761aa0abbb6aab--\r\n",
+  "expected": {
+    "id": "<CAH7x9ktXswdLaxVKAYno504b9hhafpUQFkj2V2CW8uJ9u2XLX@mail.example.com>",
+    "from": {
+      "name": "João Almeida",
+      "address": "joao.almeida@example.org"
+    },
+    "to": [
+      {
+        "name": "Alice Dvořáková",
+        "address": "alice@example.com"
+      }
+    ],
+    "cc": [],
+    "replyTo": [],
+    "date": "2026-03-03T11:35:05.000Z",
+    "subject": "Re: Rascunho do contrato",
+    "text": "Oi Alice,\n\no rascunho está quase pronto, mando na quinta.\n\nJoão\n\nEm ter., 3 de mar. de 2026 às 10:15, Alice Dvořáková <alice@example.com>\nescreveu:\n\n> Oi João,\n>\n> você pode me mandar o rascunho do contrato até sexta?\n>\n> Obrigada,\n> Alice\n\n",
+    "textSource": "plain",
+    "es": null,
+    "attachments": [],
+    "refs": {
+      "messageId": "<CAH7x9ktXswdLaxVKAYno504b9hhafpUQFkj2V2CW8uJ9u2XLX@mail.example.com>",
+      "inReplyTo": [
+        "<CAKx4m1zbF04ocKaLEJgGYGLPeQiWab0ktT01clNE1NRzTFJj@mail.example.com>"
+      ],
+      "references": [
+        "<CAKx4m1zbF04ocKaLEJgGYGLPeQiWab0ktT01clNE1NRzTFJj@mail.example.com>"
+      ]
+    },
+    "delivery": {
+      "listHeaders": [],
+      "listId": null,
+      "autoSubmitted": null,
+      "precedence": null,
+      "returnPath": null,
+      "listUnsubscribe": null
+    }
+  },
+  "split": {
+    "fresh": "Oi Alice,\n\no rascunho está quase pronto, mando na quinta.\n\nJoão",
+    "quoted": "Em ter., 3 de mar. de 2026 às 10:15, Alice Dvořáková <alice@example.com>\nescreveu:\n\n> Oi João,\n>\n> você pode me mandar o rascunho do contrato até sexta?\n>\n> Obrigada,\n> Alice",
+    "signature": ""
+  }
+}

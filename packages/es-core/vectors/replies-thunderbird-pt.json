@@ -1,0 +1,48 @@
+{
+  "description": "Thunderbird, pt: answer below the quote; attribution \"Em 03/03/2026 10:15, Alice Dvořáková escreveu:\"",
+  "source": "fixtures/replies/thunderbird-pt.eml",
+  "raw": "Message-ID: <c5a40373-9fd4-4e31-960b-876e8f1d30a7@example.org>\r\nDate: Tue, 3 Mar 2026 11:05:13 +0100\r\nMIME-Version: 1.0\r\nUser-Agent: Mozilla Thunderbird\r\nContent-Language: pt-BR\r\nTo: =?UTF-8?Q?Alice_Dvo=C5=99=C3=A1kov=C3=A1?= <alice@example.com>\r\nFrom: =?UTF-8?Q?Jo=C3=A3o_Almeida?= <joao.almeida@example.org>\r\nSubject: Re: Rascunho do contrato\r\nReferences: <CAKx4mauNLJ5lZFRmT0MiIt8eVRTnhys39olJtx8R2Lj00yyQ@mail.example.com>\r\nIn-Reply-To: <CAKx4mauNLJ5lZFRmT0MiIt8eVRTnhys39olJtx8R2Lj00yyQ@mail.example.com>\r\nContent-Type: text/plain; charset=UTF-8; format=flowed\r\nContent-Transfer-Encoding: 8bit\r\n\r\nEm 03/03/2026 10:15, Alice Dvořáková escreveu:\r\n> Oi João,\r\n>\r\n> você pode me mandar o rascunho do contrato até sexta?\r\n>\r\n> Obrigada,\r\n> Alice\r\n\r\nOi Alice,\r\n\r\nmando hoje à noite.\r\n\r\nJoão\r\n",
+  "expected": {
+    "id": "<c5a40373-9fd4-4e31-960b-876e8f1d30a7@example.org>",
+    "from": {
+      "name": "João Almeida",
+      "address": "joao.almeida@example.org"
+    },
+    "to": [
+      {
+        "name": "Alice Dvořáková",
+        "address": "alice@example.com"
+      }
+    ],
+    "cc": [],
+    "replyTo": [],
+    "date": "2026-03-03T10:05:13.000Z",
+    "subject": "Re: Rascunho do contrato",
+    "text": "Em 03/03/2026 10:15, Alice Dvořáková escreveu:\n> Oi João,\n>\n> você pode me mandar o rascunho do contrato até sexta?\n>\n> Obrigada,\n> Alice\n\nOi Alice,\n\nmando hoje à noite.\n\nJoão\n",
+    "textSource": "plain",
+    "es": null,
+    "attachments": [],
+    "refs": {
+      "messageId": "<c5a40373-9fd4-4e31-960b-876e8f1d30a7@example.org>",
+      "inReplyTo": [
+        "<CAKx4mauNLJ5lZFRmT0MiIt8eVRTnhys39olJtx8R2Lj00yyQ@mail.example.com>"
+      ],
+      "references": [
+        "<CAKx4mauNLJ5lZFRmT0MiIt8eVRTnhys39olJtx8R2Lj00yyQ@mail.example.com>"
+      ]
+    },
+    "delivery": {
+      "listHeaders": [],
+      "listId": null,
+      "autoSubmitted": null,
+      "precedence": null,
+      "returnPath": null,
+      "listUnsubscribe": null
+    }
+  },
+  "split": {
+    "fresh": "Oi Alice,\n\nmando hoje à noite.\n\nJoão",
+    "quoted": "Em 03/03/2026 10:15, Alice Dvořáková escreveu:\n> Oi João,\n>\n> você pode me mandar o rascunho do contrato até sexta?\n>\n> Obrigada,\n> Alice",
+    "signature": ""
+  }
+}

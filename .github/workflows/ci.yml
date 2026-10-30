@@ -9,6 +9,19 @@ permissions:
   contents: read
 
 jobs:
+  audit:
+    name: Known vulnerabilities in runtime dependencies
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with:
+          node-version-file: .nvmrc
+      # Runtime dependencies only (--omit=dev): the packages license:check
+      # counts as runtime, i.e. lockfile entries not marked "dev". Fails on
+      # high or critical advisories; reads package-lock.json, no install.
+      - run: npm run audit:prod
+
   test:
     name: Test (Node 22)
     runs-on: ubuntu-latest

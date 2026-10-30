@@ -1,0 +1,48 @@
+{
+  "description": "Outlook on the web / new Outlook, it: underscore divider + Da:/Inviato:/A:/Oggetto: header block, original not prefixed",
+  "source": "fixtures/replies/outlook-new-web-it.eml",
+  "raw": "From: Giulia Romano <giulia.romano@example.org>\r\nTo: =?UTF-8?Q?Alice_Dvo=C5=99=C3=A1kov=C3=A1?= <alice@example.com>\r\nSubject: R: Bozza del contratto\r\nThread-Topic: Bozza del contratto\r\nThread-Index: AQHcqvpGlR0HF9q3I1XUA47QyrDo==\r\nDate: Tue, 3 Mar 2026 10:46:12 +0000\r\nMessage-ID: <PAXPR02MB0945529750CF51F460DCF929A03559EC7E2D1@PAXPR02MB0945529750CF51F460DCF929A03559EC7E2D1.eurprd02.prod.outlook.example.com>\r\nReferences: <CAKx4mprZuSiCZ334AajiES33cpXyud3DD6V9SeThKtOMTWTf@mail.example.com>\r\nIn-Reply-To: <CAKx4mprZuSiCZ334AajiES33cpXyud3DD6V9SeThKtOMTWTf@mail.example.com>\r\nAccept-Language: it-IT, en-US\r\nContent-Language: it-IT\r\nX-MS-Has-Attach:\r\nX-MS-TNEF-Correlator:\r\nContent-Type: multipart/alternative;\r\n\tboundary=\"_000_PAXPR02MB0945529750CF51F460DCF929A03559EC7_\"\r\nMIME-Version: 1.0\r\n\r\n--_000_PAXPR02MB0945529750CF51F460DCF929A03559EC7_\r\nContent-Type: text/plain; charset=\"utf-8\"\r\nContent-Transfer-Encoding: quoted-printable\r\n\r\nCiao Alice,\r\n\r\nti mando la bozza domani mattina.\r\n\r\nGiulia\r\n________________________________\r\nDa: Alice Dvo=C5=99=C3=A1kov=C3=A1 <alice@example.com>\r\nInviato: marted=C3=AC 3 marzo 2026 10:15\r\nA: Giulia Romano <giulia.romano@example.org>\r\nOggetto: Bozza del contratto\r\n\r\nCiao Giulia,\r\n\r\nmi mandi la bozza del contratto entro venerd=C3=AC?\r\n\r\nGrazie,\r\nAlice\r\n\r\n\r\n--_000_PAXPR02MB0945529750CF51F460DCF929A03559EC7_\r\nContent-Type: text/html; charset=\"utf-8\"\r\nContent-Transfer-Encoding: quoted-printable\r\n\r\n<html>\r\n<head>\r\n<meta http-equiv=3D\"Content-Type\" content=3D\"text/html; charset=3Dutf-8\">\r\n<style type=3D\"text/css\" style=3D\"display:none;\"> P {margin-top:0;margin-bo=\r\nttom:0;} </style>\r\n</head>\r\n<body dir=3D\"ltr\">\r\n<div class=3D\"elementToProof\" style=3D\"font-family: Aptos, Aptos_EmbeddedFo=\r\nnt, Aptos_MSFontService, Calibri, Helvetica, sans-serif; font-size: 12pt; c=\r\nolor: rgb(0, 0, 0);\">Ciao Alice,</div>\r\n<div class=3D\"elementToProof\" style=3D\"font-family: Aptos, Aptos_EmbeddedFo=\r\nnt, Aptos_MSFontService, Calibri, Helvetica, sans-serif; font-size: 12pt; c=\r\nolor: rgb(0, 0, 0);\"><br></div>\r\n<div class=3D\"elementToProof\" style=3D\"font-family: Aptos, Aptos_EmbeddedFo=\r\nnt, Aptos_MSFontService, Calibri, Helvetica, sans-serif; font-size: 12pt; c=\r\nolor: rgb(0, 0, 0);\">ti mando la bozza domani mattina.</div>\r\n<div class=3D\"elementToProof\" style=3D\"font-family: Aptos, Aptos_EmbeddedFo=\r\nnt, Aptos_MSFontService, Calibri, Helvetica, sans-serif; font-size: 12pt; c=\r\nolor: rgb(0, 0, 0);\"><br></div>\r\n<div class=3D\"elementToProof\" style=3D\"font-family: Aptos, Aptos_EmbeddedFo=\r\nnt, Aptos_MSFontService, Calibri, Helvetica, sans-serif; font-size: 12pt; c=\r\nolor: rgb(0, 0, 0);\">Giulia</div>\r\n<div id=3D\"appendonsend\"></div>\r\n<hr style=3D\"display:inline-block;width:98%\" tabindex=3D\"-1\">\r\n<div id=3D\"divRplyFwdMsg\" dir=3D\"ltr\"><font face=3D\"Calibri, sans-serif\" st=\r\nyle=3D\"font-size:11pt\" color=3D\"#000000\"><b>Da:</b> Alice Dvo=C5=99=C3=A1ko=\r\nv=C3=A1 &lt;alice@example.com&gt;<br>=0D\r\n<b>Inviato:</b> marted=C3=AC 3 marzo 2026 10:15<br>=0D\r\n<b>A:</b> Giulia Romano &lt;giulia.romano@example.org&gt;<br>=0D\r\n<b>Oggetto:</b> Bozza del contratto</font>\r\n<div>&nbsp;</div>\r\n</div>\r\n<div class=3D\"BodyFragment\"><font size=3D\"2\"><span style=3D\"font-size:11pt;=\r\n\">\r\n<div class=3D\"PlainText\">Ciao Giulia,<br>\r\n<br>\r\nmi mandi la bozza del contratto entro venerd=C3=AC?<br>\r\n<br>\r\nGrazie,<br>\r\nAlice</div>\r\n</span></font></div>\r\n</body>\r\n</html>\r\n\r\n--_000_PAXPR02MB0945529750CF51F460DCF929A03559EC7_--\r\n",
+  "expected": {
+    "id": "<PAXPR02MB0945529750CF51F460DCF929A03559EC7E2D1@PAXPR02MB0945529750CF51F460DCF929A03559EC7E2D1.eurprd02.prod.outlook.example.com>",
+    "from": {
+      "name": "Giulia Romano",
+      "address": "giulia.romano@example.org"
+    },
+    "to": [
+      {
+        "name": "Alice Dvořáková",
+        "address": "alice@example.com"
+      }
+    ],
+    "cc": [],
+    "replyTo": [],
+    "date": "2026-03-03T10:46:12.000Z",
+    "subject": "R: Bozza del contratto",
+    "text": "Ciao Alice,\n\nti mando la bozza domani mattina.\n\nGiulia\n________________________________\nDa: Alice Dvořáková <alice@example.com>\nInviato: martedì 3 marzo 2026 10:15\nA: Giulia Romano <giulia.romano@example.org>\nOggetto: Bozza del contratto\n\nCiao Giulia,\n\nmi mandi la bozza del contratto entro venerdì?\n\nGrazie,\nAlice\n\n",
+    "textSource": "plain",
+    "es": null,
+    "attachments": [],
+    "refs": {
+      "messageId": "<PAXPR02MB0945529750CF51F460DCF929A03559EC7E2D1@PAXPR02MB0945529750CF51F460DCF929A03559EC7E2D1.eurprd02.prod.outlook.example.com>",
+      "inReplyTo": [
+        "<CAKx4mprZuSiCZ334AajiES33cpXyud3DD6V9SeThKtOMTWTf@mail.example.com>"
+      ],
+      "references": [
+        "<CAKx4mprZuSiCZ334AajiES33cpXyud3DD6V9SeThKtOMTWTf@mail.example.com>"
+      ]
+    },
+    "delivery": {
+      "listHeaders": [],
+      "listId": null,
+      "autoSubmitted": null,
+      "precedence": null,
+      "returnPath": null,
+      "listUnsubscribe": null
+    }
+  },
+  "split": {
+    "fresh": "Ciao Alice,\n\nti mando la bozza domani mattina.\n\nGiulia",
+    "quoted": "________________________________\nDa: Alice Dvořáková <alice@example.com>\nInviato: martedì 3 marzo 2026 10:15\nA: Giulia Romano <giulia.romano@example.org>\nOggetto: Bozza del contratto\n\nCiao Giulia,\n\nmi mandi la bozza del contratto entro venerdì?\n\nGrazie,\nAlice",
+    "signature": ""
+  }
+}

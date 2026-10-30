@@ -1,0 +1,48 @@
+{
+  "description": "Gmail web, pl: attribution \"wt., 3 mar 2026 o 10:15 Alice Dvořáková <alice@example.com> napisał(a):\"",
+  "source": "fixtures/replies/gmail-web-pl.eml",
+  "raw": "MIME-Version: 1.0\r\nReferences: <CAKx4ms2jKgcBmYtoHYckD3Q4ZhFio3TCxa6IpEnWgYpl5YIA@mail.example.com>\r\nIn-Reply-To: <CAKx4ms2jKgcBmYtoHYckD3Q4ZhFio3TCxa6IpEnWgYpl5YIA@mail.example.com>\r\nFrom: Piotr Nowicki <piotr.nowicki@example.org>\r\nDate: Tue, 3 Mar 2026 12:31:05 +0100\r\nMessage-ID: <CAH7x9kHOm6FUBUTf6Pkvjq839kZ2Hi6I1Pxpb5R7nzsrCLc1Z@mail.example.com>\r\nSubject: =?UTF-8?B?UmU6IFpkasSZY2lhIHogd3ljaWVjemtp?=\r\nTo: =?UTF-8?Q?Alice_Dvo=C5=99=C3=A1kov=C3=A1?= <alice@example.com>\r\nContent-Type: multipart/alternative; boundary=\"000000000000096191a4faab3e2b\"\r\n\r\n--000000000000096191a4faab3e2b\r\nContent-Type: text/plain; charset=\"UTF-8\"\r\nContent-Transfer-Encoding: quoted-printable\r\n\r\nCze=C5=9B=C4=87 Alice,\r\n\r\nzdj=C4=99cia wrzuci=C5=82em do wsp=C3=B3lnego albumu, link wy=C5=9Bl=C4=99 =\r\nwieczorem.\r\n\r\nPiotr\r\n\r\nwt., 3 mar 2026 o 10:15 Alice Dvo=C5=99=C3=A1kov=C3=A1 <alice@example.com> =\r\nnapisa=C5=82(a):\r\n\r\n> Cze=C5=9B=C4=87 Piotrze,\r\n>\r\n> czy mo=C5=BCesz mi przes=C5=82a=C4=87 zdj=C4=99cia z wycieczki? Chc=C4=99=\r\n je wrzuci=C4=87 do albumu.\r\n>\r\n> Dzi=C4=99ki,\r\n> Alice\r\n\r\n\r\n--000000000000096191a4faab3e2b\r\nContent-Type: text/html; charset=\"UTF-8\"\r\nContent-Transfer-Encoding: quoted-printable\r\n\r\n<div dir=3D\"ltr\"><div>Cze=C5=9B=C4=87 Alice,</div><div><br></div><div>zdj=\r\n=C4=99cia wrzuci=C5=82em do wsp=C3=B3lnego albumu, link wy=C5=9Bl=C4=99 wie=\r\nczorem.</div><div><br></div><div>Piotr</div></div><br><div class=3D\"gmail_q=\r\nuote gmail_quote_container\"><div dir=3D\"ltr\" class=3D\"gmail_attr\">wt., 3 ma=\r\nr 2026 o 10:15 Alice Dvo=C5=99=C3=A1kov=C3=A1 &lt;<a href=3D\"mailto:alice@e=\r\nxample.com\">alice@example.com</a>&gt; napisa=C5=82(a):<br></div><blockquote=\r\n class=3D\"gmail_quote\" style=3D\"margin:0px 0px 0px 0.8ex;border-left:1px so=\r\nlid rgb(204,204,204);padding-left:1ex\"><div dir=3D\"ltr\">Cze=C5=9B=C4=87 Pio=\r\ntrze,<br><br>czy mo=C5=BCesz mi przes=C5=82a=C4=87 zdj=C4=99cia z wycieczki=\r\n? Chc=C4=99 je wrzuci=C4=87 do albumu.<br><br>Dzi=C4=99ki,<br>Alice</div></=\r\nblockquote></div>\r\n\r\n--000000000000096191a4faab3e2b--\r\n",
+  "expected": {
+    "id": "<CAH7x9kHOm6FUBUTf6Pkvjq839kZ2Hi6I1Pxpb5R7nzsrCLc1Z@mail.example.com>",
+    "from": {
+      "name": "Piotr Nowicki",
+      "address": "piotr.nowicki@example.org"
+    },
+    "to": [
+      {
+        "name": "Alice Dvořáková",
+        "address": "alice@example.com"
+      }
+    ],
+    "cc": [],
+    "replyTo": [],
+    "date": "2026-03-03T11:31:05.000Z",
+    "subject": "Re: Zdjęcia z wycieczki",
+    "text": "Cześć Alice,\n\nzdjęcia wrzuciłem do wspólnego albumu, link wyślę wieczorem.\n\nPiotr\n\nwt., 3 mar 2026 o 10:15 Alice Dvořáková <alice@example.com> napisał(a):\n\n> Cześć Piotrze,\n>\n> czy możesz mi przesłać zdjęcia z wycieczki? Chcę je wrzucić do albumu.\n>\n> Dzięki,\n> Alice\n\n",
+    "textSource": "plain",
+    "es": null,
+    "attachments": [],
+    "refs": {
+      "messageId": "<CAH7x9kHOm6FUBUTf6Pkvjq839kZ2Hi6I1Pxpb5R7nzsrCLc1Z@mail.example.com>",
+      "inReplyTo": [
+        "<CAKx4ms2jKgcBmYtoHYckD3Q4ZhFio3TCxa6IpEnWgYpl5YIA@mail.example.com>"
+      ],
+      "references": [
+        "<CAKx4ms2jKgcBmYtoHYckD3Q4ZhFio3TCxa6IpEnWgYpl5YIA@mail.example.com>"
+      ]
+    },
+    "delivery": {
+      "listHeaders": [],
+      "listId": null,
+      "autoSubmitted": null,
+      "precedence": null,
+      "returnPath": null,
+      "listUnsubscribe": null
+    }
+  },
+  "split": {
+    "fresh": "Cześć Alice,\n\nzdjęcia wrzuciłem do wspólnego albumu, link wyślę wieczorem.\n\nPiotr",
+    "quoted": "wt., 3 mar 2026 o 10:15 Alice Dvořáková <alice@example.com> napisał(a):\n\n> Cześć Piotrze,\n>\n> czy możesz mi przesłać zdjęcia z wycieczki? Chcę je wrzucić do albumu.\n>\n> Dzięki,\n> Alice",
+    "signature": ""
+  }
+}
