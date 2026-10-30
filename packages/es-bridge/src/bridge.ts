@@ -343,7 +343,10 @@ export async function startBridge(options: BridgeOptions): Promise<RunningBridge
         "default-src 'self'",
         "script-src 'self'",
         "style-src 'self'",
-        "img-src 'self' data:",
+        // A story's frame (srcdoc) inherits this policy on top of its own: its style attributes, and its
+        // images once the reader asks for them (spec section 12.5). This page itself sets neither.
+        "style-src-attr 'unsafe-inline'",
+        "img-src 'self' data: https:",
         `connect-src 'self' ws://127.0.0.1:${port} ws://localhost:${port}`,
         "object-src 'none'",
         "base-uri 'none'",
