@@ -9,8 +9,9 @@ With Node.js 22.12 or later, run `npm ci`, `npm run build` and `npx email-social
 ## Contribute
 
 - Read [`CLAUDE.md`](CLAUDE.md) first: plain e-mail always works, no server of ours, no secrets or real addresses (fixtures use `example.com`, `example.org` and `example.net`), no claims, tests first.
+- [`CONTRIBUTING.md`](CONTRIBUTING.md) says how to build, test and submit a pull request. Report vulnerabilities as [`SECURITY.md`](SECURITY.md) describes, not in an issue.
 - Work items are in [`tasks/`](tasks/), each with an acceptance test; one task is one pull request.
-- `npm test` (which includes `npm run docs:check`), `npm run typecheck`, `npm run build`, `npm run test:browser`, `npm run test:e2e` and `npm run license:check` run in CI on every pull request.
+- `npm test` (which includes `npm run docs:check`), `npm run typecheck`, `npm run build`, `npm run test:browser`, `npm run test:e2e`, `npm run license:check` and `npm run audit:prod` run in CI on every pull request.
 - A change to the protocol changes [`spec/es-protocol.md`](spec/es-protocol.md) together with the tests or vectors that cover it; where real mail clients do something other than the draft, [`spec/DEVIATIONS.md`](spec/DEVIATIONS.md) records it with the evidence.
 
 ## Licences

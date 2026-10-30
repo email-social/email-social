@@ -1,0 +1,40 @@
+MIME-Version: 1.0
+References: <CAKx4mLuU6BfT3tvPERH6Ymvn7Rnrc5a8UaA5XG1GusLL796j@mail.example.com>
+In-Reply-To: <CAKx4mLuU6BfT3tvPERH6Ymvn7Rnrc5a8UaA5XG1GusLL796j@mail.example.com>
+From: Anna Becker <anna.becker@example.net>
+Date: Tue, 3 Mar 2026 10:50:31 +0100
+Message-ID: <CAH7x9kl63Sr0xJ4R66Qi3JEWppPx8ae5DMx6P17Q8Gzf2TKcv@mail.example.com>
+Subject: =?UTF-8?B?UmU6IFByb2pla3TDvGJlcnNpY2h0?=
+To: =?UTF-8?Q?Alice_Dvo=C5=99=C3=A1kov=C3=A1?= <alice@example.com>
+Content-Type: multipart/alternative; boundary="0000000000005c5189ef9245018d"
+
+--0000000000005c5189ef9245018d
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+
+Mach ich, bis Freitag!
+
+Alice Dvo=C5=99=C3=A1kov=C3=A1 <alice@example.com> schrieb am Di., 3. M=C3=
+=A4rz 2026, 10:15:
+
+> Hallo Anna,
+>
+> kannst du mir die Projekt=C3=BCbersicht bis Freitag schicken?
+>
+> Viele Gr=C3=BC=C3=9Fe
+> Alice
+
+
+--0000000000005c5189ef9245018d
+Content-Type: text/html; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+
+<div dir=3D"auto">Mach ich, bis Freitag!</div><br><div class=3D"gmail_quote=
+ gmail_quote_container"><div dir=3D"ltr" class=3D"gmail_attr">Alice Dvo=C5=
+=99=C3=A1kov=C3=A1 &lt;alice@example.com&gt; schrieb am Di., 3. M=C3=A4rz 2=
+026, 10:15:<br></div><blockquote class=3D"gmail_quote" style=3D"margin:0 0 =
+0 .8ex;border-left:1px #ccc solid;padding-left:1ex"><div dir=3D"ltr">Hallo =
+Anna,<br><br>kannst du mir die Projekt=C3=BCbersicht bis Freitag schicken?<=
+br><br>Viele Gr=C3=BC=C3=9Fe<br>Alice</div></blockquote></div>
+
+--0000000000005c5189ef9245018d--

@@ -1,0 +1,48 @@
+{
+  "description": "Outlook on the web / new Outlook, pl: underscore divider + Od:/Wysłane:/Do:/Temat: header block, original not prefixed",
+  "source": "fixtures/replies/outlook-new-web-pl.eml",
+  "raw": "From: Piotr Nowicki <piotr.nowicki@example.org>\r\nTo: =?UTF-8?Q?Alice_Dvo=C5=99=C3=A1kov=C3=A1?= <alice@example.com>\r\nSubject: =?utf-8?Q?Odp=3A_Zdj=C4=99cia_z_wycieczki?=\r\nThread-Topic: =?utf-8?Q?Zdj=C4=99cia_z_wycieczki?=\r\nThread-Index: AQHcqvk3wRfrTRuUpzxXTrgdUTmK==\r\nDate: Tue, 3 Mar 2026 10:44:12 +0000\r\nMessage-ID: <PAXPR02MB8303C1D8942DCC4A8C205579BAFE702D7DDCA@PAXPR02MB8303C1D8942DCC4A8C205579BAFE702D7DDCA.eurprd02.prod.outlook.example.com>\r\nReferences: <CAKx4mdbl51xq0BN2aIXlX5ZZdjAVwQcZsaozhYtPCFWLOzPg@mail.example.com>\r\nIn-Reply-To: <CAKx4mdbl51xq0BN2aIXlX5ZZdjAVwQcZsaozhYtPCFWLOzPg@mail.example.com>\r\nAccept-Language: pl-PL, en-US\r\nContent-Language: pl-PL\r\nX-MS-Has-Attach:\r\nX-MS-TNEF-Correlator:\r\nContent-Type: multipart/alternative;\r\n\tboundary=\"_000_PAXPR02MB8303C1D8942DCC4A8C205579BAFE702D7_\"\r\nMIME-Version: 1.0\r\n\r\n--_000_PAXPR02MB8303C1D8942DCC4A8C205579BAFE702D7_\r\nContent-Type: text/plain; charset=\"utf-8\"\r\nContent-Transfer-Encoding: quoted-printable\r\n\r\nCze=C5=9B=C4=87 Alice,\r\n\r\nzdj=C4=99cia s=C4=85 we wsp=C3=B3lnym albumie, link wy=C5=9Bl=C4=99 po po=\r\n=C5=82udniu.\r\n\r\nPiotr\r\n________________________________\r\nOd: Alice Dvo=C5=99=C3=A1kov=C3=A1 <alice@example.com>\r\nWys=C5=82ane: wtorek, 3 marca 2026 10:15\r\nDo: Piotr Nowicki <piotr.nowicki@example.org>\r\nTemat: Zdj=C4=99cia z wycieczki\r\n\r\nCze=C5=9B=C4=87 Piotrze,\r\n\r\nczy mo=C5=BCesz mi przes=C5=82a=C4=87 zdj=C4=99cia z wycieczki? Chc=C4=99 j=\r\ne wrzuci=C4=87 do albumu.\r\n\r\nDzi=C4=99ki,\r\nAlice\r\n\r\n\r\n--_000_PAXPR02MB8303C1D8942DCC4A8C205579BAFE702D7_\r\nContent-Type: text/html; charset=\"utf-8\"\r\nContent-Transfer-Encoding: quoted-printable\r\n\r\n<html>\r\n<head>\r\n<meta http-equiv=3D\"Content-Type\" content=3D\"text/html; charset=3Dutf-8\">\r\n<style type=3D\"text/css\" style=3D\"display:none;\"> P {margin-top:0;margin-bo=\r\nttom:0;} </style>\r\n</head>\r\n<body dir=3D\"ltr\">\r\n<div class=3D\"elementToProof\" style=3D\"font-family: Aptos, Aptos_EmbeddedFo=\r\nnt, Aptos_MSFontService, Calibri, Helvetica, sans-serif; font-size: 12pt; c=\r\nolor: rgb(0, 0, 0);\">Cze=C5=9B=C4=87 Alice,</div>\r\n<div class=3D\"elementToProof\" style=3D\"font-family: Aptos, Aptos_EmbeddedFo=\r\nnt, Aptos_MSFontService, Calibri, Helvetica, sans-serif; font-size: 12pt; c=\r\nolor: rgb(0, 0, 0);\"><br></div>\r\n<div class=3D\"elementToProof\" style=3D\"font-family: Aptos, Aptos_EmbeddedFo=\r\nnt, Aptos_MSFontService, Calibri, Helvetica, sans-serif; font-size: 12pt; c=\r\nolor: rgb(0, 0, 0);\">zdj=C4=99cia s=C4=85 we wsp=C3=B3lnym albumie, link wy=\r\n=C5=9Bl=C4=99 po po=C5=82udniu.</div>\r\n<div class=3D\"elementToProof\" style=3D\"font-family: Aptos, Aptos_EmbeddedFo=\r\nnt, Aptos_MSFontService, Calibri, Helvetica, sans-serif; font-size: 12pt; c=\r\nolor: rgb(0, 0, 0);\"><br></div>\r\n<div class=3D\"elementToProof\" style=3D\"font-family: Aptos, Aptos_EmbeddedFo=\r\nnt, Aptos_MSFontService, Calibri, Helvetica, sans-serif; font-size: 12pt; c=\r\nolor: rgb(0, 0, 0);\">Piotr</div>\r\n<div id=3D\"appendonsend\"></div>\r\n<hr style=3D\"display:inline-block;width:98%\" tabindex=3D\"-1\">\r\n<div id=3D\"divRplyFwdMsg\" dir=3D\"ltr\"><font face=3D\"Calibri, sans-serif\" st=\r\nyle=3D\"font-size:11pt\" color=3D\"#000000\"><b>Od:</b> Alice Dvo=C5=99=C3=A1ko=\r\nv=C3=A1 &lt;alice@example.com&gt;<br>=0D\r\n<b>Wys=C5=82ane:</b> wtorek, 3 marca 2026 10:15<br>=0D\r\n<b>Do:</b> Piotr Nowicki &lt;piotr.nowicki@example.org&gt;<br>=0D\r\n<b>Temat:</b> Zdj=C4=99cia z wycieczki</font>\r\n<div>&nbsp;</div>\r\n</div>\r\n<div class=3D\"BodyFragment\"><font size=3D\"2\"><span style=3D\"font-size:11pt;=\r\n\">\r\n<div class=3D\"PlainText\">Cze=C5=9B=C4=87 Piotrze,<br>\r\n<br>\r\nczy mo=C5=BCesz mi przes=C5=82a=C4=87 zdj=C4=99cia z wycieczki? Chc=C4=99 j=\r\ne wrzuci=C4=87 do albumu.<br>\r\n<br>\r\nDzi=C4=99ki,<br>\r\nAlice</div>\r\n</span></font></div>\r\n</body>\r\n</html>\r\n\r\n--_000_PAXPR02MB8303C1D8942DCC4A8C205579BAFE702D7_--\r\n",
+  "expected": {
+    "id": "<PAXPR02MB8303C1D8942DCC4A8C205579BAFE702D7DDCA@PAXPR02MB8303C1D8942DCC4A8C205579BAFE702D7DDCA.eurprd02.prod.outlook.example.com>",
+    "from": {
+      "name": "Piotr Nowicki",
+      "address": "piotr.nowicki@example.org"
+    },
+    "to": [
+      {
+        "name": "Alice Dvořáková",
+        "address": "alice@example.com"
+      }
+    ],
+    "cc": [],
+    "replyTo": [],
+    "date": "2026-03-03T10:44:12.000Z",
+    "subject": "Odp: Zdjęcia z wycieczki",
+    "text": "Cześć Alice,\n\nzdjęcia są we wspólnym albumie, link wyślę po południu.\n\nPiotr\n________________________________\nOd: Alice Dvořáková <alice@example.com>\nWysłane: wtorek, 3 marca 2026 10:15\nDo: Piotr Nowicki <piotr.nowicki@example.org>\nTemat: Zdjęcia z wycieczki\n\nCześć Piotrze,\n\nczy możesz mi przesłać zdjęcia z wycieczki? Chcę je wrzucić do albumu.\n\nDzięki,\nAlice\n\n",
+    "textSource": "plain",
+    "es": null,
+    "attachments": [],
+    "refs": {
+      "messageId": "<PAXPR02MB8303C1D8942DCC4A8C205579BAFE702D7DDCA@PAXPR02MB8303C1D8942DCC4A8C205579BAFE702D7DDCA.eurprd02.prod.outlook.example.com>",
+      "inReplyTo": [
+        "<CAKx4mdbl51xq0BN2aIXlX5ZZdjAVwQcZsaozhYtPCFWLOzPg@mail.example.com>"
+      ],
+      "references": [
+        "<CAKx4mdbl51xq0BN2aIXlX5ZZdjAVwQcZsaozhYtPCFWLOzPg@mail.example.com>"
+      ]
+    },
+    "delivery": {
+      "listHeaders": [],
+      "listId": null,
+      "autoSubmitted": null,
+      "precedence": null,
+      "returnPath": null,
+      "listUnsubscribe": null
+    }
+  },
+  "split": {
+    "fresh": "Cześć Alice,\n\nzdjęcia są we wspólnym albumie, link wyślę po południu.\n\nPiotr",
+    "quoted": "________________________________\nOd: Alice Dvořáková <alice@example.com>\nWysłane: wtorek, 3 marca 2026 10:15\nDo: Piotr Nowicki <piotr.nowicki@example.org>\nTemat: Zdjęcia z wycieczki\n\nCześć Piotrze,\n\nczy możesz mi przesłać zdjęcia z wycieczki? Chcę je wrzucić do albumu.\n\nDzięki,\nAlice",
+    "signature": ""
+  }
+}

@@ -55,9 +55,13 @@ export function threadMessages(messages: readonly EsMessage[]): Conversation[] {
   const drafts: Draft[] = [];
   // Conversations by subject key, in creation order ("the first existing conversation" wins).
   const byKey = new Map<string, Draft[]>();
+  // Without a subject a group joins only the first draft with the same participants, and that
+  // draft's participants never change: looked up by the sorted addresses instead of a scan.
+  const bySet = new Map<string, Draft>();
+  const setKey = (participants: ReadonlySet<string>): string => [...participants].sort(compareCodeUnits).join("\n");
   for (const group of groups) {
     const candidates = byKey.get(group.key) ?? [];
-    const target = candidates.find((draft) => fits(draft, group));
+    const target = group.key === "" ? bySet.get(setKey(group.participants)) : candidates.find((draft) => fits(draft, group));
     if (target === undefined) {
       const draft: Draft = {
         rootId: group.rootId,
@@ -67,7 +71,9 @@ export function threadMessages(messages: readonly EsMessage[]): Conversation[] {
         items: [...group.items],
       };
       drafts.push(draft);
-      byKey.set(group.key, [...candidates, draft]);
+      candidates.push(draft);
+      byKey.set(group.key, candidates);
+      if (group.key === "") bySet.set(setKey(group.participants), draft);
       continue;
     }
     target.items.push(...group.items);
@@ -130,7 +136,16 @@ function compareItems(a: Item, b: Item): number {
  */
 function buildReferenceTrees(items: readonly Item[]): Map<string, string> {
   const parents = new Map<string, string>();
+  // Every id that has ever been made a parent. An id outside it is no one's ancestor, so the
+  // walk below is skipped for it; without this, a chain of n replies takes n²/2 steps.
+  const hasChild = new Set<string>();
+  const link = (child: string, parent: string): void => {
+    parents.set(child, parent);
+    hasChild.add(parent);
+  };
   const isAncestorOrSelf = (candidate: string, id: string): boolean => {
+    if (candidate === id) return true;
+    if (!hasChild.has(candidate)) return false;
     for (let current: string | undefined = id; current !== undefined; current = parents.get(current)) {
       if (current === candidate) return true;
     }
@@ -146,10 +161,10 @@ function buildReferenceTrees(items: readonly Item[]): Map<string, string> {
     for (let i = 1; i < chain.length; i++) {
       const parent = chain[i - 1]!;
       const child = chain[i]!;
-      if (!parents.has(child) && !isAncestorOrSelf(child, parent)) parents.set(child, parent);
+      if (!parents.has(child) && !isAncestorOrSelf(child, parent)) link(child, parent);
     }
     const last = chain[chain.length - 1];
-    if (last !== undefined && !isAncestorOrSelf(message.id, last)) parents.set(message.id, last);
+    if (last !== undefined && !isAncestorOrSelf(message.id, last)) link(message.id, last);
   }
   return parents;
 }
@@ -157,9 +172,19 @@ function buildReferenceTrees(items: readonly Item[]): Map<string, string> {
 /** One group per reference tree that holds at least one message, in canonical group order. */
 function collectGroups(items: readonly Item[], parents: ReadonlyMap<string, string>): Group[] {
   const byRoot = new Map<string, Item[]>();
+  // Root of every id walked so far, so each parent link is followed once in total.
+  const rootOf = new Map<string, string>();
   for (const item of items) {
+    const path: string[] = [];
     let root = item.message.id;
-    for (let parent = parents.get(root); parent !== undefined; parent = parents.get(root)) root = parent;
+    for (let known = rootOf.get(root); known === undefined; known = rootOf.get(root)) {
+      path.push(root);
+      const parent = parents.get(root);
+      if (parent === undefined) break;
+      root = parent;
+    }
+    root = rootOf.get(root) ?? root;
+    for (const id of path) rootOf.set(id, root);
     const list = byRoot.get(root);
     if (list === undefined) byRoot.set(root, [item]);
     else list.push(item);

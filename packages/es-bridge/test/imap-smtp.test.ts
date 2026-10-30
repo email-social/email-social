@@ -2,7 +2,7 @@
  * ImapSmtpAdapter with the real imapflow client against a small IMAP server
  * on 127.0.0.1 (helpers/fake-imap.ts), and a recording SMTP transport.
  */
-import { afterEach, describe, expect, it } from "vitest";
+import { afterEach, describe, expect, it, vi } from "vitest";
 import { ImapSmtpAdapter, imapOptions, smtpOptions } from "../src/adapters/imap-smtp.js";
 import { SEEN, type ConnectionStatus } from "../src/adapters/types.js";
 import type { AccountConfig } from "../src/credentials.js";
@@ -248,5 +248,32 @@ describe("live updates and lost connections", () => {
     const started = Date.now();
     await adapter.close();
     expect(Date.now() - started).toBeLessThan(3000);
+  });
+});
+
+describe("a hostile or broken IMAP server", () => {
+  // imapflow buffers a literal of up to 1 GB by default and imapOptions sets no lower limit, so one FETCH can hold gigabytes.
+  it.fails("caps the size of one fetched message", () => {
+    expect((imapOptions(CONFIG) as { maxLiteralSize?: number }).maxLiteralSize).toBeLessThanOrEqual(100 * 2 ** 20);
+  });
+
+  // Only the session's sync watchdog calls reconnect(); a download outside a sync waits for imapflow's 5-minute socket timeout, which a trickling server never triggers.
+  it.fails("gives up on a command by itself when the server stops answering", async () => {
+    const { adapter, server } = await setUp(seed);
+    await adapter.open();
+    server.stall();
+    vi.useFakeTimers({ toFake: ["setTimeout", "clearTimeout"] });
+    try {
+      let settled = false;
+      adapter.fetchRaw({ folder: "inbox", uid: "1700000001.2" }).then(
+        () => (settled = true),
+        () => (settled = true),
+      );
+      await vi.advanceTimersByTimeAsync(10 * 60_000);
+      expect(settled).toBe(true);
+    } finally {
+      vi.useRealTimers();
+      adapter.reconnect("test over");
+    }
   });
 });

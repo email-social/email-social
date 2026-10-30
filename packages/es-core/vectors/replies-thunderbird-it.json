@@ -1,0 +1,48 @@
+{
+  "description": "Thunderbird, it: answer below the quote; attribution \"Il 03/03/26 10:15, Alice Dvořáková ha scritto:\"",
+  "source": "fixtures/replies/thunderbird-it.eml",
+  "raw": "Message-ID: <859e4b4e-51b6-4bc2-9d87-257dfdde501d@example.org>\r\nDate: Tue, 3 Mar 2026 11:03:13 +0100\r\nMIME-Version: 1.0\r\nUser-Agent: Mozilla Thunderbird\r\nContent-Language: it-IT\r\nTo: =?UTF-8?Q?Alice_Dvo=C5=99=C3=A1kov=C3=A1?= <alice@example.com>\r\nFrom: Giulia Romano <giulia.romano@example.org>\r\nSubject: Re: Bozza del contratto\r\nReferences: <CAKx4mUmvBoCQlIVAwIFnlNWwhvjd3zxasUx7IqLVZ5T4N5SE@mail.example.com>\r\nIn-Reply-To: <CAKx4mUmvBoCQlIVAwIFnlNWwhvjd3zxasUx7IqLVZ5T4N5SE@mail.example.com>\r\nContent-Type: text/plain; charset=UTF-8; format=flowed\r\nContent-Transfer-Encoding: 8bit\r\n\r\nIl 03/03/26 10:15, Alice Dvořáková ha scritto:\r\n> Ciao Giulia,\r\n>\r\n> mi mandi la bozza del contratto entro venerdì?\r\n>\r\n> Grazie,\r\n> Alice\r\n\r\nCiao Alice,\r\n\r\nte la mando stasera.\r\n\r\nGiulia\r\n",
+  "expected": {
+    "id": "<859e4b4e-51b6-4bc2-9d87-257dfdde501d@example.org>",
+    "from": {
+      "name": "Giulia Romano",
+      "address": "giulia.romano@example.org"
+    },
+    "to": [
+      {
+        "name": "Alice Dvořáková",
+        "address": "alice@example.com"
+      }
+    ],
+    "cc": [],
+    "replyTo": [],
+    "date": "2026-03-03T10:03:13.000Z",
+    "subject": "Re: Bozza del contratto",
+    "text": "Il 03/03/26 10:15, Alice Dvořáková ha scritto:\n> Ciao Giulia,\n>\n> mi mandi la bozza del contratto entro venerdì?\n>\n> Grazie,\n> Alice\n\nCiao Alice,\n\nte la mando stasera.\n\nGiulia\n",
+    "textSource": "plain",
+    "es": null,
+    "attachments": [],
+    "refs": {
+      "messageId": "<859e4b4e-51b6-4bc2-9d87-257dfdde501d@example.org>",
+      "inReplyTo": [
+        "<CAKx4mUmvBoCQlIVAwIFnlNWwhvjd3zxasUx7IqLVZ5T4N5SE@mail.example.com>"
+      ],
+      "references": [
+        "<CAKx4mUmvBoCQlIVAwIFnlNWwhvjd3zxasUx7IqLVZ5T4N5SE@mail.example.com>"
+      ]
+    },
+    "delivery": {
+      "listHeaders": [],
+      "listId": null,
+      "autoSubmitted": null,
+      "precedence": null,
+      "returnPath": null,
+      "listUnsubscribe": null
+    }
+  },
+  "split": {
+    "fresh": "Ciao Alice,\n\nte la mando stasera.\n\nGiulia",
+    "quoted": "Il 03/03/26 10:15, Alice Dvořáková ha scritto:\n> Ciao Giulia,\n>\n> mi mandi la bozza del contratto entro venerdì?\n>\n> Grazie,\n> Alice",
+    "signature": ""
+  }
+}

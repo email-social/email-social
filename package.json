@@ -1,5 +1,6 @@
 {
   "name": "email-social",
+  "version": "0.1.0",
   "private": true,
   "description": "Email Social: an ordinary mailbox as a chat-like client.",
   "license": "Apache-2.0",
@@ -21,6 +22,8 @@
     "vectors:check": "npm run vectors:check --workspaces --if-present",
     "license:check": "node scripts/license-check.mjs",
     "docs:check": "node scripts/docs-check.mjs",
+    "audit:prod": "npm audit --omit=dev --audit-level=high",
+    "sbom": "node scripts/sbom.mjs",
     "start": "email-social"
   }
 }

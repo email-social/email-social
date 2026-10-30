@@ -19,6 +19,15 @@ const ORIGINAL = {
   cs: "Ahoj Karle, pošleš mi prosím fotky z výletu? Chci je dát do alba. Díky, Alice",
   de: "Hallo Anna, kannst du mir die Projektübersicht bis Freitag schicken? Viele Grüße Alice",
   fr: "Bonjour Camille, peux-tu m'envoyer le compte rendu de la réunion ? Merci, Alice",
+  // J4: the newer fixtures (and the French ones among them ask for Friday too).
+  enFlowed: "Hi Bob, could you send me the contract draft by Friday? Legal wants to review it before the meeting with the client next Tuesday. Thanks, Alice",
+  frFriday: "Bonjour Camille, peux-tu m'envoyer le compte rendu de la réunion avant vendredi ? Merci, Alice",
+  sk: "Ahoj Martina, pošleš mi, prosím, fotky z výletu? Chcem ich dať do albumu. Vďaka, Alice",
+  pl: "Cześć Piotrze, czy możesz mi przesłać zdjęcia z wycieczki? Chcę je wrzucić do albumu. Dzięki, Alice",
+  es: "Hola Lucía, ¿me puedes enviar el borrador del contrato antes del viernes? Gracias, Alice",
+  it: "Ciao Giulia, mi mandi la bozza del contratto entro venerdì? Grazie, Alice",
+  nl: "Hoi Daan, kun je me het conceptcontract vóór vrijdag sturen? Bedankt, Alice",
+  pt: "Oi João, você pode me mandar o rascunho do contrato até sexta? Obrigada, Alice",
 };
 
 describe("collapse", () => {
@@ -55,6 +64,57 @@ describe("unquotedLines / unquote: every default reply format quotes exactly the
     "replies/outlook-web.eml": ORIGINAL.enJulien,
     "replies/outlook-web-html-only.eml": ORIGINAL.enJulien,
     "replies/outlook-ios.eml": ORIGINAL.enJulien,
+    "replies/apple-mail-de.eml": ORIGINAL.de,
+    "replies/apple-mail-fr.eml": ORIGINAL.frFriday,
+    "replies/fastmail-en.eml": ORIGINAL.en,
+    "replies/gmail-android-de.eml": ORIGINAL.de,
+    "replies/gmail-android-fr.eml": ORIGINAL.frFriday,
+    "replies/gmail-ios-en.eml": ORIGINAL.en,
+    "replies/gmail-web-es.eml": ORIGINAL.es,
+    "replies/gmail-web-it.eml": ORIGINAL.it,
+    "replies/gmail-web-nl.eml": ORIGINAL.nl,
+    "replies/gmail-web-pl.eml": ORIGINAL.pl,
+    "replies/gmail-web-pt.eml": ORIGINAL.pt,
+    "replies/gmail-web-sk.eml": ORIGINAL.sk,
+    "replies/ios-mail-cs-ipad.eml": ORIGINAL.cs,
+    "replies/ios-mail-es.eml": ORIGINAL.es,
+    "replies/ios-mail-fr.eml": ORIGINAL.frFriday,
+    "replies/ios-mail-it.eml": ORIGINAL.it,
+    "replies/ios-mail-nl.eml": ORIGINAL.nl,
+    "replies/ios-mail-pl.eml": ORIGINAL.pl,
+    "replies/ios-mail-pt.eml": ORIGINAL.pt,
+    "replies/ios-mail-sk.eml": ORIGINAL.sk,
+    "replies/outlook-android-cs.eml": ORIGINAL.cs,
+    "replies/outlook-android-de.eml": ORIGINAL.de,
+    "replies/outlook-android-fr.eml": ORIGINAL.frFriday,
+    "replies/outlook-new-web-cs-html-only.eml": ORIGINAL.cs,
+    "replies/outlook-new-web-cs.eml": ORIGINAL.cs,
+    "replies/outlook-new-web-de.eml": ORIGINAL.de,
+    "replies/outlook-new-web-es.eml": ORIGINAL.es,
+    "replies/outlook-new-web-fr.eml": ORIGINAL.frFriday,
+    "replies/outlook-new-web-it.eml": ORIGINAL.it,
+    "replies/outlook-new-web-nl.eml": ORIGINAL.nl,
+    "replies/outlook-new-web-pl.eml": ORIGINAL.pl,
+    "replies/outlook-new-web-pt.eml": ORIGINAL.pt,
+    "replies/outlook-new-web-sk.eml": ORIGINAL.sk,
+    "replies/outlook-new-windows-cs-cc.eml": ORIGINAL.cs,
+    "replies/proton-mail-en.eml": ORIGINAL.en,
+    "replies/proton-mail-html-only.eml": ORIGINAL.en,
+    "replies/roundcube-en.eml": ORIGINAL.en,
+    "replies/samsung-mail-de.eml": ORIGINAL.de,
+    "replies/samsung-mail-en.eml": ORIGINAL.en,
+    "replies/samsung-mail-fr.eml": ORIGINAL.frFriday,
+    "replies/thunderbird-cs-signature-above-quote.eml": ORIGINAL.cs,
+    "replies/thunderbird-en-signature-above-quote.eml": ORIGINAL.en,
+    "replies/thunderbird-es.eml": ORIGINAL.es,
+    "replies/thunderbird-flowed-attribution.eml": ORIGINAL.enFlowed,
+    "replies/thunderbird-it.eml": ORIGINAL.it,
+    "replies/thunderbird-nl.eml": ORIGINAL.nl,
+    "replies/thunderbird-pl.eml": ORIGINAL.pl,
+    "replies/thunderbird-pt.eml": ORIGINAL.pt,
+    "replies/thunderbird-sk.eml": ORIGINAL.sk,
+    "replies/yahoo-mail-android-en.eml": ORIGINAL.en,
+    "replies/yahoo-mail-web-en.eml": ORIGINAL.en,
   };
 
   it.each(Object.entries(expected))("%s", (name, text) => {
@@ -62,7 +122,11 @@ describe("unquotedLines / unquote: every default reply format quotes exactly the
   });
 
   it("covers every reply fixture that quotes Alice's original", () => {
-    const quoting = listReplyFixtures().filter((name) => !["replies/plain-no-quote.eml", "replies/mutt-interleaved.eml", "replies/gmail-long-quote.eml", "replies/gmail-web-fragment.eml", "replies/outlook-desktop-fragment.eml"].includes(name));
+    // Not a plain quote of one original: no quote, interleaved, cut, a reply to a reply, or a forward (Thunderbird's forward header table starts with Betreff:, not a From label).
+    const quoting = listReplyFixtures().filter((name) => ![
+      "replies/plain-no-quote.eml", "replies/mutt-interleaved.eml", "replies/gmail-long-quote.eml", "replies/gmail-web-fragment.eml", "replies/outlook-desktop-fragment.eml",
+      "replies/gmail-interleaved-en.eml", "replies/gmail-nested-reply-en.eml", "replies/gmail-forward-in-reply-en.eml", "replies/thunderbird-de-forward.eml",
+    ].includes(name));
     expect(Object.keys(expected).sort()).toEqual(quoting);
   });
 });
@@ -158,7 +222,7 @@ describe("unquotedLines: the parts it drops and keeps", () => {
 describe("isInterleaved", () => {
   it("is true for answers between quoted points (mutt) and false for every other reply format", () => {
     // The mbox archive's ">From" line (mboxrd escaping) sits between two paragraphs, so splitQuoted keeps it in fresh the same way.
-    const interleaved = ["mbox-lf-obsolete-date.eml", "replies/mutt-interleaved.eml"];
+    const interleaved = ["mbox-lf-obsolete-date.eml", "replies/mutt-interleaved.eml", "replies/gmail-interleaved-en.eml"];
     for (const name of listAllFixtures()) {
       expect(isInterleaved(parseMessage(readFixture(name))), name).toBe(interleaved.includes(name));
     }

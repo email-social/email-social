@@ -1,0 +1,48 @@
+{
+  "description": "Outlook on the web / new Outlook, es: underscore divider + De:/Enviado:/Para:/Asunto: header block, original not prefixed",
+  "source": "fixtures/replies/outlook-new-web-es.eml",
+  "raw": "From: =?UTF-8?Q?Luc=C3=ADa_Ortega?= <lucia.ortega@example.net>\r\nTo: =?UTF-8?Q?Alice_Dvo=C5=99=C3=A1kov=C3=A1?= <alice@example.com>\r\nSubject: RE: Borrador del contrato\r\nThread-Topic: Borrador del contrato\r\nThread-Index: AQHcqvGVTafJsolzha2m1jcuccKw==\r\nDate: Tue, 3 Mar 2026 10:45:12 +0000\r\nMessage-ID: <PAXPR02MB6842C2187939614DA48B822CDFD2BDF7A2493@PAXPR02MB6842C2187939614DA48B822CDFD2BDF7A2493.eurprd02.prod.outlook.example.com>\r\nReferences: <CAKx4mYSIE5l5E4Yj3BXStKuabMmuc5EzCwOSr7ja8DBjN7jq@mail.example.com>\r\nIn-Reply-To: <CAKx4mYSIE5l5E4Yj3BXStKuabMmuc5EzCwOSr7ja8DBjN7jq@mail.example.com>\r\nAccept-Language: es-ES, en-US\r\nContent-Language: es-ES\r\nX-MS-Has-Attach:\r\nX-MS-TNEF-Correlator:\r\nContent-Type: multipart/alternative;\r\n\tboundary=\"_000_PAXPR02MB6842C2187939614DA48B822CDFD2BDF7A_\"\r\nMIME-Version: 1.0\r\n\r\n--_000_PAXPR02MB6842C2187939614DA48B822CDFD2BDF7A_\r\nContent-Type: text/plain; charset=\"utf-8\"\r\nContent-Transfer-Encoding: quoted-printable\r\n\r\nHola Alice,\r\n\r\nte env=C3=ADo el borrador ma=C3=B1ana por la ma=C3=B1ana.\r\n\r\nUn saludo,\r\nLuc=C3=ADa\r\n________________________________\r\nDe: Alice Dvo=C5=99=C3=A1kov=C3=A1 <alice@example.com>\r\nEnviado: martes, 3 de marzo de 2026 10:15\r\nPara: Luc=C3=ADa Ortega <lucia.ortega@example.net>\r\nAsunto: Borrador del contrato\r\n\r\nHola Luc=C3=ADa,\r\n\r\n=C2=BFme puedes enviar el borrador del contrato antes del viernes?\r\n\r\nGracias,\r\nAlice\r\n\r\n\r\n--_000_PAXPR02MB6842C2187939614DA48B822CDFD2BDF7A_\r\nContent-Type: text/html; charset=\"utf-8\"\r\nContent-Transfer-Encoding: quoted-printable\r\n\r\n<html>\r\n<head>\r\n<meta http-equiv=3D\"Content-Type\" content=3D\"text/html; charset=3Dutf-8\">\r\n<style type=3D\"text/css\" style=3D\"display:none;\"> P {margin-top:0;margin-bo=\r\nttom:0;} </style>\r\n</head>\r\n<body dir=3D\"ltr\">\r\n<div class=3D\"elementToProof\" style=3D\"font-family: Aptos, Aptos_EmbeddedFo=\r\nnt, Aptos_MSFontService, Calibri, Helvetica, sans-serif; font-size: 12pt; c=\r\nolor: rgb(0, 0, 0);\">Hola Alice,</div>\r\n<div class=3D\"elementToProof\" style=3D\"font-family: Aptos, Aptos_EmbeddedFo=\r\nnt, Aptos_MSFontService, Calibri, Helvetica, sans-serif; font-size: 12pt; c=\r\nolor: rgb(0, 0, 0);\"><br></div>\r\n<div class=3D\"elementToProof\" style=3D\"font-family: Aptos, Aptos_EmbeddedFo=\r\nnt, Aptos_MSFontService, Calibri, Helvetica, sans-serif; font-size: 12pt; c=\r\nolor: rgb(0, 0, 0);\">te env=C3=ADo el borrador ma=C3=B1ana por la ma=C3=B1a=\r\nna.</div>\r\n<div class=3D\"elementToProof\" style=3D\"font-family: Aptos, Aptos_EmbeddedFo=\r\nnt, Aptos_MSFontService, Calibri, Helvetica, sans-serif; font-size: 12pt; c=\r\nolor: rgb(0, 0, 0);\"><br></div>\r\n<div class=3D\"elementToProof\" style=3D\"font-family: Aptos, Aptos_EmbeddedFo=\r\nnt, Aptos_MSFontService, Calibri, Helvetica, sans-serif; font-size: 12pt; c=\r\nolor: rgb(0, 0, 0);\">Un saludo,</div>\r\n<div class=3D\"elementToProof\" style=3D\"font-family: Aptos, Aptos_EmbeddedFo=\r\nnt, Aptos_MSFontService, Calibri, Helvetica, sans-serif; font-size: 12pt; c=\r\nolor: rgb(0, 0, 0);\">Luc=C3=ADa</div>\r\n<div id=3D\"appendonsend\"></div>\r\n<hr style=3D\"display:inline-block;width:98%\" tabindex=3D\"-1\">\r\n<div id=3D\"divRplyFwdMsg\" dir=3D\"ltr\"><font face=3D\"Calibri, sans-serif\" st=\r\nyle=3D\"font-size:11pt\" color=3D\"#000000\"><b>De:</b> Alice Dvo=C5=99=C3=A1ko=\r\nv=C3=A1 &lt;alice@example.com&gt;<br>=0D\r\n<b>Enviado:</b> martes, 3 de marzo de 2026 10:15<br>=0D\r\n<b>Para:</b> Luc=C3=ADa Ortega &lt;lucia.ortega@example.net&gt;<br>=0D\r\n<b>Asunto:</b> Borrador del contrato</font>\r\n<div>&nbsp;</div>\r\n</div>\r\n<div class=3D\"BodyFragment\"><font size=3D\"2\"><span style=3D\"font-size:11pt;=\r\n\">\r\n<div class=3D\"PlainText\">Hola Luc=C3=ADa,<br>\r\n<br>\r\n=C2=BFme puedes enviar el borrador del contrato antes del viernes?<br>\r\n<br>\r\nGracias,<br>\r\nAlice</div>\r\n</span></font></div>\r\n</body>\r\n</html>\r\n\r\n--_000_PAXPR02MB6842C2187939614DA48B822CDFD2BDF7A_--\r\n",
+  "expected": {
+    "id": "<PAXPR02MB6842C2187939614DA48B822CDFD2BDF7A2493@PAXPR02MB6842C2187939614DA48B822CDFD2BDF7A2493.eurprd02.prod.outlook.example.com>",
+    "from": {
+      "name": "Lucía Ortega",
+      "address": "lucia.ortega@example.net"
+    },
+    "to": [
+      {
+        "name": "Alice Dvořáková",
+        "address": "alice@example.com"
+      }
+    ],
+    "cc": [],
+    "replyTo": [],
+    "date": "2026-03-03T10:45:12.000Z",
+    "subject": "RE: Borrador del contrato",
+    "text": "Hola Alice,\n\nte envío el borrador mañana por la mañana.\n\nUn saludo,\nLucía\n________________________________\nDe: Alice Dvořáková <alice@example.com>\nEnviado: martes, 3 de marzo de 2026 10:15\nPara: Lucía Ortega <lucia.ortega@example.net>\nAsunto: Borrador del contrato\n\nHola Lucía,\n\n¿me puedes enviar el borrador del contrato antes del viernes?\n\nGracias,\nAlice\n\n",
+    "textSource": "plain",
+    "es": null,
+    "attachments": [],
+    "refs": {
+      "messageId": "<PAXPR02MB6842C2187939614DA48B822CDFD2BDF7A2493@PAXPR02MB6842C2187939614DA48B822CDFD2BDF7A2493.eurprd02.prod.outlook.example.com>",
+      "inReplyTo": [
+        "<CAKx4mYSIE5l5E4Yj3BXStKuabMmuc5EzCwOSr7ja8DBjN7jq@mail.example.com>"
+      ],
+      "references": [
+        "<CAKx4mYSIE5l5E4Yj3BXStKuabMmuc5EzCwOSr7ja8DBjN7jq@mail.example.com>"
+      ]
+    },
+    "delivery": {
+      "listHeaders": [],
+      "listId": null,
+      "autoSubmitted": null,
+      "precedence": null,
+      "returnPath": null,
+      "listUnsubscribe": null
+    }
+  },
+  "split": {
+    "fresh": "Hola Alice,\n\nte envío el borrador mañana por la mañana.\n\nUn saludo,\nLucía",
+    "quoted": "________________________________\nDe: Alice Dvořáková <alice@example.com>\nEnviado: martes, 3 de marzo de 2026 10:15\nPara: Lucía Ortega <lucia.ortega@example.net>\nAsunto: Borrador del contrato\n\nHola Lucía,\n\n¿me puedes enviar el borrador del contrato antes del viernes?\n\nGracias,\nAlice",
+    "signature": ""
+  }
+}

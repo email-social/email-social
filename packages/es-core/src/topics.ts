@@ -101,12 +101,15 @@ export function topicsOf(messages: readonly EsMessage[]): ChatTopics {
   const of: ChatTopics["of"] = {};
   const topics: Topic[] = [];
   const byRoot = new Map<string, { topic: Topic; root: EsMessage }>();
+  // The newest topic for each non-empty base subject key (rule 3), so a message need not scan every earlier topic.
+  const newestByKey = new Map<string, string>();
   let previous: string | null = null;
 
   const start = (message: EsMessage): string => {
     const topic: Topic = { rootId: message.id, label: null, base: normalizeSubject(message.subject).base, kind: "plain", count: 0 };
     topics.push(topic);
     byRoot.set(message.id, { topic, root: message });
+    if (topic.base !== "") newestByKey.set(subjectKey(topic.base), message.id);
     return message.id;
   };
   const placed = (id: string | undefined): id is string => id !== undefined && Object.hasOwn(of, id);
@@ -125,8 +128,8 @@ export function topicsOf(messages: readonly EsMessage[]): ChatTopics {
 
     const subject = normalizeSubject(message.subject);
     if (subject.base !== "") {
-      const key = subjectKey(subject.base);
-      for (let i = topics.length - 1; i >= 0; i--) if (topics[i]!.base !== "" && subjectKey(topics[i]!.base) === key) return topics[i]!.rootId;
+      const newest = newestByKey.get(subjectKey(subject.base));
+      if (newest !== undefined) return newest;
     }
 
     const threaded = [...message.refs.inReplyTo, ...message.refs.references].some((id) => id !== message.id);

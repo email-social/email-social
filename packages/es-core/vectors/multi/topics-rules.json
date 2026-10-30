@@ -1,0 +1,199 @@
+{
+  "description": "Section 8.2, the five placement rules in one chat: a fresh first message, a reply by In-Reply-To, a new fresh subject, an Outlook reply without headers found by subject, a prefixed reply with a new subject, named topics from ES parts, a reply whose In-Reply-To is outside the chat but whose References reaches the chat, an ES part's topicRoot winning over In-Reply-To, an empty subject, a fresh mail with an existing subject, and a topicRoot that is not in the chat.",
+  "covers": [
+    "TP-1"
+  ],
+  "owner": {
+    "name": "Alice Example",
+    "addresses": [
+      "alice@example.com"
+    ]
+  },
+  "messages": [
+    {
+      "raw": "From: Bob Svoboda <bob@example.org>\r\nTo: Alice Example <alice@example.com>\r\nSubject: Trip\r\nDate: Mon, 09 Mar 2026 09:00:00 GMT\r\nMessage-ID: <t01@example.org>\r\nMIME-Version: 1.0\r\nContent-Type: text/plain; charset=utf-8\r\nContent-Transfer-Encoding: 8bit\r\n\r\nRule 5 (and the first message): a root.\r\n"
+    },
+    {
+      "raw": "From: Alice Example <alice@example.com>\r\nTo: Bob Svoboda <bob@example.org>\r\nSubject: Re: Trip\r\nDate: Mon, 09 Mar 2026 09:01:00 GMT\r\nMessage-ID: <t02@example.com>\r\nIn-Reply-To: <t01@example.org>\r\nReferences: <t01@example.org>\r\nMIME-Version: 1.0\r\nContent-Type: text/plain; charset=utf-8\r\nContent-Transfer-Encoding: 8bit\r\n\r\nRule 2.\r\n"
+    },
+    {
+      "raw": "From: Bob Svoboda <bob@example.org>\r\nTo: Alice Example <alice@example.com>\r\nSubject: Budget\r\nDate: Mon, 09 Mar 2026 09:02:00 GMT\r\nMessage-ID: <t03@example.org>\r\nMIME-Version: 1.0\r\nContent-Type: text/plain; charset=utf-8\r\nContent-Transfer-Encoding: 8bit\r\n\r\nRule 5: a new topic.\r\n"
+    },
+    {
+      "raw": "From: Alice Example <alice@example.com>\r\nTo: Bob Svoboda <bob@example.org>\r\nSubject: RE: Trip\r\nDate: Mon, 09 Mar 2026 09:03:00 GMT\r\nMessage-ID: <t04@example.com>\r\nMIME-Version: 1.0\r\nContent-Type: text/plain; charset=utf-8\r\nContent-Transfer-Encoding: 8bit\r\n\r\nRule 3: no headers, the subject of an existing topic.\r\n"
+    },
+    {
+      "raw": "From: Bob Svoboda <bob@example.org>\r\nTo: Alice Example <alice@example.com>\r\nSubject: Re: Something else\r\nDate: Mon, 09 Mar 2026 09:04:00 GMT\r\nMessage-ID: <t05@example.org>\r\nMIME-Version: 1.0\r\nContent-Type: text/plain; charset=utf-8\r\nContent-Transfer-Encoding: 8bit\r\n\r\nRule 4: a reply prefix, the previous message's topic.\r\n"
+    },
+    {
+      "raw": "Date: Mon, 9 Mar 2026 09:05:00 +0000\r\nFrom: Alice Example <alice@example.com>\r\nTo: Bob Svoboda <bob@example.org>\r\nSubject: Concert\r\nMessage-ID: <t06@example.com>\r\nMIME-Version: 1.0\r\nContent-Type: multipart/mixed; boundary=\"=_es_8222da9e54df8e3ed0b82cdd\"\r\n\r\nThis is a multi-part message in MIME format.\r\n\r\n--=_es_8222da9e54df8e3ed0b82cdd\r\nContent-Type: text/plain; charset=utf-8\r\nContent-Transfer-Encoding: 7bit\r\n\r\nRule 1: a named topic.\r\n\r\n--=_es_8222da9e54df8e3ed0b82cdd\r\nContent-Type: application/vnd.email-social.message+json\r\nContent-Transfer-Encoding: base64\r\nContent-Disposition: attachment; filename=\"email-social.json\"\r\n\r\newogICIkdHlwZSI6ICJlcy5zb2NpYWwucG9zdCIsCiAgInZhbHVlIjogewogICAgInRleHQiOiAi\r\nUnVsZSAxOiBhIG5hbWVkIHRvcGljLlxuIiwKICAgICJ2aWEiOiAiYWxpY2VAZXhhbXBsZS5jb20i\r\nLAogICAgImNyZWF0ZWRBdCI6ICIyMDI2LTAzLTA5VDA5OjA1OjAwLjAwMFoiLAogICAgImVtYWls\r\nIjogewogICAgICAibWVzc2FnZUlkIjogIjx0MDZAZXhhbXBsZS5jb20+IiwKICAgICAgInN1Ympl\r\nY3QiOiAiQ29uY2VydCIsCiAgICAgICJ0b3BpY1Jvb3QiOiAiPHQwNkBleGFtcGxlLmNvbT4iLAog\r\nICAgICAidG9waWNMYWJlbCI6ICJDb25jZXJ0IgogICAgfQogIH0KfQo=\r\n--=_es_8222da9e54df8e3ed0b82cdd--\r\n"
+    },
+    {
+      "raw": "From: Bob Svoboda <bob@example.org>\r\nTo: Alice Example <alice@example.com>\r\nSubject: Re: Budget\r\nDate: Mon, 09 Mar 2026 09:06:00 GMT\r\nMessage-ID: <t07@example.org>\r\nIn-Reply-To: <elsewhere@example.net>\r\nReferences: <t03@example.org> <elsewhere@example.net>\r\nMIME-Version: 1.0\r\nContent-Type: text/plain; charset=utf-8\r\nContent-Transfer-Encoding: 8bit\r\n\r\nRule 2 by References.\r\n"
+    },
+    {
+      "raw": "Date: Mon, 9 Mar 2026 09:07:00 +0000\r\nFrom: Bob Svoboda <bob@example.org>\r\nTo: Alice Example <alice@example.com>\r\nSubject: Re: Concert\r\nMessage-ID: <t08@example.org>\r\nIn-Reply-To: <t07@example.org>\r\nReferences: <t03@example.org> <t07@example.org>\r\nMIME-Version: 1.0\r\nContent-Type: multipart/mixed; boundary=\"=_es_1d4714378a088275e1b83122\"\r\n\r\nThis is a multi-part message in MIME format.\r\n\r\n--=_es_1d4714378a088275e1b83122\r\nContent-Type: text/plain; charset=utf-8\r\nContent-Transfer-Encoding: 7bit\r\n\r\nRule 1 before rule 2.\r\n\r\n--=_es_1d4714378a088275e1b83122\r\nContent-Type: application/vnd.email-social.message+json\r\nContent-Transfer-Encoding: base64\r\nContent-Disposition: attachment; filename=\"email-social.json\"\r\n\r\newogICIkdHlwZSI6ICJlcy5zb2NpYWwucG9zdCIsCiAgInZhbHVlIjogewogICAgInRleHQiOiAi\r\nUnVsZSAxIGJlZm9yZSBydWxlIDIuXG4iLAogICAgInZpYSI6ICJib2JAZXhhbXBsZS5vcmciLAog\r\nICAgImNyZWF0ZWRBdCI6ICIyMDI2LTAzLTA5VDA5OjA3OjAwLjAwMFoiLAogICAgImVtYWlsIjog\r\newogICAgICAibWVzc2FnZUlkIjogIjx0MDhAZXhhbXBsZS5vcmc+IiwKICAgICAgInN1YmplY3Qi\r\nOiAiUmU6IENvbmNlcnQiLAogICAgICAiaW5SZXBseVRvIjogIjx0MDdAZXhhbXBsZS5vcmc+IiwK\r\nICAgICAgInJlZmVyZW5jZXMiOiBbCiAgICAgICAgIjx0MDNAZXhhbXBsZS5vcmc+IiwKICAgICAg\r\nICAiPHQwN0BleGFtcGxlLm9yZz4iCiAgICAgIF0sCiAgICAgICJ0b3BpY1Jvb3QiOiAiPHQwNkBl\r\neGFtcGxlLmNvbT4iLAogICAgICAidG9waWNMYWJlbCI6ICJDb25jZXJ0IgogICAgfQogIH0KfQo=\r\n--=_es_1d4714378a088275e1b83122--\r\n"
+    },
+    {
+      "raw": "From: Bob Svoboda <bob@example.org>\r\nTo: Alice Example <alice@example.com>\r\nDate: Mon, 09 Mar 2026 09:08:00 GMT\r\nMessage-ID: <t09@example.org>\r\nMIME-Version: 1.0\r\nContent-Type: text/plain; charset=utf-8\r\nContent-Transfer-Encoding: 8bit\r\n\r\nRule 4: no subject.\r\n"
+    },
+    {
+      "raw": "From: Alice Example <alice@example.com>\r\nTo: Bob Svoboda <bob@example.org>\r\nSubject: Budget\r\nDate: Mon, 09 Mar 2026 09:09:00 GMT\r\nMessage-ID: <t10@example.com>\r\nMIME-Version: 1.0\r\nContent-Type: text/plain; charset=utf-8\r\nContent-Transfer-Encoding: 8bit\r\n\r\nRule 3: unprefixed, an existing subject.\r\n"
+    },
+    {
+      "raw": "From: Bob Svoboda <bob@example.org>\r\nTo: Alice Example <alice@example.com>\r\nSubject: Holiday photos\r\nDate: Mon, 09 Mar 2026 09:10:00 GMT\r\nMessage-ID: <t11@example.org>\r\nMIME-Version: 1.0\r\nContent-Type: text/plain; charset=utf-8\r\nContent-Transfer-Encoding: 8bit\r\n\r\nRule 5.\r\n"
+    },
+    {
+      "raw": "Date: Mon, 9 Mar 2026 09:11:00 +0000\r\nFrom: Bob Svoboda <bob@example.org>\r\nTo: Alice Example <alice@example.com>\r\nSubject: Re: Trip\r\nMessage-ID: <t12@example.org>\r\nMIME-Version: 1.0\r\nContent-Type: multipart/mixed; boundary=\"=_es_02b942429b59eaee76065aea\"\r\n\r\nThis is a multi-part message in MIME format.\r\n\r\n--=_es_02b942429b59eaee76065aea\r\nContent-Type: text/plain; charset=utf-8\r\nContent-Transfer-Encoding: 7bit\r\n\r\ntopicRoot not in the chat: rule 3.\r\n\r\n--=_es_02b942429b59eaee76065aea\r\nContent-Type: application/vnd.email-social.message+json\r\nContent-Transfer-Encoding: base64\r\nContent-Disposition: attachment; filename=\"email-social.json\"\r\n\r\newogICIkdHlwZSI6ICJlcy5zb2NpYWwucG9zdCIsCiAgInZhbHVlIjogewogICAgInRleHQiOiAi\r\ndG9waWNSb290IG5vdCBpbiB0aGUgY2hhdDogcnVsZSAzLlxuIiwKICAgICJ2aWEiOiAiYm9iQGV4\r\nYW1wbGUub3JnIiwKICAgICJjcmVhdGVkQXQiOiAiMjAyNi0wMy0wOVQwOToxMTowMC4wMDBaIiwK\r\nICAgICJlbWFpbCI6IHsKICAgICAgIm1lc3NhZ2VJZCI6ICI8dDEyQGV4YW1wbGUub3JnPiIsCiAg\r\nICAgICJzdWJqZWN0IjogIlJlOiBUcmlwIiwKICAgICAgInRvcGljUm9vdCI6ICI8dW5rbm93bkBl\r\neGFtcGxlLm9yZz4iCiAgICB9CiAgfQp9Cg==\r\n--=_es_02b942429b59eaee76065aea--\r\n"
+    }
+  ],
+  "expected": {
+    "chats": [
+      {
+        "id": "chat-686b5e4cf4f963adf8f51468a48028ef",
+        "participants": [
+          {
+            "name": "Bob Svoboda",
+            "address": "bob@example.org"
+          }
+        ],
+        "messages": [
+          {
+            "id": "<t01@example.org>",
+            "subject": "Trip"
+          },
+          {
+            "id": "<t02@example.com>",
+            "subject": "Trip"
+          },
+          {
+            "id": "<t03@example.org>",
+            "subject": "Budget"
+          },
+          {
+            "id": "<t04@example.com>",
+            "subject": "Trip"
+          },
+          {
+            "id": "<t05@example.org>",
+            "subject": "Something else"
+          },
+          {
+            "id": "<t06@example.com>",
+            "subject": "Concert"
+          },
+          {
+            "id": "<t07@example.org>",
+            "subject": "Budget"
+          },
+          {
+            "id": "<t08@example.org>",
+            "subject": "Concert"
+          },
+          {
+            "id": "<t09@example.org>",
+            "subject": ""
+          },
+          {
+            "id": "<t10@example.com>",
+            "subject": "Budget"
+          },
+          {
+            "id": "<t11@example.org>",
+            "subject": "Holiday photos"
+          },
+          {
+            "id": "<t12@example.org>",
+            "subject": "Trip"
+          }
+        ],
+        "firstDate": "2026-03-09T09:00:00.000Z",
+        "lastDate": "2026-03-09T09:11:00.000Z"
+      }
+    ],
+    "topics": {
+      "chat-686b5e4cf4f963adf8f51468a48028ef": {
+        "topics": [
+          {
+            "rootId": "<t01@example.org>",
+            "label": null,
+            "base": "Trip",
+            "kind": "plain",
+            "count": 5
+          },
+          {
+            "rootId": "<t03@example.org>",
+            "label": null,
+            "base": "Budget",
+            "kind": "plain",
+            "count": 3
+          },
+          {
+            "rootId": "<t06@example.com>",
+            "label": "Concert",
+            "base": "Concert",
+            "kind": "named",
+            "count": 3
+          },
+          {
+            "rootId": "<t11@example.org>",
+            "label": null,
+            "base": "Holiday photos",
+            "kind": "plain",
+            "count": 1
+          }
+        ],
+        "of": {
+          "<t01@example.org>": {
+            "rootId": "<t01@example.org>",
+            "topicStart": true
+          },
+          "<t02@example.com>": {
+            "rootId": "<t01@example.org>",
+            "topicStart": false
+          },
+          "<t03@example.org>": {
+            "rootId": "<t03@example.org>",
+            "topicStart": true
+          },
+          "<t04@example.com>": {
+            "rootId": "<t01@example.org>",
+            "topicStart": true
+          },
+          "<t05@example.org>": {
+            "rootId": "<t01@example.org>",
+            "topicStart": false
+          },
+          "<t06@example.com>": {
+            "rootId": "<t06@example.com>",
+            "topicStart": true
+          },
+          "<t07@example.org>": {
+            "rootId": "<t03@example.org>",
+            "topicStart": true
+          },
+          "<t08@example.org>": {
+            "rootId": "<t06@example.com>",
+            "topicStart": true
+          },
+          "<t09@example.org>": {
+            "rootId": "<t06@example.com>",
+            "topicStart": false
+          },
+          "<t10@example.com>": {
+            "rootId": "<t03@example.org>",
+            "topicStart": true
+          },
+          "<t11@example.org>": {
+            "rootId": "<t11@example.org>",
+            "topicStart": true
+          },
+          "<t12@example.org>": {
+            "rootId": "<t01@example.org>",
+            "topicStart": true
+          }
+        }
+      }
+    }
+  }
+}

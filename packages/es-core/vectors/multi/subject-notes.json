@@ -1,0 +1,97 @@
+{
+  "description": "Section 9.6: in one topic, the root, a same-subject reply, a reply differing only in case, a gateway tag after the subject (a note), a list tag before it (no note), an Email Social post with another subject, an empty subject, and a renamed reply (a note); none of them moves.",
+  "covers": [
+    "QT-7"
+  ],
+  "owner": {
+    "name": "Alice Example",
+    "addresses": [
+      "alice@example.com"
+    ]
+  },
+  "messages": [
+    {
+      "raw": "From: Bob Svoboda <bob@example.org>\r\nTo: Alice Example <alice@example.com>\r\nSubject: Trip\r\nDate: Tue, 17 Mar 2026 09:00:00 GMT\r\nMessage-ID: <n1@example.org>\r\nMIME-Version: 1.0\r\nContent-Type: text/plain; charset=utf-8\r\nContent-Transfer-Encoding: 8bit\r\n\r\nRoot.\r\n"
+    },
+    {
+      "raw": "From: Alice Example <alice@example.com>\r\nTo: Bob Svoboda <bob@example.org>\r\nSubject: Re: Trip\r\nDate: Tue, 17 Mar 2026 09:01:00 GMT\r\nMessage-ID: <n2@example.com>\r\nIn-Reply-To: <n1@example.org>\r\nMIME-Version: 1.0\r\nContent-Type: text/plain; charset=utf-8\r\nContent-Transfer-Encoding: 8bit\r\n\r\nSame subject.\r\n"
+    },
+    {
+      "raw": "From: Bob Svoboda <bob@example.org>\r\nTo: Alice Example <alice@example.com>\r\nSubject: RE: trip\r\nDate: Tue, 17 Mar 2026 09:02:00 GMT\r\nMessage-ID: <n3@example.org>\r\nIn-Reply-To: <n2@example.com>\r\nMIME-Version: 1.0\r\nContent-Type: text/plain; charset=utf-8\r\nContent-Transfer-Encoding: 8bit\r\n\r\nOnly the case differs.\r\n"
+    },
+    {
+      "raw": "From: Bob Svoboda <bob@example.org>\r\nTo: Alice Example <alice@example.com>\r\nSubject: Re: Trip [EXTERNAL]\r\nDate: Tue, 17 Mar 2026 09:03:00 GMT\r\nMessage-ID: <n4@example.org>\r\nIn-Reply-To: <n3@example.org>\r\nMIME-Version: 1.0\r\nContent-Type: text/plain; charset=utf-8\r\nContent-Transfer-Encoding: 8bit\r\n\r\nA gateway tag.\r\n"
+    },
+    {
+      "raw": "From: Bob Svoboda <bob@example.org>\r\nTo: Alice Example <alice@example.com>\r\nSubject: [EXTERNAL] Re: Trip\r\nDate: Tue, 17 Mar 2026 09:04:00 GMT\r\nMessage-ID: <n5@example.org>\r\nIn-Reply-To: <n4@example.org>\r\nMIME-Version: 1.0\r\nContent-Type: text/plain; charset=utf-8\r\nContent-Transfer-Encoding: 8bit\r\n\r\nA tag the base subject removes.\r\n"
+    },
+    {
+      "raw": "Date: Tue, 17 Mar 2026 09:05:00 +0000\r\nFrom: Alice Example <alice@example.com>\r\nTo: Bob Svoboda <bob@example.org>\r\nSubject: Re: Trip plans\r\nMessage-ID: <n6@example.com>\r\nIn-Reply-To: <n5@example.org>\r\nReferences: <n1@example.org> <n5@example.org>\r\nMIME-Version: 1.0\r\nContent-Type: multipart/mixed; boundary=\"=_es_04055c2d8862e23d0187fa01\"\r\n\r\nThis is a multi-part message in MIME format.\r\n\r\n--=_es_04055c2d8862e23d0187fa01\r\nContent-Type: text/plain; charset=utf-8\r\nContent-Transfer-Encoding: 7bit\r\n\r\nA post.\r\n\r\n--=_es_04055c2d8862e23d0187fa01\r\nContent-Type: application/vnd.email-social.message+json\r\nContent-Transfer-Encoding: base64\r\nContent-Disposition: attachment; filename=\"email-social.json\"\r\n\r\newogICIkdHlwZSI6ICJlcy5zb2NpYWwucG9zdCIsCiAgInZhbHVlIjogewogICAgInRleHQiOiAi\r\nQSBwb3N0LlxuIiwKICAgICJ2aWEiOiAiYWxpY2VAZXhhbXBsZS5jb20iLAogICAgImNyZWF0ZWRB\r\ndCI6ICIyMDI2LTAzLTE3VDA5OjA1OjAwLjAwMFoiLAogICAgImVtYWlsIjogewogICAgICAibWVz\r\nc2FnZUlkIjogIjxuNkBleGFtcGxlLmNvbT4iLAogICAgICAic3ViamVjdCI6ICJSZTogVHJpcCBw\r\nbGFucyIsCiAgICAgICJpblJlcGx5VG8iOiAiPG41QGV4YW1wbGUub3JnPiIsCiAgICAgICJyZWZl\r\ncmVuY2VzIjogWwogICAgICAgICI8bjFAZXhhbXBsZS5vcmc+IiwKICAgICAgICAiPG41QGV4YW1w\r\nbGUub3JnPiIKICAgICAgXQogICAgfQogIH0KfQo=\r\n--=_es_04055c2d8862e23d0187fa01--\r\n"
+    },
+    {
+      "raw": "From: Bob Svoboda <bob@example.org>\r\nTo: Alice Example <alice@example.com>\r\nSubject: \r\nDate: Tue, 17 Mar 2026 09:06:00 GMT\r\nMessage-ID: <n7@example.org>\r\nIn-Reply-To: <n6@example.com>\r\nMIME-Version: 1.0\r\nContent-Type: text/plain; charset=utf-8\r\nContent-Transfer-Encoding: 8bit\r\n\r\nEmpty subject.\r\n"
+    },
+    {
+      "raw": "From: Bob Svoboda <bob@example.org>\r\nTo: Alice Example <alice@example.com>\r\nSubject: Re: Lunch\r\nDate: Tue, 17 Mar 2026 09:07:00 GMT\r\nMessage-ID: <n8@example.org>\r\nIn-Reply-To: <n7@example.org>\r\nMIME-Version: 1.0\r\nContent-Type: text/plain; charset=utf-8\r\nContent-Transfer-Encoding: 8bit\r\n\r\nRenamed.\r\n"
+    }
+  ],
+  "expected": {
+    "topics": {
+      "chat-686b5e4cf4f963adf8f51468a48028ef": {
+        "topics": [
+          {
+            "rootId": "<n1@example.org>",
+            "label": null,
+            "base": "Trip",
+            "kind": "plain",
+            "count": 8
+          }
+        ],
+        "of": {
+          "<n1@example.org>": {
+            "rootId": "<n1@example.org>",
+            "topicStart": true
+          },
+          "<n2@example.com>": {
+            "rootId": "<n1@example.org>",
+            "topicStart": false
+          },
+          "<n3@example.org>": {
+            "rootId": "<n1@example.org>",
+            "topicStart": false
+          },
+          "<n4@example.org>": {
+            "rootId": "<n1@example.org>",
+            "topicStart": false
+          },
+          "<n5@example.org>": {
+            "rootId": "<n1@example.org>",
+            "topicStart": false
+          },
+          "<n6@example.com>": {
+            "rootId": "<n1@example.org>",
+            "topicStart": false
+          },
+          "<n7@example.org>": {
+            "rootId": "<n1@example.org>",
+            "topicStart": false
+          },
+          "<n8@example.org>": {
+            "rootId": "<n1@example.org>",
+            "topicStart": false
+          }
+        }
+      }
+    },
+    "subjectNotes": {
+      "<n1@example.org>": null,
+      "<n2@example.com>": null,
+      "<n3@example.org>": null,
+      "<n4@example.org>": "Trip [EXTERNAL]",
+      "<n5@example.org>": null,
+      "<n6@example.com>": null,
+      "<n7@example.org>": null,
+      "<n8@example.org>": "Lunch"
+    }
+  }
+}

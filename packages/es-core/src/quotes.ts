@@ -6,10 +6,12 @@
  * <blockquote> lines start with "> "):
  * - lines starting with ">" and the attribution line in front of them,
  *   also wrapped over up to three lines ("On … wrote:", "Dne … napsal(a):",
- *   "Am … schrieb …:", "Le … a écrit :", Gmail's "… odesílatel … napsal:");
- * - Outlook header blocks (From:/Sent:/To:/Subject: and their Czech, German
- *   and French forms), with or without "-----Original Message-----" or a
- *   line of underscores above them; after one, everything is quoted, since
+ *   "Am … schrieb …:", "Op … schreef …:", "Le … a écrit :", Gmail's
+ *   "… odesílatel … napsal:");
+ * - Outlook header blocks (From:/Sent:/To:/Subject: and their Czech, Slovak,
+ *   German, French, Polish, Spanish, Italian, Dutch and Portuguese forms),
+ *   with or without "-----Original Message-----" or a line of underscores
+ *   above them; after one, everything is quoted, since
  *   Outlook does not prefix the original;
  * - forwarded-message separators (Gmail, Thunderbird, Apple Mail);
  * - the signature delimiter "-- " (RFC 3676 §4.3; also "--", as webmail
@@ -30,18 +32,22 @@ import { collapse } from "./util/text.js";
 /** A quoted line: ">" after at most three spaces (or the U+FEFF iOS Mail writes). */
 const QUOTE = /^[ \t﻿]{0,3}>/;
 
-/** Verbs that end an attribution line: en, cs, de, fr, es, it, nl, pt, sv/da/no, pl. */
+/** Verbs that end an attribution line: en, cs, sk, de, fr, es, it, nl, pt, sv/da/no, pl. */
 const ATTRIBUTION_END =
-  /(?:\bwrote|\bnapsal(?:a|\(a\)|\/a)?|\bschrieb|\ba écrit|\bescribió|\bha scritto|\bschreef|\bescreveu|\bskrev|\bnapisał(?:a|\(a\))?)\s?:$/iu;
+  /(?:\bwrote|\bnapsal(?:a|\(a\)|\/a)?|\bnapísal(?:a|\(a\))?|\bschrieb|\ba écrit|\bescribió|\bha scritto|\bschreef|\bhet volgende geschreven|\bescreveu|\bskrev|\bnapisał(?:a|\(a\))?|\bpisze)\s?:$/iu;
 
-/** "Am … schrieb …:" (German Gmail puts the name after the verb). */
-const GERMAN_ATTRIBUTION = /^Am\s.*\bschrieb\b.*:$/u;
+/**
+ * The name after the verb: "Am … schrieb …:" (German Gmail), "Op … schreef
+ * …:" (Dutch Gmail, Thunderbird), "… schrieb am …:" (German Gmail for Android),
+ * "Wiadomość napisana przez … w dniu …:" (Polish iOS Mail).
+ */
+const VERB_FIRST_ATTRIBUTION = /^(?:Am\s.*\bschrieb|Op\s.*\bschreef|.*\bschrieb am|Wiadomość napisana przez)\b.*:$/u;
 
 /** mutt's other common attribution: "* Name <address> [2026-03-03 10:15]:". */
 const MUTT_ATTRIBUTION = /^\* .+ \[\d{4}-\d{2}-\d{2}[^\]]*\]:$/u;
 
 /** How an attribution starts: a lead word, a Czech weekday (Gmail), or a date. */
-const ATTRIBUTION_START = /^(?:On|Am|Le|Dne|El|Il|Op|Em|Den|Dnia|po|út|st|čt|pá|so|ne|\d)[\s.,]/iu;
+const ATTRIBUTION_START = /^(?:On|Am|Le|Dne|El|Il|Op|Em|Den|Dnia|Dňa|W dniu|po|út|st|čt|pá|so|ne|\d)[\s.,]/iu;
 
 const ORIGINAL_SEPARATOR =
   /^\s*-{2,}\s*(?:original message|původní zpráva|původní e-mail|ursprüngliche nachricht|message d'origine|mensaje original|messaggio originale|oorspronkelijk bericht)\s*-{2,}\s*$/iu;
@@ -60,6 +66,11 @@ const OTHER_LABELS = new Set([
   "odesláno", "datum", "komu", "kopie", "předmět",
   "gesendet", "an", "betreff",
   "envoyé", "à", "objet",
+  "odoslané", "predmet",
+  "wysłane", "do", "temat",
+  "enviado", "para", "asunto", "assunto",
+  "inviato", "a", "oggetto",
+  "verzonden", "aan", "onderwerp",
 ]);
 
 /** A divider line above an Outlook header block (Outlook on the web, Outlook for iOS). */
@@ -71,9 +82,9 @@ const FOOTER_DIVIDER = /^\s*_{20,}\s*$/;
 /** RFC 3676 §4.3 "-- ", and "--" as written when trailing spaces are stripped. */
 const SIGNATURE_DELIMITER = /^--[ \t]?$/;
 
-/** One-line signatures of mobile clients. */
+/** One-line signatures of mobile clients (and Proton Mail's footer), in en, cs, sk, de, fr, pl, es, it, nl, pt. */
 const MOBILE_SIGNATURE =
-  /^(?:sent from my \S.*|sent from (?:outlook|mail|yahoo mail|samsung).*|get outlook for (?:ios|android).*|odesláno z (?:iphonu|ipadu|mobilu|mého .*)|odesláno ze .*|von meinem \S+ gesendet.*|gesendet von meinem .*|envoyé de mon .*|envoyé depuis .*)$/iu;
+  /^(?:sent from my \S.*|sent from (?:outlook|mail|yahoo mail|samsung).*|sent with \[?proton mail.*|get outlook for (?:ios|android).*|odesláno z (?:iphonu|ipadu|mobilu|mého .*)|odesláno ze .*|získejte outlook pro (?:ios|android).*|odoslané z (?:iphonu|ipadu)|von meinem .+ gesendet.*|gesendet von meinem .*|outlook für (?:ios|android) herunterladen.*|envoyé de mon .*|envoyé depuis .*|obtenir outlook pour (?:ios|android).*|wysłane z (?:iphone'a|ipada)|enviado desde mi .*|inviato da (?:iphone|ipad).*|verstuurd vanaf mijn .*|enviado do meu .*)$/iu;
 
 // ---------------------------------------------------------------- line tests
 
@@ -107,7 +118,7 @@ function attributionEndingAt(lines: readonly string[], end: number, strict: bool
 function isAttribution(window: readonly string[], strict: boolean): boolean {
   const joined = window.map((line) => line.trim()).join(" ");
   if (joined.length > 300 || !/[\d@]/u.test(joined)) return false;
-  const shaped = ATTRIBUTION_END.test(joined) || GERMAN_ATTRIBUTION.test(joined) || MUTT_ATTRIBUTION.test(joined);
+  const shaped = ATTRIBUTION_END.test(joined) || VERB_FIRST_ATTRIBUTION.test(joined) || MUTT_ATTRIBUTION.test(joined);
   return shaped && ((window.length === 1 && !strict) || ATTRIBUTION_START.test(joined));
 }
 
@@ -281,11 +292,10 @@ function assignRoles(lines: readonly string[], roles: Role[]): boolean {
   }
 
   // Quote blocks: trailing ones are quoted; leading ones too unless the reply is interleaved.
-  const freshLine = (i: number): boolean => i < body && !inBlock[i] && !isBlank(lines[i]!);
-  const hasFreshBetween = (from: number, to: number): boolean => {
-    for (let i = from; i < to; i++) if (freshLine(i)) return true;
-    return false;
-  };
+  // freshBefore[i]: fresh lines before line i, so each test below is O(1), not a scan (linear in the number of blocks).
+  const freshBefore = new Array<number>(limit + 1).fill(0);
+  for (let i = 0; i < limit; i++) freshBefore[i + 1] = freshBefore[i]! + (i < body && !inBlock[i] && !isBlank(lines[i]!) ? 1 : 0);
+  const hasFreshBetween = (from: number, to: number): boolean => from < to && freshBefore[to]! > freshBefore[from]!;
   const inBody = blocks.filter((block) => block.start < body);
   const interleaved = inBody.some((block) => hasFreshBetween(0, block.start) && hasFreshBetween(block.end, body));
   for (const block of blocks) {
@@ -357,8 +367,8 @@ function quotedAttributionEndingAt(lines: readonly QuoteLine[], end: number): nu
  * them: ">" marks removed at any depth (with the U+FEFF of iOS Mail), and
  * the lines mail clients add around a quote dropped: attribution lines
  * ("On … wrote:", "Dne … napsal(a):", "Am … schrieb …:", "Le … a écrit :",
- * wrapped too), Outlook header blocks (From/Sent/To/Subject in en, cs, de,
- * fr) with the divider above them, and separators ("-----Original
+ * wrapped too), Outlook header blocks (From/Sent/To/Subject in en, cs, sk,
+ * de, fr, pl, es, it, nl, pt) with the divider above them, and separators ("-----Original
  * Message-----", forwarded-message lines). Blank lines are kept.
  */
 export function unquotedLines(quoted: string): string[] {

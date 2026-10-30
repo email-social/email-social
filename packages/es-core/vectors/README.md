@@ -93,3 +93,67 @@ then be reviewed like any code change.
 The fixture vectors come from `../fixtures/`; see `../fixtures/README.md`
 for what each reconstructed client format contains. All addresses and
 domains are `example.com`, `example.org` or `example.net`.
+
+## Multi-message vectors (`multi/*.json`)
+
+Threading, contacts, chats, topics, unquoting, fragments, reply quotes,
+reply cards and subject notes (sections 7–9 of
+[`spec/es-protocol.md`](../../../spec/es-protocol.md)) need more than one
+message. Each file in `multi/` is one mailbox:
+
+```json
+{
+  "description": "what the messages are and what they exercise",
+  "covers": ["TP-1"],
+  "owner": { "name": "Alice Example", "addresses": ["alice@example.com"] },
+  "messages": [{ "raw": "…" }, { "rawBase64": "…" }],
+  "expected": { "conversations": [], "chats": [], "topics": {}, "…": "some of the views below" },
+  "divergences": [{ "key": "replyCards", "statement": "QT-6", "note": "…" }]
+}
+```
+
+- **`covers`** names the statements of the spec the file exists for.
+- **`owner`** is the account owner: every address of the account (the
+  first is the one it writes from) and the display name it writes with.
+- **`messages`** are read like the `raw` / `rawBase64` of a single vector.
+  Their order does not matter: every view is the same for any order of the
+  messages, and `test/vectors-multi.test.ts` checks this with the reversed
+  and a rotated order.
+- **`expected`** holds only the views the file is about. Compare each with
+  deep equality (key order does not matter, array order does). Message ids
+  below are `EsMessage.id`; with several messages of one id, the first one
+  is used for lookups (the copies in these files read to the same model).
+  - `conversations`: `threadMessages(messages)` (section 7.1);
+  - `contacts`: `deriveContacts(messages)`, nothing excluded (section 7.3);
+  - `kinds`: id → `"person"`, `"list"` or `"automated"`: `"person"` for a
+    message from one of the owner's addresses, else `classifyMessage`
+    (section 8.3);
+  - `chats`: `groupByParticipants` of the messages whose kind is
+    `"person"`, with `self` = the owner's addresses (sections 8.1 and 8.3:
+    list and automated mail is not shown as chats);
+  - `topics`: chat id → `topicsOf(the chat's messages in chat order)`
+    (section 8.2);
+  - `carrierSubjects`: chat id → `carrierSubject({ name: owner.name,
+    address: owner.addresses[0] }, chat.participants)` (section 8.2);
+  - `subjectNotes`: id → `subjectNoteOf(message, its topic)` for every
+    message placed in a topic (section 9.6);
+  - `quotes`: id → `{ quoted, lines, text }` for every message whose
+    `splitQuoted(message).quoted` is not empty: that part,
+    `unquotedLines(quoted)` and `unquote(quoted)` (section 9.2);
+  - `fragments`: id → `quotedFragmentOf(message, parent)` for every message
+    whose parent is held; the parent is the first In-Reply-To id, else the
+    last References id, never the message's own id (section 9.3);
+  - `replyQuotes`: id → `quoteForReply(message, { maxLines: 5, timeZone:
+    "UTC" })`, the quote below a reply to that message (section 9.4);
+  - `replyCards`: id → `replyCardOf(message, lookup, { inChat, self })`
+    for every message of every chat, with `lookup` over all the messages,
+    `inChat` the ids of the message's chat and `self` the owner's addresses
+    (section 9.5).
+- **`divergences`** (optional) lists the views where es-core does not do
+  what the spec says. The file holds what the spec says; the note says
+  where es-core differs, and `test/vectors-multi.test.ts` expects that
+  check to fail until es-core or the spec changes.
+
+The messages are written in `test/helpers/multi-vectors.ts`: plain
+messages as an ordinary client writes them, Email Social posts by es-core's
+serializer. `npm run vectors:update` rewrites these files too.

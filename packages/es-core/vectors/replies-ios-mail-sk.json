@@ -1,0 +1,48 @@
+{
+  "description": "iOS Mail (iPhone), sk: mobile signature \"Odoslané z iPhonu\"; attribution \"> Dňa 3. 3. 2026 o 10:15 používateľ Alice Dvořáková <alice@example.com> napísal:\"",
+  "source": "fixtures/replies/ios-mail-sk.eml",
+  "raw": "Content-Type: text/plain;\r\n\tcharset=utf-8\r\nContent-Transfer-Encoding: quoted-printable\r\nFrom: =?utf-8?Q?Martina_Kov=C3=A1=C4=8Dov=C3=A1?= <martina.kovacova@example.net>\r\nMime-Version: 1.0 (1.0)\r\nSubject: =?utf-8?Q?Re=3A_Fotky_z_v=C3=BDletu?=\r\nDate: Tue, 3 Mar 2026 10:22:10 +0100\r\nMessage-Id: <86D55DD5-BFC9-46CD-9650-E75311D10321@example.net>\r\nReferences: <CAKx4mftisZ8JHb3oUXXvB6sPFmWrl4RulrQDbbcOrbFsgJZS@mail.example.com>\r\nIn-Reply-To: <CAKx4mftisZ8JHb3oUXXvB6sPFmWrl4RulrQDbbcOrbFsgJZS@mail.example.com>\r\nTo: =?utf-8?Q?Alice_Dvo=C5=99=C3=A1kov=C3=A1?= <alice@example.com>\r\nX-Mailer: iPhone Mail (22E240)\r\n\r\nJasn=C3=A9, po=C5=A1lem ich ve=C4=8Der.\r\n\r\nOdoslan=C3=A9 z iPhonu\r\n\r\n> D=C5=88a 3. 3. 2026 o 10:15 pou=C5=BE=C3=ADvate=C4=BE Alice Dvo=C5=99=C3=\r\n=A1kov=C3=A1 <alice@example.com> nap=C3=ADsal:\r\n>\r\n> =EF=BB=BFAhoj Martina,\r\n>\r\n> po=C5=A1le=C5=A1 mi, pros=C3=ADm, fotky z v=C3=BDletu? Chcem ich da=C5=A5=\r\n do albumu.\r\n>\r\n> V=C4=8Faka,\r\n> Alice\r\n",
+  "expected": {
+    "id": "<86D55DD5-BFC9-46CD-9650-E75311D10321@example.net>",
+    "from": {
+      "name": "Martina Kováčová",
+      "address": "martina.kovacova@example.net"
+    },
+    "to": [
+      {
+        "name": "Alice Dvořáková",
+        "address": "alice@example.com"
+      }
+    ],
+    "cc": [],
+    "replyTo": [],
+    "date": "2026-03-03T09:22:10.000Z",
+    "subject": "Re: Fotky z výletu",
+    "text": "Jasné, pošlem ich večer.\n\nOdoslané z iPhonu\n\n> Dňa 3. 3. 2026 o 10:15 používateľ Alice Dvořáková <alice@example.com> napísal:\n>\n> ﻿Ahoj Martina,\n>\n> pošleš mi, prosím, fotky z výletu? Chcem ich dať do albumu.\n>\n> Vďaka,\n> Alice\n",
+    "textSource": "plain",
+    "es": null,
+    "attachments": [],
+    "refs": {
+      "messageId": "<86D55DD5-BFC9-46CD-9650-E75311D10321@example.net>",
+      "inReplyTo": [
+        "<CAKx4mftisZ8JHb3oUXXvB6sPFmWrl4RulrQDbbcOrbFsgJZS@mail.example.com>"
+      ],
+      "references": [
+        "<CAKx4mftisZ8JHb3oUXXvB6sPFmWrl4RulrQDbbcOrbFsgJZS@mail.example.com>"
+      ]
+    },
+    "delivery": {
+      "listHeaders": [],
+      "listId": null,
+      "autoSubmitted": null,
+      "precedence": null,
+      "returnPath": null,
+      "listUnsubscribe": null
+    }
+  },
+  "split": {
+    "fresh": "Jasné, pošlem ich večer.",
+    "quoted": "> Dňa 3. 3. 2026 o 10:15 používateľ Alice Dvořáková <alice@example.com> napísal:\n>\n> ﻿Ahoj Martina,\n>\n> pošleš mi, prosím, fotky z výletu? Chcem ich dať do albumu.\n>\n> Vďaka,\n> Alice",
+    "signature": "Odoslané z iPhonu"
+  }
+}

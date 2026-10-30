@@ -1,0 +1,76 @@
+{
+  "description": "Section 9.2: quotes as the quoted message had them: nested quote marks with and without spaces and a tab, attributions at every depth (Gmail, mutt), an Outlook header block in Czech under a divider, an English header block inside a quote with a line right under it, an original-message separator, and the U+FEFF of iOS Mail.",
+  "covers": [
+    "QT-3"
+  ],
+  "owner": {
+    "name": "Alice Example",
+    "addresses": [
+      "alice@example.com"
+    ]
+  },
+  "messages": [
+    {
+      "raw": "From: Alice Example <alice@example.com>\r\nTo: Bob Svoboda <bob@example.org>\r\nSubject: Re: Lunch\r\nDate: Fri, 13 Mar 2026 09:00:00 GMT\r\nMessage-ID: <u1@example.com>\r\nMIME-Version: 1.0\r\nContent-Type: text/plain; charset=utf-8\r\nContent-Transfer-Encoding: 8bit\r\n\r\nThanks!\r\n\r\nOn Mon, 2 Mar 2026 at 09:00, Bob Svoboda <bob@example.org> wrote:\r\n> Sounds good.\r\n>\r\n> On Sun, 1 Mar 2026 at 18:00, Alice Example <alice@example.com> wrote:\r\n> > Lunch on Friday?\r\n> >> At noon.\r\n"
+    },
+    {
+      "raw": "From: Alice Example <alice@example.com>\r\nTo: Bob Svoboda <bob@example.org>\r\nSubject: RE: Oběd\r\nDate: Fri, 13 Mar 2026 09:01:00 GMT\r\nMessage-ID: <u2@example.com>\r\nMIME-Version: 1.0\r\nContent-Type: text/plain; charset=utf-8\r\nContent-Transfer-Encoding: 8bit\r\n\r\nDíky.\r\n\r\n________________________________\r\nOd: Bob Svoboda <bob@example.org>\r\nOdesláno: pondělí 2. března 2026 10:00\r\nKomu: Alice Example <alice@example.com>\r\nPředmět: Oběd\r\n\r\nV pátek ve 12?\r\n"
+    },
+    {
+      "raw": "From: Alice Example <alice@example.com>\r\nTo: Bob Svoboda <bob@example.org>\r\nSubject: Re: Venue\r\nDate: Fri, 13 Mar 2026 09:02:00 GMT\r\nMessage-ID: <u3@example.com>\r\nMIME-Version: 1.0\r\nContent-Type: text/plain; charset=utf-8\r\nContent-Transfer-Encoding: 8bit\r\n\r\nNoted.\r\n\r\nOn Mon, 2 Mar 2026 at 11:00, Bob Svoboda <bob@example.org> wrote:\r\n> Forwarding Carol's note.\r\n>\r\n> -----Original Message-----\r\n> From: Carol Novak <carol@example.net>\r\n> Sent: Monday, March 2, 2026 9:00 AM\r\n> To: Bob Svoboda <bob@example.org>\r\n> Subject: Venue\r\n> The hall is booked.\r\n"
+    },
+    {
+      "raw": "From: Alice Example <alice@example.com>\r\nTo: Bob Svoboda <bob@example.org>\r\nSubject: Re: Noon\r\nDate: Fri, 13 Mar 2026 09:03:00 GMT\r\nMessage-ID: <u4@example.com>\r\nMIME-Version: 1.0\r\nContent-Type: text/plain; charset=utf-8\r\nContent-Transfer-Encoding: 8bit\r\n\r\nOK\r\n\r\nSent from my iPhone\r\n\r\nOn 2 Mar 2026, at 10:00, Bob Svoboda <bob@example.org> wrote:\r\n\r\n> ﻿See you at noon.\r\n"
+    },
+    {
+      "raw": "From: Alice Example <alice@example.com>\r\nTo: Bob Svoboda <bob@example.org>\r\nSubject: Re: Patch\r\nDate: Fri, 13 Mar 2026 09:04:00 GMT\r\nMessage-ID: <u5@example.com>\r\nMIME-Version: 1.0\r\nContent-Type: text/plain; charset=utf-8\r\nContent-Transfer-Encoding: 8bit\r\n\r\n* Bob Svoboda <bob@example.org> [2026-03-02 10:15]:\r\n> Does it build?\r\n>\t> It did yesterday.\r\n\r\nIt builds now.\r\n"
+    }
+  ],
+  "expected": {
+    "quotes": {
+      "<u1@example.com>": {
+        "quoted": "On Mon, 2 Mar 2026 at 09:00, Bob Svoboda <bob@example.org> wrote:\n> Sounds good.\n>\n> On Sun, 1 Mar 2026 at 18:00, Alice Example <alice@example.com> wrote:\n> > Lunch on Friday?\n> >> At noon.",
+        "lines": [
+          "Sounds good.",
+          "",
+          "Lunch on Friday?",
+          "At noon."
+        ],
+        "text": "Sounds good. Lunch on Friday? At noon."
+      },
+      "<u2@example.com>": {
+        "quoted": "________________________________\nOd: Bob Svoboda <bob@example.org>\nOdesláno: pondělí 2. března 2026 10:00\nKomu: Alice Example <alice@example.com>\nPředmět: Oběd\n\nV pátek ve 12?",
+        "lines": [
+          "",
+          "V pátek ve 12?"
+        ],
+        "text": "V pátek ve 12?"
+      },
+      "<u3@example.com>": {
+        "quoted": "On Mon, 2 Mar 2026 at 11:00, Bob Svoboda <bob@example.org> wrote:\n> Forwarding Carol's note.\n>\n> -----Original Message-----\n> From: Carol Novak <carol@example.net>\n> Sent: Monday, March 2, 2026 9:00 AM\n> To: Bob Svoboda <bob@example.org>\n> Subject: Venue\n> The hall is booked.",
+        "lines": [
+          "Forwarding Carol's note.",
+          "",
+          "The hall is booked."
+        ],
+        "text": "Forwarding Carol's note. The hall is booked."
+      },
+      "<u4@example.com>": {
+        "quoted": "On 2 Mar 2026, at 10:00, Bob Svoboda <bob@example.org> wrote:\n\n> ﻿See you at noon.",
+        "lines": [
+          "",
+          "See you at noon."
+        ],
+        "text": "See you at noon."
+      },
+      "<u5@example.com>": {
+        "quoted": "* Bob Svoboda <bob@example.org> [2026-03-02 10:15]:\n> Does it build?\n>\t> It did yesterday.",
+        "lines": [
+          "Does it build?",
+          "It did yesterday."
+        ],
+        "text": "Does it build? It did yesterday."
+      }
+    }
+  }
+}

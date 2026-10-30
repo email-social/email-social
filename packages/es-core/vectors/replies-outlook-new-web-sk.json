@@ -1,0 +1,48 @@
+{
+  "description": "Outlook on the web / new Outlook, sk: underscore divider + Od:/Odoslané:/Komu:/Predmet: header block, original not prefixed",
+  "source": "fixtures/replies/outlook-new-web-sk.eml",
+  "raw": "From: =?UTF-8?Q?Martina_Kov=C3=A1=C4=8Dov=C3=A1?= <martina.kovacova@example.net>\r\nTo: =?UTF-8?Q?Alice_Dvo=C5=99=C3=A1kov=C3=A1?= <alice@example.com>\r\nSubject: =?utf-8?Q?RE=3A_Fotky_z_v=C3=BDletu?=\r\nThread-Topic: =?utf-8?Q?Fotky_z_v=C3=BDletu?=\r\nThread-Index: AQHcqveSurXTmV335ngr6XCAVk6h==\r\nDate: Tue, 3 Mar 2026 10:43:12 +0000\r\nMessage-ID: <PAXPR02MB342372FA5E74C5DE8A82C7B6B9D5A67B23207@PAXPR02MB342372FA5E74C5DE8A82C7B6B9D5A67B23207.eurprd02.prod.outlook.example.com>\r\nReferences: <CAKx4mzYOI7Y8Y4sRPsONCP362c6deTYdBxGghzzynkH9OkWC@mail.example.com>\r\nIn-Reply-To: <CAKx4mzYOI7Y8Y4sRPsONCP362c6deTYdBxGghzzynkH9OkWC@mail.example.com>\r\nAccept-Language: sk-SK, en-US\r\nContent-Language: sk-SK\r\nX-MS-Has-Attach:\r\nX-MS-TNEF-Correlator:\r\nContent-Type: multipart/alternative;\r\n\tboundary=\"_000_PAXPR02MB342372FA5E74C5DE8A82C7B6B9D5A67B2_\"\r\nMIME-Version: 1.0\r\n\r\n--_000_PAXPR02MB342372FA5E74C5DE8A82C7B6B9D5A67B2_\r\nContent-Type: text/plain; charset=\"utf-8\"\r\nContent-Transfer-Encoding: quoted-printable\r\n\r\nAhoj Alice,\r\n\r\nfotky s=C3=BA v zdie=C4=BEanom albume, odkaz ti po=C5=A1lem poobede.\r\n\r\nMartina\r\n________________________________\r\nOd: Alice Dvo=C5=99=C3=A1kov=C3=A1 <alice@example.com>\r\nOdoslan=C3=A9: utorok 3. marca 2026 10:15\r\nKomu: Martina Kov=C3=A1=C4=8Dov=C3=A1 <martina.kovacova@example.net>\r\nPredmet: Fotky z v=C3=BDletu\r\n\r\nAhoj Martina,\r\n\r\npo=C5=A1le=C5=A1 mi, pros=C3=ADm, fotky z v=C3=BDletu? Chcem ich da=C5=A5 d=\r\no albumu.\r\n\r\nV=C4=8Faka,\r\nAlice\r\n\r\n\r\n--_000_PAXPR02MB342372FA5E74C5DE8A82C7B6B9D5A67B2_\r\nContent-Type: text/html; charset=\"utf-8\"\r\nContent-Transfer-Encoding: quoted-printable\r\n\r\n<html>\r\n<head>\r\n<meta http-equiv=3D\"Content-Type\" content=3D\"text/html; charset=3Dutf-8\">\r\n<style type=3D\"text/css\" style=3D\"display:none;\"> P {margin-top:0;margin-bo=\r\nttom:0;} </style>\r\n</head>\r\n<body dir=3D\"ltr\">\r\n<div class=3D\"elementToProof\" style=3D\"font-family: Aptos, Aptos_EmbeddedFo=\r\nnt, Aptos_MSFontService, Calibri, Helvetica, sans-serif; font-size: 12pt; c=\r\nolor: rgb(0, 0, 0);\">Ahoj Alice,</div>\r\n<div class=3D\"elementToProof\" style=3D\"font-family: Aptos, Aptos_EmbeddedFo=\r\nnt, Aptos_MSFontService, Calibri, Helvetica, sans-serif; font-size: 12pt; c=\r\nolor: rgb(0, 0, 0);\"><br></div>\r\n<div class=3D\"elementToProof\" style=3D\"font-family: Aptos, Aptos_EmbeddedFo=\r\nnt, Aptos_MSFontService, Calibri, Helvetica, sans-serif; font-size: 12pt; c=\r\nolor: rgb(0, 0, 0);\">fotky s=C3=BA v zdie=C4=BEanom albume, odkaz ti po=C5=\r\n=A1lem poobede.</div>\r\n<div class=3D\"elementToProof\" style=3D\"font-family: Aptos, Aptos_EmbeddedFo=\r\nnt, Aptos_MSFontService, Calibri, Helvetica, sans-serif; font-size: 12pt; c=\r\nolor: rgb(0, 0, 0);\"><br></div>\r\n<div class=3D\"elementToProof\" style=3D\"font-family: Aptos, Aptos_EmbeddedFo=\r\nnt, Aptos_MSFontService, Calibri, Helvetica, sans-serif; font-size: 12pt; c=\r\nolor: rgb(0, 0, 0);\">Martina</div>\r\n<div id=3D\"appendonsend\"></div>\r\n<hr style=3D\"display:inline-block;width:98%\" tabindex=3D\"-1\">\r\n<div id=3D\"divRplyFwdMsg\" dir=3D\"ltr\"><font face=3D\"Calibri, sans-serif\" st=\r\nyle=3D\"font-size:11pt\" color=3D\"#000000\"><b>Od:</b> Alice Dvo=C5=99=C3=A1ko=\r\nv=C3=A1 &lt;alice@example.com&gt;<br>=0D\r\n<b>Odoslan=C3=A9:</b> utorok 3. marca 2026 10:15<br>=0D\r\n<b>Komu:</b> Martina Kov=C3=A1=C4=8Dov=C3=A1 &lt;martina.kovacova@example.n=\r\net&gt;<br>=0D\r\n<b>Predmet:</b> Fotky z v=C3=BDletu</font>\r\n<div>&nbsp;</div>\r\n</div>\r\n<div class=3D\"BodyFragment\"><font size=3D\"2\"><span style=3D\"font-size:11pt;=\r\n\">\r\n<div class=3D\"PlainText\">Ahoj Martina,<br>\r\n<br>\r\npo=C5=A1le=C5=A1 mi, pros=C3=ADm, fotky z v=C3=BDletu? Chcem ich da=C5=A5 d=\r\no albumu.<br>\r\n<br>\r\nV=C4=8Faka,<br>\r\nAlice</div>\r\n</span></font></div>\r\n</body>\r\n</html>\r\n\r\n--_000_PAXPR02MB342372FA5E74C5DE8A82C7B6B9D5A67B2_--\r\n",
+  "expected": {
+    "id": "<PAXPR02MB342372FA5E74C5DE8A82C7B6B9D5A67B23207@PAXPR02MB342372FA5E74C5DE8A82C7B6B9D5A67B23207.eurprd02.prod.outlook.example.com>",
+    "from": {
+      "name": "Martina Kováčová",
+      "address": "martina.kovacova@example.net"
+    },
+    "to": [
+      {
+        "name": "Alice Dvořáková",
+        "address": "alice@example.com"
+      }
+    ],
+    "cc": [],
+    "replyTo": [],
+    "date": "2026-03-03T10:43:12.000Z",
+    "subject": "RE: Fotky z výletu",
+    "text": "Ahoj Alice,\n\nfotky sú v zdieľanom albume, odkaz ti pošlem poobede.\n\nMartina\n________________________________\nOd: Alice Dvořáková <alice@example.com>\nOdoslané: utorok 3. marca 2026 10:15\nKomu: Martina Kováčová <martina.kovacova@example.net>\nPredmet: Fotky z výletu\n\nAhoj Martina,\n\npošleš mi, prosím, fotky z výletu? Chcem ich dať do albumu.\n\nVďaka,\nAlice\n\n",
+    "textSource": "plain",
+    "es": null,
+    "attachments": [],
+    "refs": {
+      "messageId": "<PAXPR02MB342372FA5E74C5DE8A82C7B6B9D5A67B23207@PAXPR02MB342372FA5E74C5DE8A82C7B6B9D5A67B23207.eurprd02.prod.outlook.example.com>",
+      "inReplyTo": [
+        "<CAKx4mzYOI7Y8Y4sRPsONCP362c6deTYdBxGghzzynkH9OkWC@mail.example.com>"
+      ],
+      "references": [
+        "<CAKx4mzYOI7Y8Y4sRPsONCP362c6deTYdBxGghzzynkH9OkWC@mail.example.com>"
+      ]
+    },
+    "delivery": {
+      "listHeaders": [],
+      "listId": null,
+      "autoSubmitted": null,
+      "precedence": null,
+      "returnPath": null,
+      "listUnsubscribe": null
+    }
+  },
+  "split": {
+    "fresh": "Ahoj Alice,\n\nfotky sú v zdieľanom albume, odkaz ti pošlem poobede.\n\nMartina",
+    "quoted": "________________________________\nOd: Alice Dvořáková <alice@example.com>\nOdoslané: utorok 3. marca 2026 10:15\nKomu: Martina Kováčová <martina.kovacova@example.net>\nPredmet: Fotky z výletu\n\nAhoj Martina,\n\npošleš mi, prosím, fotky z výletu? Chcem ich dať do albumu.\n\nVďaka,\nAlice",
+    "signature": ""
+  }
+}

@@ -1,0 +1,48 @@
+{
+  "description": "Outlook on the web / new Outlook, pt: underscore divider + De:/Enviado:/Para:/Assunto: header block, original not prefixed",
+  "source": "fixtures/replies/outlook-new-web-pt.eml",
+  "raw": "From: =?UTF-8?Q?Jo=C3=A3o_Almeida?= <joao.almeida@example.org>\r\nTo: =?UTF-8?Q?Alice_Dvo=C5=99=C3=A1kov=C3=A1?= <alice@example.com>\r\nSubject: RE: Rascunho do contrato\r\nThread-Topic: Rascunho do contrato\r\nThread-Index: AQHcqvUCFh2bUFQJ5TYqLXUS5zjT==\r\nDate: Tue, 3 Mar 2026 10:48:12 +0000\r\nMessage-ID: <PAXPR02MB36229C9783C22A5BD1F927E0E9D246C25A6D7@PAXPR02MB36229C9783C22A5BD1F927E0E9D246C25A6D7.eurprd02.prod.outlook.example.com>\r\nReferences: <CAKx4m2Ymi2mjywa4BDYSqOimzFZiSQtIf3yCuqXKtzgEMpGm@mail.example.com>\r\nIn-Reply-To: <CAKx4m2Ymi2mjywa4BDYSqOimzFZiSQtIf3yCuqXKtzgEMpGm@mail.example.com>\r\nAccept-Language: pt-BR, en-US\r\nContent-Language: pt-BR\r\nX-MS-Has-Attach:\r\nX-MS-TNEF-Correlator:\r\nContent-Type: multipart/alternative;\r\n\tboundary=\"_000_PAXPR02MB36229C9783C22A5BD1F927E0E9D246C25_\"\r\nMIME-Version: 1.0\r\n\r\n--_000_PAXPR02MB36229C9783C22A5BD1F927E0E9D246C25_\r\nContent-Type: text/plain; charset=\"utf-8\"\r\nContent-Transfer-Encoding: quoted-printable\r\n\r\nOi Alice,\r\n\r\nmando o rascunho amanh=C3=A3 de manh=C3=A3.\r\n\r\nAbra=C3=A7o,\r\nJo=C3=A3o\r\n________________________________\r\nDe: Alice Dvo=C5=99=C3=A1kov=C3=A1 <alice@example.com>\r\nEnviado: ter=C3=A7a-feira, 3 de mar=C3=A7o de 2026 10:15\r\nPara: Jo=C3=A3o Almeida <joao.almeida@example.org>\r\nAssunto: Rascunho do contrato\r\n\r\nOi Jo=C3=A3o,\r\n\r\nvoc=C3=AA pode me mandar o rascunho do contrato at=C3=A9 sexta?\r\n\r\nObrigada,\r\nAlice\r\n\r\n\r\n--_000_PAXPR02MB36229C9783C22A5BD1F927E0E9D246C25_\r\nContent-Type: text/html; charset=\"utf-8\"\r\nContent-Transfer-Encoding: quoted-printable\r\n\r\n<html>\r\n<head>\r\n<meta http-equiv=3D\"Content-Type\" content=3D\"text/html; charset=3Dutf-8\">\r\n<style type=3D\"text/css\" style=3D\"display:none;\"> P {margin-top:0;margin-bo=\r\nttom:0;} </style>\r\n</head>\r\n<body dir=3D\"ltr\">\r\n<div class=3D\"elementToProof\" style=3D\"font-family: Aptos, Aptos_EmbeddedFo=\r\nnt, Aptos_MSFontService, Calibri, Helvetica, sans-serif; font-size: 12pt; c=\r\nolor: rgb(0, 0, 0);\">Oi Alice,</div>\r\n<div class=3D\"elementToProof\" style=3D\"font-family: Aptos, Aptos_EmbeddedFo=\r\nnt, Aptos_MSFontService, Calibri, Helvetica, sans-serif; font-size: 12pt; c=\r\nolor: rgb(0, 0, 0);\"><br></div>\r\n<div class=3D\"elementToProof\" style=3D\"font-family: Aptos, Aptos_EmbeddedFo=\r\nnt, Aptos_MSFontService, Calibri, Helvetica, sans-serif; font-size: 12pt; c=\r\nolor: rgb(0, 0, 0);\">mando o rascunho amanh=C3=A3 de manh=C3=A3.</div>\r\n<div class=3D\"elementToProof\" style=3D\"font-family: Aptos, Aptos_EmbeddedFo=\r\nnt, Aptos_MSFontService, Calibri, Helvetica, sans-serif; font-size: 12pt; c=\r\nolor: rgb(0, 0, 0);\"><br></div>\r\n<div class=3D\"elementToProof\" style=3D\"font-family: Aptos, Aptos_EmbeddedFo=\r\nnt, Aptos_MSFontService, Calibri, Helvetica, sans-serif; font-size: 12pt; c=\r\nolor: rgb(0, 0, 0);\">Abra=C3=A7o,</div>\r\n<div class=3D\"elementToProof\" style=3D\"font-family: Aptos, Aptos_EmbeddedFo=\r\nnt, Aptos_MSFontService, Calibri, Helvetica, sans-serif; font-size: 12pt; c=\r\nolor: rgb(0, 0, 0);\">Jo=C3=A3o</div>\r\n<div id=3D\"appendonsend\"></div>\r\n<hr style=3D\"display:inline-block;width:98%\" tabindex=3D\"-1\">\r\n<div id=3D\"divRplyFwdMsg\" dir=3D\"ltr\"><font face=3D\"Calibri, sans-serif\" st=\r\nyle=3D\"font-size:11pt\" color=3D\"#000000\"><b>De:</b> Alice Dvo=C5=99=C3=A1ko=\r\nv=C3=A1 &lt;alice@example.com&gt;<br>=0D\r\n<b>Enviado:</b> ter=C3=A7a-feira, 3 de mar=C3=A7o de 2026 10:15<br>=0D\r\n<b>Para:</b> Jo=C3=A3o Almeida &lt;joao.almeida@example.org&gt;<br>=0D\r\n<b>Assunto:</b> Rascunho do contrato</font>\r\n<div>&nbsp;</div>\r\n</div>\r\n<div class=3D\"BodyFragment\"><font size=3D\"2\"><span style=3D\"font-size:11pt;=\r\n\">\r\n<div class=3D\"PlainText\">Oi Jo=C3=A3o,<br>\r\n<br>\r\nvoc=C3=AA pode me mandar o rascunho do contrato at=C3=A9 sexta?<br>\r\n<br>\r\nObrigada,<br>\r\nAlice</div>\r\n</span></font></div>\r\n</body>\r\n</html>\r\n\r\n--_000_PAXPR02MB36229C9783C22A5BD1F927E0E9D246C25_--\r\n",
+  "expected": {
+    "id": "<PAXPR02MB36229C9783C22A5BD1F927E0E9D246C25A6D7@PAXPR02MB36229C9783C22A5BD1F927E0E9D246C25A6D7.eurprd02.prod.outlook.example.com>",
+    "from": {
+      "name": "João Almeida",
+      "address": "joao.almeida@example.org"
+    },
+    "to": [
+      {
+        "name": "Alice Dvořáková",
+        "address": "alice@example.com"
+      }
+    ],
+    "cc": [],
+    "replyTo": [],
+    "date": "2026-03-03T10:48:12.000Z",
+    "subject": "RE: Rascunho do contrato",
+    "text": "Oi Alice,\n\nmando o rascunho amanhã de manhã.\n\nAbraço,\nJoão\n________________________________\nDe: Alice Dvořáková <alice@example.com>\nEnviado: terça-feira, 3 de março de 2026 10:15\nPara: João Almeida <joao.almeida@example.org>\nAssunto: Rascunho do contrato\n\nOi João,\n\nvocê pode me mandar o rascunho do contrato até sexta?\n\nObrigada,\nAlice\n\n",
+    "textSource": "plain",
+    "es": null,
+    "attachments": [],
+    "refs": {
+      "messageId": "<PAXPR02MB36229C9783C22A5BD1F927E0E9D246C25A6D7@PAXPR02MB36229C9783C22A5BD1F927E0E9D246C25A6D7.eurprd02.prod.outlook.example.com>",
+      "inReplyTo": [
+        "<CAKx4m2Ymi2mjywa4BDYSqOimzFZiSQtIf3yCuqXKtzgEMpGm@mail.example.com>"
+      ],
+      "references": [
+        "<CAKx4m2Ymi2mjywa4BDYSqOimzFZiSQtIf3yCuqXKtzgEMpGm@mail.example.com>"
+      ]
+    },
+    "delivery": {
+      "listHeaders": [],
+      "listId": null,
+      "autoSubmitted": null,
+      "precedence": null,
+      "returnPath": null,
+      "listUnsubscribe": null
+    }
+  },
+  "split": {
+    "fresh": "Oi Alice,\n\nmando o rascunho amanhã de manhã.\n\nAbraço,\nJoão",
+    "quoted": "________________________________\nDe: Alice Dvořáková <alice@example.com>\nEnviado: terça-feira, 3 de março de 2026 10:15\nPara: João Almeida <joao.almeida@example.org>\nAssunto: Rascunho do contrato\n\nOi João,\n\nvocê pode me mandar o rascunho do contrato até sexta?\n\nObrigada,\nAlice",
+    "signature": ""
+  }
+}

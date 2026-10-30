@@ -168,9 +168,14 @@ function readEmailMeta(value: unknown): EsEmailMeta {
     meta.textSha256 = value.textSha256.toLowerCase();
   }
   if (Array.isArray(value.references)) {
+    // A Set for the duplicate test: the array comes from the sender and may hold any number of ids.
+    const seen = new Set<string>();
     for (const ref of value.references) {
       const id = typeof ref === "string" ? normalizeMessageId(ref) : null;
-      if (id !== null && !meta.references.includes(id)) meta.references.push(id);
+      if (id !== null && !seen.has(id)) {
+        seen.add(id);
+        meta.references.push(id);
+      }
     }
   }
   return meta;

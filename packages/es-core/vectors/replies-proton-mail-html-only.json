@@ -1,0 +1,48 @@
+{
+  "description": "Proton Mail (web), HTML part only, en: HTML only: protonmail_signature_block, attribution in div.protonmail_quote, <blockquote class=\"protonmail_quote\">",
+  "source": "fixtures/replies/proton-mail-html-only.eml",
+  "raw": "Date: Tue, 03 Mar 2026 11:07:12 +0000\r\nTo: =?UTF-8?Q?Alice_Dvo=C5=99=C3=A1kov=C3=A1?= <alice@example.com>\r\nFrom: Bob Svoboda <bob@example.org>\r\nSubject: Re: Contract draft\r\nMessage-ID: <eYsJZeeRDrLr62QusZ4QP3g2PXyKljHhSkfw1KClZXhIAuD8HqxMozlepp3tjcbnC6jBTR5JvdkbiOFu3Xkay7=@proton.example.net>\r\nIn-Reply-To: <CAKx4mWHuuDGSzk7lDxTHHtHFOgiTbDA8oUNqqFrdvj1MBrQI@mail.example.com>\r\nReferences: <CAKx4mWHuuDGSzk7lDxTHHtHFOgiTbDA8oUNqqFrdvj1MBrQI@mail.example.com>\r\nMIME-Version: 1.0\r\nContent-Type: text/html; charset=utf-8\r\nContent-Transfer-Encoding: base64\r\n\r\nPGRpdiBzdHlsZT0iZm9udC1mYW1pbHk6IEFyaWFsLCBzYW5zLXNlcmlmOyBmb250LXNpemU6IDE0\r\ncHg7Ij5IaSBBbGljZSw8L2Rpdj48ZGl2IHN0eWxlPSJmb250LWZhbWlseTogQXJpYWwsIHNhbnMt\r\nc2VyaWY7IGZvbnQtc2l6ZTogMTRweDsiPjxicj48L2Rpdj48ZGl2IHN0eWxlPSJmb250LWZhbWls\r\neTogQXJpYWwsIHNhbnMtc2VyaWY7IGZvbnQtc2l6ZTogMTRweDsiPlRodXJzZGF5LCBhcyBwcm9t\r\naXNlZC48L2Rpdj48ZGl2IHN0eWxlPSJmb250LWZhbWlseTogQXJpYWwsIHNhbnMtc2VyaWY7IGZv\r\nbnQtc2l6ZTogMTRweDsiPjxicj48L2Rpdj48ZGl2IHN0eWxlPSJmb250LWZhbWlseTogQXJpYWws\r\nIHNhbnMtc2VyaWY7IGZvbnQtc2l6ZTogMTRweDsiPkJvYjwvZGl2PjxkaXYgc3R5bGU9ImZvbnQt\r\nZmFtaWx5OiBBcmlhbCwgc2Fucy1zZXJpZjsgZm9udC1zaXplOiAxNHB4OyI+PGJyPjwvZGl2Pjxk\r\naXYgY2xhc3M9InByb3Rvbm1haWxfc2lnbmF0dXJlX2Jsb2NrIiBzdHlsZT0iZm9udC1mYW1pbHk6\r\nIEFyaWFsLCBzYW5zLXNlcmlmOyBmb250LXNpemU6IDE0cHg7Ij48ZGl2IGNsYXNzPSJwcm90b25t\r\nYWlsX3NpZ25hdHVyZV9ibG9jay11c2VyIHByb3Rvbm1haWxfc2lnbmF0dXJlX2Jsb2NrLWVtcHR5\r\nIj48L2Rpdj48ZGl2IGNsYXNzPSJwcm90b25tYWlsX3NpZ25hdHVyZV9ibG9jay1wcm90b24iPlNl\r\nbnQgd2l0aCA8YSB0YXJnZXQ9Il9ibGFuayIgaHJlZj0iaHR0cHM6Ly9wcm90b24uZXhhbXBsZS5u\r\nZXQvIj5Qcm90b24gTWFpbDwvYT4gc2VjdXJlIGVtYWlsLjwvZGl2PjwvZGl2PjxkaXYgc3R5bGU9\r\nImZvbnQtZmFtaWx5OiBBcmlhbCwgc2Fucy1zZXJpZjsgZm9udC1zaXplOiAxNHB4OyI+PGJyPjwv\r\nZGl2PjxkaXYgY2xhc3M9InByb3Rvbm1haWxfcXVvdGUiPk9uIFR1ZXNkYXksIE1hcmNoIDNyZCwg\r\nMjAyNiBhdCAxMDoxNSBBTSwgQWxpY2UgRHZvxZnDoWtvdsOhICZsdDthbGljZUBleGFtcGxlLmNv\r\nbSZndDsgd3JvdGU6PGJyPjxibG9ja3F1b3RlIGNsYXNzPSJwcm90b25tYWlsX3F1b3RlIiB0eXBl\r\nPSJjaXRlIj48ZGl2PkhpIEJvYiw8L2Rpdj48ZGl2Pjxicj48L2Rpdj48ZGl2PmNvdWxkIHlvdSBz\r\nZW5kIG1lIHRoZSBjb250cmFjdCBkcmFmdCBieSBGcmlkYXk/PC9kaXY+PGRpdj48YnI+PC9kaXY+\r\nPGRpdj5UaGFua3MsPC9kaXY+PGRpdj5BbGljZTwvZGl2PjwvYmxvY2txdW90ZT48YnI+PC9kaXY+\r\n",
+  "expected": {
+    "id": "<eYsJZeeRDrLr62QusZ4QP3g2PXyKljHhSkfw1KClZXhIAuD8HqxMozlepp3tjcbnC6jBTR5JvdkbiOFu3Xkay7=@proton.example.net>",
+    "from": {
+      "name": "Bob Svoboda",
+      "address": "bob@example.org"
+    },
+    "to": [
+      {
+        "name": "Alice Dvořáková",
+        "address": "alice@example.com"
+      }
+    ],
+    "cc": [],
+    "replyTo": [],
+    "date": "2026-03-03T11:07:12.000Z",
+    "subject": "Re: Contract draft",
+    "text": "Hi Alice,\n\nThursday, as promised.\n\nBob\n\nSent with Proton Mail secure email.\n\nOn Tuesday, March 3rd, 2026 at 10:15 AM, Alice Dvořáková <alice@example.com> wrote:\n> Hi Bob,\n>\n> could you send me the contract draft by Friday?\n>\n> Thanks,\n> Alice",
+    "textSource": "html",
+    "es": null,
+    "attachments": [],
+    "refs": {
+      "messageId": "<eYsJZeeRDrLr62QusZ4QP3g2PXyKljHhSkfw1KClZXhIAuD8HqxMozlepp3tjcbnC6jBTR5JvdkbiOFu3Xkay7=@proton.example.net>",
+      "inReplyTo": [
+        "<CAKx4mWHuuDGSzk7lDxTHHtHFOgiTbDA8oUNqqFrdvj1MBrQI@mail.example.com>"
+      ],
+      "references": [
+        "<CAKx4mWHuuDGSzk7lDxTHHtHFOgiTbDA8oUNqqFrdvj1MBrQI@mail.example.com>"
+      ]
+    },
+    "delivery": {
+      "listHeaders": [],
+      "listId": null,
+      "autoSubmitted": null,
+      "precedence": null,
+      "returnPath": null,
+      "listUnsubscribe": null
+    }
+  },
+  "split": {
+    "fresh": "Hi Alice,\n\nThursday, as promised.\n\nBob",
+    "quoted": "On Tuesday, March 3rd, 2026 at 10:15 AM, Alice Dvořáková <alice@example.com> wrote:\n> Hi Bob,\n>\n> could you send me the contract draft by Friday?\n>\n> Thanks,\n> Alice",
+    "signature": "Sent with Proton Mail secure email."
+  }
+}

@@ -1,0 +1,48 @@
+{
+  "description": "Roundcube 1.6 (default: answer below the quote), en: attribution \"On 2026-03-03 10:15, Alice Dvořáková wrote:\" (ISO date, no address), answer below",
+  "source": "fixtures/replies/roundcube-en.eml",
+  "raw": "MIME-Version: 1.0\r\nDate: Tue, 03 Mar 2026 11:20:41 +0100\r\nFrom: Bob Svoboda <bob@example.org>\r\nTo: =?UTF-8?Q?Alice_Dvo=C5=99=C3=A1kov=C3=A1?= <alice@example.com>\r\nSubject: Re: Contract draft\r\nIn-Reply-To: <CAKx4m0uoFvKBDEx9JrO8khoQT1Kz5T6Nwvk8YqMOVEjWQM3j@mail.example.com>\r\nReferences: <CAKx4m0uoFvKBDEx9JrO8khoQT1Kz5T6Nwvk8YqMOVEjWQM3j@mail.example.com>\r\nMessage-ID: <71d13fc85a474712aead55704f918ed4@example.org>\r\nX-Sender: bob@example.org\r\nUser-Agent: Roundcube Webmail/1.6.9\r\nContent-Type: text/plain; charset=UTF-8;\r\n format=flowed\r\nContent-Transfer-Encoding: 8bit\r\n\r\nOn 2026-03-03 10:15, Alice Dvořáková wrote:\r\n> Hi Bob,\r\n>\r\n> could you send me the contract draft by Friday?\r\n>\r\n> Thanks,\r\n> Alice\r\n\r\nHi Alice,\r\n\r\nthe draft is attached to the ticket, see you on Friday.\r\n\r\nBob\r\n",
+  "expected": {
+    "id": "<71d13fc85a474712aead55704f918ed4@example.org>",
+    "from": {
+      "name": "Bob Svoboda",
+      "address": "bob@example.org"
+    },
+    "to": [
+      {
+        "name": "Alice Dvořáková",
+        "address": "alice@example.com"
+      }
+    ],
+    "cc": [],
+    "replyTo": [],
+    "date": "2026-03-03T10:20:41.000Z",
+    "subject": "Re: Contract draft",
+    "text": "On 2026-03-03 10:15, Alice Dvořáková wrote:\n> Hi Bob,\n>\n> could you send me the contract draft by Friday?\n>\n> Thanks,\n> Alice\n\nHi Alice,\n\nthe draft is attached to the ticket, see you on Friday.\n\nBob\n",
+    "textSource": "plain",
+    "es": null,
+    "attachments": [],
+    "refs": {
+      "messageId": "<71d13fc85a474712aead55704f918ed4@example.org>",
+      "inReplyTo": [
+        "<CAKx4m0uoFvKBDEx9JrO8khoQT1Kz5T6Nwvk8YqMOVEjWQM3j@mail.example.com>"
+      ],
+      "references": [
+        "<CAKx4m0uoFvKBDEx9JrO8khoQT1Kz5T6Nwvk8YqMOVEjWQM3j@mail.example.com>"
+      ]
+    },
+    "delivery": {
+      "listHeaders": [],
+      "listId": null,
+      "autoSubmitted": null,
+      "precedence": null,
+      "returnPath": null,
+      "listUnsubscribe": null
+    }
+  },
+  "split": {
+    "fresh": "Hi Alice,\n\nthe draft is attached to the ticket, see you on Friday.\n\nBob",
+    "quoted": "On 2026-03-03 10:15, Alice Dvořáková wrote:\n> Hi Bob,\n>\n> could you send me the contract draft by Friday?\n>\n> Thanks,\n> Alice",
+    "signature": ""
+  }
+}

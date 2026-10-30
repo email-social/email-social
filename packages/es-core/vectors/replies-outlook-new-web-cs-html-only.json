@@ -1,0 +1,48 @@
+{
+  "description": "Outlook on the web, HTML part only, cs: HTML only: <hr> + divRplyFwdMsg with bold Czech labels",
+  "source": "fixtures/replies/outlook-new-web-cs-html-only.eml",
+  "raw": "From: Karel Holub <karel@example.org>\r\nTo: =?UTF-8?Q?Alice_Dvo=C5=99=C3=A1kov=C3=A1?= <alice@example.com>\r\nSubject: =?utf-8?Q?Odp=3A_Fotky_z_v=C3=BDletu?=\r\nThread-Topic: =?utf-8?Q?Fotky_z_v=C3=BDletu?=\r\nThread-Index: AQHcqvod83u1HFvBk49ntRsKkklx==\r\nDate: Tue, 3 Mar 2026 12:05:09 +0000\r\nMessage-ID: <PAXPR02MB13718B4B207F7E6E10B9C5130D73B46789ED9@PAXPR02MB13718B4B207F7E6E10B9C5130D73B46789ED9.eurprd02.prod.outlook.example.com>\r\nReferences: <CAKx4mHzyAy5NZDei3VqBhtQokCba2VImt6iwL3TOXQ4wHT7Y@mail.example.com>\r\nIn-Reply-To: <CAKx4mHzyAy5NZDei3VqBhtQokCba2VImt6iwL3TOXQ4wHT7Y@mail.example.com>\r\nAccept-Language: cs-CZ, en-US\r\nContent-Language: cs-CZ\r\nX-MS-Has-Attach:\r\nX-MS-TNEF-Correlator:\r\nContent-Type: text/html; charset=\"utf-8\"\r\nContent-Transfer-Encoding: quoted-printable\r\nMIME-Version: 1.0\r\n\r\n<html>\r\n<head>\r\n<meta http-equiv=3D\"Content-Type\" content=3D\"text/html; charset=3Dutf-8\">\r\n<style type=3D\"text/css\" style=3D\"display:none;\"> P {margin-top:0;margin-bo=\r\nttom:0;} </style>\r\n</head>\r\n<body dir=3D\"ltr\">\r\n<div class=3D\"elementToProof\" style=3D\"font-family: Aptos, Aptos_EmbeddedFo=\r\nnt, Aptos_MSFontService, Calibri, Helvetica, sans-serif; font-size: 12pt; c=\r\nolor: rgb(0, 0, 0);\">Ahoj Alice,</div>\r\n<div class=3D\"elementToProof\" style=3D\"font-family: Aptos, Aptos_EmbeddedFo=\r\nnt, Aptos_MSFontService, Calibri, Helvetica, sans-serif; font-size: 12pt; c=\r\nolor: rgb(0, 0, 0);\"><br></div>\r\n<div class=3D\"elementToProof\" style=3D\"font-family: Aptos, Aptos_EmbeddedFo=\r\nnt, Aptos_MSFontService, Calibri, Helvetica, sans-serif; font-size: 12pt; c=\r\nolor: rgb(0, 0, 0);\">album je hotov=C3=A9, mrkni na n=C4=9Bj.</div>\r\n<div class=3D\"elementToProof\" style=3D\"font-family: Aptos, Aptos_EmbeddedFo=\r\nnt, Aptos_MSFontService, Calibri, Helvetica, sans-serif; font-size: 12pt; c=\r\nolor: rgb(0, 0, 0);\"><br></div>\r\n<div class=3D\"elementToProof\" style=3D\"font-family: Aptos, Aptos_EmbeddedFo=\r\nnt, Aptos_MSFontService, Calibri, Helvetica, sans-serif; font-size: 12pt; c=\r\nolor: rgb(0, 0, 0);\">Karel</div>\r\n<div id=3D\"appendonsend\"></div>\r\n<hr style=3D\"display:inline-block;width:98%\" tabindex=3D\"-1\">\r\n<div id=3D\"divRplyFwdMsg\" dir=3D\"ltr\"><font face=3D\"Calibri, sans-serif\" st=\r\nyle=3D\"font-size:11pt\" color=3D\"#000000\"><b>Od:</b> Alice Dvo=C5=99=C3=A1ko=\r\nv=C3=A1 &lt;alice@example.com&gt;<br>=0D\r\n<b>Odesl=C3=A1no:</b> =C3=BAter=C3=BD 3. b=C5=99ezna 2026 10:15<br>=0D\r\n<b>Komu:</b> Karel Holub &lt;karel@example.org&gt;<br>=0D\r\n<b>P=C5=99edm=C4=9Bt:</b> Fotky z v=C3=BDletu</font>\r\n<div>&nbsp;</div>\r\n</div>\r\n<div class=3D\"BodyFragment\"><font size=3D\"2\"><span style=3D\"font-size:11pt;=\r\n\">\r\n<div class=3D\"PlainText\">Ahoj Karle,<br>\r\n<br>\r\npo=C5=A1le=C5=A1 mi pros=C3=ADm fotky z v=C3=BDletu? Chci je d=C3=A1t do al=\r\nba.<br>\r\n<br>\r\nD=C3=ADky,<br>\r\nAlice</div>\r\n</span></font></div>\r\n</body>\r\n</html>\r\n\r\n",
+  "expected": {
+    "id": "<PAXPR02MB13718B4B207F7E6E10B9C5130D73B46789ED9@PAXPR02MB13718B4B207F7E6E10B9C5130D73B46789ED9.eurprd02.prod.outlook.example.com>",
+    "from": {
+      "name": "Karel Holub",
+      "address": "karel@example.org"
+    },
+    "to": [
+      {
+        "name": "Alice Dvořáková",
+        "address": "alice@example.com"
+      }
+    ],
+    "cc": [],
+    "replyTo": [],
+    "date": "2026-03-03T12:05:09.000Z",
+    "subject": "Odp: Fotky z výletu",
+    "text": "Ahoj Alice,\n\nalbum je hotové, mrkni na něj.\n\nKarel\nOd: Alice Dvořáková <alice@example.com>\nOdesláno: úterý 3. března 2026 10:15\nKomu: Karel Holub <karel@example.org>\nPředmět: Fotky z výletu\n\nAhoj Karle,\n\npošleš mi prosím fotky z výletu? Chci je dát do alba.\n\nDíky,\nAlice",
+    "textSource": "html",
+    "es": null,
+    "attachments": [],
+    "refs": {
+      "messageId": "<PAXPR02MB13718B4B207F7E6E10B9C5130D73B46789ED9@PAXPR02MB13718B4B207F7E6E10B9C5130D73B46789ED9.eurprd02.prod.outlook.example.com>",
+      "inReplyTo": [
+        "<CAKx4mHzyAy5NZDei3VqBhtQokCba2VImt6iwL3TOXQ4wHT7Y@mail.example.com>"
+      ],
+      "references": [
+        "<CAKx4mHzyAy5NZDei3VqBhtQokCba2VImt6iwL3TOXQ4wHT7Y@mail.example.com>"
+      ]
+    },
+    "delivery": {
+      "listHeaders": [],
+      "listId": null,
+      "autoSubmitted": null,
+      "precedence": null,
+      "returnPath": null,
+      "listUnsubscribe": null
+    }
+  },
+  "split": {
+    "fresh": "Ahoj Alice,\n\nalbum je hotové, mrkni na něj.\n\nKarel",
+    "quoted": "Od: Alice Dvořáková <alice@example.com>\nOdesláno: úterý 3. března 2026 10:15\nKomu: Karel Holub <karel@example.org>\nPředmět: Fotky z výletu\n\nAhoj Karle,\n\npošleš mi prosím fotky z výletu? Chci je dát do alba.\n\nDíky,\nAlice",
+    "signature": ""
+  }
+}

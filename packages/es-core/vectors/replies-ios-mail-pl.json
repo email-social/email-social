@@ -1,0 +1,48 @@
+{
+  "description": "iOS Mail (iPhone), pl: mobile signature \"Wysłane z iPhone'a\"; attribution \"> Wiadomość napisana przez Alice Dvořáková <alice@example.com> w dniu 3 mar 2026, o godz. 10:15:\"",
+  "source": "fixtures/replies/ios-mail-pl.eml",
+  "raw": "Content-Type: text/plain;\r\n\tcharset=utf-8\r\nContent-Transfer-Encoding: quoted-printable\r\nFrom: Piotr Nowicki <piotr.nowicki@example.org>\r\nMime-Version: 1.0 (1.0)\r\nSubject: =?utf-8?Q?Re=3A_Zdj=C4=99cia_z_wycieczki?=\r\nDate: Tue, 3 Mar 2026 10:23:10 +0100\r\nMessage-Id: <542DC878-E1B0-4AB3-9D55-B0B061A133E9@example.org>\r\nReferences: <CAKx4mQBuM4mqeysNONu95oRWPKIytivnFTT5X6CXvIjSq8j6@mail.example.com>\r\nIn-Reply-To: <CAKx4mQBuM4mqeysNONu95oRWPKIytivnFTT5X6CXvIjSq8j6@mail.example.com>\r\nTo: =?utf-8?Q?Alice_Dvo=C5=99=C3=A1kov=C3=A1?= <alice@example.com>\r\nX-Mailer: iPhone Mail (22E240)\r\n\r\nJasne, wy=C5=9Bl=C4=99 wieczorem.\r\n\r\nWys=C5=82ane z iPhone'a\r\n\r\n> Wiadomo=C5=9B=C4=87 napisana przez Alice Dvo=C5=99=C3=A1kov=C3=A1 <alice@=\r\nexample.com> w dniu 3 mar 2026, o godz. 10:15:\r\n>\r\n> =EF=BB=BFCze=C5=9B=C4=87 Piotrze,\r\n>\r\n> czy mo=C5=BCesz mi przes=C5=82a=C4=87 zdj=C4=99cia z wycieczki? Chc=C4=99=\r\n je wrzuci=C4=87 do albumu.\r\n>\r\n> Dzi=C4=99ki,\r\n> Alice\r\n",
+  "expected": {
+    "id": "<542DC878-E1B0-4AB3-9D55-B0B061A133E9@example.org>",
+    "from": {
+      "name": "Piotr Nowicki",
+      "address": "piotr.nowicki@example.org"
+    },
+    "to": [
+      {
+        "name": "Alice Dvořáková",
+        "address": "alice@example.com"
+      }
+    ],
+    "cc": [],
+    "replyTo": [],
+    "date": "2026-03-03T09:23:10.000Z",
+    "subject": "Re: Zdjęcia z wycieczki",
+    "text": "Jasne, wyślę wieczorem.\n\nWysłane z iPhone'a\n\n> Wiadomość napisana przez Alice Dvořáková <alice@example.com> w dniu 3 mar 2026, o godz. 10:15:\n>\n> ﻿Cześć Piotrze,\n>\n> czy możesz mi przesłać zdjęcia z wycieczki? Chcę je wrzucić do albumu.\n>\n> Dzięki,\n> Alice\n",
+    "textSource": "plain",
+    "es": null,
+    "attachments": [],
+    "refs": {
+      "messageId": "<542DC878-E1B0-4AB3-9D55-B0B061A133E9@example.org>",
+      "inReplyTo": [
+        "<CAKx4mQBuM4mqeysNONu95oRWPKIytivnFTT5X6CXvIjSq8j6@mail.example.com>"
+      ],
+      "references": [
+        "<CAKx4mQBuM4mqeysNONu95oRWPKIytivnFTT5X6CXvIjSq8j6@mail.example.com>"
+      ]
+    },
+    "delivery": {
+      "listHeaders": [],
+      "listId": null,
+      "autoSubmitted": null,
+      "precedence": null,
+      "returnPath": null,
+      "listUnsubscribe": null
+    }
+  },
+  "split": {
+    "fresh": "Jasne, wyślę wieczorem.",
+    "quoted": "> Wiadomość napisana przez Alice Dvořáková <alice@example.com> w dniu 3 mar 2026, o godz. 10:15:\n>\n> ﻿Cześć Piotrze,\n>\n> czy możesz mi przesłać zdjęcia z wycieczki? Chcę je wrzucić do albumu.\n>\n> Dzięki,\n> Alice",
+    "signature": "Wysłane z iPhone'a"
+  }
+}

@@ -1,0 +1,48 @@
+{
+  "description": "iOS Mail (iPhone), nl: mobile signature \"Verstuurd vanaf mijn iPhone\"; attribution \"> Op 3 mrt 2026 om 10:15 heeft Alice Dvořáková <alice@example.com> het volgende geschreven:\"",
+  "source": "fixtures/replies/ios-mail-nl.eml",
+  "raw": "Content-Type: text/plain;\r\n\tcharset=utf-8\r\nContent-Transfer-Encoding: quoted-printable\r\nFrom: Daan de Vries <daan@example.net>\r\nMime-Version: 1.0 (1.0)\r\nSubject: =?utf-8?Q?Re=3A_Conceptcontract?=\r\nDate: Tue, 3 Mar 2026 10:26:10 +0100\r\nMessage-Id: <A947F7FC-B8BF-46AA-94B6-5D49A8813412@example.net>\r\nReferences: <CAKx4mxmwyCVeAHfdsg7DwiE0WnyK0jpQG7hl3SsytYrZsfH7@mail.example.com>\r\nIn-Reply-To: <CAKx4mxmwyCVeAHfdsg7DwiE0WnyK0jpQG7hl3SsytYrZsfH7@mail.example.com>\r\nTo: =?utf-8?Q?Alice_Dvo=C5=99=C3=A1kov=C3=A1?= <alice@example.com>\r\nX-Mailer: iPhone Mail (22E240)\r\n\r\nPrima, ik stuur het donderdag.\r\n\r\nVerstuurd vanaf mijn iPhone\r\n\r\n> Op 3 mrt 2026 om 10:15 heeft Alice Dvo=C5=99=C3=A1kov=C3=A1 <alice@exampl=\r\ne.com> het volgende geschreven:\r\n>\r\n> =EF=BB=BFHoi Daan,\r\n>\r\n> kun je me het conceptcontract v=C3=B3=C3=B3r vrijdag sturen?\r\n>\r\n> Bedankt,\r\n> Alice\r\n",
+  "expected": {
+    "id": "<A947F7FC-B8BF-46AA-94B6-5D49A8813412@example.net>",
+    "from": {
+      "name": "Daan de Vries",
+      "address": "daan@example.net"
+    },
+    "to": [
+      {
+        "name": "Alice Dvořáková",
+        "address": "alice@example.com"
+      }
+    ],
+    "cc": [],
+    "replyTo": [],
+    "date": "2026-03-03T09:26:10.000Z",
+    "subject": "Re: Conceptcontract",
+    "text": "Prima, ik stuur het donderdag.\n\nVerstuurd vanaf mijn iPhone\n\n> Op 3 mrt 2026 om 10:15 heeft Alice Dvořáková <alice@example.com> het volgende geschreven:\n>\n> ﻿Hoi Daan,\n>\n> kun je me het conceptcontract vóór vrijdag sturen?\n>\n> Bedankt,\n> Alice\n",
+    "textSource": "plain",
+    "es": null,
+    "attachments": [],
+    "refs": {
+      "messageId": "<A947F7FC-B8BF-46AA-94B6-5D49A8813412@example.net>",
+      "inReplyTo": [
+        "<CAKx4mxmwyCVeAHfdsg7DwiE0WnyK0jpQG7hl3SsytYrZsfH7@mail.example.com>"
+      ],
+      "references": [
+        "<CAKx4mxmwyCVeAHfdsg7DwiE0WnyK0jpQG7hl3SsytYrZsfH7@mail.example.com>"
+      ]
+    },
+    "delivery": {
+      "listHeaders": [],
+      "listId": null,
+      "autoSubmitted": null,
+      "precedence": null,
+      "returnPath": null,
+      "listUnsubscribe": null
+    }
+  },
+  "split": {
+    "fresh": "Prima, ik stuur het donderdag.",
+    "quoted": "> Op 3 mrt 2026 om 10:15 heeft Alice Dvořáková <alice@example.com> het volgende geschreven:\n>\n> ﻿Hoi Daan,\n>\n> kun je me het conceptcontract vóór vrijdag sturen?\n>\n> Bedankt,\n> Alice",
+    "signature": "Verstuurd vanaf mijn iPhone"
+  }
+}

@@ -1,0 +1,48 @@
+{
+  "description": "Thunderbird, pl: answer below the quote; attribution \"W dniu 3.03.2026 o 10:15, Alice Dvořáková pisze:\"; the answer is a long format=flowed paragraph",
+  "source": "fixtures/replies/thunderbird-pl.eml",
+  "raw": "Message-ID: <e1bb4d8e-c088-41fc-9483-26d2a745d647@example.org>\r\nDate: Tue, 3 Mar 2026 11:01:13 +0100\r\nMIME-Version: 1.0\r\nUser-Agent: Mozilla Thunderbird\r\nContent-Language: pl-PL\r\nTo: =?UTF-8?Q?Alice_Dvo=C5=99=C3=A1kov=C3=A1?= <alice@example.com>\r\nFrom: Piotr Nowicki <piotr.nowicki@example.org>\r\nSubject: =?UTF-8?Q?Re=3A_Zdj=C4=99cia_z_wycieczki?=\r\nReferences: <CAKx4mN8O9POdDLOCl9nloLhH6YIxNpdggU9jsz4QN7mnsrR5@mail.example.com>\r\nIn-Reply-To: <CAKx4mN8O9POdDLOCl9nloLhH6YIxNpdggU9jsz4QN7mnsrR5@mail.example.com>\r\nContent-Type: text/plain; charset=UTF-8; format=flowed\r\nContent-Transfer-Encoding: 8bit\r\n\r\nW dniu 3.03.2026 o 10:15, Alice Dvořáková pisze:\r\n> Cześć Piotrze,\r\n>\r\n> czy możesz mi przesłać zdjęcia z wycieczki? Chcę je wrzucić do albumu.\r\n>\r\n> Dzięki,\r\n> Alice\r\n\r\nCześć Alice,\r\n\r\nzdjęcia wrzucę dziś wieczorem, jest ich około dwustu, więc najpierw \r\nwybiorę te najlepsze i dopiero potem dodam resztę do albumu.\r\n\r\nPiotr\r\n",
+  "expected": {
+    "id": "<e1bb4d8e-c088-41fc-9483-26d2a745d647@example.org>",
+    "from": {
+      "name": "Piotr Nowicki",
+      "address": "piotr.nowicki@example.org"
+    },
+    "to": [
+      {
+        "name": "Alice Dvořáková",
+        "address": "alice@example.com"
+      }
+    ],
+    "cc": [],
+    "replyTo": [],
+    "date": "2026-03-03T10:01:13.000Z",
+    "subject": "Re: Zdjęcia z wycieczki",
+    "text": "W dniu 3.03.2026 o 10:15, Alice Dvořáková pisze:\n> Cześć Piotrze,\n>\n> czy możesz mi przesłać zdjęcia z wycieczki? Chcę je wrzucić do albumu.\n>\n> Dzięki,\n> Alice\n\nCześć Alice,\n\nzdjęcia wrzucę dziś wieczorem, jest ich około dwustu, więc najpierw wybiorę te najlepsze i dopiero potem dodam resztę do albumu.\n\nPiotr\n",
+    "textSource": "plain",
+    "es": null,
+    "attachments": [],
+    "refs": {
+      "messageId": "<e1bb4d8e-c088-41fc-9483-26d2a745d647@example.org>",
+      "inReplyTo": [
+        "<CAKx4mN8O9POdDLOCl9nloLhH6YIxNpdggU9jsz4QN7mnsrR5@mail.example.com>"
+      ],
+      "references": [
+        "<CAKx4mN8O9POdDLOCl9nloLhH6YIxNpdggU9jsz4QN7mnsrR5@mail.example.com>"
+      ]
+    },
+    "delivery": {
+      "listHeaders": [],
+      "listId": null,
+      "autoSubmitted": null,
+      "precedence": null,
+      "returnPath": null,
+      "listUnsubscribe": null
+    }
+  },
+  "split": {
+    "fresh": "Cześć Alice,\n\nzdjęcia wrzucę dziś wieczorem, jest ich około dwustu, więc najpierw wybiorę te najlepsze i dopiero potem dodam resztę do albumu.\n\nPiotr",
+    "quoted": "W dniu 3.03.2026 o 10:15, Alice Dvořáková pisze:\n> Cześć Piotrze,\n>\n> czy możesz mi przesłać zdjęcia z wycieczki? Chcę je wrzucić do albumu.\n>\n> Dzięki,\n> Alice",
+    "signature": ""
+  }
+}

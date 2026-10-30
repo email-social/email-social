@@ -1,0 +1,48 @@
+{
+  "description": "Gmail web, en: interleaved answers between quoted questions under a Gmail attribution; quoted sign-off left at the end",
+  "source": "fixtures/replies/gmail-interleaved-en.eml",
+  "raw": "MIME-Version: 1.0\r\nReferences: <CAKx4m1t6jaSEpG1fnprsW7ahkgjb4S6z5LpolMHWSfjuwTyW@mail.example.com>\r\nIn-Reply-To: <CAKx4m1t6jaSEpG1fnprsW7ahkgjb4S6z5LpolMHWSfjuwTyW@mail.example.com>\r\nFrom: Bob Svoboda <bob@example.org>\r\nDate: Tue, 3 Mar 2026 11:12:09 +0100\r\nMessage-ID: <CAH7x9kxN1NfwHoXoVj4LfpRBvwftsdtwSNK3COUFyRHpznmS5@mail.example.com>\r\nSubject: Re: Weekend trip\r\nTo: =?UTF-8?Q?Alice_Dvo=C5=99=C3=A1kov=C3=A1?= <alice@example.com>\r\nContent-Type: multipart/alternative; boundary=\"000000000000c5f31b3046257024\"\r\n\r\n--000000000000c5f31b3046257024\r\nContent-Type: text/plain; charset=\"UTF-8\"\r\nContent-Transfer-Encoding: quoted-printable\r\n\r\nHi Alice,\r\n\r\nanswers inline.\r\n\r\nOn Tue, Mar 3, 2026 at 10:15=E2=80=AFAM Alice Dvo=C5=99=C3=A1kov=C3=A1 <ali=\r\nce@example.com>\r\nwrote:\r\n\r\n> Hi Bob,\r\n>\r\n> 1. Can you book the train?\r\n>\r\n\r\nDone, the 7:40 from the main station.\r\n\r\n> 2. Do we need a tent?\r\n>\r\n\r\nNo, the cabin has beds.\r\n\r\n> Thanks,\r\n> Alice\r\n\r\n\r\n--000000000000c5f31b3046257024\r\nContent-Type: text/html; charset=\"UTF-8\"\r\nContent-Transfer-Encoding: quoted-printable\r\n\r\n<div dir=3D\"ltr\"><div>Hi Alice,</div><div><br></div><div>answers inline.</d=\r\niv></div><br><div class=3D\"gmail_quote gmail_quote_container\"><div dir=3D\"l=\r\ntr\" class=3D\"gmail_attr\">On Tue, Mar 3, 2026 at 10:15=E2=80=AFAM Alice Dvo=\r\n=C5=99=C3=A1kov=C3=A1 &lt;<a href=3D\"mailto:alice@example.com\">alice@exampl=\r\ne.com</a>&gt; wrote:<br></div><blockquote class=3D\"gmail_quote\" style=3D\"ma=\r\nrgin:0px 0px 0px 0.8ex;border-left:1px solid rgb(204,204,204);padding-left:=\r\n1ex\"><div dir=3D\"ltr\">Hi Bob,<br><br>1. Can you book the train?<br><br></di=\r\nv></blockquote><div><br></div><div>Done, the 7:40 from the main station.</d=\r\niv><div><br></div><blockquote class=3D\"gmail_quote\" style=3D\"margin:0px 0px=\r\n 0px 0.8ex;border-left:1px solid rgb(204,204,204);padding-left:1ex\"><div di=\r\nr=3D\"ltr\">2. Do we need a tent?<br><br></div></blockquote><div><br></div><d=\r\niv>No, the cabin has beds.</div><div><br></div><blockquote class=3D\"gmail_q=\r\nuote\" style=3D\"margin:0px 0px 0px 0.8ex;border-left:1px solid rgb(204,204,2=\r\n04);padding-left:1ex\"><div dir=3D\"ltr\">Thanks,<br>Alice</div></blockquote><=\r\n/div>\r\n\r\n--000000000000c5f31b3046257024--\r\n",
+  "expected": {
+    "id": "<CAH7x9kxN1NfwHoXoVj4LfpRBvwftsdtwSNK3COUFyRHpznmS5@mail.example.com>",
+    "from": {
+      "name": "Bob Svoboda",
+      "address": "bob@example.org"
+    },
+    "to": [
+      {
+        "name": "Alice Dvořáková",
+        "address": "alice@example.com"
+      }
+    ],
+    "cc": [],
+    "replyTo": [],
+    "date": "2026-03-03T10:12:09.000Z",
+    "subject": "Re: Weekend trip",
+    "text": "Hi Alice,\n\nanswers inline.\n\nOn Tue, Mar 3, 2026 at 10:15 AM Alice Dvořáková <alice@example.com>\nwrote:\n\n> Hi Bob,\n>\n> 1. Can you book the train?\n>\n\nDone, the 7:40 from the main station.\n\n> 2. Do we need a tent?\n>\n\nNo, the cabin has beds.\n\n> Thanks,\n> Alice\n\n",
+    "textSource": "plain",
+    "es": null,
+    "attachments": [],
+    "refs": {
+      "messageId": "<CAH7x9kxN1NfwHoXoVj4LfpRBvwftsdtwSNK3COUFyRHpznmS5@mail.example.com>",
+      "inReplyTo": [
+        "<CAKx4m1t6jaSEpG1fnprsW7ahkgjb4S6z5LpolMHWSfjuwTyW@mail.example.com>"
+      ],
+      "references": [
+        "<CAKx4m1t6jaSEpG1fnprsW7ahkgjb4S6z5LpolMHWSfjuwTyW@mail.example.com>"
+      ]
+    },
+    "delivery": {
+      "listHeaders": [],
+      "listId": null,
+      "autoSubmitted": null,
+      "precedence": null,
+      "returnPath": null,
+      "listUnsubscribe": null
+    }
+  },
+  "split": {
+    "fresh": "Hi Alice,\n\nanswers inline.\n\nOn Tue, Mar 3, 2026 at 10:15 AM Alice Dvořáková <alice@example.com>\nwrote:\n\n> Hi Bob,\n>\n> 1. Can you book the train?\n>\n\nDone, the 7:40 from the main station.\n\n> 2. Do we need a tent?\n>\n\nNo, the cabin has beds.",
+    "quoted": "> Thanks,\n> Alice",
+    "signature": ""
+  }
+}

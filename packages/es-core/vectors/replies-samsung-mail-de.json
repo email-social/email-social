@@ -1,0 +1,48 @@
+{
+  "description": "Samsung Email, de: signature \"Von meinem Samsung Galaxy Smartphone gesendet.\" above \"-------- Ursprüngliche Nachricht --------\" and a header block with trailing spaces; base64",
+  "source": "fixtures/replies/samsung-mail-de.eml",
+  "raw": "Message-ID: <jvm3mq5my498rr3ib89ff7kc9001x2slp3c0@email.android.example.net>\r\nDate: Tue, 03 Mar 2026 11:31:27 +0100\r\nSubject: =?UTF-8?Q?Re=3A_Projekt=C3=BCbersicht?=\r\nIn-Reply-To: <CAKx4mLaWjrwGfUMytrTQmBca0ItW6iOXVHLqYyRd3By0n8ci@mail.example.com>\r\nReferences: <CAKx4mLaWjrwGfUMytrTQmBca0ItW6iOXVHLqYyRd3By0n8ci@mail.example.com>\r\nFrom: Anna Becker <anna.becker@example.net>\r\nTo: =?UTF-8?Q?Alice_Dvo=C5=99=C3=A1kov=C3=A1?= <alice@example.com>\r\nMIME-Version: 1.0\r\nContent-Type: multipart/alternative; boundary=\"--_com.samsung.android.email_290865140191519964\"\r\n\r\n----_com.samsung.android.email_290865140191519964\r\nContent-Type: text/plain; charset=utf-8\r\nContent-Transfer-Encoding: base64\r\n\r\nTWFjaGUgaWNoLCBiaXMgRnJlaXRhZy4KCgoKVm9uIG1laW5lbSBTYW1zdW5nIEdhbGF4eSBTbWFy\r\ndHBob25lIGdlc2VuZGV0LgoKCi0tLS0tLS0tIFVyc3Byw7xuZ2xpY2hlIE5hY2hyaWNodCAtLS0t\r\nLS0tLQpWb246IEFsaWNlIER2b8WZw6Frb3bDoSA8YWxpY2VAZXhhbXBsZS5jb20+IApEYXR1bTog\r\nMDMuMDMuMjYgMTA6MTUgKEdNVCswMTowMCkgCkFuOiBBbm5hIEJlY2tlciA8YW5uYS5iZWNrZXJA\r\nZXhhbXBsZS5uZXQ+IApCZXRyZWZmOiBQcm9qZWt0w7xiZXJzaWNodCAKCkhhbGxvIEFubmEsCgpr\r\nYW5uc3QgZHUgbWlyIGRpZSBQcm9qZWt0w7xiZXJzaWNodCBiaXMgRnJlaXRhZyBzY2hpY2tlbj8K\r\nClZpZWxlIEdyw7zDn2UKQWxpY2UK\r\n----_com.samsung.android.email_290865140191519964\r\nContent-Type: text/html; charset=utf-8\r\nContent-Transfer-Encoding: base64\r\n\r\nPGh0bWw+PGhlYWQ+PG1ldGEgaHR0cC1lcXVpdj0iQ29udGVudC1UeXBlIiBjb250ZW50PSJ0ZXh0\r\nL2h0bWw7IGNoYXJzZXQ9VVRGLTgiPjwvaGVhZD48Ym9keT48ZGl2IGRpcj0iYXV0byI+PGRpdiBk\r\naXI9ImF1dG8iPk1hY2hlIGljaCwgYmlzIEZyZWl0YWcuPC9kaXY+PC9kaXY+PGRpdiBkaXI9ImF1\r\ndG8iPjxicj48L2Rpdj48ZGl2IGRpcj0iYXV0byI+PGJyPjwvZGl2PjxkaXYgaWQ9ImNvbXBvc2Vy\r\nX3NpZ25hdHVyZSIgZGlyPSJhdXRvIj48ZGl2IHN0eWxlPSJmb250LXNpemU6MTJweDtjb2xvcjoj\r\nNTc1NzU3IiBkaXI9ImF1dG8iPlZvbiBtZWluZW0gU2Ftc3VuZyBHYWxheHkgU21hcnRwaG9uZSBn\r\nZXNlbmRldC48L2Rpdj48L2Rpdj48ZGl2IGRpcj0iYXV0byI+PGJyPjwvZGl2PjxkaXY+PGJyPjwv\r\nZGl2PjxkaXYgYWxpZ249ImxlZnQiIGRpcj0iYXV0byIgc3R5bGU9ImZvbnQtc2l6ZToxMDAlO2Nv\r\nbG9yOiMwMDAwMDAiPjxkaXY+LS0tLS0tLS0gVXJzcHLDvG5nbGljaGUgTmFjaHJpY2h0IC0tLS0t\r\nLS0tPC9kaXY+PGRpdj5Wb246IEFsaWNlIER2b8WZw6Frb3bDoSAmbHQ7YWxpY2VAZXhhbXBsZS5j\r\nb20mZ3Q7IDwvZGl2PjxkaXY+RGF0dW06IDAzLjAzLjI2IDEwOjE1IChHTVQrMDE6MDApIDwvZGl2\r\nPjxkaXY+QW46IEFubmEgQmVja2VyICZsdDthbm5hLmJlY2tlckBleGFtcGxlLm5ldCZndDsgPC9k\r\naXY+PGRpdj5CZXRyZWZmOiBQcm9qZWt0w7xiZXJzaWNodCA8L2Rpdj48ZGl2Pjxicj48L2Rpdj48\r\nL2Rpdj48ZGl2PkhhbGxvIEFubmEsPC9kaXY+PGRpdj48YnI+PC9kaXY+PGRpdj5rYW5uc3QgZHUg\r\nbWlyIGRpZSBQcm9qZWt0w7xiZXJzaWNodCBiaXMgRnJlaXRhZyBzY2hpY2tlbj88L2Rpdj48ZGl2\r\nPjxicj48L2Rpdj48ZGl2PlZpZWxlIEdyw7zDn2U8L2Rpdj48ZGl2PkFsaWNlPC9kaXY+PC9ib2R5\r\nPjwvaHRtbD4=\r\n----_com.samsung.android.email_290865140191519964--\r\n",
+  "expected": {
+    "id": "<jvm3mq5my498rr3ib89ff7kc9001x2slp3c0@email.android.example.net>",
+    "from": {
+      "name": "Anna Becker",
+      "address": "anna.becker@example.net"
+    },
+    "to": [
+      {
+        "name": "Alice Dvořáková",
+        "address": "alice@example.com"
+      }
+    ],
+    "cc": [],
+    "replyTo": [],
+    "date": "2026-03-03T10:31:27.000Z",
+    "subject": "Re: Projektübersicht",
+    "text": "Mache ich, bis Freitag.\n\n\n\nVon meinem Samsung Galaxy Smartphone gesendet.\n\n\n-------- Ursprüngliche Nachricht --------\nVon: Alice Dvořáková <alice@example.com> \nDatum: 03.03.26 10:15 (GMT+01:00) \nAn: Anna Becker <anna.becker@example.net> \nBetreff: Projektübersicht \n\nHallo Anna,\n\nkannst du mir die Projektübersicht bis Freitag schicken?\n\nViele Grüße\nAlice\n",
+    "textSource": "plain",
+    "es": null,
+    "attachments": [],
+    "refs": {
+      "messageId": "<jvm3mq5my498rr3ib89ff7kc9001x2slp3c0@email.android.example.net>",
+      "inReplyTo": [
+        "<CAKx4mLaWjrwGfUMytrTQmBca0ItW6iOXVHLqYyRd3By0n8ci@mail.example.com>"
+      ],
+      "references": [
+        "<CAKx4mLaWjrwGfUMytrTQmBca0ItW6iOXVHLqYyRd3By0n8ci@mail.example.com>"
+      ]
+    },
+    "delivery": {
+      "listHeaders": [],
+      "listId": null,
+      "autoSubmitted": null,
+      "precedence": null,
+      "returnPath": null,
+      "listUnsubscribe": null
+    }
+  },
+  "split": {
+    "fresh": "Mache ich, bis Freitag.",
+    "quoted": "-------- Ursprüngliche Nachricht --------\nVon: Alice Dvořáková <alice@example.com> \nDatum: 03.03.26 10:15 (GMT+01:00) \nAn: Anna Becker <anna.becker@example.net> \nBetreff: Projektübersicht \n\nHallo Anna,\n\nkannst du mir die Projektübersicht bis Freitag schicken?\n\nViele Grüße\nAlice",
+    "signature": "Von meinem Samsung Galaxy Smartphone gesendet."
+  }
+}

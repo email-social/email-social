@@ -1,0 +1,149 @@
+{
+  "description": "Section 7.1 step 4: an Outlook reply without threading headers joins its original by subject; the same subject between other people, and a second unprefixed original, stay apart; a prefixed reply with one more person joins by containment; messages without a subject join only when the participant sets are equal.",
+  "covers": [
+    "TH-3"
+  ],
+  "owner": {
+    "name": "Alice Example",
+    "addresses": [
+      "alice@example.com"
+    ]
+  },
+  "messages": [
+    {
+      "raw": "From: Bob Svoboda <bob@example.org>\r\nTo: Alice Example <alice@example.com>\r\nSubject: Budget 2026\r\nDate: Wed, 04 Mar 2026 09:00:00 GMT\r\nMessage-ID: <f1@example.org>\r\nMIME-Version: 1.0\r\nContent-Type: text/plain; charset=utf-8\r\nContent-Transfer-Encoding: 8bit\r\n\r\nHere is the budget.\r\n"
+    },
+    {
+      "raw": "From: Alice Example <alice@example.com>\r\nTo: Bob Svoboda <bob@example.org>\r\nSubject: RE: Budget 2026\r\nDate: Wed, 04 Mar 2026 10:00:00 GMT\r\nMessage-ID: <f2@example.com>\r\nMIME-Version: 1.0\r\nContent-Type: text/plain; charset=utf-8\r\nContent-Transfer-Encoding: 8bit\r\n\r\nOutlook reply without In-Reply-To or References.\r\n"
+    },
+    {
+      "raw": "From: Carol Novak <carol@example.net>\r\nTo: Dan <dan@example.net>\r\nSubject: Re: Budget 2026\r\nDate: Wed, 04 Mar 2026 11:00:00 GMT\r\nMessage-ID: <f3@example.net>\r\nMIME-Version: 1.0\r\nContent-Type: text/plain; charset=utf-8\r\nContent-Transfer-Encoding: 8bit\r\n\r\nOther people, same subject.\r\n"
+    },
+    {
+      "raw": "From: Bob Svoboda <bob@example.org>\r\nTo: Alice Example <alice@example.com>\r\nSubject: Budget 2026\r\nDate: Wed, 04 Mar 2026 12:00:00 GMT\r\nMessage-ID: <f4@example.org>\r\nMIME-Version: 1.0\r\nContent-Type: text/plain; charset=utf-8\r\nContent-Transfer-Encoding: 8bit\r\n\r\nA second original with the same subject.\r\n"
+    },
+    {
+      "raw": "From: Bob Svoboda <bob@example.org>\r\nTo: Alice Example <alice@example.com>\r\nCc: Carol Novak <carol@example.net>\r\nSubject: Re: Budget 2026\r\nDate: Wed, 04 Mar 2026 13:00:00 GMT\r\nMessage-ID: <f5@example.org>\r\nMIME-Version: 1.0\r\nContent-Type: text/plain; charset=utf-8\r\nContent-Transfer-Encoding: 8bit\r\n\r\nCopying Carol.\r\n"
+    },
+    {
+      "raw": "From: Bob Svoboda <bob@example.org>\r\nTo: Alice Example <alice@example.com>\r\nDate: Wed, 04 Mar 2026 09:30:00 GMT\r\nMessage-ID: <e1@example.org>\r\nMIME-Version: 1.0\r\nContent-Type: text/plain; charset=utf-8\r\nContent-Transfer-Encoding: 8bit\r\n\r\nNo subject at all.\r\n"
+    },
+    {
+      "raw": "From: Alice Example <alice@example.com>\r\nTo: Bob Svoboda <bob@example.org>\r\nSubject: \r\nDate: Wed, 04 Mar 2026 09:40:00 GMT\r\nMessage-ID: <e2@example.com>\r\nMIME-Version: 1.0\r\nContent-Type: text/plain; charset=utf-8\r\nContent-Transfer-Encoding: 8bit\r\n\r\nAn empty subject.\r\n"
+    },
+    {
+      "raw": "From: Carol Novak <carol@example.net>\r\nTo: Alice Example <alice@example.com>\r\nSubject: Re:\r\nDate: Wed, 04 Mar 2026 09:50:00 GMT\r\nMessage-ID: <e3@example.net>\r\nMIME-Version: 1.0\r\nContent-Type: text/plain; charset=utf-8\r\nContent-Transfer-Encoding: 8bit\r\n\r\nOnly a prefix.\r\n"
+    }
+  ],
+  "expected": {
+    "conversations": [
+      {
+        "id": "conv-4b50c00c76dd799e619e54291699e4ce",
+        "rootMessageId": "<f1@example.org>",
+        "subject": "Budget 2026",
+        "participants": [
+          {
+            "name": "Alice Example",
+            "address": "alice@example.com"
+          },
+          {
+            "name": "Bob Svoboda",
+            "address": "bob@example.org"
+          },
+          {
+            "name": "Carol Novak",
+            "address": "carol@example.net"
+          }
+        ],
+        "messageIds": [
+          "<f1@example.org>",
+          "<f2@example.com>",
+          "<f5@example.org>"
+        ],
+        "firstDate": "2026-03-04T09:00:00.000Z",
+        "lastDate": "2026-03-04T13:00:00.000Z"
+      },
+      {
+        "id": "conv-943dcc24de239a38905ff92ea16a029f",
+        "rootMessageId": "<f4@example.org>",
+        "subject": "Budget 2026",
+        "participants": [
+          {
+            "name": "Alice Example",
+            "address": "alice@example.com"
+          },
+          {
+            "name": "Bob Svoboda",
+            "address": "bob@example.org"
+          }
+        ],
+        "messageIds": [
+          "<f4@example.org>"
+        ],
+        "firstDate": "2026-03-04T12:00:00.000Z",
+        "lastDate": "2026-03-04T12:00:00.000Z"
+      },
+      {
+        "id": "conv-b93c8aeac46224e44b4ab4bb0ef8eb32",
+        "rootMessageId": "<f3@example.net>",
+        "subject": "Budget 2026",
+        "participants": [
+          {
+            "name": "Carol Novak",
+            "address": "carol@example.net"
+          },
+          {
+            "name": "Dan",
+            "address": "dan@example.net"
+          }
+        ],
+        "messageIds": [
+          "<f3@example.net>"
+        ],
+        "firstDate": "2026-03-04T11:00:00.000Z",
+        "lastDate": "2026-03-04T11:00:00.000Z"
+      },
+      {
+        "id": "conv-be4457cb164e6b5a5674815e2b627294",
+        "rootMessageId": "<e3@example.net>",
+        "subject": "",
+        "participants": [
+          {
+            "name": "Alice Example",
+            "address": "alice@example.com"
+          },
+          {
+            "name": "Carol Novak",
+            "address": "carol@example.net"
+          }
+        ],
+        "messageIds": [
+          "<e3@example.net>"
+        ],
+        "firstDate": "2026-03-04T09:50:00.000Z",
+        "lastDate": "2026-03-04T09:50:00.000Z"
+      },
+      {
+        "id": "conv-3fb44bbb3033eaf0e4913ba4c238e17e",
+        "rootMessageId": "<e1@example.org>",
+        "subject": "",
+        "participants": [
+          {
+            "name": "Alice Example",
+            "address": "alice@example.com"
+          },
+          {
+            "name": "Bob Svoboda",
+            "address": "bob@example.org"
+          }
+        ],
+        "messageIds": [
+          "<e1@example.org>",
+          "<e2@example.com>"
+        ],
+        "firstDate": "2026-03-04T09:30:00.000Z",
+        "lastDate": "2026-03-04T09:40:00.000Z"
+      }
+    ]
+  }
+}

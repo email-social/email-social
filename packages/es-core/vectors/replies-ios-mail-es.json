@@ -1,0 +1,48 @@
+{
+  "description": "iOS Mail (iPhone), es: mobile signature \"Enviado desde mi iPhone\"; attribution \"> El 3 mar 2026, a las 10:15, Alice Dvořáková <alice@example.com> escribió:\"",
+  "source": "fixtures/replies/ios-mail-es.eml",
+  "raw": "Content-Type: text/plain;\r\n\tcharset=utf-8\r\nContent-Transfer-Encoding: quoted-printable\r\nFrom: =?utf-8?Q?Luc=C3=ADa_Ortega?= <lucia.ortega@example.net>\r\nMime-Version: 1.0 (1.0)\r\nSubject: =?utf-8?Q?Re=3A_Borrador_del_contrato?=\r\nDate: Tue, 3 Mar 2026 10:24:10 +0100\r\nMessage-Id: <0DC515E5-1467-4A57-93D5-8E81BBA7F537@example.net>\r\nReferences: <CAKx4mCLXuhC2xkOfApIa8KG43w6QVaZrbBSPJzU7whiJh73d@mail.example.com>\r\nIn-Reply-To: <CAKx4mCLXuhC2xkOfApIa8KG43w6QVaZrbBSPJzU7whiJh73d@mail.example.com>\r\nTo: =?utf-8?Q?Alice_Dvo=C5=99=C3=A1kov=C3=A1?= <alice@example.com>\r\nX-Mailer: iPhone Mail (22E240)\r\n\r\nClaro, te lo mando el jueves.\r\n\r\nEnviado desde mi iPhone\r\n\r\n> El 3 mar 2026, a las 10:15, Alice Dvo=C5=99=C3=A1kov=C3=A1 <alice@example=\r\n.com> escribi=C3=B3:\r\n>\r\n> =EF=BB=BFHola Luc=C3=ADa,\r\n>\r\n> =C2=BFme puedes enviar el borrador del contrato antes del viernes?\r\n>\r\n> Gracias,\r\n> Alice\r\n",
+  "expected": {
+    "id": "<0DC515E5-1467-4A57-93D5-8E81BBA7F537@example.net>",
+    "from": {
+      "name": "Lucía Ortega",
+      "address": "lucia.ortega@example.net"
+    },
+    "to": [
+      {
+        "name": "Alice Dvořáková",
+        "address": "alice@example.com"
+      }
+    ],
+    "cc": [],
+    "replyTo": [],
+    "date": "2026-03-03T09:24:10.000Z",
+    "subject": "Re: Borrador del contrato",
+    "text": "Claro, te lo mando el jueves.\n\nEnviado desde mi iPhone\n\n> El 3 mar 2026, a las 10:15, Alice Dvořáková <alice@example.com> escribió:\n>\n> ﻿Hola Lucía,\n>\n> ¿me puedes enviar el borrador del contrato antes del viernes?\n>\n> Gracias,\n> Alice\n",
+    "textSource": "plain",
+    "es": null,
+    "attachments": [],
+    "refs": {
+      "messageId": "<0DC515E5-1467-4A57-93D5-8E81BBA7F537@example.net>",
+      "inReplyTo": [
+        "<CAKx4mCLXuhC2xkOfApIa8KG43w6QVaZrbBSPJzU7whiJh73d@mail.example.com>"
+      ],
+      "references": [
+        "<CAKx4mCLXuhC2xkOfApIa8KG43w6QVaZrbBSPJzU7whiJh73d@mail.example.com>"
+      ]
+    },
+    "delivery": {
+      "listHeaders": [],
+      "listId": null,
+      "autoSubmitted": null,
+      "precedence": null,
+      "returnPath": null,
+      "listUnsubscribe": null
+    }
+  },
+  "split": {
+    "fresh": "Claro, te lo mando el jueves.",
+    "quoted": "> El 3 mar 2026, a las 10:15, Alice Dvořáková <alice@example.com> escribió:\n>\n> ﻿Hola Lucía,\n>\n> ¿me puedes enviar el borrador del contrato antes del viernes?\n>\n> Gracias,\n> Alice",
+    "signature": "Enviado desde mi iPhone"
+  }
+}

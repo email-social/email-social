@@ -1,0 +1,48 @@
+{
+  "description": "Outlook on the web / new Outlook, nl: underscore divider + Van:/Verzonden:/Aan:/Onderwerp: header block, original not prefixed",
+  "source": "fixtures/replies/outlook-new-web-nl.eml",
+  "raw": "From: Daan de Vries <daan@example.net>\r\nTo: =?UTF-8?Q?Alice_Dvo=C5=99=C3=A1kov=C3=A1?= <alice@example.com>\r\nSubject: RE: Conceptcontract\r\nThread-Topic: Conceptcontract\r\nThread-Index: AQHcqvZ4jfDcJPfD7fmOyk8FROxA==\r\nDate: Tue, 3 Mar 2026 10:47:12 +0000\r\nMessage-ID: <PAXPR02MB01422ADBEEF31CC024CB30002877DF5FEC1BC@PAXPR02MB01422ADBEEF31CC024CB30002877DF5FEC1BC.eurprd02.prod.outlook.example.com>\r\nReferences: <CAKx4mSzl6rBio6Bk4aAbN1MQ8EpNRNJf67hfRWjTvo9yZh87@mail.example.com>\r\nIn-Reply-To: <CAKx4mSzl6rBio6Bk4aAbN1MQ8EpNRNJf67hfRWjTvo9yZh87@mail.example.com>\r\nAccept-Language: nl-NL, en-US\r\nContent-Language: nl-NL\r\nX-MS-Has-Attach:\r\nX-MS-TNEF-Correlator:\r\nContent-Type: multipart/alternative;\r\n\tboundary=\"_000_PAXPR02MB01422ADBEEF31CC024CB30002877DF5FE_\"\r\nMIME-Version: 1.0\r\n\r\n--_000_PAXPR02MB01422ADBEEF31CC024CB30002877DF5FE_\r\nContent-Type: text/plain; charset=\"utf-8\"\r\nContent-Transfer-Encoding: quoted-printable\r\n\r\nHoi Alice,\r\n\r\nik stuur je het concept morgenochtend.\r\n\r\nGroet,\r\nDaan\r\n________________________________\r\nVan: Alice Dvo=C5=99=C3=A1kov=C3=A1 <alice@example.com>\r\nVerzonden: dinsdag 3 maart 2026 10:15\r\nAan: Daan de Vries <daan@example.net>\r\nOnderwerp: Conceptcontract\r\n\r\nHoi Daan,\r\n\r\nkun je me het conceptcontract v=C3=B3=C3=B3r vrijdag sturen?\r\n\r\nBedankt,\r\nAlice\r\n\r\n\r\n--_000_PAXPR02MB01422ADBEEF31CC024CB30002877DF5FE_\r\nContent-Type: text/html; charset=\"utf-8\"\r\nContent-Transfer-Encoding: quoted-printable\r\n\r\n<html>\r\n<head>\r\n<meta http-equiv=3D\"Content-Type\" content=3D\"text/html; charset=3Dutf-8\">\r\n<style type=3D\"text/css\" style=3D\"display:none;\"> P {margin-top:0;margin-bo=\r\nttom:0;} </style>\r\n</head>\r\n<body dir=3D\"ltr\">\r\n<div class=3D\"elementToProof\" style=3D\"font-family: Aptos, Aptos_EmbeddedFo=\r\nnt, Aptos_MSFontService, Calibri, Helvetica, sans-serif; font-size: 12pt; c=\r\nolor: rgb(0, 0, 0);\">Hoi Alice,</div>\r\n<div class=3D\"elementToProof\" style=3D\"font-family: Aptos, Aptos_EmbeddedFo=\r\nnt, Aptos_MSFontService, Calibri, Helvetica, sans-serif; font-size: 12pt; c=\r\nolor: rgb(0, 0, 0);\"><br></div>\r\n<div class=3D\"elementToProof\" style=3D\"font-family: Aptos, Aptos_EmbeddedFo=\r\nnt, Aptos_MSFontService, Calibri, Helvetica, sans-serif; font-size: 12pt; c=\r\nolor: rgb(0, 0, 0);\">ik stuur je het concept morgenochtend.</div>\r\n<div class=3D\"elementToProof\" style=3D\"font-family: Aptos, Aptos_EmbeddedFo=\r\nnt, Aptos_MSFontService, Calibri, Helvetica, sans-serif; font-size: 12pt; c=\r\nolor: rgb(0, 0, 0);\"><br></div>\r\n<div class=3D\"elementToProof\" style=3D\"font-family: Aptos, Aptos_EmbeddedFo=\r\nnt, Aptos_MSFontService, Calibri, Helvetica, sans-serif; font-size: 12pt; c=\r\nolor: rgb(0, 0, 0);\">Groet,</div>\r\n<div class=3D\"elementToProof\" style=3D\"font-family: Aptos, Aptos_EmbeddedFo=\r\nnt, Aptos_MSFontService, Calibri, Helvetica, sans-serif; font-size: 12pt; c=\r\nolor: rgb(0, 0, 0);\">Daan</div>\r\n<div id=3D\"appendonsend\"></div>\r\n<hr style=3D\"display:inline-block;width:98%\" tabindex=3D\"-1\">\r\n<div id=3D\"divRplyFwdMsg\" dir=3D\"ltr\"><font face=3D\"Calibri, sans-serif\" st=\r\nyle=3D\"font-size:11pt\" color=3D\"#000000\"><b>Van:</b> Alice Dvo=C5=99=C3=A1k=\r\nov=C3=A1 &lt;alice@example.com&gt;<br>=0D\r\n<b>Verzonden:</b> dinsdag 3 maart 2026 10:15<br>=0D\r\n<b>Aan:</b> Daan de Vries &lt;daan@example.net&gt;<br>=0D\r\n<b>Onderwerp:</b> Conceptcontract</font>\r\n<div>&nbsp;</div>\r\n</div>\r\n<div class=3D\"BodyFragment\"><font size=3D\"2\"><span style=3D\"font-size:11pt;=\r\n\">\r\n<div class=3D\"PlainText\">Hoi Daan,<br>\r\n<br>\r\nkun je me het conceptcontract v=C3=B3=C3=B3r vrijdag sturen?<br>\r\n<br>\r\nBedankt,<br>\r\nAlice</div>\r\n</span></font></div>\r\n</body>\r\n</html>\r\n\r\n--_000_PAXPR02MB01422ADBEEF31CC024CB30002877DF5FE_--\r\n",
+  "expected": {
+    "id": "<PAXPR02MB01422ADBEEF31CC024CB30002877DF5FEC1BC@PAXPR02MB01422ADBEEF31CC024CB30002877DF5FEC1BC.eurprd02.prod.outlook.example.com>",
+    "from": {
+      "name": "Daan de Vries",
+      "address": "daan@example.net"
+    },
+    "to": [
+      {
+        "name": "Alice Dvořáková",
+        "address": "alice@example.com"
+      }
+    ],
+    "cc": [],
+    "replyTo": [],
+    "date": "2026-03-03T10:47:12.000Z",
+    "subject": "RE: Conceptcontract",
+    "text": "Hoi Alice,\n\nik stuur je het concept morgenochtend.\n\nGroet,\nDaan\n________________________________\nVan: Alice Dvořáková <alice@example.com>\nVerzonden: dinsdag 3 maart 2026 10:15\nAan: Daan de Vries <daan@example.net>\nOnderwerp: Conceptcontract\n\nHoi Daan,\n\nkun je me het conceptcontract vóór vrijdag sturen?\n\nBedankt,\nAlice\n\n",
+    "textSource": "plain",
+    "es": null,
+    "attachments": [],
+    "refs": {
+      "messageId": "<PAXPR02MB01422ADBEEF31CC024CB30002877DF5FEC1BC@PAXPR02MB01422ADBEEF31CC024CB30002877DF5FEC1BC.eurprd02.prod.outlook.example.com>",
+      "inReplyTo": [
+        "<CAKx4mSzl6rBio6Bk4aAbN1MQ8EpNRNJf67hfRWjTvo9yZh87@mail.example.com>"
+      ],
+      "references": [
+        "<CAKx4mSzl6rBio6Bk4aAbN1MQ8EpNRNJf67hfRWjTvo9yZh87@mail.example.com>"
+      ]
+    },
+    "delivery": {
+      "listHeaders": [],
+      "listId": null,
+      "autoSubmitted": null,
+      "precedence": null,
+      "returnPath": null,
+      "listUnsubscribe": null
+    }
+  },
+  "split": {
+    "fresh": "Hoi Alice,\n\nik stuur je het concept morgenochtend.\n\nGroet,\nDaan",
+    "quoted": "________________________________\nVan: Alice Dvořáková <alice@example.com>\nVerzonden: dinsdag 3 maart 2026 10:15\nAan: Daan de Vries <daan@example.net>\nOnderwerp: Conceptcontract\n\nHoi Daan,\n\nkun je me het conceptcontract vóór vrijdag sturen?\n\nBedankt,\nAlice",
+    "signature": ""
+  }
+}

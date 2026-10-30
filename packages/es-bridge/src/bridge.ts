@@ -524,7 +524,8 @@ export async function startBridge(options: BridgeOptions): Promise<RunningBridge
     });
   });
 
-  const wss = new WebSocketServer({ noServer: true });
+  // The page only listens on this socket; it never sends, so a large frame is refused (1009) instead of buffered (ws allows 100 MB).
+  const wss = new WebSocketServer({ noServer: true, maxPayload: 4096 });
   server.on("upgrade", (req, socket, head) => {
     const url = new URL(req.url ?? "/", `http://127.0.0.1:${port}`);
     const allowed =
@@ -539,6 +540,9 @@ export async function startBridge(options: BridgeOptions): Promise<RunningBridge
     wss.handleUpgrade(req, socket, head, (ws) => {
       clients.add(ws);
       ws.on("close", () => clients.delete(ws));
+      // A frame that breaks RFC 6455 (unmasked, too large, invalid UTF-8) makes ws close the socket and emit
+      // "error"; an EventEmitter "error" without a listener would throw and end the process.
+      ws.on("error", () => clients.delete(ws));
     });
   });
 

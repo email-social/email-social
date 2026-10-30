@@ -291,6 +291,303 @@ const CASES: Record<string, Case> = {
     ),
     quotedFrom: "",
   },
+
+  // ---------------------------------------------------------------- J4: more clients, languages and shapes
+  // See fixtures/replies/J4-REPORT.md: the expectations are what a reader wants, failures are the gaps.
+  "replies/outlook-new-web-cs.eml": {
+    client: "Outlook on the web / new Outlook, Czech: underscore divider + Od:/Odesláno:/Komu:/Předmět: header block, original not prefixed",
+    fresh: lines("Ahoj Alice,", "", "fotky jsou ve sdíleném albu, odkaz ti pošlu odpoledne.", "", "Karel"),
+    quotedFrom: "________________________________",
+  },
+  "replies/outlook-new-web-de.eml": {
+    client: "Outlook on the web / new Outlook, German: underscore divider + Von:/Gesendet:/An:/Betreff: header block, original not prefixed",
+    fresh: lines("Hallo Alice,", "", "die Übersicht schicke ich dir morgen früh.", "", "Viele Grüße", "Anna"),
+    quotedFrom: "________________________________",
+  },
+  "replies/outlook-new-web-fr.eml": {
+    client: "Outlook on the web / new Outlook, French: underscore divider + De :/Envoyé :/À :/Objet : header block, original not prefixed",
+    fresh: lines("Bonjour Alice,", "", "je t'envoie le compte rendu demain matin.", "", "Bonne journée,", "Camille"),
+    quotedFrom: "________________________________",
+  },
+  "replies/outlook-new-web-sk.eml": {
+    client: "Outlook on the web / new Outlook, Slovak: underscore divider + Od:/Odoslané:/Komu:/Predmet: header block, original not prefixed",
+    fresh: lines("Ahoj Alice,", "", "fotky sú v zdieľanom albume, odkaz ti pošlem poobede.", "", "Martina"),
+    quotedFrom: "________________________________",
+  },
+  "replies/outlook-new-web-pl.eml": {
+    client: "Outlook on the web / new Outlook, Polish: underscore divider + Od:/Wysłane:/Do:/Temat: header block, original not prefixed",
+    fresh: lines("Cześć Alice,", "", "zdjęcia są we wspólnym albumie, link wyślę po południu.", "", "Piotr"),
+    quotedFrom: "________________________________",
+  },
+  "replies/outlook-new-web-es.eml": {
+    client: "Outlook on the web / new Outlook, Spanish: underscore divider + De:/Enviado:/Para:/Asunto: header block, original not prefixed",
+    fresh: lines("Hola Alice,", "", "te envío el borrador mañana por la mañana.", "", "Un saludo,", "Lucía"),
+    quotedFrom: "________________________________",
+  },
+  "replies/outlook-new-web-it.eml": {
+    client: "Outlook on the web / new Outlook, Italian: underscore divider + Da:/Inviato:/A:/Oggetto: header block, original not prefixed",
+    fresh: lines("Ciao Alice,", "", "ti mando la bozza domani mattina.", "", "Giulia"),
+    quotedFrom: "________________________________",
+  },
+  "replies/outlook-new-web-nl.eml": {
+    client: "Outlook on the web / new Outlook, Dutch: underscore divider + Van:/Verzonden:/Aan:/Onderwerp: header block, original not prefixed",
+    fresh: lines("Hoi Alice,", "", "ik stuur je het concept morgenochtend.", "", "Groet,", "Daan"),
+    quotedFrom: "________________________________",
+  },
+  "replies/outlook-new-web-pt.eml": {
+    client: "Outlook on the web / new Outlook, Portuguese (BR): underscore divider + De:/Enviado:/Para:/Assunto: header block, original not prefixed",
+    fresh: lines("Oi Alice,", "", "mando o rascunho amanhã de manhã.", "", "Abraço,", "João"),
+    quotedFrom: "________________________________",
+  },
+  "replies/outlook-new-windows-cs-cc.eml": {
+    client: "new Outlook for Windows, Czech: divider + Od:/Odesláno:/Komu:/Kopie:/Předmět: (Cc line in the block)",
+    fresh: lines("Dobrý den,", "", "fotky z výletu jsou nahrané, zbytek dodá Eva.", "", "S pozdravem", "Karel Holub"),
+    quotedFrom: "________________________________",
+  },
+  "replies/outlook-new-web-cs-html-only.eml": {
+    client: "Outlook on the web, HTML part only, Czech: HTML only: <hr> + divRplyFwdMsg with bold Czech labels",
+    fresh: lines("Ahoj Alice,", "", "album je hotové, mrkni na něj.", "", "Karel"),
+    quotedFrom: "Od: Alice Dvořáková <alice@example.com>",
+  },
+  "replies/outlook-android-cs.eml": {
+    client: "Outlook for Android, Czech: mobile signature \"Získejte Outlook pro Android\" above the divider and header block",
+    fresh: "Jasně, pošlu je večer.",
+    signature: "Získejte Outlook pro Android",
+    quotedFrom: "________________________________",
+  },
+  "replies/outlook-android-de.eml": {
+    client: "Outlook for Android, German: mobile signature \"Outlook für Android herunterladen\" above the divider and header block",
+    fresh: "Klar, kommt morgen.",
+    signature: "Outlook für Android herunterladen",
+    quotedFrom: "________________________________",
+  },
+  "replies/outlook-android-fr.eml": {
+    client: "Outlook for Android, French: mobile signature \"Obtenir Outlook pour Android\" above the divider and header block",
+    fresh: "Oui, je te l'envoie demain.",
+    signature: "Obtenir Outlook pour Android",
+    quotedFrom: "________________________________",
+  },
+  "replies/gmail-web-sk.eml": {
+    client: "Gmail web, Slovak: attribution \"ut 3. 3. 2026 o 10:15 Alice Dvořáková <alice@example.com> napísal(a):\"",
+    fresh: lines("Ahoj Alice,", "", "fotky som nahrala do zdieľaného albumu, odkaz pošlem večer.", "", "Martina"),
+    quotedFrom: "ut 3. 3. 2026 o 10:15 Alice Dvořáková <alice@example.com> napísal(a):",
+  },
+  "replies/gmail-web-pl.eml": {
+    client: "Gmail web, Polish: attribution \"wt., 3 mar 2026 o 10:15 Alice Dvořáková <alice@example.com> napisał(a):\"",
+    fresh: lines("Cześć Alice,", "", "zdjęcia wrzuciłem do wspólnego albumu, link wyślę wieczorem.", "", "Piotr"),
+    quotedFrom: "wt., 3 mar 2026 o 10:15 Alice Dvořáková <alice@example.com> napisał(a):",
+  },
+  "replies/gmail-web-es.eml": {
+    client: "Gmail web, Spanish: attribution \"El mar, 3 mar 2026 a las 10:15, Alice Dvořáková (<alice@example.com>) escribió:\", wrapped onto 2 lines",
+    fresh: lines("Hola Alice,", "", "el borrador está casi listo, te lo envío el jueves.", "", "Lucía"),
+    quotedFrom: "El mar, 3 mar 2026 a las 10:15, Alice Dvořáková (<alice@example.com>)",
+  },
+  "replies/gmail-web-it.eml": {
+    client: "Gmail web, Italian: attribution \"Il giorno mar 3 mar 2026 alle ore 10:15 Alice Dvořáková <alice@example.com> ha scritto:\", wrapped onto 2 lines",
+    fresh: lines("Ciao Alice,", "", "la bozza è quasi pronta, te la mando giovedì.", "", "Giulia"),
+    quotedFrom: "Il giorno mar 3 mar 2026 alle ore 10:15 Alice Dvořáková <",
+  },
+  "replies/gmail-web-nl.eml": {
+    client: "Gmail web, Dutch: attribution \"Op di 3 mrt 2026 om 10:15 schreef Alice Dvořáková <alice@example.com>:\"",
+    fresh: lines("Hoi Alice,", "", "het concept is bijna klaar, ik stuur het donderdag.", "", "Daan"),
+    quotedFrom: "Op di 3 mrt 2026 om 10:15 schreef Alice Dvořáková <alice@example.com>:",
+  },
+  "replies/gmail-web-pt.eml": {
+    client: "Gmail web, Portuguese (BR): attribution \"Em ter., 3 de mar. de 2026 às 10:15, Alice Dvořáková <alice@example.com> escreveu:\", wrapped onto 2 lines",
+    fresh: lines("Oi Alice,", "", "o rascunho está quase pronto, mando na quinta.", "", "João"),
+    quotedFrom: "Em ter., 3 de mar. de 2026 às 10:15, Alice Dvořáková <alice@example.com>",
+  },
+  "replies/gmail-android-de.eml": {
+    client: "Gmail app for Android, German: one-line answer; unwrapped attribution \"Alice Dvořáková <alice@example.com> schrieb am Di., 3. März 2026, 10:15:\"",
+    fresh: "Mach ich, bis Freitag!",
+    quotedFrom: "Alice Dvořáková <alice@example.com> schrieb am Di., 3. März 2026, 10:15:",
+  },
+  "replies/gmail-android-fr.eml": {
+    client: "Gmail app for Android, French: one-line answer; unwrapped attribution \"Le mar. 3 mars 2026, 10:15, Alice Dvořáková <alice@example.com> a écrit :\"",
+    fresh: "Oui, vendredi sans problème !",
+    quotedFrom: "Le mar. 3 mars 2026, 10:15, Alice Dvořáková <alice@example.com> a écrit :",
+  },
+  "replies/gmail-ios-en.eml": {
+    client: "Gmail app for iOS, English: one-line answer; unwrapped attribution \"On Tue, Mar 3, 2026 at 10:15\u202fAM Alice Dvořáková <alice@example.com> wrote:\"",
+    fresh: "Will do, Friday at the latest.",
+    quotedFrom: "On Tue, Mar 3, 2026 at 10:15\u202fAM Alice Dvořáková <alice@example.com> wrote:",
+  },
+  "replies/gmail-nested-reply-en.eml": {
+    client: "Gmail web, English: reply to a reply: two attribution blocks, the inner one at depth 2 (> >)",
+    fresh: lines("Great, I'll bring the map too.", "", "Bob"),
+    quotedFrom: "On Wed, Mar 4, 2026 at 9:02\u202fAM Alice Dvořáková <alice@example.com>",
+  },
+  "replies/gmail-interleaved-en.eml": {
+    client: "Gmail web, English: interleaved answers between quoted questions under a Gmail attribution; quoted sign-off left at the end",
+    fresh: lines("Hi Alice,", "", "answers inline.", "", "On Tue, Mar 3, 2026 at 10:15\u202fAM Alice Dvořáková <alice@example.com>", "wrote:", "", "> Hi Bob,", ">", "> 1. Can you book the train?", ">", "", "Done, the 7:40 from the main station.", "", "> 2. Do we need a tent?", ">", "", "No, the cabin has beds."),
+    quotedFrom: "> Thanks,",
+  },
+  "replies/gmail-forward-in-reply-en.eml": {
+    client: "Gmail web, English: a reply quoting a Gmail forward: '> ---------- Forwarded message ---------' inside the quote",
+    fresh: lines("Thanks, I'll call them tomorrow and confirm the dates.", "", "Bob"),
+    quotedFrom: "On Tue, Mar 3, 2026 at 10:15\u202fAM Alice Dvořáková <alice@example.com>",
+  },
+  "replies/apple-mail-de.eml": {
+    client: "Apple Mail (macOS), German: attribution inside the quote, split by a QP soft line break: \"> Am 03.03.2026 um 10:15 schrieb Alice Dvořáková <alice@example.com>:\"",
+    fresh: lines("Hallo Alice,", "", "klar, die Übersicht kommt bis Freitag.", "", "Anna"),
+    quotedFrom: "> Am 03.03.2026 um 10:15 schrieb Alice Dvořáková <alice@example.com>:",
+  },
+  "replies/apple-mail-fr.eml": {
+    client: "Apple Mail (macOS), French: attribution inside the quote, split by a QP soft line break: \"> Le 3 mars 2026 à 10:15, Alice Dvořáková <alice@example.com> a écrit :\"",
+    fresh: lines("Bonjour Alice,", "", "oui, tu l'auras avant vendredi.", "", "Camille"),
+    quotedFrom: "> Le 3 mars 2026 à 10:15, Alice Dvořáková <alice@example.com> a écrit :",
+  },
+  "replies/ios-mail-cs-ipad.eml": {
+    client: "iOS Mail (iPad), Czech: mobile signature \"Odesláno z iPadu\"; attribution \"> Dne 3. 3. 2026 v 10:15, Alice Dvořáková <alice@example.com> napsal(a):\"",
+    fresh: "Jasně, pošlu je večer.",
+    signature: "Odesláno z iPadu",
+    quotedFrom: "> Dne 3. 3. 2026 v 10:15, Alice Dvořáková <alice@example.com> napsal(a):",
+  },
+  "replies/ios-mail-fr.eml": {
+    client: "iOS Mail (iPhone), French: mobile signature \"Envoyé de mon iPhone\"; attribution \"> Le 3 mars 2026 à 10:15, Alice Dvořáková <alice@example.com> a écrit :\"",
+    fresh: "Oui, avant vendredi !",
+    signature: "Envoyé de mon iPhone",
+    quotedFrom: "> Le 3 mars 2026 à 10:15, Alice Dvořáková <alice@example.com> a écrit :",
+  },
+  "replies/ios-mail-sk.eml": {
+    client: "iOS Mail (iPhone), Slovak: mobile signature \"Odoslané z iPhonu\"; attribution \"> Dňa 3. 3. 2026 o 10:15 používateľ Alice Dvořáková <alice@example.com> napísal:\"",
+    fresh: "Jasné, pošlem ich večer.",
+    signature: "Odoslané z iPhonu",
+    quotedFrom: "> Dňa 3. 3. 2026 o 10:15 používateľ Alice Dvořáková <alice@example.com> napísal:",
+  },
+  "replies/ios-mail-pl.eml": {
+    client: "iOS Mail (iPhone), Polish: mobile signature \"Wysłane z iPhone'a\"; attribution \"> Wiadomość napisana przez Alice Dvořáková <alice@example.com> w dniu 3 mar 2026, o godz. 10:15:\"",
+    fresh: "Jasne, wyślę wieczorem.",
+    signature: "Wysłane z iPhone'a",
+    quotedFrom: "> Wiadomość napisana przez Alice Dvořáková <alice@example.com> w dniu 3 mar 2026, o godz. 10:15:",
+  },
+  "replies/ios-mail-es.eml": {
+    client: "iOS Mail (iPhone), Spanish: mobile signature \"Enviado desde mi iPhone\"; attribution \"> El 3 mar 2026, a las 10:15, Alice Dvořáková <alice@example.com> escribió:\"",
+    fresh: "Claro, te lo mando el jueves.",
+    signature: "Enviado desde mi iPhone",
+    quotedFrom: "> El 3 mar 2026, a las 10:15, Alice Dvořáková <alice@example.com> escribió:",
+  },
+  "replies/ios-mail-it.eml": {
+    client: "iOS Mail (iPhone), Italian: mobile signature \"Inviato da iPhone\"; attribution \"> Il giorno 3 mar 2026, alle ore 10:15, Alice Dvořáková <alice@example.com> ha scritto:\"",
+    fresh: "Certo, te la mando giovedì.",
+    signature: "Inviato da iPhone",
+    quotedFrom: "> Il giorno 3 mar 2026, alle ore 10:15, Alice Dvořáková <alice@example.com> ha scritto:",
+  },
+  "replies/ios-mail-nl.eml": {
+    client: "iOS Mail (iPhone), Dutch: mobile signature \"Verstuurd vanaf mijn iPhone\"; attribution \"> Op 3 mrt 2026 om 10:15 heeft Alice Dvořáková <alice@example.com> het volgende geschreven:\"",
+    fresh: "Prima, ik stuur het donderdag.",
+    signature: "Verstuurd vanaf mijn iPhone",
+    quotedFrom: "> Op 3 mrt 2026 om 10:15 heeft Alice Dvořáková <alice@example.com> het volgende geschreven:",
+  },
+  "replies/ios-mail-pt.eml": {
+    client: "iOS Mail (iPhone), Portuguese (BR): mobile signature \"Enviado do meu iPhone\"; attribution \"> Em 3 de mar. de 2026, à(s) 10:15, Alice Dvořáková <alice@example.com> escreveu:\"",
+    fresh: "Claro, mando na quinta.",
+    signature: "Enviado do meu iPhone",
+    quotedFrom: "> Em 3 de mar. de 2026, à(s) 10:15, Alice Dvořáková <alice@example.com> escreveu:",
+  },
+  "replies/thunderbird-sk.eml": {
+    client: "Thunderbird, Slovak: answer below the quote; attribution \"Dňa 3. 3. 2026 o 10:15 Alice Dvořáková napísal(a):\"",
+    fresh: lines("Ahoj Alice,", "", "fotky nahrám dnes večer.", "", "Martina"),
+    quotedFrom: "Dňa 3. 3. 2026 o 10:15 Alice Dvořáková napísal(a):",
+  },
+  "replies/thunderbird-pl.eml": {
+    client: "Thunderbird, Polish: answer below the quote; attribution \"W dniu 3.03.2026 o 10:15, Alice Dvořáková pisze:\"; the answer is a long format=flowed paragraph",
+    fresh: lines("Cześć Alice,", "", "zdjęcia wrzucę dziś wieczorem, jest ich około dwustu, więc najpierw wybiorę te najlepsze i dopiero potem dodam resztę do albumu.", "", "Piotr"),
+    quotedFrom: "W dniu 3.03.2026 o 10:15, Alice Dvořáková pisze:",
+  },
+  "replies/thunderbird-es.eml": {
+    client: "Thunderbird, Spanish: answer below the quote; attribution \"El 3/3/26 a las 10:15, Alice Dvořáková escribió:\"",
+    fresh: lines("Hola Alice,", "", "te lo envío esta tarde.", "", "Lucía"),
+    quotedFrom: "El 3/3/26 a las 10:15, Alice Dvořáková escribió:",
+  },
+  "replies/thunderbird-it.eml": {
+    client: "Thunderbird, Italian: answer below the quote; attribution \"Il 03/03/26 10:15, Alice Dvořáková ha scritto:\"",
+    fresh: lines("Ciao Alice,", "", "te la mando stasera.", "", "Giulia"),
+    quotedFrom: "Il 03/03/26 10:15, Alice Dvořáková ha scritto:",
+  },
+  "replies/thunderbird-nl.eml": {
+    client: "Thunderbird, Dutch: answer below the quote; attribution \"Op 03-03-2026 om 10:15 schreef Alice Dvořáková:\"",
+    fresh: lines("Hoi Alice,", "", "ik stuur het vanavond.", "", "Daan"),
+    quotedFrom: "Op 03-03-2026 om 10:15 schreef Alice Dvořáková:",
+  },
+  "replies/thunderbird-pt.eml": {
+    client: "Thunderbird, Portuguese (BR): answer below the quote; attribution \"Em 03/03/2026 10:15, Alice Dvořáková escreveu:\"",
+    fresh: lines("Oi Alice,", "", "mando hoje à noite.", "", "João"),
+    quotedFrom: "Em 03/03/2026 10:15, Alice Dvořáková escreveu:",
+  },
+  "replies/thunderbird-flowed-attribution.eml": {
+    client: "Thunderbird, English: format=flowed: the 79-character attribution and the long lines are soft-wrapped at 72 (trailing space)",
+    fresh: lines("Hi Alice,", "", "the draft is on its way. I changed the payment terms in article 4 as we discussed and left a comment where Legal should look first.", "", "Bob"),
+    quotedFrom: "On 3/3/26 10:15, Alice Dvořáková (Example Projects, Coordination Office) wrote:",
+  },
+  "replies/thunderbird-en-signature-above-quote.eml": {
+    client: "Thunderbird (reply above the quote, signature above the quote), English: '-- ' signature between the answer and the attribution",
+    fresh: lines("Hi Alice,", "", "yes, Friday works.", "", "Bob"),
+    signature: lines("-- ", "Bob Svoboda", "Example s.r.o."),
+    quotedFrom: "On 3/3/26 10:15, Alice Dvořáková wrote:",
+  },
+  "replies/thunderbird-cs-signature-above-quote.eml": {
+    client: "Thunderbird (reply above the quote, signature above the quote), Czech: '-- ' signature between the answer and the attribution",
+    fresh: lines("Ahoj Alice,", "", "fotky pošlu v pátek.", "", "Karel"),
+    signature: lines("-- ", "Karel Holub", "Example s.r.o."),
+    quotedFrom: "Dne 03. 03. 26 v 10:15 Alice Dvořáková napsal(a):",
+  },
+  "replies/thunderbird-de-forward.eml": {
+    client: "Thunderbird, inline forward, German: forward: '-------- Weitergeleitete Nachricht --------' and the tab-separated header table",
+    fresh: lines("Hallo Lukas,", "", "zur Info, siehe unten.", "", "Anna"),
+    quotedFrom: "-------- Weitergeleitete Nachricht --------",
+  },
+  "replies/samsung-mail-en.eml": {
+    client: "Samsung Email, English: signature \"Sent from my Galaxy\" above \"-------- Original message --------\" and a header block with trailing spaces; base64",
+    fresh: "Sure, I'll send it on Thursday.",
+    signature: "Sent from my Galaxy",
+    quotedFrom: "-------- Original message --------",
+  },
+  "replies/samsung-mail-de.eml": {
+    client: "Samsung Email, German: signature \"Von meinem Samsung Galaxy Smartphone gesendet.\" above \"-------- Ursprüngliche Nachricht --------\" and a header block with trailing spaces; base64",
+    fresh: "Mache ich, bis Freitag.",
+    signature: "Von meinem Samsung Galaxy Smartphone gesendet.",
+    quotedFrom: "-------- Ursprüngliche Nachricht --------",
+  },
+  "replies/samsung-mail-fr.eml": {
+    client: "Samsung Email, French: signature \"Envoyé depuis mon appareil Galaxy\" above \"-------- Message d'origine --------\" and a header block with trailing spaces; base64",
+    fresh: "D'accord, je l'envoie jeudi.",
+    signature: "Envoyé depuis mon appareil Galaxy",
+    quotedFrom: "-------- Message d'origine --------",
+  },
+  "replies/proton-mail-en.eml": {
+    client: "Proton Mail (web), English: 'Sent with Proton Mail secure email.' footer above the attribution; base64",
+    fresh: lines("Hi Alice,", "", "yes, the draft will be ready on Thursday.", "", "Bob"),
+    signature: "Sent with [Proton Mail](https://proton.example.net/) secure email.",
+    quotedFrom: "On Tuesday, March 3rd, 2026 at 10:15 AM, Alice Dvořáková <alice@example.com> wrote:",
+  },
+  "replies/proton-mail-html-only.eml": {
+    client: "Proton Mail (web), HTML part only, English: HTML only: protonmail_signature_block, attribution in div.protonmail_quote, <blockquote class=\"protonmail_quote\">",
+    fresh: lines("Hi Alice,", "", "Thursday, as promised.", "", "Bob"),
+    signature: "Sent with Proton Mail secure email.",
+    quotedFrom: "On Tuesday, March 3rd, 2026 at 10:15 AM, Alice Dvořáková <alice@example.com> wrote:",
+  },
+  "replies/fastmail-en.eml": {
+    client: "Fastmail (web), English: attribution \"On Tue, 3 Mar 2026, at 10:15, Alice Dvořáková wrote:\" (no address) directly above the \"> \" lines",
+    fresh: lines("Hi Alice,", "", "Friday is fine, the draft is nearly done.", "", "Bob"),
+    quotedFrom: "On Tue, 3 Mar 2026, at 10:15, Alice Dvořáková wrote:",
+  },
+  "replies/yahoo-mail-web-en.eml": {
+    client: "Yahoo Mail (web), English: indented attribution with trailing spaces, original not prefixed with '>' but indented by one space",
+    fresh: lines("Hi Alice,", "", "Friday works, I'll send the draft on Thursday.", "", "Bob"),
+    quotedFrom: "    On Tuesday, March 3, 2026 at 10:15:00 AM GMT+1, Alice Dvořáková <alice@example.com> wrote:  ",
+  },
+  "replies/yahoo-mail-android-en.eml": {
+    client: "Yahoo Mail for Android, English: 'Sent from Yahoo Mail on Android'; attribution with no space before '<', original indented, not prefixed",
+    fresh: "Sure, see you Friday!",
+    signature: "Sent from Yahoo Mail on Android",
+    quotedFrom: "  On Tue, Mar 3, 2026 at 10:15, Alice Dvořáková<alice@example.com> wrote:   ",
+  },
+  "replies/roundcube-en.eml": {
+    client: "Roundcube 1.6 (default: answer below the quote), English: attribution \"On 2026-03-03 10:15, Alice Dvořáková wrote:\" (ISO date, no address), answer below",
+    fresh: lines("Hi Alice,", "", "the draft is attached to the ticket, see you on Friday.", "", "Bob"),
+    quotedFrom: "On 2026-03-03 10:15, Alice Dvořáková wrote:",
+  },
 };
 
 /** Non-blank lines, as a sorted multiset. */

@@ -1,0 +1,70 @@
+{
+  "description": "Section 9.3: replies to a seven-line message quoting one interior sentence, part of a line, its start, its end, all of it, four lines, and point by point; a reply to an HTML-only message; a reply quoting the start of a two-line message; and a fragment longer than 140 characters.",
+  "covers": [
+    "QT-4"
+  ],
+  "owner": {
+    "name": "Alice Example",
+    "addresses": [
+      "alice@example.com"
+    ]
+  },
+  "messages": [
+    {
+      "raw": "From: Alice Example <alice@example.com>\r\nTo: Bob Svoboda <bob@example.org>\r\nSubject: Saturday\r\nDate: Sat, 14 Mar 2026 09:00:00 GMT\r\nMessage-ID: <p1@example.com>\r\nMIME-Version: 1.0\r\nContent-Type: text/plain; charset=utf-8\r\nContent-Transfer-Encoding: 8bit\r\n\r\nHi Bob,\r\n\r\nthe train leaves at 7:40 from platform 3.\r\nJana said she would come too.\r\nWe could have lunch at the lake.\r\nBring a jacket, it gets cold there.\r\nTickets are on me.\r\n\r\nAlice\r\n"
+    },
+    {
+      "raw": "From: Bob Svoboda <bob@example.org>\r\nTo: Alice Example <alice@example.com>\r\nSubject: Re: Saturday\r\nDate: Sat, 14 Mar 2026 10:00:00 GMT\r\nMessage-ID: <fr1@example.org>\r\nIn-Reply-To: <p1@example.com>\r\nMIME-Version: 1.0\r\nContent-Type: text/plain; charset=utf-8\r\nContent-Transfer-Encoding: 8bit\r\n\r\nGreat!\r\n\r\nOn Mon, 2 Mar 2026 at 09:00, Alice Example <alice@example.com> wrote:\r\n> Jana said she would come too.\r\n"
+    },
+    {
+      "raw": "From: Bob Svoboda <bob@example.org>\r\nTo: Alice Example <alice@example.com>\r\nSubject: Re: Saturday\r\nDate: Sat, 14 Mar 2026 10:01:00 GMT\r\nMessage-ID: <fr2@example.org>\r\nIn-Reply-To: <p1@example.com>\r\nMIME-Version: 1.0\r\nContent-Type: text/plain; charset=utf-8\r\nContent-Transfer-Encoding: 8bit\r\n\r\nWhich one?\r\n\r\nOn Mon, 2 Mar 2026 at 09:00, Alice Example <alice@example.com> wrote:\r\n> leaves at 7:40\r\n"
+    },
+    {
+      "raw": "From: Bob Svoboda <bob@example.org>\r\nTo: Alice Example <alice@example.com>\r\nSubject: Re: Saturday\r\nDate: Sat, 14 Mar 2026 10:02:00 GMT\r\nMessage-ID: <fr3@example.org>\r\nIn-Reply-To: <p1@example.com>\r\nMIME-Version: 1.0\r\nContent-Type: text/plain; charset=utf-8\r\nContent-Transfer-Encoding: 8bit\r\n\r\nHi!\r\n\r\nOn Mon, 2 Mar 2026 at 09:00, Alice Example <alice@example.com> wrote:\r\n> Hi Bob,\r\n"
+    },
+    {
+      "raw": "From: Bob Svoboda <bob@example.org>\r\nTo: Alice Example <alice@example.com>\r\nSubject: Re: Saturday\r\nDate: Sat, 14 Mar 2026 10:03:00 GMT\r\nMessage-ID: <fr4@example.org>\r\nIn-Reply-To: <p1@example.com>\r\nMIME-Version: 1.0\r\nContent-Type: text/plain; charset=utf-8\r\nContent-Transfer-Encoding: 8bit\r\n\r\nThank you!\r\n\r\nOn Mon, 2 Mar 2026 at 09:00, Alice Example <alice@example.com> wrote:\r\n> Tickets are on me.\r\n>\r\n> Alice\r\n"
+    },
+    {
+      "raw": "From: Bob Svoboda <bob@example.org>\r\nTo: Alice Example <alice@example.com>\r\nSubject: Re: Saturday\r\nDate: Sat, 14 Mar 2026 10:04:00 GMT\r\nMessage-ID: <fr5@example.org>\r\nIn-Reply-To: <p1@example.com>\r\nMIME-Version: 1.0\r\nContent-Type: text/plain; charset=utf-8\r\nContent-Transfer-Encoding: 8bit\r\n\r\nSounds good.\r\n\r\nOn Mon, 2 Mar 2026 at 09:00, Alice Example <alice@example.com> wrote:\r\n> Hi Bob,\r\n>\r\n> the train leaves at 7:40 from platform 3.\r\n> Jana said she would come too.\r\n> We could have lunch at the lake.\r\n> Bring a jacket, it gets cold there.\r\n> Tickets are on me.\r\n>\r\n> Alice\r\n"
+    },
+    {
+      "raw": "From: Bob Svoboda <bob@example.org>\r\nTo: Alice Example <alice@example.com>\r\nSubject: Re: Saturday\r\nDate: Sat, 14 Mar 2026 10:05:00 GMT\r\nMessage-ID: <fr6@example.org>\r\nIn-Reply-To: <p1@example.com>\r\nMIME-Version: 1.0\r\nContent-Type: text/plain; charset=utf-8\r\nContent-Transfer-Encoding: 8bit\r\n\r\nFine.\r\n\r\nOn Mon, 2 Mar 2026 at 09:00, Alice Example <alice@example.com> wrote:\r\n> the train leaves at 7:40 from platform 3.\r\n> Jana said she would come too.\r\n> We could have lunch at the lake.\r\n> Bring a jacket, it gets cold there.\r\n"
+    },
+    {
+      "raw": "From: Bob Svoboda <bob@example.org>\r\nTo: Alice Example <alice@example.com>\r\nSubject: Re: Saturday\r\nDate: Sat, 14 Mar 2026 10:06:00 GMT\r\nMessage-ID: <fr7@example.org>\r\nIn-Reply-To: <p1@example.com>\r\nMIME-Version: 1.0\r\nContent-Type: text/plain; charset=utf-8\r\nContent-Transfer-Encoding: 8bit\r\n\r\nHi Alice,\r\n\r\n> the train leaves at 7:40 from platform 3.\r\nPerfect.\r\n\r\n> Tickets are on me.\r\nThank you!\r\n"
+    },
+    {
+      "raw": "From: Alice Example <alice@example.com>\r\nTo: Bob Svoboda <bob@example.org>\r\nSubject: Sunday\r\nDate: Sat, 14 Mar 2026 11:00:00 GMT\r\nMessage-ID: <p2@example.com>\r\nMIME-Version: 1.0\r\nContent-Type: text/html; charset=utf-8\r\nContent-Transfer-Encoding: 8bit\r\n\r\n<p>Hi Bob,</p><p>the bus leaves at 9:10.</p><p>Jana is coming.</p><p>We eat at the hut.</p><p>Alice</p>\r\n"
+    },
+    {
+      "raw": "From: Bob Svoboda <bob@example.org>\r\nTo: Alice Example <alice@example.com>\r\nSubject: Re: Sunday\r\nDate: Sat, 14 Mar 2026 11:01:00 GMT\r\nMessage-ID: <fr8@example.org>\r\nIn-Reply-To: <p2@example.com>\r\nMIME-Version: 1.0\r\nContent-Type: text/plain; charset=utf-8\r\nContent-Transfer-Encoding: 8bit\r\n\r\nGood.\r\n\r\nOn Sat, 14 Mar 2026 at 11:00, Alice Example <alice@example.com> wrote:\r\n> Jana is coming.\r\n"
+    },
+    {
+      "raw": "From: Alice Example <alice@example.com>\r\nTo: Bob Svoboda <bob@example.org>\r\nSubject: Coffee\r\nDate: Sat, 14 Mar 2026 12:00:00 GMT\r\nMessage-ID: <p3@example.com>\r\nMIME-Version: 1.0\r\nContent-Type: text/plain; charset=utf-8\r\nContent-Transfer-Encoding: 8bit\r\n\r\nCoffee at 10?\r\nOr at 11?\r\n"
+    },
+    {
+      "raw": "From: Bob Svoboda <bob@example.org>\r\nTo: Alice Example <alice@example.com>\r\nSubject: Re: Coffee\r\nDate: Sat, 14 Mar 2026 12:01:00 GMT\r\nMessage-ID: <fr9@example.org>\r\nIn-Reply-To: <p3@example.com>\r\nMIME-Version: 1.0\r\nContent-Type: text/plain; charset=utf-8\r\nContent-Transfer-Encoding: 8bit\r\n\r\nYes.\r\n\r\nOn Sat, 14 Mar 2026 at 12:00, Alice Example <alice@example.com> wrote:\r\n> Coffee at 10?\r\n"
+    },
+    {
+      "raw": "From: Alice Example <alice@example.com>\r\nTo: Bob Svoboda <bob@example.org>\r\nSubject: Route\r\nDate: Sat, 14 Mar 2026 13:00:00 GMT\r\nMessage-ID: <p4@example.com>\r\nMIME-Version: 1.0\r\nContent-Type: text/plain; charset=utf-8\r\nContent-Transfer-Encoding: 8bit\r\n\r\nHello,\r\n\r\nwe start at the station, walk along the river to the old mill, cross the bridge, climb the hill behind the church and come back through the forest before it gets dark.\r\n\r\nSee you,\r\nAlice\r\n"
+    },
+    {
+      "raw": "From: Bob Svoboda <bob@example.org>\r\nTo: Alice Example <alice@example.com>\r\nSubject: Re: Route\r\nDate: Sat, 14 Mar 2026 13:01:00 GMT\r\nMessage-ID: <fr10@example.org>\r\nIn-Reply-To: <p4@example.com>\r\nMIME-Version: 1.0\r\nContent-Type: text/plain; charset=utf-8\r\nContent-Transfer-Encoding: 8bit\r\n\r\nToo long for me.\r\n\r\nOn Sat, 14 Mar 2026 at 13:00, Alice Example <alice@example.com> wrote:\r\n> we start at the station, walk along the river to the old mill, cross the bridge, climb the hill behind the church and come back through the forest before it gets dark.\r\n"
+    }
+  ],
+  "expected": {
+    "fragments": {
+      "<fr10@example.org>": "we start at the station, walk along the river to the old mill, cross the bridge, climb the hill behind the church and come back through…",
+      "<fr1@example.org>": "Jana said she would come too.",
+      "<fr2@example.org>": "leaves at 7:40",
+      "<fr3@example.org>": null,
+      "<fr4@example.org>": null,
+      "<fr5@example.org>": null,
+      "<fr6@example.org>": null,
+      "<fr7@example.org>": null,
+      "<fr8@example.org>": null,
+      "<fr9@example.org>": "Coffee at 10?"
+    }
+  }
+}

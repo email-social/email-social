@@ -1,0 +1,48 @@
+{
+  "description": "Outlook on the web / new Outlook, de: underscore divider + Von:/Gesendet:/An:/Betreff: header block, original not prefixed",
+  "source": "fixtures/replies/outlook-new-web-de.eml",
+  "raw": "From: Anna Becker <anna.becker@example.net>\r\nTo: =?UTF-8?Q?Alice_Dvo=C5=99=C3=A1kov=C3=A1?= <alice@example.com>\r\nSubject: =?utf-8?Q?AW=3A_Projekt=C3=BCbersicht?=\r\nThread-Topic: =?utf-8?Q?Projekt=C3=BCbersicht?=\r\nThread-Index: AQHcqvKvsBu0Ayhq9c0P0afu8ZOH==\r\nDate: Tue, 3 Mar 2026 10:41:12 +0000\r\nMessage-ID: <PAXPR02MB36997CD23720E4F785BE7926298A754783C72@PAXPR02MB36997CD23720E4F785BE7926298A754783C72.eurprd02.prod.outlook.example.com>\r\nReferences: <CAKx4mthaI1HKCf9KCkU2kpjCZU2rx6OCwt4qmI4oWmUz5lh5@mail.example.com>\r\nIn-Reply-To: <CAKx4mthaI1HKCf9KCkU2kpjCZU2rx6OCwt4qmI4oWmUz5lh5@mail.example.com>\r\nAccept-Language: de-DE, en-US\r\nContent-Language: de-DE\r\nX-MS-Has-Attach:\r\nX-MS-TNEF-Correlator:\r\nContent-Type: multipart/alternative;\r\n\tboundary=\"_000_PAXPR02MB36997CD23720E4F785BE7926298A75478_\"\r\nMIME-Version: 1.0\r\n\r\n--_000_PAXPR02MB36997CD23720E4F785BE7926298A75478_\r\nContent-Type: text/plain; charset=\"utf-8\"\r\nContent-Transfer-Encoding: quoted-printable\r\n\r\nHallo Alice,\r\n\r\ndie =C3=9Cbersicht schicke ich dir morgen fr=C3=BCh.\r\n\r\nViele Gr=C3=BC=C3=9Fe\r\nAnna\r\n________________________________\r\nVon: Alice Dvo=C5=99=C3=A1kov=C3=A1 <alice@example.com>\r\nGesendet: Dienstag, 3. M=C3=A4rz 2026 10:15\r\nAn: Anna Becker <anna.becker@example.net>\r\nBetreff: Projekt=C3=BCbersicht\r\n\r\nHallo Anna,\r\n\r\nkannst du mir die Projekt=C3=BCbersicht bis Freitag schicken?\r\n\r\nViele Gr=C3=BC=C3=9Fe\r\nAlice\r\n\r\n\r\n--_000_PAXPR02MB36997CD23720E4F785BE7926298A75478_\r\nContent-Type: text/html; charset=\"utf-8\"\r\nContent-Transfer-Encoding: quoted-printable\r\n\r\n<html>\r\n<head>\r\n<meta http-equiv=3D\"Content-Type\" content=3D\"text/html; charset=3Dutf-8\">\r\n<style type=3D\"text/css\" style=3D\"display:none;\"> P {margin-top:0;margin-bo=\r\nttom:0;} </style>\r\n</head>\r\n<body dir=3D\"ltr\">\r\n<div class=3D\"elementToProof\" style=3D\"font-family: Aptos, Aptos_EmbeddedFo=\r\nnt, Aptos_MSFontService, Calibri, Helvetica, sans-serif; font-size: 12pt; c=\r\nolor: rgb(0, 0, 0);\">Hallo Alice,</div>\r\n<div class=3D\"elementToProof\" style=3D\"font-family: Aptos, Aptos_EmbeddedFo=\r\nnt, Aptos_MSFontService, Calibri, Helvetica, sans-serif; font-size: 12pt; c=\r\nolor: rgb(0, 0, 0);\"><br></div>\r\n<div class=3D\"elementToProof\" style=3D\"font-family: Aptos, Aptos_EmbeddedFo=\r\nnt, Aptos_MSFontService, Calibri, Helvetica, sans-serif; font-size: 12pt; c=\r\nolor: rgb(0, 0, 0);\">die =C3=9Cbersicht schicke ich dir morgen fr=C3=BCh.</=\r\ndiv>\r\n<div class=3D\"elementToProof\" style=3D\"font-family: Aptos, Aptos_EmbeddedFo=\r\nnt, Aptos_MSFontService, Calibri, Helvetica, sans-serif; font-size: 12pt; c=\r\nolor: rgb(0, 0, 0);\"><br></div>\r\n<div class=3D\"elementToProof\" style=3D\"font-family: Aptos, Aptos_EmbeddedFo=\r\nnt, Aptos_MSFontService, Calibri, Helvetica, sans-serif; font-size: 12pt; c=\r\nolor: rgb(0, 0, 0);\">Viele Gr=C3=BC=C3=9Fe</div>\r\n<div class=3D\"elementToProof\" style=3D\"font-family: Aptos, Aptos_EmbeddedFo=\r\nnt, Aptos_MSFontService, Calibri, Helvetica, sans-serif; font-size: 12pt; c=\r\nolor: rgb(0, 0, 0);\">Anna</div>\r\n<div id=3D\"appendonsend\"></div>\r\n<hr style=3D\"display:inline-block;width:98%\" tabindex=3D\"-1\">\r\n<div id=3D\"divRplyFwdMsg\" dir=3D\"ltr\"><font face=3D\"Calibri, sans-serif\" st=\r\nyle=3D\"font-size:11pt\" color=3D\"#000000\"><b>Von:</b> Alice Dvo=C5=99=C3=A1k=\r\nov=C3=A1 &lt;alice@example.com&gt;<br>=0D\r\n<b>Gesendet:</b> Dienstag, 3. M=C3=A4rz 2026 10:15<br>=0D\r\n<b>An:</b> Anna Becker &lt;anna.becker@example.net&gt;<br>=0D\r\n<b>Betreff:</b> Projekt=C3=BCbersicht</font>\r\n<div>&nbsp;</div>\r\n</div>\r\n<div class=3D\"BodyFragment\"><font size=3D\"2\"><span style=3D\"font-size:11pt;=\r\n\">\r\n<div class=3D\"PlainText\">Hallo Anna,<br>\r\n<br>\r\nkannst du mir die Projekt=C3=BCbersicht bis Freitag schicken?<br>\r\n<br>\r\nViele Gr=C3=BC=C3=9Fe<br>\r\nAlice</div>\r\n</span></font></div>\r\n</body>\r\n</html>\r\n\r\n--_000_PAXPR02MB36997CD23720E4F785BE7926298A75478_--\r\n",
+  "expected": {
+    "id": "<PAXPR02MB36997CD23720E4F785BE7926298A754783C72@PAXPR02MB36997CD23720E4F785BE7926298A754783C72.eurprd02.prod.outlook.example.com>",
+    "from": {
+      "name": "Anna Becker",
+      "address": "anna.becker@example.net"
+    },
+    "to": [
+      {
+        "name": "Alice Dvořáková",
+        "address": "alice@example.com"
+      }
+    ],
+    "cc": [],
+    "replyTo": [],
+    "date": "2026-03-03T10:41:12.000Z",
+    "subject": "AW: Projektübersicht",
+    "text": "Hallo Alice,\n\ndie Übersicht schicke ich dir morgen früh.\n\nViele Grüße\nAnna\n________________________________\nVon: Alice Dvořáková <alice@example.com>\nGesendet: Dienstag, 3. März 2026 10:15\nAn: Anna Becker <anna.becker@example.net>\nBetreff: Projektübersicht\n\nHallo Anna,\n\nkannst du mir die Projektübersicht bis Freitag schicken?\n\nViele Grüße\nAlice\n\n",
+    "textSource": "plain",
+    "es": null,
+    "attachments": [],
+    "refs": {
+      "messageId": "<PAXPR02MB36997CD23720E4F785BE7926298A754783C72@PAXPR02MB36997CD23720E4F785BE7926298A754783C72.eurprd02.prod.outlook.example.com>",
+      "inReplyTo": [
+        "<CAKx4mthaI1HKCf9KCkU2kpjCZU2rx6OCwt4qmI4oWmUz5lh5@mail.example.com>"
+      ],
+      "references": [
+        "<CAKx4mthaI1HKCf9KCkU2kpjCZU2rx6OCwt4qmI4oWmUz5lh5@mail.example.com>"
+      ]
+    },
+    "delivery": {
+      "listHeaders": [],
+      "listId": null,
+      "autoSubmitted": null,
+      "precedence": null,
+      "returnPath": null,
+      "listUnsubscribe": null
+    }
+  },
+  "split": {
+    "fresh": "Hallo Alice,\n\ndie Übersicht schicke ich dir morgen früh.\n\nViele Grüße\nAnna",
+    "quoted": "________________________________\nVon: Alice Dvořáková <alice@example.com>\nGesendet: Dienstag, 3. März 2026 10:15\nAn: Anna Becker <anna.becker@example.net>\nBetreff: Projektübersicht\n\nHallo Anna,\n\nkannst du mir die Projektübersicht bis Freitag schicken?\n\nViele Grüße\nAlice",
+    "signature": ""
+  }
+}

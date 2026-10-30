@@ -1,0 +1,124 @@
+{
+  "description": "Section 8.2, the carrier subject the owner writes into each chat: one other person (only the sender is named), a person without a name, a group of five (sorted by address, three names, then +2, an address for a person without a name) and a group of two.",
+  "covers": [
+    "TP-4"
+  ],
+  "owner": {
+    "name": "Alice   Example",
+    "addresses": [
+      "alice@example.com"
+    ]
+  },
+  "messages": [
+    {
+      "raw": "From: \"Bob   Svoboda\" <bob@example.org>\r\nTo: Alice Example <alice@example.com>\r\nSubject: Hi\r\nDate: Thu, 12 Mar 2026 09:00:00 GMT\r\nMessage-ID: <cs1@example.org>\r\nMIME-Version: 1.0\r\nContent-Type: text/plain; charset=utf-8\r\nContent-Transfer-Encoding: 8bit\r\n\r\nOne other person.\r\n"
+    },
+    {
+      "raw": "From: dan@example.net\r\nTo: Alice Example <alice@example.com>\r\nSubject: Hi\r\nDate: Thu, 12 Mar 2026 09:01:00 GMT\r\nMessage-ID: <cs2@example.net>\r\nMIME-Version: 1.0\r\nContent-Type: text/plain; charset=utf-8\r\nContent-Transfer-Encoding: 8bit\r\n\r\nNo name.\r\n"
+    },
+    {
+      "raw": "From: Alice Example <alice@example.com>\r\nTo: Frank <frank@example.com>, Carol Novak <carol@example.net>, dan@example.net, Erin <erin@example.com>, Bob Svoboda <bob@example.org>\r\nSubject: Group\r\nDate: Thu, 12 Mar 2026 09:02:00 GMT\r\nMessage-ID: <cs3@example.com>\r\nMIME-Version: 1.0\r\nContent-Type: text/plain; charset=utf-8\r\nContent-Transfer-Encoding: 8bit\r\n\r\nFive others.\r\n"
+    },
+    {
+      "raw": "From: Alice Example <alice@example.com>\r\nTo: Erin <erin@example.com>, Carol Novak <carol@example.net>\r\nSubject: Pair\r\nDate: Thu, 12 Mar 2026 09:03:00 GMT\r\nMessage-ID: <cs4@example.com>\r\nMIME-Version: 1.0\r\nContent-Type: text/plain; charset=utf-8\r\nContent-Transfer-Encoding: 8bit\r\n\r\nTwo others.\r\n"
+    }
+  ],
+  "expected": {
+    "chats": [
+      {
+        "id": "chat-8dc5427d85972211f39c908efa52921f",
+        "participants": [
+          {
+            "name": "Carol Novak",
+            "address": "carol@example.net"
+          },
+          {
+            "name": "Erin",
+            "address": "erin@example.com"
+          }
+        ],
+        "messages": [
+          {
+            "id": "<cs4@example.com>",
+            "subject": "Pair"
+          }
+        ],
+        "firstDate": "2026-03-12T09:03:00.000Z",
+        "lastDate": "2026-03-12T09:03:00.000Z"
+      },
+      {
+        "id": "chat-839217995553c8aa68150c223d3287d5",
+        "participants": [
+          {
+            "name": "Bob Svoboda",
+            "address": "bob@example.org"
+          },
+          {
+            "name": "Carol Novak",
+            "address": "carol@example.net"
+          },
+          {
+            "name": "",
+            "address": "dan@example.net"
+          },
+          {
+            "name": "Erin",
+            "address": "erin@example.com"
+          },
+          {
+            "name": "Frank",
+            "address": "frank@example.com"
+          }
+        ],
+        "messages": [
+          {
+            "id": "<cs3@example.com>",
+            "subject": "Group"
+          }
+        ],
+        "firstDate": "2026-03-12T09:02:00.000Z",
+        "lastDate": "2026-03-12T09:02:00.000Z"
+      },
+      {
+        "id": "chat-3a60d155dbea03b9678f7e86dee5723b",
+        "participants": [
+          {
+            "name": "",
+            "address": "dan@example.net"
+          }
+        ],
+        "messages": [
+          {
+            "id": "<cs2@example.net>",
+            "subject": "Hi"
+          }
+        ],
+        "firstDate": "2026-03-12T09:01:00.000Z",
+        "lastDate": "2026-03-12T09:01:00.000Z"
+      },
+      {
+        "id": "chat-686b5e4cf4f963adf8f51468a48028ef",
+        "participants": [
+          {
+            "name": "Bob Svoboda",
+            "address": "bob@example.org"
+          }
+        ],
+        "messages": [
+          {
+            "id": "<cs1@example.org>",
+            "subject": "Hi"
+          }
+        ],
+        "firstDate": "2026-03-12T09:00:00.000Z",
+        "lastDate": "2026-03-12T09:00:00.000Z"
+      }
+    ],
+    "carrierSubjects": {
+      "chat-8dc5427d85972211f39c908efa52921f": "Message from Alice Example to Carol Novak, Erin",
+      "chat-839217995553c8aa68150c223d3287d5": "Message from Alice Example to Bob Svoboda, Carol Novak, dan@example.net +2",
+      "chat-3a60d155dbea03b9678f7e86dee5723b": "Message from Alice Example",
+      "chat-686b5e4cf4f963adf8f51468a48028ef": "Message from Alice Example"
+    }
+  }
+}

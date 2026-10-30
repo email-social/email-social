@@ -16,7 +16,12 @@ const ASCII_LABELS = new Set(["us-ascii", "ascii", "ansi_x3.4-1968", "iso646-us"
  */
 const TREAT_AS_UNKNOWN = new Set(["x-user-defined"]);
 
-const decoders = new Map<string, TextDecoder | null>();
+/**
+ * Decoders by label. Only labels the platform knows are kept (a fixed set of
+ * about 200); unknown ones are tried again each time, since labels come from
+ * mail and a cache of every label ever seen would grow without bound.
+ */
+const decoders = new Map<string, TextDecoder>();
 const windows1252 = new TextDecoder("windows-1252");
 
 function normalizeLabel(label: string): string {
@@ -24,19 +29,26 @@ function normalizeLabel(label: string): string {
 }
 
 function decoderFor(label: string): TextDecoder | null {
-  let decoder = decoders.get(label);
-  if (decoder !== undefined) return decoder;
-  decoder = null;
-  if (!TREAT_AS_UNKNOWN.has(label)) {
-    try {
-      decoder = new TextDecoder(label, { fatal: false });
-    } catch {
-      // RangeError: not a WHATWG label (e.g. "utf-7", "cp852"), or one mapped to "replacement".
-      decoder = null;
-    }
+  const cached = decoders.get(label);
+  if (cached !== undefined) return cached;
+  if (TREAT_AS_UNKNOWN.has(label)) return null;
+  let decoder: TextDecoder;
+  try {
+    decoder = new TextDecoder(label, { fatal: false });
+  } catch {
+    // RangeError: not a WHATWG label (e.g. "utf-7", "cp852"), or one mapped to "replacement".
+    return null;
   }
   decoders.set(label, decoder);
   return decoder;
+}
+
+/**
+ * Number of cached decoders, for the test that the cache stays bounded.
+ * @internal
+ */
+export function decoderCacheSize(): number {
+  return decoders.size;
 }
 
 /** UTF-8 when the bytes are valid UTF-8, else windows-1252 (every byte sequence is valid in it). */

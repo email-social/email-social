@@ -1,0 +1,48 @@
+{
+  "description": "Fastmail (web), en: attribution \"On Tue, 3 Mar 2026, at 10:15, Alice Dvořáková wrote:\" (no address) directly above the \"> \" lines",
+  "source": "fixtures/replies/fastmail-en.eml",
+  "raw": "MIME-Version: 1.0\r\nMessage-Id: <fa31b065-51c0-4ffa-9920-190e10fc54af@app.fastmail.example.com>\r\nIn-Reply-To: <CAKx4mWasqF4ia3MDuEX6IMq1oLtUdHIu2xpJ7fSOdFRgk8SK@mail.example.com>\r\nReferences: <CAKx4mWasqF4ia3MDuEX6IMq1oLtUdHIu2xpJ7fSOdFRgk8SK@mail.example.com>\r\nDate: Tue, 03 Mar 2026 10:49:20 +0100\r\nFrom: Bob Svoboda <bob@example.org>\r\nTo: =?UTF-8?Q?Alice_Dvo=C5=99=C3=A1kov=C3=A1?= <alice@example.com>\r\nSubject: Re: Contract draft\r\nContent-Type: multipart/alternative;\r\n    boundary=385a476b51684d6f81a6b0ca0bfac1ca\r\n\r\n--385a476b51684d6f81a6b0ca0bfac1ca\r\nContent-Type: text/plain; charset=utf-8\r\nContent-Transfer-Encoding: quoted-printable\r\n\r\nHi Alice,\r\n\r\nFriday is fine, the draft is nearly done.\r\n\r\nBob\r\n\r\nOn Tue, 3 Mar 2026, at 10:15, Alice Dvo=C5=99=C3=A1kov=C3=A1 wrote:\r\n> Hi Bob,\r\n>\r\n> could you send me the contract draft by Friday?\r\n>\r\n> Thanks,\r\n> Alice\r\n\r\n--385a476b51684d6f81a6b0ca0bfac1ca\r\nContent-Type: text/html; charset=utf-8\r\nContent-Transfer-Encoding: quoted-printable\r\n\r\n<!DOCTYPE html><html><head><title></title><style type=3D\"text/css\">p.MsoNor=\r\nmal,p.MsoNoSpacing{margin:0}</style></head><body><div>Hi Alice,</div><div><=\r\nbr></div><div>Friday is fine, the draft is nearly done.</div><div><br></div=\r\n><div>Bob</div><div><br></div><div>On Tue, 3 Mar 2026, at 10:15, Alice Dvo=\r\n=C5=99=C3=A1kov=C3=A1 wrote:<br></div><blockquote type=3D\"cite\" id=3D\"qt\" s=\r\ntyle=3D\"\"><div>Hi Bob,</div><div><br></div><div>could you send me the contr=\r\nact draft by Friday?</div><div><br></div><div>Thanks,</div><div>Alice</div>=\r\n</blockquote><div><br></div></body></html>\r\n--385a476b51684d6f81a6b0ca0bfac1ca--\r\n",
+  "expected": {
+    "id": "<fa31b065-51c0-4ffa-9920-190e10fc54af@app.fastmail.example.com>",
+    "from": {
+      "name": "Bob Svoboda",
+      "address": "bob@example.org"
+    },
+    "to": [
+      {
+        "name": "Alice Dvořáková",
+        "address": "alice@example.com"
+      }
+    ],
+    "cc": [],
+    "replyTo": [],
+    "date": "2026-03-03T09:49:20.000Z",
+    "subject": "Re: Contract draft",
+    "text": "Hi Alice,\n\nFriday is fine, the draft is nearly done.\n\nBob\n\nOn Tue, 3 Mar 2026, at 10:15, Alice Dvořáková wrote:\n> Hi Bob,\n>\n> could you send me the contract draft by Friday?\n>\n> Thanks,\n> Alice\n",
+    "textSource": "plain",
+    "es": null,
+    "attachments": [],
+    "refs": {
+      "messageId": "<fa31b065-51c0-4ffa-9920-190e10fc54af@app.fastmail.example.com>",
+      "inReplyTo": [
+        "<CAKx4mWasqF4ia3MDuEX6IMq1oLtUdHIu2xpJ7fSOdFRgk8SK@mail.example.com>"
+      ],
+      "references": [
+        "<CAKx4mWasqF4ia3MDuEX6IMq1oLtUdHIu2xpJ7fSOdFRgk8SK@mail.example.com>"
+      ]
+    },
+    "delivery": {
+      "listHeaders": [],
+      "listId": null,
+      "autoSubmitted": null,
+      "precedence": null,
+      "returnPath": null,
+      "listUnsubscribe": null
+    }
+  },
+  "split": {
+    "fresh": "Hi Alice,\n\nFriday is fine, the draft is nearly done.\n\nBob",
+    "quoted": "On Tue, 3 Mar 2026, at 10:15, Alice Dvořáková wrote:\n> Hi Bob,\n>\n> could you send me the contract draft by Friday?\n>\n> Thanks,\n> Alice",
+    "signature": ""
+  }
+}

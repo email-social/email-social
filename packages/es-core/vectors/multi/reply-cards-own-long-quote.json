@@ -1,0 +1,39 @@
+{
+  "description": "Section 9.5: the owner's own reply quoting the whole of a long message gets a card whose excerpt is the first 140 characters of unquote(quoted).",
+  "covers": [
+    "QT-6"
+  ],
+  "owner": {
+    "name": "Alice Example",
+    "addresses": [
+      "alice@example.com"
+    ]
+  },
+  "messages": [
+    {
+      "raw": "From: Bob Svoboda <bob@example.org>\r\nTo: Alice Example <alice@example.com>\r\nSubject: Plan\r\nDate: Mon, 16 Mar 2026 09:00:00 GMT\r\nMessage-ID: <lq1@example.org>\r\nMIME-Version: 1.0\r\nContent-Type: text/plain; charset=utf-8\r\nContent-Transfer-Encoding: 8bit\r\n\r\nLet us meet at the station at half past seven, take the slow train to the lake, walk around it in the morning\r\nand have lunch in the small restaurant by the pier before we go back.\r\n"
+    },
+    {
+      "raw": "From: Alice Example <alice@example.com>\r\nTo: Bob Svoboda <bob@example.org>\r\nSubject: Re: Plan\r\nDate: Mon, 16 Mar 2026 10:00:00 GMT\r\nMessage-ID: <lq2@example.com>\r\nIn-Reply-To: <lq1@example.org>\r\nMIME-Version: 1.0\r\nContent-Type: text/plain; charset=utf-8\r\nContent-Transfer-Encoding: 8bit\r\n\r\nAgreed.\r\n\r\nOn Mon, 16 Mar 2026 at 09:00, Bob Svoboda <bob@example.org> wrote:\r\n> Let us meet at the station at half past seven, take the slow train to the lake, walk around it in the morning\r\n> and have lunch in the small restaurant by the pier before we go back.\r\n"
+    }
+  ],
+  "expected": {
+    "replyCards": {
+      "<lq1@example.org>": null,
+      "<lq2@example.com>": {
+        "messageId": "<lq1@example.org>",
+        "from": "Bob Svoboda",
+        "excerpt": "Let us meet at the station at half past seven, take the slow train to the lake, walk around it in the morning and have lunch in the small re",
+        "attachment": null,
+        "clickable": true
+      }
+    }
+  },
+  "divergences": [
+    {
+      "key": "replyCards",
+      "statement": "QT-6",
+      "note": "The fourth bullet of section 9.5 says \"the first 140 characters of unquote(quoted)\"; es-core cuts that text as in section 9.3 instead (139 characters, back to a word boundary, then \"…\"). The vector holds the first 140 characters."
+    }
+  ]
+}
