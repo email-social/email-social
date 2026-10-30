@@ -60,20 +60,26 @@ function numericReference(digits: string, radix: number): string {
   return String.fromCodePoint(code);
 }
 
-function decodeReferences(text: string): string {
+/**
+ * Decodes character references. In an attribute value (`attribute`), a
+ * legacy reference without ";" followed by "=" stays as written, as HTML
+ * parsing does ("?a=1&copy=2" in a URL).
+ */
+export function decodeReferences(text: string, attribute = false): string {
   if (!text.includes("&")) return text;
-  return text.replace(REFERENCE, (match, dec?: string, hex?: string, name?: string, semicolon?: string) => {
+  return text.replace(REFERENCE, (match, dec: string | undefined, hex: string | undefined, name: string | undefined, semicolon: string, offset: number, whole: string) => {
     if (dec !== undefined) return numericReference(dec, 10);
     if (hex !== undefined) return numericReference(hex, 16);
     const value = NAMED.get(name!);
     if (value === undefined) return match;
-    if (semicolon === ";" || LEGACY.has(name!)) return value;
+    if (semicolon === ";") return value;
+    if (LEGACY.has(name!) && !(attribute && whole[offset + match.length] === "=")) return value;
     return match;
   });
 }
 
 /** Index of the ">" ending a tag whose name ends before `start`; quotes in attribute values are respected. -1 at end of input. */
-function tagEnd(html: string, start: number): number {
+export function tagEnd(html: string, start: number): number {
   let quote = "";
   let previous = "";
   for (let i = start; i < html.length; i++) {

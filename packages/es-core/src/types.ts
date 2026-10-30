@@ -136,6 +136,17 @@ export interface EsStoryPart {
 export type EsPart = EsPostPart | EsReceiptPart | EsStoryPart;
 
 /** The decoded content of one MIME leaf part (see `extractPart`). */
+/** What a story shows (storyContent). */
+export interface EsStoryContent {
+  /** The message text, as EsMessage.text. */
+  text: string;
+  textSource: TextSource;
+  /** The HTML body reduced to an allow-list, image sources in data-src / data-srcset; null without HTML. */
+  html: string | null;
+  /** Images whose loading was held back. */
+  images: number;
+}
+
 export interface EsPartContent {
   /** Lowercased media type, as in EsAttachment.contentType. */
   contentType: string;

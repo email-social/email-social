@@ -13,7 +13,7 @@ is attached after it in `multipart/mixed`, so any mail client shows the text.
 
 ```ts
 parseMessage(raw: string | Uint8Array): EsMessage                     // never throws; strings are read as UTF-8
-extractPart(raw, partId): EsPartContent | null                        // decoded bytes of one attachment (EsAttachment.partId)
+extractPart(raw, partId): EsPartContent | null · storyContent(raw): EsStoryContent  // one attachment's bytes · a story's text and reduced HTML
 serializeMessage(out: EsOutgoing, { date, messageId, includeEsPart? }): string  // CRLF, 7-bit; text/plain first, then the ES part
 serializeReceipt(receipt: EsOutgoingReceipt, { date, messageId }): string · writeStory(story: EsOutgoingStory, { date, messageId }): string  // a receipt · a story
 replyTargetOf(parent): ReplyTarget · replyCardOf(message, lookup, { inChat, self }) · quotedFragmentOf(message, parent)  // reply headers · quote card
@@ -26,7 +26,7 @@ normalizeSubject(subject): { base, isReply, isForward } · subjectKey(base) · c
 deriveContacts(messages, { exclude? }): Contact[] · deriveDid(address) · formatDid · parseDid · isValidDid  // contacts; did:es as metadata
 ES_MEDIA_TYPE · ES_DRAFT_MEDIA_TYPE · ES_TEXT_MAX_BYTES · readRecord(json): EsPart | null  // ES part media types, text limit (10000 B), its JSON
 // Types (src/types.ts): EsMessage, EsAddress, EsAttachment, EsRefs, EsDelivery, EsListUnsubscribe, EsPart (EsPostPart | EsReceiptPart | EsStoryPart), EsStory, EsUnsubscribe, EsOutgoingStory, Conversation,
-// Chat, ChatEntry, ChatTopics, Topic, TopicKind, MessageKind, QuotedSplit, ReplyCard, EsReplyToCard, Contact, EsOutgoing, EsOutgoingReceipt, ReplyTarget, SerializeOptions, ReceiptKind, EsPartContent
+// Chat, ChatEntry, ChatTopics, Topic, TopicKind, MessageKind, QuotedSplit, ReplyCard, EsReplyToCard, Contact, EsOutgoing, EsOutgoingReceipt, ReplyTarget, SerializeOptions, ReceiptKind, EsPartContent, EsStoryContent
 ```
 
 ## Example

@@ -1,6 +1,6 @@
 // Public API of es-core. See README.md.
 export type * from "./types.js";
-export { extractPart, parseMessage } from "./parse.js";
+export { extractPart, parseMessage, storyContent } from "./parse.js";
 export { serializeMessage, serializeReceipt, replyTargetOf, writeStory } from "./serialize.js";
 export { storyOf } from "./story.js";
 export type { StoryOptions } from "./story.js";

@@ -41,6 +41,7 @@ describe("public API (src/index.ts)", () => {
       "serializeMessage",
       "serializeReceipt",
       "splitQuoted",
+      "storyContent",
       "storyOf",
       "subjectKey",
       "subjectNoteOf",

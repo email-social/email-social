@@ -15,10 +15,11 @@ import { getHeader, getHeaders } from "./headers/header-block.js";
 import { parseMessageId, parseMessageIds } from "./headers/message-id.js";
 import { decodeFlowed } from "./mime/flowed.js";
 import { htmlToText } from "./mime/html-to-text.js";
+import { sanitizeHtml } from "./mime/sanitize-html.js";
 import { decodeBody, decodedSize, normalizeContentId, parseMimeTree, type MimeNode } from "./mime/tree.js";
 import { canonicalAddress } from "./headers/canonical.js";
 import type { HeaderField } from "./headers/header-block.js";
-import type { EsAddress, EsAttachment, EsDelivery, EsListUnsubscribe, EsMessage, EsPart, EsPartContent, EsRefs, TextSource } from "./types.js";
+import type { EsAddress, EsAttachment, EsDelivery, EsListUnsubscribe, EsMessage, EsPart, EsPartContent, EsRefs, EsStoryContent, TextSource } from "./types.js";
 import { toBytes, utf8Decode } from "./util/bytes.js";
 import { sha256Hex } from "./util/sha256.js";
 
@@ -324,6 +325,40 @@ export function extractPart(raw: string | Uint8Array, partId: string): EsPartCon
     return { contentType: node.contentType, filename: filenameOf(node), bytes: decodeBody(node) };
   } catch {
     return null;
+  }
+}
+
+/** The HTML body leaves, preferring HTML: in multipart/alternative the last alternative that has one. */
+function htmlLeaves(node: MimeNode): MimeNode[] {
+  if (node.children.length === 0) return isBodyText(node) && node.contentType === "text/html" ? [node] : [];
+  if (node.contentType === "multipart/alternative") {
+    const options = node.children.map(htmlLeaves).filter((o) => o.length > 0);
+    return options[options.length - 1] ?? [];
+  }
+  if (node.contentType === "multipart/related") {
+    const start = normalizeContentId(node.params.start ?? null);
+    return htmlLeaves((start === null ? undefined : node.children.find((c) => c.contentId === start)) ?? node.children[0]!);
+  }
+  return node.children.flatMap(htmlLeaves);
+}
+
+/**
+ * What a story shows (spec section 12.5): the message text (section 6.6;
+ * HTML reduced to text when there is no text/plain), and its HTML body
+ * reduced to an allow-list that runs nothing and loads nothing, with image
+ * sources moved to data-src. `html` is null for a message without HTML.
+ * Never throws.
+ */
+export function storyContent(raw: string | Uint8Array): EsStoryContent {
+  const bytes = toBytes(raw);
+  const message = parseMessage(bytes);
+  try {
+    const leaves = htmlLeaves(parseMimeTree(bytes));
+    if (leaves.length === 0) return { text: message.text, textSource: message.textSource, html: null, images: 0 };
+    const parts = leaves.map((node) => sanitizeHtml(decodeText(decodeBody(node), node.params.charset)));
+    return { text: message.text, textSource: message.textSource, html: parts.map((p) => p.html).join("\n"), images: parts.reduce((n, p) => n + p.images, 0) };
+  } catch {
+    return { text: message.text, textSource: message.textSource, html: null, images: 0 };
   }
 }
 
