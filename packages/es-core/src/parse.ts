@@ -8,7 +8,7 @@
 
 import { decodeText } from "./codec/charset.js";
 import { decodeEncodedWords } from "./codec/encoded-word.js";
-import { ES_POST_TYPE, isEsMediaType, parseEsJson } from "./es/schema.js";
+import { ES_POST_TYPE, ES_STORY_TYPE, isEsMediaType, parseEsJson } from "./es/schema.js";
 import { parseAddressList } from "./headers/address.js";
 import { parseDate } from "./headers/date.js";
 import { getHeader, getHeaders } from "./headers/header-block.js";
@@ -18,7 +18,7 @@ import { htmlToText } from "./mime/html-to-text.js";
 import { decodeBody, decodedSize, normalizeContentId, parseMimeTree, type MimeNode } from "./mime/tree.js";
 import { canonicalAddress } from "./headers/canonical.js";
 import type { HeaderField } from "./headers/header-block.js";
-import type { EsAddress, EsAttachment, EsDelivery, EsMessage, EsPart, EsPartContent, EsRefs, TextSource } from "./types.js";
+import type { EsAddress, EsAttachment, EsDelivery, EsListUnsubscribe, EsMessage, EsPart, EsPartContent, EsRefs, TextSource } from "./types.js";
 import { toBytes, utf8Decode } from "./util/bytes.js";
 import { sha256Hex } from "./util/sha256.js";
 
@@ -147,7 +147,7 @@ function leaves(node: MimeNode, out: MimeNode[] = []): MimeNode[] {
 /**
  * The ES part of this message, or null. Only the first leaf with an ES media
  * type is considered. It must parse, its `via` must be the From address, and
- * a post's `email.messageId` must be the header Message-ID when both exist:
+ * a post's or story's `email.messageId` must be the header Message-ID when both exist:
  * a forward made by an ordinary client carries the original's ES part along,
  * and that part describes another message.
  */
@@ -155,7 +155,7 @@ function acceptEsPart(node: MimeNode, from: EsAddress | null, messageId: string 
   const es = parseEsJson(utf8Decode(decodeBody(node)));
   if (es === null) return null;
   if (from !== null && es.via !== from.address) return null;
-  if (es.$type === ES_POST_TYPE && messageId !== null && es.email.messageId !== null && es.email.messageId !== messageId) {
+  if ((es.$type === ES_POST_TYPE || es.$type === ES_STORY_TYPE) && messageId !== null && es.email.messageId !== null && es.email.messageId !== messageId) {
     return null;
   }
   return es;
@@ -186,12 +186,30 @@ function firstMailbox(values: readonly string[]): EsAddress | null {
 /** RFC 2369 §3 and RFC 2919 list header fields. */
 const LIST_FIELDS = new Set(["list-id", "list-help", "list-unsubscribe", "list-subscribe", "list-post", "list-owner", "list-archive"]);
 
-const NO_DELIVERY: EsDelivery = { listHeaders: [], listId: null, autoSubmitted: null, precedence: null, returnPath: null };
+const NO_DELIVERY: EsDelivery = { listHeaders: [], listId: null, autoSubmitted: null, precedence: null, returnPath: null, listUnsubscribe: null };
 
 /** A header value without RFC 5322 comments ("(...)"), trimmed and lowercased; null for null. */
 function keyword(value: string | null): string | null {
   if (value === null) return null;
   return value.replace(/\([^()]*\)/g, " ").split(";")[0]!.trim().toLowerCase();
+}
+
+/**
+ * The first List-Unsubscribe field: the URIs in angle brackets (RFC 2369
+ * §2, §3.2), white space removed (folding), in order, each once; and
+ * whether the first List-Unsubscribe-Post is "List-Unsubscribe=One-Click"
+ * (RFC 8058 §3.1), compared without white space and letter case.
+ */
+function listUnsubscribeOf(fields: readonly HeaderField[]): EsListUnsubscribe | null {
+  const value = getHeader(fields, "list-unsubscribe");
+  if (value === null) return null;
+  const uris: string[] = [];
+  for (const m of value.matchAll(/<([^<>]*)>/g)) {
+    const uri = m[1]!.replace(/\s+/g, "");
+    if (uri !== "" && !uris.includes(uri)) uris.push(uri);
+  }
+  const post = getHeader(fields, "list-unsubscribe-post");
+  return { uris, oneClick: post !== null && post.replace(/\s+/g, "").toLowerCase() === "list-unsubscribe=one-click" };
 }
 
 function deliveryOf(fields: readonly HeaderField[]): EsDelivery {
@@ -210,6 +228,7 @@ function deliveryOf(fields: readonly HeaderField[]): EsDelivery {
     autoSubmitted: keyword(getHeader(fields, "auto-submitted")),
     precedence: keyword(getHeader(fields, "precedence")),
     returnPath,
+    listUnsubscribe: listUnsubscribeOf(fields),
   };
 }
 

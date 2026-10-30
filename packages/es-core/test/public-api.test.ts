@@ -35,17 +35,20 @@ describe("public API (src/index.ts)", () => {
       "parseMessage",
       "quoteForReply",
       "quotedFragmentOf",
+      "readRecord",
       "replyCardOf",
       "replyTargetOf",
       "serializeMessage",
       "serializeReceipt",
       "splitQuoted",
+      "storyOf",
       "subjectKey",
       "subjectNoteOf",
       "threadMessages",
       "topicsOf",
       "unquote",
       "unquotedLines",
+      "writeStory",
     ]);
     expect(ES_MEDIA_TYPE).toBe("application/vnd.email-social.message+json");
   });

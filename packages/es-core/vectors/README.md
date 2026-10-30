@@ -16,9 +16,10 @@ then be reviewed like any code change.
   "source": "fixtures/<file>.eml" | "generated",
   "raw": "the message, when its bytes are valid UTF-8",
   "rawBase64": "the message bytes in base64, otherwise (exactly one of raw / rawBase64)",
-  "input": { "kind": "message" | "receipt", "...": "only for generated vectors, see below" },
+  "input": { "kind": "message" | "receipt" | "story", "...": "only for generated vectors, see below" },
   "expected": { "...": "EsMessage" },
-  "split": { "fresh": "…", "quoted": "…", "signature": "…" }
+  "split": { "fresh": "…", "quoted": "…", "signature": "…" },
+  "story": { "…": "only in stories-*.json: storyOf(expected), or null" }
 }
 ```
 
@@ -56,7 +57,12 @@ then be reviewed like any code change.
     of the RFC 2369 / RFC 2919 `List-*` fields present (sorted), the
     `List-Id` identifier, the `Auto-Submitted` keyword (RFC 3834) and the
     `Precedence` value (lowercased, without comments or parameters), and the
-    `Return-Path` address (`""` for `<>`), each `null` when absent.
+    `Return-Path` address (`""` for `<>`), each `null` when absent; and
+    `listUnsubscribe`: the URIs in angle brackets of the first
+    `List-Unsubscribe` field (RFC 2369 §3.2, white space removed, in order,
+    each once) with `oneClick`, true when `List-Unsubscribe-Post` is
+    `List-Unsubscribe=One-Click` (RFC 8058 §3.1), or `null` when there is no
+    `List-Unsubscribe` field.
 - **`split`** is `splitQuoted(expected)`: the text the sender wrote in
   this message (`fresh`), the earlier messages their client quoted
   (`quoted`: `>` lines with their attribution, an Outlook header block or a
@@ -67,12 +73,19 @@ then be reviewed like any code change.
   non-blank line of `text` is in exactly one part. The
   `replies-*.json` vectors (from `fixtures/replies/`) exist for this field:
   one reply per client format.
+- **`story`** is in the `stories-*.json` vectors only (from
+  `fixtures/stories/`, and the generated `stories-explicit-record.json`):
+  `storyOf(expected)` without an owner address, the story a client shows
+  for the message, or `null` for the discussion list, the automated mail and
+  the bounce that must never be one (`es-protocol.md`, section "Stories").
 - **Generated vectors** (`source: "generated"`) were written by es-core's
   serializer from `input` with a fixed date and Message-ID.
   `generated-topic-root.json` and `generated-topic-reply.json` are the root
   of a named topic and a deliberate reply inside it, with the `email` keys in
   the order `messageId, subject, inReplyTo, references, textSha256,
-  topicRoot, topicLabel, replyTo`. A conforming
+  topicRoot, topicLabel, replyTo`. `stories-explicit-record.json` was
+  written by `writeStory`: an es.social.story record with its keys in the
+  order `via, createdAt, email, title, expiresAt, unsubscribe, text`. A conforming
   writer need not produce the same bytes, but a conforming parser must read
   `raw` as `expected`. es-core additionally checks that serialising `input`
   again gives `raw` byte for byte.

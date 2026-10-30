@@ -8,6 +8,9 @@
  *   └── application/vnd.email-social.message+json
  *                                         the ES record, base64, as a named attachment
  *
+ * A story (`writeStory`) has the same layout, with an es.social.story record
+ * as its ES part and a List-Unsubscribe field when it says how to leave.
+ *
  * With `includeEsPart: false` a message is a single text/plain part and
  * nothing else. The text/plain part always holds the whole text; a text
  * longer than ES_TEXT_MAX_BYTES is left out of the ES record, which then
@@ -32,8 +35,11 @@ import {
   ES_PART_FILENAME,
   ES_POST_TYPE,
   ES_RECEIPT_TYPE,
+  ES_STORY_TITLE_MAX_BYTES,
+  ES_STORY_TYPE,
   ES_SUBJECT_MAX_BYTES,
   ES_TEXT_MAX_BYTES,
+  STORY_URL,
   formatEsJson,
   isRfc3339DateTime,
 } from "./es/schema.js";
@@ -44,10 +50,13 @@ import type {
   EsMessage,
   EsOutgoing,
   EsOutgoingReceipt,
+  EsOutgoingStory,
   EsPart,
   EsPostPart,
   EsReceiptPart,
   EsReplyToCard,
+  EsStoryPart,
+  EsStoryUnsubscribe,
   ReceiptKind,
   ReplyTarget,
   SerializeOptions,
@@ -264,6 +273,8 @@ interface Envelope {
   inReplyTo: string | null;
   references: readonly string[];
   autoSubmitted: boolean;
+  /** The List-Unsubscribe value of a story ("<mailto:…>" or "<https://…>"), or null. */
+  listUnsubscribe?: string | null;
 }
 
 function headerLines(e: Envelope): string[] {
@@ -278,6 +289,8 @@ function headerLines(e: Envelope): string[] {
   }
   // RFC 3834 §5: marks an automatic response so that vacation responders and similar agents do not answer it.
   if (e.autoSubmitted) lines.push(field("Auto-Submitted", "auto-replied"));
+  // RFC 2369 §3.2: every mail client can offer the story's unsubscribe, not only Email Social.
+  if (e.listUnsubscribe != null) lines.push(field("List-Unsubscribe", e.listUnsubscribe));
   return lines;
 }
 
@@ -472,6 +485,64 @@ export function serializeReceipt(r: EsOutgoingReceipt, options: SerializeOptions
     autoSubmitted: true,
   };
   return assemble(envelope, text, receipt);
+}
+
+/** A story's `unsubscribe`: a writable address, or an http(s) URL that fits on a header line. */
+function checkStoryUnsubscribe(value: unknown): EsStoryUnsubscribe | null {
+  if (value === undefined || value === null) return null;
+  const input = value as Partial<{ mailto: unknown; url: unknown }>;
+  if (typeof input.mailto === "string") return { mailto: checkMailbox({ address: input.mailto }, "unsubscribe.mailto").address };
+  if (typeof input.url === "string" && STORY_URL.test(input.url) && !/[<>"\\]/.test(input.url) && input.url.length <= 900) return { url: input.url };
+  throw new TypeError(`unsubscribe must be { mailto: address } or { url: "https://…" }: ${JSON.stringify(value)}`);
+}
+
+/** A story's expiresAt as an RFC 3339 UTC timestamp, or null. */
+function checkExpiresAt(value: unknown): string | null {
+  if (value === undefined || value === null) return null;
+  return checkDate(value).toISOString();
+}
+
+/**
+ * Serialises a story: an ordinary message whose text/plain part holds the
+ * whole text and whose ES part is an es.social.story record (spec section
+ * "Stories"). The Subject is the title. A story never asks for receipts. With
+ * `unsubscribe` it also carries List-Unsubscribe (RFC 2369 §3.2), so every
+ * mail client can offer it. A text over ES_TEXT_MAX_BYTES is only in the
+ * text/plain part; the record then carries its SHA-256.
+ *
+ * Throws TypeError for an invalid Message-ID, date, address, did:es author,
+ * an empty title or one over ES_STORY_TITLE_MAX_BYTES, an invalid
+ * unsubscribe or expiresAt, or a story without recipients.
+ */
+export function writeStory(story: EsOutgoingStory, options: SerializeOptions): string {
+  const messageId = checkMessageId(options.messageId);
+  const date = checkDate(options.date);
+  const from = checkMailbox(story.from, "from");
+  const to = (story.to ?? []).map((mailbox) => checkMailbox(mailbox, "to"));
+  const cc = (story.cc ?? []).map((mailbox) => checkMailbox(mailbox, "cc"));
+  if (to.length + cc.length === 0) throw new TypeError("A story needs at least one recipient in to or cc");
+  if (typeof story.title !== "string") throw new TypeError("title must be a string");
+  const title = normalizeSubject(story.title);
+  if (title === "" || utf8Encode(title).length > ES_STORY_TITLE_MAX_BYTES) {
+    throw new TypeError(`A story title needs 1 to ${ES_STORY_TITLE_MAX_BYTES} UTF-8 bytes: ${JSON.stringify(story.title)}`);
+  }
+  const text = normalizeText(story.text);
+  const textInRecord = utf8Encode(text).length <= ES_TEXT_MAX_BYTES;
+  const unsubscribe = checkStoryUnsubscribe(story.unsubscribe);
+  const record: EsStoryPart = {
+    $type: ES_STORY_TYPE,
+    author: checkAuthor(story.author),
+    via: from.address,
+    createdAt: date.toISOString(),
+    email: { messageId, textSha256: textInRecord ? null : sha256Hex(text) },
+    title,
+    expiresAt: checkExpiresAt(story.expiresAt),
+    unsubscribe,
+    text: textInRecord ? text : null,
+  };
+  const listUnsubscribe = unsubscribe === null ? null : "mailto" in unsubscribe ? `<mailto:${unsubscribe.mailto}>` : `<${unsubscribe.url}>`;
+  const envelope: Envelope = { date, messageId, from, to, cc, subject: title, inReplyTo: null, references: [], autoSubmitted: false, listUnsubscribe };
+  return assemble(envelope, text, record);
 }
 
 /**

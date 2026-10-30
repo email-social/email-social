@@ -1,0 +1,62 @@
+{
+  "description": "Postfix delivery status notification (RFC 3464): Return-Path: <>, Auto-Submitted: auto-replied, multipart/report; report-type=delivery-status with message/delivery-status and text/rfc822-headers; never a story",
+  "source": "fixtures/stories/bounce.eml",
+  "raw": "Return-Path: <>\r\nDate: Fri, 20 Mar 2026 22:00:01 +0000 (UTC)\r\nFrom: MAILER-DAEMON@mx.example.com (Mail Delivery System)\r\nTo: alice@example.com\r\nSubject: Undelivered Mail Returned to Sender\r\nMessage-ID: <20260320220001.8E1A2601F3@mx.example.com>\r\nAuto-Submitted: auto-replied\r\nMIME-Version: 1.0\r\nContent-Type: multipart/report; report-type=delivery-status;\r\n\tboundary=\"8E1A2601F3.1710972000/mx.example.com\"\r\n\r\nThis is a MIME-encapsulated message.\r\n\r\n--8E1A2601F3.1710972000/mx.example.com\r\nContent-Description: Notification\r\nContent-Type: text/plain; charset=us-ascii\r\n\r\nThis is the mail system at host mx.example.com.\r\n\r\nI'm sorry to have to inform you that your message could not\r\nbe delivered to one or more recipients.\r\n\r\n<old.address@example.net>: host mx.example.net[203.0.113.25] said: 550 5.1.1\r\n    <old.address@example.net>: Recipient address rejected: User unknown\r\n\r\n--8E1A2601F3.1710972000/mx.example.com\r\nContent-Description: Delivery report\r\nContent-Type: message/delivery-status\r\n\r\nReporting-MTA: dns; mx.example.com\r\nX-Postfix-Queue-ID: 8E1A2601F3\r\nArrival-Date: Fri, 20 Mar 2026 22:00:00 +0000 (UTC)\r\n\r\nFinal-Recipient: rfc822; old.address@example.net\r\nOriginal-Recipient: rfc822;old.address@example.net\r\nAction: failed\r\nStatus: 5.1.1\r\nRemote-MTA: dns; mx.example.net\r\nDiagnostic-Code: smtp; 550 5.1.1 <old.address@example.net>: Recipient address rejected: User unknown\r\n\r\n--8E1A2601F3.1710972000/mx.example.com\r\nContent-Description: Undelivered Message Headers\r\nContent-Type: text/rfc822-headers\r\n\r\nDate: Fri, 20 Mar 2026 21:59:58 +0000\r\nFrom: Alice <alice@example.com>\r\nTo: old.address@example.net\r\nSubject: Walk on Saturday?\r\nMessage-ID: <walk-1@example.com>\r\n\r\n--8E1A2601F3.1710972000/mx.example.com--\r\n",
+  "expected": {
+    "id": "<20260320220001.8E1A2601F3@mx.example.com>",
+    "from": {
+      "name": "Mail Delivery System",
+      "address": "MAILER-DAEMON@mx.example.com"
+    },
+    "to": [
+      {
+        "name": "",
+        "address": "alice@example.com"
+      }
+    ],
+    "cc": [],
+    "replyTo": [],
+    "date": "2026-03-20T22:00:01.000Z",
+    "subject": "Undelivered Mail Returned to Sender",
+    "text": "This is the mail system at host mx.example.com.\n\nI'm sorry to have to inform you that your message could not\nbe delivered to one or more recipients.\n\n<old.address@example.net>: host mx.example.net[203.0.113.25] said: 550 5.1.1\n    <old.address@example.net>: Recipient address rejected: User unknown\n",
+    "textSource": "plain",
+    "es": null,
+    "attachments": [
+      {
+        "filename": null,
+        "contentType": "message/delivery-status",
+        "disposition": "attachment",
+        "size": 391,
+        "contentId": null,
+        "partId": "2"
+      },
+      {
+        "filename": null,
+        "contentType": "text/rfc822-headers",
+        "disposition": "attachment",
+        "size": 163,
+        "contentId": null,
+        "partId": "3"
+      }
+    ],
+    "refs": {
+      "messageId": "<20260320220001.8E1A2601F3@mx.example.com>",
+      "inReplyTo": [],
+      "references": []
+    },
+    "delivery": {
+      "listHeaders": [],
+      "listId": null,
+      "autoSubmitted": "auto-replied",
+      "precedence": null,
+      "returnPath": "",
+      "listUnsubscribe": null
+    }
+  },
+  "split": {
+    "fresh": "This is the mail system at host mx.example.com.\n\nI'm sorry to have to inform you that your message could not\nbe delivered to one or more recipients.\n\n<old.address@example.net>: host mx.example.net[203.0.113.25] said: 550 5.1.1\n    <old.address@example.net>: Recipient address rejected: User unknown",
+    "quoted": "",
+    "signature": ""
+  },
+  "story": null
+}

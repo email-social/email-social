@@ -1,0 +1,64 @@
+Return-Path: <bounce-7f3a2c@mail.shop.example.org>
+Received: from mta12.mail.shop.example.org (mta12.mail.shop.example.org [198.51.100.44])
+	by mx.example.com with ESMTPS id 4f8k2c; Thu, 19 Mar 2026 07:30:02 +0000
+Date: Thu, 19 Mar 2026 07:30:00 +0000
+From: Shoe Shop <news@shop.example.org>
+Reply-To: Shoe Shop <hello@shop.example.org>
+To: alice@example.com
+Subject: =?utf-8?Q?Spring_sale:_shoes_from_20_=E2=82=AC?=
+Message-ID: <20260319073000.7f3a2c@mail.shop.example.org>
+List-Unsubscribe: <https://shop.example.org/u/7f3a2c?l=spring>,
+ <mailto:unsubscribe@mail.shop.example.org?subject=unsubscribe-7f3a2c>
+List-Unsubscribe-Post: List-Unsubscribe=One-Click
+List-Id: Shoe Shop news <spring.shop.example.org>
+Precedence: bulk
+Feedback-ID: spring26:shop:news:mail.shop.example.org
+MIME-Version: 1.0
+Content-Type: multipart/alternative; boundary="_----------=_MCPart_17107834001"
+
+This is a multi-part message in MIME format
+
+--_----------=_MCPart_17107834001
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+
+Spring sale: shoes from 20 EUR
+
+Hi Alice,
+
+our spring collection is here. Walking shoes, trail runners and sandals
+are 30 % off until Sunday.
+
+Shop the sale: https://shop.example.org/sale?utm_source=3Dnews
+
+You get this e-mail because you signed up at shop.example.org.
+Unsubscribe: https://shop.example.org/u/7f3a2c?l=3Dspring
+--_----------=_MCPart_17107834001
+Content-Type: text/html; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+
+<!DOCTYPE html>
+<html><head><meta charset=3D"utf-8"><title>Spring sale</title>
+<style>body{font-family:Arial,sans-serif} .btn{background:#d0491f;color:#ff=
+f}</style>
+</head><body>
+<table width=3D"100%" cellpadding=3D"0" cellspacing=3D"0" role=3D"presentat=
+ion"><tr><td align=3D"center">
+<img src=3D"https://img.shop.example.org/2026/spring/hero.jpg" srcset=3D"ht=
+tps://img.shop.example.org/2026/spring/hero-2x.jpg 2x" alt=3D"Spring shoes"=
+ width=3D"600" height=3D"300">
+<h1>Spring sale: shoes from 20&nbsp;&euro;</h1>
+<p>Hi Alice,</p>
+<p>our spring collection is here. Walking shoes, trail runners and sandals =
+are 30&nbsp;% off until Sunday.</p>
+<p><a class=3D"btn" href=3D"https://shop.example.org/sale?utm_source=3Dnews=
+">Shop the sale</a></p>
+<p style=3D"font-size:12px;color:#777">You get this e-mail because you sign=
+ed up at shop.example.org.
+<a href=3D"https://shop.example.org/u/7f3a2c?l=3Dspring">Unsubscribe</a></p=
+>
+</td></tr></table>
+<img src=3D"https://open.mail.shop.example.org/o/7f3a2c.gif" width=3D"1" he=
+ight=3D"1" alt=3D"">
+</body></html>
+--_----------=_MCPart_17107834001--

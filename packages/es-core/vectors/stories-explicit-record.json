@@ -1,0 +1,105 @@
+{
+  "description": "A story written by es-core (writeStory): text/plain first, then an es.social.story record with its title, expiresAt and unsubscribe address; List-Unsubscribe carries the same address for ordinary clients.",
+  "source": "generated",
+  "input": {
+    "kind": "story",
+    "story": {
+      "from": {
+        "name": "Shoe Shop",
+        "address": "news@shop.example.org"
+      },
+      "to": [
+        {
+          "name": "Alice Example",
+          "address": "alice@example.com"
+        }
+      ],
+      "title": "Spring sale: shoes from 20 €",
+      "text": "Spring sale: walking shoes, trail runners and sandals from 20 €, until Sunday.\n\nhttps://shop.example.org/sale\n",
+      "expiresAt": "2026-03-22T23:00:00Z",
+      "unsubscribe": {
+        "mailto": "leave@shop.example.org"
+      }
+    },
+    "options": {
+      "date": "2026-03-18T08:00:00Z",
+      "messageId": "<es-vector-9@shop.example.org>"
+    }
+  },
+  "raw": "Date: Wed, 18 Mar 2026 08:00:00 +0000\r\nFrom: Shoe Shop <news@shop.example.org>\r\nTo: Alice Example <alice@example.com>\r\nSubject: =?UTF-8?Q?Spring_sale:_shoes_from_20_=E2=82=AC?=\r\nMessage-ID: <es-vector-9@shop.example.org>\r\nList-Unsubscribe: <mailto:leave@shop.example.org>\r\nMIME-Version: 1.0\r\nContent-Type: multipart/mixed; boundary=\"=_es_003c405f3ccebc03b397efbe\"\r\n\r\nThis is a multi-part message in MIME format.\r\n\r\n--=_es_003c405f3ccebc03b397efbe\r\nContent-Type: text/plain; charset=utf-8\r\nContent-Transfer-Encoding: quoted-printable\r\n\r\nSpring sale: walking shoes, trail runners and sandals from 20 =E2=82=AC, un=\r\ntil Sunday.\r\n\r\nhttps://shop.example.org/sale\r\n\r\n--=_es_003c405f3ccebc03b397efbe\r\nContent-Type: application/vnd.email-social.message+json\r\nContent-Transfer-Encoding: base64\r\nContent-Disposition: attachment; filename=\"email-social.json\"\r\n\r\newogICIkdHlwZSI6ICJlcy5zb2NpYWwuc3RvcnkiLAogICJ2YWx1ZSI6IHsKICAgICJ2aWEiOiAi\r\nbmV3c0BzaG9wLmV4YW1wbGUub3JnIiwKICAgICJjcmVhdGVkQXQiOiAiMjAyNi0wMy0xOFQwODow\r\nMDowMC4wMDBaIiwKICAgICJlbWFpbCI6IHsKICAgICAgIm1lc3NhZ2VJZCI6ICI8ZXMtdmVjdG9y\r\nLTlAc2hvcC5leGFtcGxlLm9yZz4iCiAgICB9LAogICAgInRpdGxlIjogIlNwcmluZyBzYWxlOiBz\r\naG9lcyBmcm9tIDIwIOKCrCIsCiAgICAiZXhwaXJlc0F0IjogIjIwMjYtMDMtMjJUMjM6MDA6MDAu\r\nMDAwWiIsCiAgICAidW5zdWJzY3JpYmUiOiB7CiAgICAgICJtYWlsdG8iOiAibGVhdmVAc2hvcC5l\r\neGFtcGxlLm9yZyIKICAgIH0sCiAgICAidGV4dCI6ICJTcHJpbmcgc2FsZTogd2Fsa2luZyBzaG9l\r\ncywgdHJhaWwgcnVubmVycyBhbmQgc2FuZGFscyBmcm9tIDIwIOKCrCwgdW50aWwgU3VuZGF5Llxu\r\nXG5odHRwczovL3Nob3AuZXhhbXBsZS5vcmcvc2FsZVxuIgogIH0KfQo=\r\n--=_es_003c405f3ccebc03b397efbe--\r\n",
+  "expected": {
+    "id": "<es-vector-9@shop.example.org>",
+    "from": {
+      "name": "Shoe Shop",
+      "address": "news@shop.example.org"
+    },
+    "to": [
+      {
+        "name": "Alice Example",
+        "address": "alice@example.com"
+      }
+    ],
+    "cc": [],
+    "replyTo": [],
+    "date": "2026-03-18T08:00:00.000Z",
+    "subject": "Spring sale: shoes from 20 €",
+    "text": "Spring sale: walking shoes, trail runners and sandals from 20 €, until Sunday.\n\nhttps://shop.example.org/sale\n",
+    "textSource": "plain",
+    "es": {
+      "$type": "es.social.story",
+      "author": null,
+      "via": "news@shop.example.org",
+      "createdAt": "2026-03-18T08:00:00.000Z",
+      "email": {
+        "messageId": "<es-vector-9@shop.example.org>",
+        "textSha256": null
+      },
+      "title": "Spring sale: shoes from 20 €",
+      "expiresAt": "2026-03-22T23:00:00.000Z",
+      "unsubscribe": {
+        "mailto": "leave@shop.example.org"
+      },
+      "text": "Spring sale: walking shoes, trail runners and sandals from 20 €, until Sunday.\n\nhttps://shop.example.org/sale\n"
+    },
+    "attachments": [],
+    "refs": {
+      "messageId": "<es-vector-9@shop.example.org>",
+      "inReplyTo": [],
+      "references": []
+    },
+    "delivery": {
+      "listHeaders": [
+        "list-unsubscribe"
+      ],
+      "listId": null,
+      "autoSubmitted": null,
+      "precedence": null,
+      "returnPath": null,
+      "listUnsubscribe": {
+        "uris": [
+          "mailto:leave@shop.example.org"
+        ],
+        "oneClick": false
+      }
+    }
+  },
+  "split": {
+    "fresh": "Spring sale: walking shoes, trail runners and sandals from 20 €, until Sunday.\n\nhttps://shop.example.org/sale",
+    "quoted": "",
+    "signature": ""
+  },
+  "story": {
+    "sender": {
+      "name": "Shoe Shop",
+      "address": "news@shop.example.org"
+    },
+    "title": "Spring sale: shoes from 20 €",
+    "receivedAt": "2026-03-18T08:00:00.000Z",
+    "expiresAt": "2026-03-22T23:00:00.000Z",
+    "unsubscribe": {
+      "mailto": "leave@shop.example.org",
+      "subject": "unsubscribe"
+    },
+    "explicit": true
+  }
+}

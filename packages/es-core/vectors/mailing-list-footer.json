@@ -43,7 +43,14 @@
       "listId": "dev-list.lists.example.org",
       "autoSubmitted": null,
       "precedence": "list",
-      "returnPath": "dev-list-bounces@lists.example.org"
+      "returnPath": "dev-list-bounces@lists.example.org",
+      "listUnsubscribe": {
+        "uris": [
+          "https://lists.example.org/mailman/options/dev-list",
+          "mailto:dev-list-request@lists.example.org?subject=unsubscribe"
+        ],
+        "oneClick": false
+      }
     }
   },
   "split": {

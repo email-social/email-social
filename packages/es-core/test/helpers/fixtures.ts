@@ -20,18 +20,26 @@ export function listReplyFixtures(): string[] {
     .map((name) => "replies/" + name);
 }
 
-/** Every fixture: the corpus and the reply formats. */
+/** Names of the story fixtures (fixtures/stories/*.eml: newsletters and the automated mail that is not one) as "stories/<file>". */
+export function listStoryFixtures(): string[] {
+  return readdirSync(FIXTURES_DIR + "stories")
+    .filter((name) => name.endsWith(".eml"))
+    .sort()
+    .map((name) => "stories/" + name);
+}
+
+/** Every fixture: the corpus, the reply formats and the story formats. */
 export function listAllFixtures(): string[] {
-  return [...listFixtures(), ...listReplyFixtures()];
+  return [...listFixtures(), ...listReplyFixtures(), ...listStoryFixtures()];
 }
 
 /**
- * The exact bytes of a fixture ("name.eml" or "replies/name.eml"). Returned
+ * The exact bytes of a fixture ("name.eml", "replies/name.eml" or "stories/name.eml"). Returned
  * as a plain Uint8Array, not a Node Buffer, so tests exercise the same input
  * type a browser would pass.
  */
 export function readFixture(name: string): Uint8Array {
-  if (!/^(?:replies\/)?[^/\\]+$/.test(name) || name.includes("..")) throw new Error(`not a fixture name: ${name}`);
+  if (!/^(?:replies\/|stories\/)?[^/\\]+$/.test(name) || name.includes("..")) throw new Error(`not a fixture name: ${name}`);
   const buffer = readFileSync(FIXTURES_DIR + name);
   return new Uint8Array(buffer.buffer.slice(buffer.byteOffset, buffer.byteOffset + buffer.byteLength));
 }

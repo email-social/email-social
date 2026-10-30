@@ -16,6 +16,12 @@
  *     "author": "did:es:…",
  *     "value": { "kind": "delivered" | "read", "messageId", "via", "createdAt" } }
  *
+ *   { "$type": "es.social.story",
+ *     "author": "did:es:…",
+ *     "value": { "via", "createdAt", "email": { "messageId", "textSha256" },
+ *                "title", "expiresAt", "unsubscribe": { "mailto" } | { "url" },
+ *                "text" } }
+ *
  * The post record is the direct-message subset of the draft's es.social.post
  * lexicon (spec 2.3.1): text, via, createdAt and email. Facets, embeds,
  * visibility, geo, reply (AT URIs) and langs belong to features this
@@ -42,6 +48,12 @@
  * record leaves `text` out and carries `email.textSha256`, the lowercase hex
  * SHA-256 of the UTF-8 text, so a reader can tie it to that body.
  *
+ * The story record marks a newsletter or promotion explicitly (spec section
+ * "Stories"). It is ours, like the receipt record: the draft has none. It
+ * never asks for receipts (`requestReceipts` is neither written nor read),
+ * its title is at most ES_STORY_TITLE_MAX_BYTES, and its text follows the
+ * post rule above.
+ *
  * Parsing is liberal (unknown fields are ignored, malformed optional fields
  * are dropped); a record missing a required field is rejected as a whole.
  */
@@ -49,7 +61,8 @@
 import { canonicalAddress } from "../headers/canonical.js";
 import { normalizeMessageId } from "../headers/message-id.js";
 import { isValidDid } from "../did.js";
-import type { EsEmailMeta, EsPart, EsPostPart, EsReceiptPart, EsReplyToCard, ReceiptKind } from "../types.js";
+import { utf8Encode } from "../util/bytes.js";
+import type { EsEmailMeta, EsPart, EsPostPart, EsReceiptPart, EsReplyToCard, EsStoryPart, EsStoryUnsubscribe, ReceiptKind } from "../types.js";
 
 /** Media type of the ES part written by es-core. */
 export const ES_MEDIA_TYPE = "application/vnd.email-social.message+json";
@@ -60,10 +73,16 @@ export const ES_PART_FILENAME = "email-social.json";
 
 export const ES_POST_TYPE = "es.social.post";
 export const ES_RECEIPT_TYPE = "es.social.receipt";
+export const ES_STORY_TYPE = "es.social.story";
 
 /** Lexicon limits (spec 2.3.1), in UTF-8 bytes as in AT Protocol lexicons. */
 export const ES_TEXT_MAX_BYTES = 10000;
 export const ES_SUBJECT_MAX_BYTES = 500;
+/** Longest story title, in UTF-8 bytes. */
+export const ES_STORY_TITLE_MAX_BYTES = 200;
+
+/** An unsubscribe URL a story record may give: http or https, printable ASCII without spaces or brackets. */
+export const STORY_URL = /^https?:\/\/[\x21-\x7e]+$/i;
 
 const RECEIPT_KINDS: readonly ReceiptKind[] = ["delivered", "read"];
 
@@ -103,6 +122,25 @@ function readAddress(value: unknown): string | null {
 function readReceiptKinds(value: unknown): ReceiptKind[] {
   if (!Array.isArray(value)) return [];
   return RECEIPT_KINDS.filter((kind) => value.includes(kind));
+}
+
+/** An address with something before and after its last "@", in canonical form; null otherwise. */
+function readUsableAddress(value: unknown): string | null {
+  const address = readAddress(value);
+  if (address === null) return null;
+  const at = address.lastIndexOf("@");
+  return at > 0 && at < address.length - 1 && !/[\s<>]/.test(address) ? address : null;
+}
+
+/** A story's `unsubscribe`: `{ mailto }` with a usable address or `{ url }` with an http(s) URL; null otherwise. */
+function readStoryUnsubscribe(value: unknown): EsStoryUnsubscribe | null {
+  if (!isObject(value)) return null;
+  if (typeof value.mailto === "string") {
+    const mailto = readUsableAddress(value.mailto);
+    return mailto === null ? null : { mailto };
+  }
+  if (typeof value.url === "string" && value.url.length <= 2000 && STORY_URL.test(value.url) && !/[<>"\\]/.test(value.url)) return { url: value.url };
+  return null;
 }
 
 /** `email.replyTo`, or null when it is not an object with a usable `from.address`. */
@@ -174,6 +212,28 @@ export function parseEsJson(json: string): EsPart | null {
     };
     return post;
   }
+  if (root.$type === ES_STORY_TYPE) {
+    const email = isObject(value.email) ? value.email : {};
+    const messageId = typeof email.messageId === "string" ? normalizeMessageId(email.messageId) : null;
+    const textSha256 = typeof email.textSha256 === "string" && /^[0-9a-f]{64}$/i.test(email.textSha256) ? email.textSha256.toLowerCase() : null;
+    const title = typeof value.title === "string" ? value.title : null;
+    if (messageId === null || title === null || title.trim() === "" || utf8Encode(title).length > ES_STORY_TITLE_MAX_BYTES) return null;
+    const text = typeof value.text === "string" ? value.text : null;
+    const omitted = (value.text === undefined || value.text === null) && textSha256 !== null;
+    if (text === null && !omitted) return null;
+    const story: EsStoryPart = {
+      $type: ES_STORY_TYPE,
+      author,
+      via,
+      createdAt,
+      email: { messageId, textSha256 },
+      title,
+      expiresAt: typeof value.expiresAt === "string" && isRfc3339DateTime(value.expiresAt) ? value.expiresAt : null,
+      unsubscribe: readStoryUnsubscribe(value.unsubscribe),
+      text,
+    };
+    return story;
+  }
   if (root.$type === ES_RECEIPT_TYPE) {
     const kind = RECEIPT_KINDS.find((k) => k === value.kind);
     const messageId = typeof value.messageId === "string" ? normalizeMessageId(value.messageId) : null;
@@ -207,6 +267,14 @@ export function esPartToWire(part: EsPart): Record<string, unknown> {
     }
     if (Object.keys(email).length > 0) value.email = email;
     if (part.requestReceipts.length > 0) value.requestReceipts = readReceiptKinds(part.requestReceipts);
+    wire.value = value;
+  } else if (part.$type === ES_STORY_TYPE) {
+    const value: Record<string, unknown> = { via: part.via, createdAt: part.createdAt };
+    value.email = part.email.textSha256 === null ? { messageId: part.email.messageId } : { messageId: part.email.messageId, textSha256: part.email.textSha256 };
+    value.title = part.title;
+    if (part.expiresAt !== null) value.expiresAt = part.expiresAt;
+    if (part.unsubscribe !== null) value.unsubscribe = "mailto" in part.unsubscribe ? { mailto: part.unsubscribe.mailto } : { url: part.unsubscribe.url };
+    if (part.text !== null) value.text = part.text;
     wire.value = value;
   } else {
     wire.value = { kind: part.kind, messageId: part.messageId, via: part.via, createdAt: part.createdAt };

@@ -1,0 +1,35 @@
+Return-Path: <orders-bounce@shop.example.org>
+Date: Thu, 19 Mar 2026 12:25:00 +0000
+From: Shoe Shop <orders@shop.example.org>
+To: alice@example.com
+Subject: Your order 10-4471 is confirmed
+Message-ID: <order-10-4471.confirm@shop.example.org>
+Auto-Submitted: auto-generated
+MIME-Version: 1.0
+Content-Type: multipart/alternative; boundary="----=_Part_4471_1958271331.1710851100000"
+
+------=_Part_4471_1958271331.1710851100000
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+
+Thank you for your order 10-4471.
+
+1 x Trail runner "Ridge", size 39      42.00 EUR
+Shipping                                  0.00 EUR
+Total                                    42.00 EUR
+
+We will send the parcel on Monday. Track it at
+https://shop.example.org/orders/10-4471
+------=_Part_4471_1958271331.1710851100000
+Content-Type: text/html; charset=UTF-8
+Content-Transfer-Encoding: base64
+
+PGh0bWw+PGJvZHk+PGgyPlRoYW5rIHlvdSBmb3IgeW91ciBvcmRlciAxMC00NDcxLjwvaDI+DQo8
+dGFibGU+PHRyPjx0ZD4xICZ0aW1lczsgVHJhaWwgcnVubmVyICZxdW90O1JpZGdlJnF1b3Q7LCBz
+aXplIDM5PC90ZD48dGQ+NDIuMDAgRVVSPC90ZD48L3RyPg0KPHRyPjx0ZD5TaGlwcGluZzwvdGQ+
+PHRkPjAuMDAgRVVSPC90ZD48L3RyPjx0cj48dGQ+PGI+VG90YWw8L2I+PC90ZD48dGQ+PGI+NDIu
+MDAgRVVSPC9iPjwvdGQ+PC90cj48L3RhYmxlPg0KPHA+V2Ugd2lsbCBzZW5kIHRoZSBwYXJjZWwg
+b24gTW9uZGF5LiA8YSBocmVmPSJodHRwczovL3Nob3AuZXhhbXBsZS5vcmcvb3JkZXJzLzEwLTQ0
+NzEiPlRyYWNrIGl0PC9hPi48L3A+DQo8aW1nIHNyYz0iaHR0cHM6Ly9pbWcuc2hvcC5leGFtcGxl
+Lm9yZy9sb2dvLnBuZyIgYWx0PSJTaG9lIFNob3AiPjwvYm9keT48L2h0bWw+DQo=
+------=_Part_4471_1958271331.1710851100000--

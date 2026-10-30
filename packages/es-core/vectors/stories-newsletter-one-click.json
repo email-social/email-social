@@ -1,0 +1,71 @@
+{
+  "description": "Newsletter from a bulk sending service: multipart/alternative (QP plain + QP HTML with a hero image, a srcset, a <style> block and a 1×1 tracking pixel); List-Unsubscribe with an https URI and a mailto URI, List-Unsubscribe-Post: List-Unsubscribe=One-Click (RFC 8058); List-Id without List-Post; Precedence: bulk; a story with one-click unsubscribe",
+  "source": "fixtures/stories/newsletter-one-click.eml",
+  "raw": "Return-Path: <bounce-7f3a2c@mail.shop.example.org>\r\nReceived: from mta12.mail.shop.example.org (mta12.mail.shop.example.org [198.51.100.44])\r\n\tby mx.example.com with ESMTPS id 4f8k2c; Thu, 19 Mar 2026 07:30:02 +0000\r\nDate: Thu, 19 Mar 2026 07:30:00 +0000\r\nFrom: Shoe Shop <news@shop.example.org>\r\nReply-To: Shoe Shop <hello@shop.example.org>\r\nTo: alice@example.com\r\nSubject: =?utf-8?Q?Spring_sale:_shoes_from_20_=E2=82=AC?=\r\nMessage-ID: <20260319073000.7f3a2c@mail.shop.example.org>\r\nList-Unsubscribe: <https://shop.example.org/u/7f3a2c?l=spring>,\r\n <mailto:unsubscribe@mail.shop.example.org?subject=unsubscribe-7f3a2c>\r\nList-Unsubscribe-Post: List-Unsubscribe=One-Click\r\nList-Id: Shoe Shop news <spring.shop.example.org>\r\nPrecedence: bulk\r\nFeedback-ID: spring26:shop:news:mail.shop.example.org\r\nMIME-Version: 1.0\r\nContent-Type: multipart/alternative; boundary=\"_----------=_MCPart_17107834001\"\r\n\r\nThis is a multi-part message in MIME format\r\n\r\n--_----------=_MCPart_17107834001\r\nContent-Type: text/plain; charset=utf-8\r\nContent-Transfer-Encoding: quoted-printable\r\n\r\nSpring sale: shoes from 20 EUR\r\n\r\nHi Alice,\r\n\r\nour spring collection is here. Walking shoes, trail runners and sandals\r\nare 30 % off until Sunday.\r\n\r\nShop the sale: https://shop.example.org/sale?utm_source=3Dnews\r\n\r\nYou get this e-mail because you signed up at shop.example.org.\r\nUnsubscribe: https://shop.example.org/u/7f3a2c?l=3Dspring\r\n--_----------=_MCPart_17107834001\r\nContent-Type: text/html; charset=utf-8\r\nContent-Transfer-Encoding: quoted-printable\r\n\r\n<!DOCTYPE html>\r\n<html><head><meta charset=3D\"utf-8\"><title>Spring sale</title>\r\n<style>body{font-family:Arial,sans-serif} .btn{background:#d0491f;color:#ff=\r\nf}</style>\r\n</head><body>\r\n<table width=3D\"100%\" cellpadding=3D\"0\" cellspacing=3D\"0\" role=3D\"presentat=\r\nion\"><tr><td align=3D\"center\">\r\n<img src=3D\"https://img.shop.example.org/2026/spring/hero.jpg\" srcset=3D\"ht=\r\ntps://img.shop.example.org/2026/spring/hero-2x.jpg 2x\" alt=3D\"Spring shoes\"=\r\n width=3D\"600\" height=3D\"300\">\r\n<h1>Spring sale: shoes from 20&nbsp;&euro;</h1>\r\n<p>Hi Alice,</p>\r\n<p>our spring collection is here. Walking shoes, trail runners and sandals =\r\nare 30&nbsp;% off until Sunday.</p>\r\n<p><a class=3D\"btn\" href=3D\"https://shop.example.org/sale?utm_source=3Dnews=\r\n\">Shop the sale</a></p>\r\n<p style=3D\"font-size:12px;color:#777\">You get this e-mail because you sign=\r\ned up at shop.example.org.\r\n<a href=3D\"https://shop.example.org/u/7f3a2c?l=3Dspring\">Unsubscribe</a></p=\r\n>\r\n</td></tr></table>\r\n<img src=3D\"https://open.mail.shop.example.org/o/7f3a2c.gif\" width=3D\"1\" he=\r\night=3D\"1\" alt=3D\"\">\r\n</body></html>\r\n--_----------=_MCPart_17107834001--\r\n",
+  "expected": {
+    "id": "<20260319073000.7f3a2c@mail.shop.example.org>",
+    "from": {
+      "name": "Shoe Shop",
+      "address": "news@shop.example.org"
+    },
+    "to": [
+      {
+        "name": "",
+        "address": "alice@example.com"
+      }
+    ],
+    "cc": [],
+    "replyTo": [
+      {
+        "name": "Shoe Shop",
+        "address": "hello@shop.example.org"
+      }
+    ],
+    "date": "2026-03-19T07:30:00.000Z",
+    "subject": "Spring sale: shoes from 20 €",
+    "text": "Spring sale: shoes from 20 EUR\n\nHi Alice,\n\nour spring collection is here. Walking shoes, trail runners and sandals\nare 30 % off until Sunday.\n\nShop the sale: https://shop.example.org/sale?utm_source=news\n\nYou get this e-mail because you signed up at shop.example.org.\nUnsubscribe: https://shop.example.org/u/7f3a2c?l=spring",
+    "textSource": "plain",
+    "es": null,
+    "attachments": [],
+    "refs": {
+      "messageId": "<20260319073000.7f3a2c@mail.shop.example.org>",
+      "inReplyTo": [],
+      "references": []
+    },
+    "delivery": {
+      "listHeaders": [
+        "list-id",
+        "list-unsubscribe"
+      ],
+      "listId": "spring.shop.example.org",
+      "autoSubmitted": null,
+      "precedence": "bulk",
+      "returnPath": "bounce-7f3a2c@mail.shop.example.org",
+      "listUnsubscribe": {
+        "uris": [
+          "https://shop.example.org/u/7f3a2c?l=spring",
+          "mailto:unsubscribe@mail.shop.example.org?subject=unsubscribe-7f3a2c"
+        ],
+        "oneClick": true
+      }
+    }
+  },
+  "split": {
+    "fresh": "Spring sale: shoes from 20 EUR\n\nHi Alice,\n\nour spring collection is here. Walking shoes, trail runners and sandals\nare 30 % off until Sunday.\n\nShop the sale: https://shop.example.org/sale?utm_source=news\n\nYou get this e-mail because you signed up at shop.example.org.\nUnsubscribe: https://shop.example.org/u/7f3a2c?l=spring",
+    "quoted": "",
+    "signature": ""
+  },
+  "story": {
+    "sender": {
+      "name": "Shoe Shop",
+      "address": "news@shop.example.org"
+    },
+    "title": "Spring sale: shoes from 20 €",
+    "receivedAt": "2026-03-19T07:30:00.000Z",
+    "expiresAt": "2026-03-26T07:30:00.000Z",
+    "unsubscribe": {
+      "oneClick": "https://shop.example.org/u/7f3a2c?l=spring"
+    },
+    "explicit": false
+  }
+}

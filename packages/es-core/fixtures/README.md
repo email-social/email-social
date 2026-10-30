@@ -140,3 +140,23 @@ output. Web search was used to confirm a few details (the
 `Odp:`); fetching reference pages was not possible from the environment the
 corpus was written in, so the other details were not checked against a
 primary source.
+
+## Story formats (`stories/`)
+
+Newsletters, which Email Social shows as stories for a week, and the
+automated and list mail that must never be one (`storyOf`, expected stories
+in `test/story.test.ts`). The same rules as above apply (reconstructed,
+example domains and documentation IP ranges only, CRLF, byte-exact,
+quoted-printable and base64 produced by an encoder). The dates fit the
+tests' fixed "now", 2026-03-21 10:00 UTC: the two newsletters are from the
+last two days, the expired one is eight days old.
+
+| File | Client / format reconstructed | What it exercises | Provenance note |
+| --- | --- | --- | --- |
+| `stories/newsletter-one-click.eml` | Newsletter from a bulk sending service | `multipart/alternative` (QP plain + QP HTML with a hero image, a `srcset`, a `<style>` block and a 1×1 tracking pixel); `List-Unsubscribe` with an https URI and a mailto URI, `List-Unsubscribe-Post: List-Unsubscribe=One-Click` (RFC 8058); `List-Id` without `List-Post`; `Precedence: bulk`; a story with one-click unsubscribe | Header set of common sending services (`Feedback-ID`, a bounce Return-Path per recipient, `_----------=_MCPart_` boundary) |
+| `stories/newsletter-mailto-bulk.eml` | A club's weekly newsletter sent from its own server | `text/plain` only, 8bit UTF-8; `Precedence: bulk`; `List-Unsubscribe` with a mailto URI whose percent-encoded subject is the one to send; a story unsubscribed by e-mail | Small senders often have only a mailto unsubscribe |
+| `stories/discussion-list.eml` | Mailman 3 discussion list post | `List-Id`, `List-Post`, `List-Unsubscribe`, `List-Help`, `Archived-At`, `Precedence: list`, `[hiking]` tag; written by a person; never a story (List-Post) | Mailman 3 header set (`Message-ID-Hash`, `X-Mailman-Version`) |
+| `stories/order-confirmation.eml` | Shop's order confirmation | `Auto-Submitted: auto-generated`, no `List-Unsubscribe`; `multipart/alternative` with base64 HTML; automated, never a story | Transactional mail from the same shop as the newsletter |
+| `stories/password-reset.eml` | Password reset from an account service | `Auto-Submitted: auto-generated` together with `List-Unsubscribe` and `List-Unsubscribe-Post` (some services put them on every message); automated, never a story; the token in the link is a placeholder | Shows why an unsubscribe field alone does not make a story |
+| `stories/bounce.eml` | Postfix delivery status notification (RFC 3464) | `Return-Path: <>`, `Auto-Submitted: auto-replied`, `multipart/report; report-type=delivery-status` with `message/delivery-status` and `text/rfc822-headers`; never a story | Postfix bounce layout; the Remote-MTA address is from RFC 5737 |
+| `stories/expired-newsletter.eml` | Garden centre newsletter | `multipart/alternative` (7bit plain + QP HTML with an image link), one-click unsubscribe, dated 2026-03-13: eight days before the tests' "now", so it is no longer shown as a story and only appears under Other mail | Same layout as the one-click newsletter, older |
