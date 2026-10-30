@@ -55,6 +55,7 @@ async function main(): Promise<void> {
     ...(maildir === undefined ? { credentials: new KeychainStore() } : { maildir }),
     cacheDir: options.cacheDir === null ? null : resolve(options.cacheDir),
     maxMessages: options.maxMessages,
+    receipts: options.receipts,
   });
   process.stdout.write(`Email Social is running at ${bridge.url}\nOpen that address in your browser. Press Ctrl+C to stop.\n`);
   if (options.open) openBrowser(bridge.url);

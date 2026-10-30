@@ -63,6 +63,16 @@ import type {
 } from "./api-types.js";
 import type { MetadataCache } from "./cache.js";
 
+/**
+ * Which receipts the account sends (spec/es-protocol.md section 14, RC-8):
+ * every kind a post asks for, only "delivered", or none. It changes nothing
+ * else: incoming receipts are still read and shown, and the account's own
+ * posts still ask for receipts.
+ */
+export type ReceiptSetting = "all" | "delivered" | "none";
+
+export const RECEIPT_SETTINGS: readonly ReceiptSetting[] = ["all", "delivered", "none"];
+
 export interface SessionOptions {
   adapter: MailboxAdapter;
   account: Person;
@@ -86,6 +96,8 @@ export interface SessionOptions {
   stallMs?: number;
   /** Time zone of the date in quoted replies. Default: this computer's. */
   timeZone?: string;
+  /** Which receipts the account sends. Default "all". */
+  receipts?: ReceiptSetting;
 }
 
 interface Stored {
@@ -826,10 +838,13 @@ export class MailSession {
 
   /**
    * Sends a receipt of `kind` for an incoming message when its ES part asked
-   * for one and none has been sent yet (keyword in the mailbox, or in this
-   * session). Plain e-mail senders never get one.
+   * for one, the account's receipt setting allows that kind, and none has
+   * been sent yet (keyword in the mailbox, or in this session). Plain e-mail
+   * senders never get one. The keyword is set only for a receipt sent.
    */
   private async receipt(kind: ReceiptKind, stored: Stored): Promise<void> {
+    const setting = this.options.receipts ?? "all";
+    if (setting === "none" || (setting === "delivered" && kind === "read")) return;
     const es = stored.message.es;
     if (es?.$type !== "es.social.post" || !es.requestReceipts.includes(kind)) return;
     if (stored.entry.folder !== "inbox" || this.isMine(stored) || stored.message.refs.messageId === null) return;

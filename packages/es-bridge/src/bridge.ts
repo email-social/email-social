@@ -24,7 +24,7 @@ import type { LoginRequest, Person, SendRequest, ServerEvent, ServerSettings, Se
 import { MetadataCache } from "./cache.js";
 import { MemoryStore, type AccountConfig, type CredentialStore } from "./credentials.js";
 import { PRESETS } from "./providers.js";
-import { MailSession, TOPIC_LABEL_MAX } from "./session.js";
+import { MailSession, TOPIC_LABEL_MAX, type ReceiptSetting } from "./session.js";
 
 export interface BridgeOptions {
   /** Directory of the built web client (index.html and assets/); null serves the API only. */
@@ -49,6 +49,8 @@ export interface BridgeOptions {
   stallMs?: number;
   /** Time zone of the dates in quoted replies. Default: this computer's. */
   timeZone?: string;
+  /** Which receipts the account sends (`--receipts`): "all" (the default), "delivered" or "none". */
+  receipts?: ReceiptSetting;
   clock?: () => Date;
   newMessageId?: () => string;
   log?: (message: string) => void;
@@ -219,6 +221,7 @@ export async function startBridge(options: BridgeOptions): Promise<RunningBridge
       ...(options.firstBatch !== undefined ? { firstBatch: options.firstBatch } : {}),
       ...(options.stallMs !== undefined ? { stallMs: options.stallMs } : {}),
       ...(options.timeZone !== undefined ? { timeZone: options.timeZone } : {}),
+      ...(options.receipts !== undefined ? { receipts: options.receipts } : {}),
       onChange: () => broadcast({ type: "changed" }),
       onStatus: () => broadcast({ type: "session" }),
       ...(onProgress ? { onProgress } : {}),
