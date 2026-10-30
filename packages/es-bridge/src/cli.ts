@@ -16,6 +16,7 @@ import { startBridge } from "./bridge.js";
 import { parseArgs, USAGE } from "./cli-args.js";
 import { KeychainStore } from "./credentials.js";
 import { DEMO_ACCOUNT, writeDemoMaildir } from "./demo.js";
+import { defaultSettingsDir } from "./settings.js";
 
 function openBrowser(url: string): void {
   const [command, args] =
@@ -40,10 +41,14 @@ async function main(): Promise<void> {
     throw new Error("The web client is not built. Run `npm run build` at the repository root first.");
   }
   let maildir: { root: string; account: { address: string; name: string } } | undefined;
+  // The account's settings (hidden story senders, receipts): next to the cache, else in the user's configuration folder.
+  let settingsDir = options.cacheDir === null ? defaultSettingsDir() : resolve(options.cacheDir);
   if (options.demo) {
     const root = await mkdtemp(join(tmpdir(), "email-social-demo-"));
     await writeDemoMaildir(root);
     maildir = { root, account: DEMO_ACCOUNT };
+    // The demo keeps its settings in its own temporary folder.
+    if (options.cacheDir === null) settingsDir = root;
     process.stdout.write(`Demo mailbox: ${root} (messages you send are written to its Outbox/ and Sent/ folders)\n`);
   } else if (options.maildir !== null) {
     const address = canonicalAddress(options.address!);
@@ -55,7 +60,8 @@ async function main(): Promise<void> {
     ...(maildir === undefined ? { credentials: new KeychainStore() } : { maildir }),
     cacheDir: options.cacheDir === null ? null : resolve(options.cacheDir),
     maxMessages: options.maxMessages,
-    receipts: options.receipts,
+    settingsDir,
+    ...(options.receipts !== null ? { receipts: options.receipts } : {}),
   });
   process.stdout.write(`Email Social is running at ${bridge.url}\nOpen that address in your browser. Press Ctrl+C to stop.\n`);
   if (options.open) openBrowser(bridge.url);

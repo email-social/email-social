@@ -200,6 +200,65 @@ export interface OtherView {
   messages: MessageView[];
 }
 
+/** How a story's sender can be left (spec section 12.3): a one-click request, a message, or a page the reader opens. */
+export type UnsubscribeKind = "oneClick" | "mailto" | "link";
+
+/** One story in GET /api/stories. */
+export interface StorySummary {
+  /** EsMessage.id: what POST /api/stories/open and /unsubscribe take. */
+  messageId: string;
+  title: string;
+  receivedAt: string;
+  expiresAt: string;
+  unsubscribe: UnsubscribeKind | null;
+  /** The message is marked \Seen (opening the story marks it). */
+  seen: boolean;
+}
+
+/** GET /api/stories: one entry per sender, newest story first; hidden senders and expired stories left out. */
+export interface StorySender {
+  sender: Person;
+  /** Newest first. */
+  stories: StorySummary[];
+  /** Every story of the sender is seen. */
+  seen: boolean;
+  /** The sender is also someone the account chats with (es-web leaves them out of the strip). */
+  chat: boolean;
+}
+
+/** Where an unsubscribe goes, shown before the reader confirms. */
+export type UnsubscribeTarget =
+  | { kind: "oneClick"; url: string; host: string }
+  | { kind: "mailto"; address: string; subject: string }
+  | { kind: "link"; url: string };
+
+/** POST /api/stories/open: what the viewer shows. */
+export interface StoryView {
+  messageId: string;
+  sender: Person;
+  title: string;
+  receivedAt: string;
+  expiresAt: string;
+  /** The message text (HTML reduced to text when there is no text/plain part). */
+  text: string;
+  /** The HTML body reduced to an allow-list, image sources in data-src / data-srcset; null without HTML. */
+  html: string | null;
+  /** Images held back until the reader asks for them. */
+  images: number;
+  unsubscribe: UnsubscribeTarget | null;
+}
+
+/** POST /api/stories/unsubscribe: what was done. The sender's stories are hidden afterwards. */
+export type UnsubscribeResult =
+  | { done: "oneClick"; host: string; status: number; hidden: true }
+  | { done: "mailto"; address: string; subject: string; hidden: true }
+  | { done: "link"; url: string; hidden: true };
+
+/** POST and DELETE /api/stories/hide: the senders whose stories are hidden now. */
+export interface HiddenSenders {
+  hidden: string[];
+}
+
 export interface ContactView {
   address: string;
   name: string;

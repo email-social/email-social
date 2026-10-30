@@ -688,6 +688,18 @@ A reader MUST read a story record by section 5.4 items 1 to 4 and these rules: [
 
 A story record MUST NOT contain `requestReceipts`, and a reader ignores one. A client MUST NOT send a receipt (section 11) for a message that is a story (section 12.1), explicit or not, whatever its ES part asks for: the sender of a newsletter learns nothing from the reader's client. [ST-7]
 
+### 12.5 Reading a story and leaving its sender
+
+A client MUST show a story without making any request because of it. It shows the message text, or the message's HTML reduced to an allow-list that runs nothing and loads nothing (es-core `storyContent`): no scripts, styles, forms, frames, objects or event handlers; links only to http, https and mailto targets, opening in a new window without a referrer; image sources held back in `data-src` and `data-srcset`. Remote images are loaded only when the reader asks for them, for that story only. Opening a story marks its message `\Seen` (RFC 9051 §2.3.2) and sends no receipt (ST-7). [ST-8]
+
+A client MUST NOT make any other request for a story than the one the reader asks for by unsubscribing, after a confirmation that names where it goes, and then exactly one, by the kind of section 12.3: [ST-9]
+
+- `oneClick`: one HTTPS POST to the URI with the body `List-Unsubscribe=One-Click` and the media type `application/x-www-form-urlencoded` (RFC 8058 §3.1), without cookies, a referrer or other header fields; at most one redirect is followed, to https only, with the same POST; 10 seconds in all; a 2xx answer is success.
+- `mailto`: one message to the address through the account's own SMTP server, with the URI's subject and an empty body, without an ES part and without a copy in the sent folder.
+- `link`: no request by the client; the page opens in the reader's browser.
+
+After any of these succeeds, the client hides the sender's stories; the messages stay under "Other mail". The reader can also hide a sender without unsubscribing, and show them again. es-bridge keeps the hidden senders in the account's settings file (section 15, RC-8).
+
 ## 13. Compatibility with real mail clients
 
 Real clients do not follow the draft, and often not the RFCs either. [`DEVIATIONS.md`](DEVIATIONS.md) records each difference with its evidence; this section summarises what a client has to be ready for.
@@ -763,7 +775,7 @@ The 58 fixture vectors come from `packages/es-core/fixtures/`: 22 messages recon
 - **What a message reveals.** The ES part repeats what the message's header already says (sender, Message-ID, subject, threading) and adds the text, receipt requests, topic names and the excerpt of a message answered. A writer SHOULD NOT put anything in the ES part that it would not put in the `text/plain` part or the header. [CN-1]
 - **No lookups.** A reader MUST NOT fetch anything because of a message: no DID resolution, no handle lookup, no remote content in HTML (section 6.7 reduces HTML to text without loading anything). [CN-2]
 - **Robustness.** A reader MUST bound its work on hostile input: es-core never throws, limits MIME nesting to 32 levels, and treats a malformed part as data. [CN-3]
-- **Receipts** tell the sender when a message was fetched and when it was opened. That is the account owner's information, so which kinds of receipts a client sends is the owner's choice. A client SHOULD let the account owner choose between sending every kind a post asks for, only `delivered`, and none; sending fewer kinds MUST NOT change anything else, and incoming receipts are still read and shown. es-bridge reads the choice from its `--receipts all|delivered|none` option (`all` by default) and sets the keyword of section 11.2 only for a receipt it sent. [RC-8]
+- **Receipts** tell the sender when a message was fetched and when it was opened. That is the account owner's information, so which kinds of receipts a client sends is the owner's choice. A client SHOULD let the account owner choose between sending every kind a post asks for, only `delivered`, and none; sending fewer kinds MUST NOT change anything else, and incoming receipts are still read and shown. es-bridge reads the choice from its `--receipts all|delivered|none` option, keeps it in the account's settings file (beside the metadata cache, else in the user's configuration folder; readable by the owner only) for the next start, uses `all` when neither says anything, and sets the keyword of section 11.2 only for a receipt it sent. [RC-8]
 
 ## 16. Requirements and the tests that cover them
 
@@ -864,7 +876,9 @@ Paths are relative to the repository root. `›` names a test (a distinctive par
 | ST-4 | `packages/es-core/test/story.test.ts` › "one-click: List-Unsubscribe-Post", "with both mailto and https and no List-Unsubscribe-Post", "RFC 8058 needs https", "reads the mailto subject percent-decoded", "skips a mailto without a usable address", "offers a record's url as a page to open"; `packages/es-core/vectors/stories-newsletter-one-click.json`; `packages/es-core/vectors/stories-newsletter-mailto-bulk.json` |
 | ST-5 | `packages/es-core/test/story-record.test.ts` › "writes an ordinary message: text/plain first", "writes the record's fields in a fixed order", "writes List-Unsubscribe from the record", "collapses the title, and refuses an empty one", "leaves a text over 10000 UTF-8 bytes out of the record"; `packages/es-core/vectors/stories-explicit-record.json` |
 | ST-6 | `packages/es-core/test/story-record.test.ts` › "reads back what writeStory wrote", "rejects a story without a title", "drops malformed optional fields instead of rejecting the story", "accepts a story whose text is left out", "is not taken from a message whose Message-ID differs" |
-| ST-7 | `packages/es-core/test/story-record.test.ts` › "never asks for receipts", "drops malformed optional fields instead of rejecting the story" |
+| ST-7 | `packages/es-core/test/story-record.test.ts` › "never asks for receipts", "drops malformed optional fields instead of rejecting the story"; `packages/es-bridge/test/stories.test.ts` › "and sends no receipt, even when its ES part asks for one" |
+| ST-8 | `packages/es-bridge/test/stories.test.ts` › "listing and opening stories makes no request to anyone", "gives the text and the reduced HTML, images held back", "and sends no receipt, even when its ES part asks for one"; `packages/es-core/test/story-content.test.ts` › "leaves out scripts, styles, the head", "leaves out forms and their controls", "leaves out every event handler", "keeps style declarations that load nothing", "moves image sources to data-src and data-srcset", "keeps http, https and mailto links", "drops javascript:, data: and obfuscated link targets", "the one-click newsletter: reduced text" |
+| ST-9 | `packages/es-bridge/test/stories.test.ts` › "one-click: exactly one POST", "one-click: follows one redirect to https", "one-click: gives up after the time limit", "mailto: one plain message", "link: no request at all", "hides a sender's stories in a per-account file" |
 | VE-1 | `packages/es-core/test/vectors.test.ts` › "stores each fixture byte for byte", "parseMessage(raw) equals expected" |
 | VE-2 | `packages/es-core/test/vectors.test.ts` › "parseMessage(raw) equals expected" |
 | VE-3 | `packages/es-core/test/vectors.test.ts` › "splitQuoted(expected) equals split" |
@@ -873,7 +887,7 @@ Paths are relative to the repository root. `›` names a test (a distinctive par
 | CN-1 | `packages/es-core/test/es-schema.test.ts` › "writes a fixed key order and omits empty optional fields" |
 | CN-2 | `packages/es-bridge/test/nothing-leaves.test.ts` › "a maildir session makes no outbound connection", "an IMAP sign-in connects only to the configured IMAP and SMTP hosts"; `packages/es-core/test/hygiene.test.ts` › "library code runs in browsers and is deterministic" |
 | CN-3 | `packages/es-core/test/parse.test.ts` › "never throws and always returns a complete EsMessage", "returns a message with only its SHA-256 id if an internal error escapes"; `packages/es-core/test/mime-tree.test.ts` › "stops descending at depth 32", "never throws on truncated or malformed multipart input" |
-| RC-8 | `packages/es-bridge/test/receipt-rule.test.ts` › "all (the default): both receipts are sent and both keywords set", "delivered: only the Delivered receipt is sent and only its keyword set", "none: no receipt is sent and no keyword set"; `packages/es-bridge/test/server.test.ts` › "sends receipts as the account's setting says"; `packages/es-bridge/test/cli-args.test.ts` › "reads every option" |
+| RC-8 | `packages/es-bridge/test/receipt-rule.test.ts` › "all (the default): both receipts are sent and both keywords set", "delivered: only the Delivered receipt is sent and only its keyword set", "none: no receipt is sent and no keyword set"; `packages/es-bridge/test/server.test.ts` › "sends receipts as the account's setting says"; `packages/es-bridge/test/cli-args.test.ts` › "reads every option"; `packages/es-bridge/test/stories.test.ts` › "keeps the receipt setting in the same file" |
 
 ## Appendix A: patterns for quoted text
 

@@ -3,7 +3,7 @@ import { parseArgs, USAGE } from "../src/cli-args.js";
 
 describe("command line", () => {
   it("defaults to signing in to an IMAP account on a random port and opening the browser", () => {
-    expect(parseArgs([])).toEqual({ demo: false, open: true, port: 0, help: false, maildir: null, address: null, name: null, cacheDir: null, maxMessages: 500, receipts: "all" });
+    expect(parseArgs([])).toEqual({ demo: false, open: true, port: 0, help: false, maildir: null, address: null, name: null, cacheDir: null, maxMessages: 500, receipts: null });
   });
 
   it("reads every option", () => {

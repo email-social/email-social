@@ -20,11 +20,13 @@ import { WebSocketServer, type WebSocket } from "ws";
 import { ImapSmtpAdapter } from "./adapters/imap-smtp.js";
 import { MaildirAdapter } from "./adapters/maildir.js";
 import type { MailboxAdapter } from "./adapters/types.js";
-import type { LoginRequest, Person, SendRequest, ServerEvent, ServerSettings, SessionInfo, StartProgress } from "./api-types.js";
+import type { LoginRequest, Person, SendRequest, ServerEvent, ServerSettings, SessionInfo, StartProgress, UnsubscribeResult } from "./api-types.js";
 import { MetadataCache } from "./cache.js";
 import { MemoryStore, type AccountConfig, type CredentialStore } from "./credentials.js";
 import { PRESETS } from "./providers.js";
-import { MailSession, TOPIC_LABEL_MAX, type ReceiptSetting } from "./session.js";
+import { isAddress, MailSession, TOPIC_LABEL_MAX, type ReceiptSetting } from "./session.js";
+import { AccountSettings } from "./settings.js";
+import { oneClickUnsubscribe } from "./unsubscribe.js";
 
 export interface BridgeOptions {
   /** Directory of the built web client (index.html and assets/); null serves the API only. */
@@ -49,8 +51,18 @@ export interface BridgeOptions {
   stallMs?: number;
   /** Time zone of the dates in quoted replies. Default: this computer's. */
   timeZone?: string;
-  /** Which receipts the account sends (`--receipts`): "all" (the default), "delivered" or "none". */
+  /**
+   * Which receipts the account sends (`--receipts`): "all", "delivered" or
+   * "none". Given, it is also written to the account's settings; left out,
+   * the settings decide ("all" when they say nothing).
+   */
   receipts?: ReceiptSetting;
+  /** Where each account's settings file is kept (hidden story senders, receipts). Default: cacheDir, else memory only. */
+  settingsDir?: string | null;
+  /** Tests only: where a one-click unsubscribe request really goes. */
+  unsubscribeRewrite?: (url: URL) => URL;
+  /** Tests only: the time a one-click unsubscribe request has. Default 10 s. */
+  unsubscribeTimeoutMs?: number;
   clock?: () => Date;
   newMessageId?: () => string;
   log?: (message: string) => void;
@@ -152,6 +164,13 @@ function checkTopic(value: unknown): SendRequest["topic"] {
   return { label };
 }
 
+/** The `messageId` of a stories request body; anything else is a 400. */
+function messageIdOf(body: unknown): string {
+  const id = (body as { messageId?: unknown } | null)?.messageId;
+  if (typeof id !== "string" || id === "") throw new HttpError(400, "messageId must be a message id");
+  return id;
+}
+
 function send(res: ServerResponse, status: number, body: unknown): void {
   const text = body === undefined ? "" : JSON.stringify(body);
   res.writeHead(status, {
@@ -209,24 +228,28 @@ export async function startBridge(options: BridgeOptions): Promise<RunningBridge
     mode: "imap" | "maildir",
     appendToSent: boolean,
     onProgress?: (progress: StartProgress) => void,
-  ): Promise<MailSession> =>
-    MailSession.start({
+  ): Promise<MailSession> => {
+    const settings = await AccountSettings.open(options.settingsDir !== undefined ? options.settingsDir : (options.cacheDir ?? null), account.address);
+    if (options.receipts !== undefined && settings.receipts !== options.receipts) await settings.setReceipts(options.receipts);
+    return MailSession.start({
       adapter,
       account,
       mode,
       appendToSent,
+      settings,
+      receipts: settings.receipts ?? "all",
       cache: options.cacheDir ? new MetadataCache(options.cacheDir, account.address) : null,
       ...(options.clock ? { clock: options.clock } : {}),
       ...(options.newMessageId ? { newMessageId: options.newMessageId } : {}),
       ...(options.firstBatch !== undefined ? { firstBatch: options.firstBatch } : {}),
       ...(options.stallMs !== undefined ? { stallMs: options.stallMs } : {}),
       ...(options.timeZone !== undefined ? { timeZone: options.timeZone } : {}),
-      ...(options.receipts !== undefined ? { receipts: options.receipts } : {}),
       onChange: () => broadcast({ type: "changed" }),
       onStatus: () => broadcast({ type: "session" }),
       ...(onProgress ? { onProgress } : {}),
       log,
     });
+  };
 
   const signIn = async (config: AccountConfig, remember: boolean): Promise<void> => {
     const mine = ++generation;
@@ -415,6 +438,44 @@ export async function startBridge(options: BridgeOptions): Promise<RunningBridge
       await readJson(req);
       if (!(await ready().markRead(decodeURIComponent(m[1]!)))) throw new HttpError(404, "No such chat");
       return send(res, 204, undefined);
+    }
+    if (method === "GET" && path === "/api/stories") return send(res, 200, ready().stories());
+    if (method === "POST" && path === "/api/stories/open") {
+      const story = await ready().openStory(messageIdOf(await readJson(req)));
+      if (story === null) throw new HttpError(404, "No such story");
+      return send(res, 200, story);
+    }
+    if (method === "POST" && path === "/api/stories/unsubscribe") {
+      const current = ready();
+      const found = current.storyUnsubscribe(messageIdOf(await readJson(req)));
+      if (found === null) throw new HttpError(404, "No such story");
+      const target = found.target;
+      if (target === null) throw new HttpError(409, "This sender gives no way to unsubscribe");
+      let result: UnsubscribeResult;
+      // The only requests the bridge makes for a story, and only here, when the reader asked.
+      if (target.kind === "oneClick") {
+        const answer = await oneClickUnsubscribe(target.url, {
+          ...(options.unsubscribeRewrite ? { rewrite: options.unsubscribeRewrite } : {}),
+          ...(options.unsubscribeTimeoutMs !== undefined ? { timeoutMs: options.unsubscribeTimeoutMs } : {}),
+        }).catch((e: unknown) => {
+          throw new HttpError(502, e instanceof Error ? e.message : String(e));
+        });
+        result = { done: "oneClick", host: target.host, status: answer.status, hidden: true };
+      } else if (target.kind === "mailto") {
+        await current.sendUnsubscribe(target.address, target.subject).catch((e: unknown) => {
+          throw new HttpError(502, `Could not send the unsubscribe message: ${e instanceof Error ? e.message : String(e)}`);
+        });
+        result = { done: "mailto", address: target.address, subject: target.subject, hidden: true };
+      } else {
+        result = { done: "link", url: target.url, hidden: true };
+      }
+      await current.setHidden(found.sender, true);
+      return send(res, 200, result);
+    }
+    if ((method === "POST" || method === "DELETE") && path === "/api/stories/hide") {
+      const body = (await readJson(req)) as { sender?: unknown } | null;
+      if (typeof body?.sender !== "string" || !isAddress(body.sender)) throw new HttpError(400, "sender must be an address");
+      return send(res, 200, { hidden: await ready().setHidden(body.sender, method === "POST") });
     }
     if (method === "POST" && path === "/api/messages") {
       const body = (await readJson(req)) as Partial<SendRequest> | null;

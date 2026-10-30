@@ -30,6 +30,8 @@ import {
   serializeMessage,
   serializeReceipt,
   splitQuoted,
+  storyContent,
+  storyOf,
   subjectKey,
   subjectNoteOf,
   topicsOf,
@@ -40,6 +42,7 @@ import {
   type EsOutgoing,
   type EsPartContent,
   type EsReplyToCard,
+  type EsStory,
   type MessageKind,
   type QuotedSplit,
   type ReceiptKind,
@@ -59,9 +62,14 @@ import type {
   SendRequest,
   SendResult,
   StartProgress,
+  StorySender,
+  StorySummary,
+  StoryView,
   SyncStatus,
+  UnsubscribeTarget,
 } from "./api-types.js";
 import type { MetadataCache } from "./cache.js";
+import type { AccountSettings } from "./settings.js";
 
 /**
  * Which receipts the account sends (spec/es-protocol.md section 15, RC-8):
@@ -98,6 +106,8 @@ export interface SessionOptions {
   timeZone?: string;
   /** Which receipts the account sends. Default "all". */
   receipts?: ReceiptSetting;
+  /** The account's settings file: the senders whose stories are hidden. Default: none hidden, in memory. */
+  settings?: AccountSettings | null;
 }
 
 interface Stored {
@@ -792,6 +802,136 @@ export class MailSession {
     return { sender: this.otherSummary(model, group), messages: await this.views(model, shown, null) };
   }
 
+  // ---------------------------------------------------------------- stories
+
+  /** The story an incoming message is (spec section 12), or null; own messages never are. */
+  private storyOf(stored: Stored): EsStory | null {
+    return this.isMine(stored) ? null : storyOf(stored.message, { self: this.me });
+  }
+
+  private hidden(address: string): boolean {
+    return this.options.settings?.isHidden(address) ?? false;
+  }
+
+  /** A story that is shown now: its message and its story, or null (unknown, not a story, or expired). */
+  private currentStory(model: Model, messageId: string): { stored: Stored; story: EsStory } | null {
+    if (!model.copies.has(messageId)) return null;
+    const stored = this.shown(model, messageId);
+    const story = this.storyOf(stored);
+    if (story === null || Date.parse(story.expiresAt) <= this.clock().getTime()) return null;
+    return { stored, story };
+  }
+
+  /**
+   * GET /api/stories: the stories shown now (not expired at the session
+   * clock), one entry per sender, newest first; senders the account hid are
+   * left out. Reading them fetches nothing: a story is made from the header
+   * fields already held.
+   */
+  stories(): StorySender[] {
+    const model = this.build();
+    const bySender = new Map<string, { sender: StorySender["sender"]; stories: StorySummary[] }>();
+    for (const messageId of model.copies.keys()) {
+      const current = this.currentStory(model, messageId);
+      if (current === null || this.hidden(current.story.sender.address)) continue;
+      const { story } = current;
+      const entry = bySender.get(story.sender.address) ?? { sender: { address: story.sender.address, name: story.sender.name || story.sender.address }, stories: [] };
+      entry.stories.push({
+        messageId,
+        title: story.title,
+        receivedAt: story.receivedAt,
+        expiresAt: story.expiresAt,
+        unsubscribe: story.unsubscribe === null ? null : "oneClick" in story.unsubscribe ? "oneClick" : "mailto" in story.unsubscribe ? "mailto" : "link",
+        seen: !this.unread(model, messageId),
+      });
+      bySender.set(story.sender.address, entry);
+    }
+    const inChats = new Set(model.chats.flatMap((c) => c.participants.map((p) => canonicalAddress(p.address))));
+    const newestFirst = (a: StorySummary, b: StorySummary): number => b.receivedAt.localeCompare(a.receivedAt) || a.messageId.localeCompare(b.messageId);
+    return [...bySender.values()]
+      .map(({ sender, stories }) => {
+        stories.sort(newestFirst);
+        return { sender, stories, seen: stories.every((s) => s.seen), chat: inChats.has(sender.address) };
+      })
+      .sort((a, b) => newestFirst(a.stories[0]!, b.stories[0]!));
+  }
+
+  /** Where the story's unsubscribe goes, for the reader to see before confirming. */
+  private unsubscribeTarget(story: EsStory): UnsubscribeTarget | null {
+    const u = story.unsubscribe;
+    if (u === null) return null;
+    if ("oneClick" in u) return { kind: "oneClick", url: u.oneClick, host: new URL(u.oneClick).host };
+    if ("mailto" in u) return { kind: "mailto", address: u.mailto, subject: u.subject };
+    return { kind: "link", url: u.link };
+  }
+
+  /**
+   * POST /api/stories/open: the story's text and reduced HTML (images held
+   * back), and \Seen on the message. Opening a story sends no receipt and
+   * makes no request to anyone but the account's own mailbox. Null when the
+   * message is not a story shown now.
+   */
+  async openStory(messageId: string): Promise<StoryView | null> {
+    const model = this.build();
+    const current = this.currentStory(model, messageId);
+    if (current === null) return null;
+    const raw = await this.raw(current.stored.key);
+    if (raw === null) return null;
+    const content = storyContent(raw);
+    let changed = false;
+    for (const stored of model.copies.get(messageId)!) {
+      if (stored.entry.folder !== "inbox" || this.isMine(stored) || stored.entry.flags.includes(SEEN)) continue;
+      await this.options.adapter.addFlags(stored.entry, [SEEN]);
+      stored.entry.flags.push(SEEN);
+      changed = true;
+    }
+    if (changed) {
+      this.model = null;
+      await this.saveCache();
+      this.mailChanged.flush();
+    }
+    const { story } = current;
+    return {
+      messageId,
+      sender: { address: story.sender.address, name: story.sender.name || story.sender.address },
+      title: story.title,
+      receivedAt: story.receivedAt,
+      expiresAt: story.expiresAt,
+      text: content.text,
+      html: content.html,
+      images: content.images,
+      unsubscribe: this.unsubscribeTarget(story),
+    };
+  }
+
+  /** The unsubscribe of a story shown now, or null (no such story); the target is null when it has no way to unsubscribe. */
+  storyUnsubscribe(messageId: string): { sender: string; target: UnsubscribeTarget | null } | null {
+    const current = this.currentStory(this.build(), messageId);
+    return current === null ? null : { sender: current.story.sender.address, target: this.unsubscribeTarget(current.story) };
+  }
+
+  /**
+   * Sends the unsubscribe message of a mailto URI (RFC 2369 §3.2, RFC 6068):
+   * plain text, the URI's subject, an empty body, no ES part and no copy in
+   * the sent folder (it is not part of any chat).
+   */
+  async sendUnsubscribe(address: string, subject: string): Promise<void> {
+    const raw = serializeMessage(
+      { from: { name: this.options.account.name, address: this.me }, to: [{ name: "", address }], subject, text: "" },
+      { date: this.clock(), messageId: this.newMessageId(), includeEsPart: false },
+    );
+    await this.options.adapter.send(encoder.encode(raw), { from: this.me, to: [address] });
+  }
+
+  /** Hides (or shows again) a sender's stories; their messages stay under Other mail. */
+  async setHidden(address: string, hidden: boolean): Promise<string[]> {
+    const settings = this.options.settings;
+    if (settings === undefined || settings === null) throw new Error("This session keeps no settings");
+    await (hidden ? settings.hide(address) : settings.unhide(address));
+    this.mailChanged.flush();
+    return settings.hidden;
+  }
+
   private messageIdsOf(model: Model, id: string): string[] | null {
     const chat = model.chats.find((c) => c.id === id);
     if (chat !== undefined) return chat.messages.map((m) => m.id);
@@ -848,6 +988,8 @@ export class MailSession {
     const es = stored.message.es;
     if (es?.$type !== "es.social.post" || !es.requestReceipts.includes(kind)) return;
     if (stored.entry.folder !== "inbox" || this.isMine(stored) || stored.message.refs.messageId === null) return;
+    // The sender of a newsletter learns nothing from the reader's client (spec section 12.4, ST-7).
+    if (this.storyOf(stored) !== null) return;
     const flag = kind === "read" ? READ_SENT : DELIVERED_SENT;
     const once = `${kind} ${stored.message.id}`;
     if (stored.entry.flags.includes(flag) || this.receiptsSent.has(once)) return;
