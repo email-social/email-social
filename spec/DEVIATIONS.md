@@ -352,11 +352,11 @@ Quotations from the draft are translated from Czech where the draft is in Czech.
     - a short English plain text that says what happened;
     - the ES part.
   - Receipts never request receipts, just as RFC 8098 §2.1 forbids an MDN in answer to an MDN.
-  - es-core only builds and parses receipts. Whether and when to send one, including asking the user, is left to the client (Task 2).
+  - es-core only builds and parses receipts. Whether and when to send one is left to the client: es-bridge follows `es-protocol.md` section 11.2, and the account owner chooses which kinds it sends with `--receipts all|delivered|none` (section 14, RC-8).
 - **Why:**
   - The task requires the receipt to be in the ES part.
   - An MDN request is honoured unevenly (D15), and an ordinary message with a text part is readable everywhere (rule 1).
-- **Covered by:** `test/es-schema.test.ts`, `test/serialize.test.ts`, `test/parse.test.ts`.
+- **Covered by:** `test/es-schema.test.ts`, `test/serialize.test.ts`, `test/parse.test.ts`; the owner's choice by `packages/es-bridge/test/receipt-rule.test.ts` ("receipt setting").
 
 ### D20. DIDs derived from the mailbox address, in one canonical spelling
 

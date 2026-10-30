@@ -664,7 +664,7 @@ The 51 fixture vectors come from `packages/es-core/fixtures/`: 22 messages recon
 - **What a message reveals.** The ES part repeats what the message's header already says (sender, Message-ID, subject, threading) and adds the text, receipt requests, topic names and the excerpt of a message answered. A writer SHOULD NOT put anything in the ES part that it would not put in the `text/plain` part or the header. [CN-1]
 - **No lookups.** A reader MUST NOT fetch anything because of a message: no DID resolution, no handle lookup, no remote content in HTML (section 6.7 reduces HTML to text without loading anything). [CN-2]
 - **Robustness.** A reader MUST bound its work on hostile input: es-core never throws, limits MIME nesting to 32 levels, and treats a malformed part as data. [CN-3]
-- **Receipts** tell the sender when a message was fetched or opened. es-bridge sends them only for posts that asked for them (section 11.2); it has no setting to stop sending them yet.
+- **Receipts** tell the sender when a message was fetched and when it was opened. That is the account owner's information, so which kinds of receipts a client sends is the owner's choice. A client SHOULD let the account owner choose between sending every kind a post asks for, only `delivered`, and none; sending fewer kinds MUST NOT change anything else, and incoming receipts are still read and shown. es-bridge reads the choice from its `--receipts all|delivered|none` option (`all` by default) and sets the keyword of section 11.2 only for a receipt it sent. [RC-8]
 
 ## 15. Requirements and the tests that cover them
 
@@ -766,6 +766,7 @@ Paths are relative to the repository root. `›` names a test (a distinctive par
 | CN-1 | `packages/es-core/test/es-schema.test.ts` › "writes a fixed key order and omits empty optional fields" |
 | CN-2 | `packages/es-bridge/test/nothing-leaves.test.ts` › "a maildir session makes no outbound connection", "an IMAP sign-in connects only to the configured IMAP and SMTP hosts"; `packages/es-core/test/hygiene.test.ts` › "library code runs in browsers and is deterministic" |
 | CN-3 | `packages/es-core/test/parse.test.ts` › "never throws and always returns a complete EsMessage", "returns a message with only its SHA-256 id if an internal error escapes"; `packages/es-core/test/mime-tree.test.ts` › "stops descending at depth 32", "never throws on truncated or malformed multipart input" |
+| RC-8 | `packages/es-bridge/test/receipt-rule.test.ts` › "all (the default): both receipts are sent and both keywords set", "delivered: only the Delivered receipt is sent and only its keyword set", "none: no receipt is sent and no keyword set"; `packages/es-bridge/test/server.test.ts` › "sends receipts as the account's setting says"; `packages/es-bridge/test/cli-args.test.ts` › "reads every option" |
 
 ## Appendix A: patterns for quoted text
 
