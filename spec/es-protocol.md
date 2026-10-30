@@ -1,10 +1,10 @@
 # Email Social Protocol: direct messages over e-mail
 
-**Status:** the specification of what this repository implements (Tasks 1–2d). It is written from the Czech working draft [`es-protocol-v2-excerpt.md`](es-protocol-v2-excerpt.md), which stays in this directory for provenance, and from what the code in `packages/es-core` and `packages/es-bridge` does. Where the draft and this document differ, this document describes the implementation and [`DEVIATIONS.md`](DEVIATIONS.md) gives the reason and the evidence.
+**Status:** the specification of what this repository implements (Tasks 1–4). It is written from the Czech working draft [`es-protocol-v2-excerpt.md`](es-protocol-v2-excerpt.md), which stays in this directory for provenance, and from what the code in `packages/es-core` and `packages/es-bridge` does. Where the draft and this document differ, this document describes the implementation and [`DEVIATIONS.md`](DEVIATIONS.md) gives the reason and the evidence.
 
 **Licence:** CC BY 4.0 (see [`LICENSE`](LICENSE)).
 
-**Test vectors:** [`packages/es-core/vectors/`](../packages/es-core/vectors/README.md). Every normative statement below carries an identifier such as `[ID-1]`; the [table at the end](#15-requirements-and-the-tests-that-cover-them) names the tests and vectors that cover each one.
+**Test vectors:** [`packages/es-core/vectors/`](../packages/es-core/vectors/README.md). Every normative statement below carries an identifier such as `[ID-1]`; the [table at the end](#16-requirements-and-the-tests-that-cover-them) names the tests and vectors that cover each one.
 
 ## Contents
 
@@ -19,10 +19,11 @@
 9. [Quoted text and reply cards](#9-quoted-text-and-reply-cards)
 10. [Sending into a chat](#10-sending-into-a-chat)
 11. [Receipts](#11-receipts)
-12. [Compatibility with real mail clients](#12-compatibility-with-real-mail-clients)
-13. [Test vectors](#13-test-vectors)
-14. [Considerations](#14-considerations)
-15. [Requirements and the tests that cover them](#15-requirements-and-the-tests-that-cover-them)
+12. [Stories](#12-stories)
+13. [Compatibility with real mail clients](#13-compatibility-with-real-mail-clients)
+14. [Test vectors](#14-test-vectors)
+15. [Considerations](#15-considerations)
+16. [Requirements and the tests that cover them](#16-requirements-and-the-tests-that-cover-them)
 
 Appendix A: [patterns for quoted text](#appendix-a-patterns-for-quoted-text) · Appendix B: [reply and forward prefixes](#appendix-b-reply-and-forward-prefixes) · Appendix C: [named character references](#appendix-c-named-character-references)
 
@@ -35,7 +36,7 @@ The design follows two goals, which take precedence over everything else in this
 - **Plain e-mail always works.** Every message is an ordinary RFC 5322 message whose first body part is `text/plain` and holds the whole text. A recipient with any mail client reads it without knowing about Email Social. The structured data an Email Social client adds (the *ES part*) is optional for everyone else.
 - **No server.** The user's mailbox, reached over IMAP and SMTP, is the only storage. Nothing in this protocol needs a server of its own, a lookup on the network, or a third-party service.
 
-This document covers direct messages between people (one to one and small groups), delivery and read receipts, threading, and the chat view built on them. It does not cover the draft's federation (chapter 3), HTTP API (chapter 5), repositories, content identifiers, feeds, reactions, follows, profiles, encryption or signatures. A client MUST NOT need any of these to read or write the messages this document describes. [INT-1]
+This document covers direct messages between people (one to one and small groups), delivery and read receipts, threading, the chat view built on them, and newsletters shown apart from it as stories. It does not cover the draft's federation (chapter 3), HTTP API (chapter 5), repositories, content identifiers, feeds, reactions, follows, profiles, encryption or signatures. A client MUST NOT need any of these to read or write the messages this document describes. [INT-1]
 
 ## 2. Conventions and terminology
 
@@ -43,12 +44,13 @@ The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "S
 
 Regular expressions are written in JavaScript syntax. The flag `i` means case-insensitive matching (with `u`, by Unicode simple case folding), `u` means Unicode-aware matching; `\b` is the ASCII word boundary and `\d` is `[0-9]`. **White space** without qualification, and `\s` in a regular expression, mean JavaScript's white space: TAB, LF, VT, FF, CR, SPACE, U+00A0, U+1680, U+2000–U+200A, U+2028, U+2029, U+202F, U+205F, U+3000 and U+FEFF. To **trim** is to remove white space at both ends; to **collapse** white space is to replace every run of it with one SPACE. Where a rule uses fewer characters, it names them. A **`<…>` group** is a `<`, any characters other than `<` and `>`, and a `>` (`/<([^<>]*)>/`); its *content* is what lies between the brackets. To **remove comments** from a value is to replace, in one pass, every `(` … `)` that contains no parenthesis with one SPACE (`value.replace(/\([^()]*\)/g, " ")`); where a rule removes *nested* comments, a comment runs from `(` to the matching `)`, with `\` quoting the next character.
 
-- **Writer:** software that composes Email Social messages and receipts (section 4, 5, 10, 11).
-- **Reader:** software that turns a raw message into the message model of section 6 and checks its ES part (sections 5 and 6). A conforming reader passes the test vectors (section 13).
+- **Writer:** software that composes Email Social messages, receipts and story records (sections 4, 5, 10, 11, 12.4).
+- **Reader:** software that turns a raw message into the message model of section 6 and checks its ES part (sections 5 and 6). A conforming reader passes the test vectors (section 14).
 - **Client:** a reader and writer that also groups messages (sections 7 to 9) and sends receipts (section 11).
 - **Account owner:** the person whose mailbox the client shows; *own messages* are those sent from the owner's address (or found in the owner's Sent folder).
 - **ES part:** the MIME part with media type `application/vnd.email-social.message+json` (section 5).
-- **Post:** an ES part with `$type` `es.social.post`; **receipt:** one with `$type` `es.social.receipt`.
+- **Post:** an ES part with `$type` `es.social.post`; **receipt:** one with `$type` `es.social.receipt`; **story record:** one with `$type` `es.social.story`.
+- **Story:** a newsletter or promotion that a client shows apart from chats for a limited time (section 12).
 - **Base subject:** a subject without reply and forward prefixes and list tags (section 7.2).
 - **Conversation:** messages linked by threading headers and subjects (section 7). **Chat:** every message exchanged with one set of people (section 8.1). **Topic:** a thread inside a chat (section 8.2).
 
@@ -222,7 +224,8 @@ A reader MUST parse the JSON of an ES part as follows, liberal with optional fie
    - `text`: required as a string, unless `text` is absent or `null` and `email.textSha256` is set; then `text` is `null`. Anything else → no record.
    - `requestReceipts`: the values `delivered` and `read` that occur in the array, in that order; `[]` when absent or not an array.
 6. `$type` `es.social.receipt`: `kind` MUST be `delivered` or `read` and `messageId` a string that normalises, otherwise no record.
-7. Any other `$type` → no record. Unknown fields are ignored; the draft's envelope fields `uri`, `cid` and `signature` are ignored (DEVIATIONS D18).
+7. `$type` `es.social.story`: section 12.4.
+8. Any other `$type` → no record. Unknown fields are ignored; the draft's envelope fields `uri`, `cid` and `signature` are ignored (DEVIATIONS D18).
 
 ### 5.5 Which ES part belongs to the message
 
@@ -231,11 +234,11 @@ A forward made by an ordinary client can carry another message's ES part along (
 1. Consider only the first leaf of the MIME tree (in part order, section 6.4) whose media type is an ES media type (section 5.1). Later ES parts are attachments.
 2. Decode its body (section 6.4) as UTF-8, replacing invalid sequences with U+FFFD, and parse it (section 5.4). No record → no ES part.
 3. When the message has a From address, the record's `via` MUST equal it (both canonical).
-4. For a post, when both the message's Message-ID and the record's `email.messageId` are present, they MUST be equal. A receipt is about another message; only its `via` is checked.
+4. For a post or a story record, when both the message's Message-ID and the record's `email.messageId` are present, they MUST be equal. A receipt is about another message; only its `via` is checked.
 
 ## 6. Reading a message
 
-A reader turns the raw bytes of a message into the model below. The test vectors (section 13) give the expected model for 51 messages in real client formats and 8 messages written by es-core. A reader MUST produce, for each vector, a model equal to `expected` (field order does not matter, array order does). [RD-1]
+A reader turns the raw bytes of a message into the model below. The test vectors (section 14) give the expected model for 58 messages in real client formats and 9 messages written by es-core. A reader MUST produce, for each vector, a model equal to `expected` (field order does not matter, array order does). [RD-1]
 
 The model, in TypeScript notation (`?:` is not used: every field is always present):
 
@@ -250,11 +253,12 @@ interface Message {
   subject: string;
   text: string;
   textSource: "plain" | "html" | "none";
-  es: Post | Receipt | null;
+  es: Post | Receipt | StoryRecord | null;
   attachments: Attachment[];
   refs: { messageId: string | null; inReplyTo: string[]; references: string[] };
   delivery: { listHeaders: string[]; listId: string | null; autoSubmitted: string | null;
-              precedence: string | null; returnPath: string | null };
+              precedence: string | null; returnPath: string | null;
+              listUnsubscribe: { uris: string[]; oneClick: boolean } | null };
 }
 interface Address { name: string; address: string }   // name "" when there is none
 interface Attachment { filename: string | null; contentType: string; disposition: "inline" | "attachment";
@@ -268,9 +272,14 @@ interface Post {
 }
 interface Receipt { $type: "es.social.receipt"; author: string | null; kind: "delivered" | "read";
                     messageId: string; via: string; createdAt: string }
+interface StoryRecord {
+  $type: "es.social.story"; author: string | null; via: string; createdAt: string;
+  email: { messageId: string; textSha256: string | null }; title: string; expiresAt: string | null;
+  unsubscribe: { mailto: string } | { url: string } | null; text: string | null;
+}
 ```
 
-`Post` and `Receipt` are the record of section 5.4 with the fields of `value` beside `$type` and `author`.
+`Post`, `Receipt` and `StoryRecord` are the records of sections 5.4 and 12.4 with the fields of `value` beside `$type` and `author`.
 
 | Field | Value |
 | --- | --- |
@@ -421,6 +430,7 @@ A reader MUST record in `delivery` the header fields that tell list and program 
 | `autoSubmitted` | the first `Auto-Submitted` value with comments removed, cut at the first `;`, trimmed and lowercased; `null` when absent |
 | `precedence` | the same for `Precedence` |
 | `returnPath` | the content of the first `<…>` of the first `Return-Path` (else its value), trimmed, in canonical form; `""` for the null path `<>`; `null` when absent |
+| `listUnsubscribe` | `null` when there is no `List-Unsubscribe` field; else `uris`, the content of every `<…>` group of the first `List-Unsubscribe` (RFC 2369 §3.2) with white space removed (a URI may be folded), in order, empty ones and repeats left out; and `oneClick`, true when the first `List-Unsubscribe-Post` value with white space removed is `List-Unsubscribe=One-Click` in any letter case (RFC 8058 §3.1) |
 
 ## 7. Threading
 
@@ -494,7 +504,7 @@ Each topic has `rootId`; `label`, the `topicLabel` of the oldest message of the 
 
 ### 8.3 Lists and programs
 
-A client MUST classify a message as `list` mail when `delivery.listHeaders` is not empty or `precedence` is `list`; otherwise as `automated` when `autoSubmitted` is present and not `no` (RFC 3834 §5), `precedence` is `bulk` or `junk`, `returnPath` is `""` (bounces, RFC 5321 §4.5.5), or the local part of the From address matches `/^(?:no[-_.]?reply|do[-_.]?not[-_.]?reply|mailer[-_.]?daemon|postmaster)(?:[-+_.].*)?$/i`; otherwise as `person`. The account owner's own messages MUST always be `person`. es-web shows list and automated mail apart from chats, under "Other mail". [CH-3]
+A client MUST classify a message as `list` mail when `delivery.listHeaders` is not empty, `precedence` is `list` or its ES part is a story record (section 12.4); otherwise as `automated` when `autoSubmitted` is present and not `no` (RFC 3834 §5), `precedence` is `bulk` or `junk`, `returnPath` is `""` (bounces, RFC 5321 §4.5.5), or the local part of the From address matches `/^(?:no[-_.]?reply|do[-_.]?not[-_.]?reply|mailer[-_.]?daemon|postmaster)(?:[-+_.].*)?$/i`; otherwise as `person`. The account owner's own messages MUST always be `person`. es-web shows list and automated mail apart from chats, under "Other mail". [CH-3]
 
 ## 9. Quoted text and reply cards
 
@@ -593,7 +603,92 @@ A receipt MUST NOT request receipts, as RFC 8098 §2.1 forbids an MDN in answer 
 - A client MAY send `read` when the account owner opens the chat that holds the message. [RC-6]
 - A client MUST send a receipt only for incoming messages in the inbox that are not the owner's own and that have a Message-ID, and MUST address it to the post's `via`. [RC-7]
 
-## 12. Compatibility with real mail clients
+## 12. Stories
+
+Newsletters and promotions are not conversations. A client shows them apart from chats as **stories**: above the chat list, one circle per sender, each message for a week. A story is an ordinary message and stays one: it is also listed under "Other mail" (section 8.3), and nothing about it is sent anywhere. Reading a story makes no request to its sender or to anyone else (CN-2).
+
+### 12.1 Which messages are stories
+
+A client MUST take a message as a story when it has a `from` and a `date`, its From address is not one of the account owner's addresses (canonical form, section 3.1), and either: [ST-1]
+
+- its ES part (section 5.5) is a story record (section 12.4), an **explicit** story; or
+- its header fields say "newsletter" (section 6.9): `delivery.listUnsubscribe` is not `null` (a `List-Unsubscribe` field, RFC 2369 §3.2); `delivery.listHeaders` does not contain `list-post` (a discussion list, where people write to each other, is not a story); `delivery.autoSubmitted` is `null` or `no` (RFC 3834 §5: order confirmations, password resets and other automated mail are not stories, whatever unsubscribe field they carry); and `delivery.returnPath` is not `""` (a bounce, RFC 5321 §4.5.5).
+
+`Precedence: bulk` alone does not make a story. A `List-Unsubscribe` field without a usable URI still does; the story then has no way to unsubscribe (section 12.3).
+
+The story of a message MUST depend on nothing but the message and the account owner's addresses: finding it makes no request and does not read the clock, so the same message always gives the same story. Whether a story is still shown is decided by comparing its `expiresAt` with the current time. [ST-2]
+
+### 12.2 What a story shows
+
+A story has the fields below. A client MUST NOT show a story at or after its `expiresAt`; the message stays where it is, in the mailbox and under "Other mail". [ST-3]
+
+| Field | Value |
+| --- | --- |
+| `sender` | the message's `from`: the display name with white space collapsed and the address in canonical form |
+| `title` | for an explicit story, the record's `title` with white space collapsed; otherwise the base subject (section 7.2), or, when that is empty, the first non-blank line of `text` cut to 140 characters (section 9.3) |
+| `receivedAt` | `date`, the instant of the `Date` field |
+| `expiresAt` | `receivedAt` plus 7 days of 24 hours; for an explicit story, the record's `expiresAt` when that is an earlier instant (never a later one) |
+| `unsubscribe` | section 12.3 |
+| `explicit` | `true` for an explicit story, else `false` |
+
+### 12.3 How to unsubscribe
+
+A client MUST take a story's `unsubscribe` from the first of these that applies: [ST-4]
+
+1. `{ oneClick: uri }` when `delivery.listUnsubscribe.oneClick` is true (RFC 8058 §3.1) and one of its URIs starts with `https://` (in any letter case): the first such URI. RFC 8058 §3.1 requires https, so an `http:` URI is never used for a one-click request.
+2. `{ mailto: address, subject }` for the first `mailto:` URI (RFC 6068) whose first address, percent-decoded and in canonical form, is usable: something before and after its last `@`, no white space and none of `<>(),;` in it, none of `:"\[]` after the `@`. `subject` is the URI's `subject` field, percent-decoded, with every control character (U+0000–U+001F, U+007F) replaced by a SPACE and white space collapsed, or `unsubscribe` when there is none or it is empty. The `body` and other fields are ignored.
+3. `{ link: uri }` for the first URI that starts with `http://` or `https://`: a page for the reader to open.
+4. For an explicit story: the record's `unsubscribe`, `{ mailto }` as `{ mailto, subject: "unsubscribe" }` and `{ url }` as `{ link: url }`. A record never declares a one-click request.
+5. Otherwise `null`.
+
+A mailto URI comes before a page because the client can send the message itself and nothing opens in a browser. The URIs are those of the first `List-Unsubscribe` field (section 6.9).
+
+### 12.4 The story record
+
+A sender can mark a message as a story with an ES part whose `$type` is `es.social.story`. es-core writes one with `writeStory`.
+
+```json
+{
+  "$type": "es.social.story",
+  "author": "did:es:shop.example.org:…",
+  "value": {
+    "via": "news@shop.example.org",
+    "createdAt": "2026-03-18T08:00:00.000Z",
+    "email": { "messageId": "<es-vector-9@shop.example.org>" },
+    "title": "Spring sale: shoes from 20 €",
+    "expiresAt": "2026-03-22T23:00:00.000Z",
+    "unsubscribe": { "mailto": "leave@shop.example.org" },
+    "text": "Spring sale: walking shoes, trail runners and sandals from 20 €, until Sunday.\n"
+  }
+}
+```
+
+| Field | Written | Meaning |
+| --- | --- | --- |
+| `$type` | always | `es.social.story` |
+| `author` | optional | a valid `did:es` identifier (section 3.3) |
+| `value.via` | always | the canonical From address |
+| `value.createdAt` | always | the `Date` instant as an RFC 3339 UTC timestamp with milliseconds |
+| `value.email.messageId` | always | the message's own Message-ID |
+| `value.email.textSha256` | when `text` is left out | lowercase hexadecimal SHA-256 of the UTF-8 text |
+| `value.title` | always | the story's title, white space collapsed, 1 to 200 UTF-8 bytes; also the `Subject` |
+| `value.expiresAt` | optional | when the story stops being shown, as an RFC 3339 UTC timestamp with milliseconds |
+| `value.unsubscribe` | optional | `{ "mailto": address }` or `{ "url": http or https URL }`; also written as `List-Unsubscribe` |
+| `value.text` | unless too long | exactly the text of the `text/plain` part; left out when its UTF-8 form is over 10000 bytes |
+
+A writer MUST write a story as a message with the layout of section 4.1 and the header fields of section 4.2, with `Subject` equal to the title and the record's fields in the order of the example, optional fields without a value left out. When the story has an `unsubscribe`, the writer MUST also write a `List-Unsubscribe` field with the same URI (`<mailto:address>` or `<url>`), so that ordinary clients offer it too. The title, white space collapsed, MUST be 1 to 200 UTF-8 bytes, and a text over 10000 UTF-8 bytes MUST be left out and represented by `email.textSha256` (as ES-4 says for a post). [ST-5]
+
+A reader MUST read a story record by section 5.4 items 1 to 4 and these rules: [ST-6]
+
+- `email.messageId`: a string that normalises (section 3.2); otherwise no record. `email.textSha256` as for a post.
+- `title`: a string that is not blank and is at most 200 UTF-8 bytes, kept as written; otherwise no record.
+- `text`: as for a post (section 5.4 item 5).
+- `expiresAt`: kept when it is an RFC 3339 date-time (section 5.4 item 4), else `null`.
+- `unsubscribe`: when it is an object with a `mailto` string, `{ mailto }` with the address in canonical form if it is usable (something before and after its last `@`, no white space, `<` or `>`), else `null`; otherwise `{ url }` when `url` is a string of at most 2000 characters that matches `/^https?:\/\/[\x21-\x7e]+$/i` and contains none of `<>"\`, else `null`.
+
+A story record MUST NOT contain `requestReceipts`, and a reader ignores one. A client MUST NOT send a receipt (section 11) for a message that is a story (section 12.1), explicit or not, whatever its ES part asks for: the sender of a newsletter learns nothing from the reader's client. [ST-7]
+
+## 13. Compatibility with real mail clients
 
 Real clients do not follow the draft, and often not the RFCs either. [`DEVIATIONS.md`](DEVIATIONS.md) records each difference with its evidence; this section summarises what a client has to be ready for.
 
@@ -604,6 +699,7 @@ Real clients do not follow the draft, and often not the RFCs either. [`DEVIATION
 - **Forwards** carry another message's ES part along (D12), which section 5.5 rejects.
 - **People, lists and programs** share a mailbox; section 8 tells them apart (D22).
 - **Receipts** by MDN are honoured unevenly (D15); section 11 uses ordinary messages.
+- **Newsletters** say what they are only through `List-Unsubscribe`, often with an RFC 8058 one-click request, and order confirmations and password resets carry the same field (D27); section 12 tells them apart and shows newsletters as stories.
 
 | Deviation | Draft | This document |
 | --- | --- | --- |
@@ -633,10 +729,11 @@ Real clients do not follow the draft, and often not the RFCs either. [`DEVIATION
 | D24 | (none) | topics and the carrier subject (sections 8.2, 10.2) |
 | D25 | (none) | `topicRoot`, `topicLabel`, `replyTo` in `email` (section 5.2) |
 | D26 | §1.2–§1.4, §2.1–§2.5, §4.2 repositories, other lexicons, CIDs, signatures, DKIM | not implemented (sections 1, 5.4) |
+| D27 | (none) | stories from header fields, and the `es.social.story` record (section 12) |
 
 The draft's §2.1–§2.2 (repositories and record URIs), §2.3.2–§2.3.4 (reactions, follows, profiles), §2.4 (content identifiers), §2.5 and §4.2 (signatures, DKIM checks) are out of scope of this repository: no reader or writer here produces or interprets them (DEVIATIONS D26).
 
-## 13. Test vectors
+## 14. Test vectors
 
 `packages/es-core/vectors/*.json` are the conformance suite of this document. Each file holds one raw message and the model of section 6 that a conforming reader produces from it; [`vectors/README.md`](../packages/es-core/vectors/README.md) describes the format.
 
@@ -648,7 +745,8 @@ The draft's §2.1–§2.2 (repositories and record URIs), §2.3.2–§2.3.4 (rea
   "rawBase64": "the message bytes in base64, otherwise",
   "input": { "only for generated vectors": "what es-core serialised" },
   "expected": { "…": "the model of section 6" },
-  "split": { "fresh": "…", "quoted": "…", "signature": "…" }
+  "split": { "fresh": "…", "quoted": "…", "signature": "…" },
+  "story": { "only in stories-*.json": "the story of section 12, or null" }
 }
 ```
 
@@ -656,17 +754,18 @@ The draft's §2.1–§2.2 (repositories and record URIs), §2.3.2–§2.3.4 (rea
 - **`expected`.** The reader's model MUST equal `expected` by deep equality (section 6). [VE-2]
 - **`split`.** A reader that implements section 9.1 MUST give `split` for the text of `expected` (with its ES part). [VE-3]
 - **Generated vectors** were written by es-core from `input` with a fixed date and Message-ID. A conforming writer need not produce the same bytes, but it MUST produce messages that a conforming reader reads to the same model fields (subject, addresses, threading headers, text, ES record). [VE-4]
+- **`story`.** A client that implements section 12 MUST give `story` for `expected` (with an account owner who is none of the vector's senders). [VE-5]
 
-The 51 fixture vectors come from `packages/es-core/fixtures/`: 22 messages reconstructed from the published output formats of Gmail, Outlook, Apple Mail, iOS Mail, Thunderbird, mutt, Seznam.cz, Mailman, a newsletter sender and the draft's own layout, and 29 reply formats from `fixtures/replies/`; the 8 generated vectors cover new messages, replies, a 20 kB text, a plain message, both receipts, and a named topic with a deliberate reply in it. Every domain in them is `example.com`, `example.org` or `example.net`.
+The 58 fixture vectors come from `packages/es-core/fixtures/`: 22 messages reconstructed from the published output formats of Gmail, Outlook, Apple Mail, iOS Mail, Thunderbird, mutt, Seznam.cz, Mailman, a newsletter sender and the draft's own layout, 29 reply formats from `fixtures/replies/`, and 7 newsletters and automated messages from `fixtures/stories/`; the 9 generated vectors cover new messages, replies, a 20 kB text, a plain message, both receipts, a named topic with a deliberate reply in it, and a story record. Every domain in them is `example.com`, `example.org` or `example.net`.
 
-## 14. Considerations
+## 15. Considerations
 
 - **What a message reveals.** The ES part repeats what the message's header already says (sender, Message-ID, subject, threading) and adds the text, receipt requests, topic names and the excerpt of a message answered. A writer SHOULD NOT put anything in the ES part that it would not put in the `text/plain` part or the header. [CN-1]
 - **No lookups.** A reader MUST NOT fetch anything because of a message: no DID resolution, no handle lookup, no remote content in HTML (section 6.7 reduces HTML to text without loading anything). [CN-2]
 - **Robustness.** A reader MUST bound its work on hostile input: es-core never throws, limits MIME nesting to 32 levels, and treats a malformed part as data. [CN-3]
 - **Receipts** tell the sender when a message was fetched and when it was opened. That is the account owner's information, so which kinds of receipts a client sends is the owner's choice. A client SHOULD let the account owner choose between sending every kind a post asks for, only `delivered`, and none; sending fewer kinds MUST NOT change anything else, and incoming receipts are still read and shown. es-bridge reads the choice from its `--receipts all|delivered|none` option (`all` by default) and sets the keyword of section 11.2 only for a receipt it sent. [RC-8]
 
-## 15. Requirements and the tests that cover them
+## 16. Requirements and the tests that cover them
 
 Paths are relative to the repository root. `›` names a test (a distinctive part of its title) in that file; a vector path means every assertion run on that vector by `packages/es-core/test/vectors.test.ts`. `packages/es-core/test/spec.test.ts` checks that every requirement above appears here exactly once and that every named test and file exists.
 
@@ -759,10 +858,18 @@ Paths are relative to the repository root. `›` names a test (a distinctive par
 | RC-5 | `packages/es-bridge/test/receipt-rule.test.ts` › "sends no Delivered receipt for a message that is already read", "sends a Delivered receipt for an ES message that arrives while running" |
 | RC-6 | `packages/es-bridge/test/receipt-rule.test.ts` › "sends exactly one Read receipt per message when the conversation is opened" |
 | RC-7 | `packages/es-bridge/test/receipt-rule.test.ts` › "never answers the account's own messages", "writes receipts as ordinary messages" |
+| ST-1 | `packages/es-core/test/story.test.ts` › "a newsletter with List-Unsubscribe is a story", "is not a story without List-Unsubscribe, even with Precedence: bulk", "a discussion list (List-Post) is not a story", "Auto-Submitted other than no is an automated message", "a bounce (Return-Path: <>) is never a story", "the account owner's own message is never a story", "needs a sender and a date", "is a story with explicit: true"; `packages/es-core/vectors/stories-discussion-list.json`; `packages/es-core/vectors/stories-order-confirmation.json`; `packages/es-core/vectors/stories-password-reset.json`; `packages/es-core/vectors/stories-bounce.json` |
+| ST-2 | `packages/es-core/test/story.test.ts` › "is deterministic: the same message gives the same story" |
+| ST-3 | `packages/es-core/test/story.test.ts` › "takes the title from the subject without reply and forward prefixes", "takes the first non-blank line of the text when the subject is empty", "expires exactly seven days after the Date", "counts seven days of 24 hours across a daylight saving change", "uses the record's expiresAt when it is earlier than seven days, never later"; `packages/es-core/vectors/stories-expired-newsletter.json` |
+| ST-4 | `packages/es-core/test/story.test.ts` › "one-click: List-Unsubscribe-Post", "with both mailto and https and no List-Unsubscribe-Post", "RFC 8058 needs https", "reads the mailto subject percent-decoded", "skips a mailto without a usable address", "offers a record's url as a page to open"; `packages/es-core/vectors/stories-newsletter-one-click.json`; `packages/es-core/vectors/stories-newsletter-mailto-bulk.json` |
+| ST-5 | `packages/es-core/test/story-record.test.ts` › "writes an ordinary message: text/plain first", "writes the record's fields in a fixed order", "writes List-Unsubscribe from the record", "collapses the title, and refuses an empty one", "leaves a text over 10000 UTF-8 bytes out of the record"; `packages/es-core/vectors/stories-explicit-record.json` |
+| ST-6 | `packages/es-core/test/story-record.test.ts` › "reads back what writeStory wrote", "rejects a story without a title", "drops malformed optional fields instead of rejecting the story", "accepts a story whose text is left out", "is not taken from a message whose Message-ID differs" |
+| ST-7 | `packages/es-core/test/story-record.test.ts` › "never asks for receipts", "drops malformed optional fields instead of rejecting the story" |
 | VE-1 | `packages/es-core/test/vectors.test.ts` › "stores each fixture byte for byte", "parseMessage(raw) equals expected" |
 | VE-2 | `packages/es-core/test/vectors.test.ts` › "parseMessage(raw) equals expected" |
 | VE-3 | `packages/es-core/test/vectors.test.ts` › "splitQuoted(expected) equals split" |
 | VE-4 | `packages/es-core/test/roundtrip.test.ts` › "round trip: serialise → parse"; `packages/es-core/test/serialize.test.ts` › "gives the same text, subject, addresses and threading headers" |
+| VE-5 | `packages/es-core/test/vectors.test.ts` › "storyOf(expected) equals story", "gives every story vector a story field and no other vector one" |
 | CN-1 | `packages/es-core/test/es-schema.test.ts` › "writes a fixed key order and omits empty optional fields" |
 | CN-2 | `packages/es-bridge/test/nothing-leaves.test.ts` › "a maildir session makes no outbound connection", "an IMAP sign-in connects only to the configured IMAP and SMTP hosts"; `packages/es-core/test/hygiene.test.ts` › "library code runs in browsers and is deterministic" |
 | CN-3 | `packages/es-core/test/parse.test.ts` › "never throws and always returns a complete EsMessage", "returns a message with only its SHA-256 id if an internal error escapes"; `packages/es-core/test/mime-tree.test.ts` › "stops descending at depth 32", "never throws on truncated or malformed multipart input" |

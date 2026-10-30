@@ -1,7 +1,7 @@
 /**
  * spec/es-protocol.md (Task 3): every normative statement carries an
  * identifier such as [WR-1] and uses an RFC 2119 key word, and the table of
- * section 15 names, for each identifier, tests and vectors that exist.
+ * section 16 names, for each identifier, tests and vectors that exist.
  */
 import { existsSync, readFileSync } from "node:fs";
 import { join } from "node:path";
@@ -11,7 +11,7 @@ import { describe, expect, it } from "vitest";
 const REPO = fileURLToPath(new URL("../../../", import.meta.url));
 const SPEC = readFileSync(join(REPO, "spec/es-protocol.md"), "utf8");
 
-const TABLE_HEADING = "## 15. Requirements and the tests that cover them";
+const TABLE_HEADING = "## 16. Requirements and the tests that cover them";
 const KEYWORD = /\b(?:MUST|REQUIRED|SHALL|SHOULD|RECOMMENDED|MAY|OPTIONAL)\b/;
 const TAG = /\[([A-Z]{2,3}-\d+)\]/g;
 
@@ -37,7 +37,7 @@ interface Block {
   own: boolean;
 }
 
-/** Paragraphs and list items before section 15 (and the appendices after its table). */
+/** Paragraphs and list items before section 16 (and the appendices after its table). */
 function blocks(lines: readonly string[]): Block[] {
   const out: Block[] = [];
   let current: string[] = [];
@@ -123,7 +123,7 @@ describe("spec/es-protocol.md: normative statements", () => {
   });
 });
 
-describe("spec/es-protocol.md: the table of section 15", () => {
+describe("spec/es-protocol.md: the table of section 16", () => {
   it("lists every requirement once, in the order of the text", () => {
     expect(rows.map((r) => r.id)).toEqual(bodyIds);
   });

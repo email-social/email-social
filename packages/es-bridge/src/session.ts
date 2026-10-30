@@ -64,7 +64,7 @@ import type {
 import type { MetadataCache } from "./cache.js";
 
 /**
- * Which receipts the account sends (spec/es-protocol.md section 14, RC-8):
+ * Which receipts the account sends (spec/es-protocol.md section 15, RC-8):
  * every kind a post asks for, only "delivered", or none. It changes nothing
  * else: incoming receipts are still read and shown, and the account's own
  * posts still ask for receipts.
