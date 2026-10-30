@@ -49,6 +49,19 @@ saved from your mail client):
 npx email-social --maildir ./my-mail --address you@example.com --name "Your Name"
 ```
 
+Receipts are the account owner's choice. Other Email Social users can ask
+to be told when their message reached your Email Social and when you opened
+it; by default both receipts are sent. Start with `--receipts delivered` to
+never send Read receipts, or `--receipts none` to send no receipts at all
+(this works the same with `--demo`, `--maildir` and an account you sign in
+to). Receipts others send you are still shown either way. The web client
+has no settings view, so this is set on the command line each time you
+start `email-social`:
+
+```sh
+npx email-social --receipts none
+```
+
 `./my-mail/INBOX/*.eml` are received messages and `./my-mail/Sent/*.eml`
 yours.
 
@@ -132,6 +145,9 @@ With two accounts that both run Email Social (A and B):
 2. When B's Email Social receives it, A's message shows **Delivered**. When B
    opens the chat, it shows **Read**. Each is sent once per message, and
    never to someone writing from an ordinary mail client.
+3. Start B's `email-social` with `--receipts delivered` and repeat step 1:
+   A's new message shows **Delivered** and never **Read**. With
+   `--receipts none` it stays **Sent**. B still sees the receipts A sends.
 
 ### 3d. Topics and deliberate replies as the recipient sees them (Task 2d)
 

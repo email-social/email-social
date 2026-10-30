@@ -1,5 +1,7 @@
 /** Command-line options of `email-social`. */
 
+import { RECEIPT_SETTINGS, type ReceiptSetting } from "./session.js";
+
 export interface CliOptions {
   demo: boolean;
   open: boolean;
@@ -10,6 +12,7 @@ export interface CliOptions {
   name: string | null;
   cacheDir: string | null;
   maxMessages: number;
+  receipts: ReceiptSetting;
 }
 
 export const USAGE = `Usage: email-social [options]
@@ -25,11 +28,13 @@ Without options you sign in to your IMAP/SMTP account in the page.
   --port <number>        listen on this port instead of a random one
   --no-open              do not open the browser
   --max-messages <n>     newest messages to load per IMAP folder (default 500)
+  --receipts <which>     receipts this account sends to Email Social users who ask:
+                         all (default), delivered (never "read") or none
   --help                 show this text
 `;
 
 export function parseArgs(argv: readonly string[]): CliOptions {
-  const options: CliOptions = { demo: false, open: true, port: 0, help: false, maildir: null, address: null, name: null, cacheDir: null, maxMessages: 500 };
+  const options: CliOptions = { demo: false, open: true, port: 0, help: false, maildir: null, address: null, name: null, cacheDir: null, maxMessages: 500, receipts: "all" };
   const args = argv.flatMap((a) => (a.startsWith("--") && a.includes("=") ? [a.slice(0, a.indexOf("=")), a.slice(a.indexOf("=") + 1)] : [a]));
   const value = (i: number, name: string): string => {
     const v = args[i + 1];
@@ -72,6 +77,13 @@ export function parseArgs(argv: readonly string[]): CliOptions {
       case "--max-messages":
         options.maxMessages = integer(value(i++, arg), arg, 1_000_000);
         break;
+      case "--receipts": {
+        const which = value(i++, arg);
+        const setting = RECEIPT_SETTINGS.find((s) => s === which);
+        if (setting === undefined) throw new Error(`${arg} must be ${RECEIPT_SETTINGS.join(", ")}`);
+        options.receipts = setting;
+        break;
+      }
       default:
         throw new Error(`Unknown option: ${arg}`);
     }

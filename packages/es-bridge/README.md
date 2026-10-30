@@ -15,7 +15,9 @@ npx email-social --maildir DIR --address you@example.com   # a folder of .eml fi
 Options: `--demo`, `--maildir <dir>`, `--address`, `--name`, `--cache-dir <dir>`,
 `--port <n>` (default: a random free port), `--no-open`, `--max-messages <n>`
 (newest messages per IMAP folder, default 500; the newest 50 are loaded
-first and the chats appear, the rest follows in the background). Manual steps with Gmail,
+first and the chats appear, the rest follows in the background),
+`--receipts all|delivered|none` (which receipts this account sends, default
+`all`). Manual steps with Gmail,
 Seznam.cz and other providers: [`docs/TRY-IT.md`](../../docs/TRY-IT.md).
 
 ## What goes where
@@ -53,7 +55,10 @@ Seznam.cz and other providers: [`docs/TRY-IT.md`](../../docs/TRY-IT.md).
 - **Receipts.** A Delivered receipt when an Email Social message that asks
   for one arrives, and a Read receipt when you open its chat. Each is
   sent once per message (recorded as `$EsDelivered` / `$EsRead` keywords in
-  the mailbox) and never to someone writing plain e-mail.
+  the mailbox) and never to someone writing plain e-mail. Which kinds are
+  sent is the account owner's choice: `--receipts delivered` never sends
+  Read receipts, `--receipts none` sends none (a keyword is set only for a
+  receipt sent); receipts others send you are still read and shown.
 - **Sending.** `POST /api/messages` writes into a chat (`chatId`) or to a
   set of people (`to`: their chat, or a new one). It continues a topic
   (`topic: { root }`, or the composer's default), names one (`topic:

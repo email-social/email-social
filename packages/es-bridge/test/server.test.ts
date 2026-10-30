@@ -8,7 +8,8 @@ import type { ChatSummary, ChatView, ContactDetail, OtherSummary, OtherView, Sen
 import { startBridge, type BridgeOptions, type RunningBridge } from "../src/bridge.js";
 import { MemoryStore, type AccountConfig } from "../src/credentials.js";
 import { DEMO_ACCOUNT } from "../src/demo.js";
-import { NOW, demoMaildir, tempDir } from "./helpers/session.js";
+import type { ReceiptSetting } from "../src/session.js";
+import { NOW, demoMaildir, folder, tempDir } from "./helpers/session.js";
 
 const running: RunningBridge[] = [];
 afterEach(async () => {
@@ -106,6 +107,20 @@ describe("local API: where and to whom it answers", () => {
 });
 
 describe("local API: the mailbox as chats", () => {
+  it("sends receipts as the account's setting says: by default what posts ask for, with none nothing", async () => {
+    const sent = async (receipts?: ReceiptSetting): Promise<number> => {
+      const root = await demoMaildir();
+      const bridge = await start({ maildir: { root, account: DEMO_ACCOUNT, pollMs: 60_000 }, ...(receipts === undefined ? {} : { receipts }) });
+      await bridge.ready;
+      const session = bridge.session()!;
+      for (const chat of await session.chats()) await session.markRead(chat.id);
+      return folder(root, "Outbox").filter(({ message }) => message.es?.$type === "es.social.receipt").length;
+    };
+    expect(await sent()).toBeGreaterThan(1);
+    expect(await sent("all")).toBe(await sent());
+    expect(await sent("none")).toBe(0);
+  });
+
   it("lists chats and Other mail, opens a chat, marks it read and lists contacts", async () => {
     const bridge = await demoBridge();
     const session = await json<SessionInfo>(await api(bridge, "/api/session"));
