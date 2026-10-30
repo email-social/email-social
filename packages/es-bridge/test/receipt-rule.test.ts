@@ -3,11 +3,12 @@
  * for one gets exactly one Read receipt per message" (tasks/02), and
  * Delivered receipts follow the same rule when a message arrives.
  */
-import { mkdirSync, writeFileSync } from "node:fs";
+import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 import { describe, expect, it } from "vitest";
-import { serializeMessage, type ReceiptKind } from "@email-social/es-core";
+import { serializeMessage, serializeReceipt, type ReceiptKind } from "@email-social/es-core";
 import { DEMO_ACCOUNT } from "../src/demo.js";
+import type { ReceiptSetting } from "../src/session.js";
 import { deliver, folder, openSession, tempDir } from "./helpers/session.js";
 
 const me = DEMO_ACCOUNT;
@@ -121,5 +122,69 @@ describe("receipt rule", () => {
     for (const view of [...(await session.chats()), ...(await session.others())]) await session.markRead(view.id);
     expect(receipts(root)).toEqual([]);
     await session.close();
+  });
+});
+
+describe("receipt setting: the account owner chooses which receipts are sent (spec RC-8)", () => {
+  /**
+   * One unread Email Social post that asks for both receipts, and the
+   * account's own post (in Sent) with a Read receipt for it in INBOX.
+   */
+  function askingForBoth(): string {
+    const root = tempDir("es-receipts-setting-");
+    for (const dir of ["INBOX", "Sent", "Outbox"]) mkdirSync(join(root, dir));
+    deliver(root, "ask.eml", message(es, "<ask@example.org>", "Both, please", ["delivered", "read"], "2026-03-20T09:00:00Z"));
+    writeFileSync(
+      join(root, "Sent", "mine.eml"),
+      serializeMessage(
+        { from: me, to: [es], subject: "Mine", text: "Mine text", es: { requestReceipts: ["delivered", "read"] } },
+        { date: "2026-03-20T08:00:00Z", messageId: "<mine@example.com>" },
+      ),
+    );
+    deliver(
+      root,
+      "receipt.eml",
+      serializeReceipt(
+        { kind: "read", from: es, to: me, original: { messageId: "<mine@example.com>", subject: "Mine" } },
+        { date: "2026-03-20T08:30:00Z", messageId: "<receipt@example.org>" },
+      ),
+    );
+    return root;
+  }
+
+  /** Opens the mailbox with the setting, opens every chat, and returns the receipts sent and the asking post's flags and keywords. */
+  async function run(setting: ReceiptSetting | undefined): Promise<{ sent: [string, string, string][]; flags: string[]; myStatus: string | null }> {
+    const root = askingForBoth();
+    const session = await openSession(root, setting === undefined ? {} : { receipts: setting });
+    for (const view of [...(await session.chats()), ...(await session.others())]) await session.markRead(view.id);
+    const chat = (await session.chat((await session.chats())[0]!.id))!;
+    const myStatus = chat.messages.find((m) => m.mine)?.status ?? null;
+    await session.close();
+    const stored = JSON.parse(readFileSync(join(root, "INBOX", ".email-social-flags.json"), "utf8")) as Record<string, string[]>;
+    return { sent: receipts(root), flags: [...(stored["ask.eml"] ?? [])].sort(), myStatus };
+  }
+
+  it.each([undefined, "all"] as const)("all (the default): both receipts are sent and both keywords set (receipts: %s)", async (setting) => {
+    const { sent, flags, myStatus } = await run(setting);
+    expect(sent).toEqual([
+      ["delivered", "<ask@example.org>", "ema@example.org"],
+      ["read", "<ask@example.org>", "ema@example.org"],
+    ]);
+    expect(flags).toEqual(["$EsDelivered", "$EsRead", "\\Seen"]);
+    expect(myStatus).toBe("read");
+  });
+
+  it("delivered: only the Delivered receipt is sent and only its keyword set", async () => {
+    const { sent, flags, myStatus } = await run("delivered");
+    expect(sent).toEqual([["delivered", "<ask@example.org>", "ema@example.org"]]);
+    expect(flags).toEqual(["$EsDelivered", "\\Seen"]);
+    expect(myStatus).toBe("read");
+  });
+
+  it("none: no receipt is sent and no keyword set; the message is still marked read and incoming receipts still show", async () => {
+    const { sent, flags, myStatus } = await run("none");
+    expect(sent).toEqual([]);
+    expect(flags).toEqual(["\\Seen"]);
+    expect(myStatus).toBe("read");
   });
 });
