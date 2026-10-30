@@ -546,7 +546,7 @@ A chat view shows a quote card above a **deliberate reply**, a message that answ
 - an Email Social post whose ES part carries `email.replyTo` → a card from the carried sender and excerpt (cut to 140 characters), whether or not the target is held;
 - an Email Social post without `email.replyTo` → no card, whatever its `In-Reply-To` says: it continues its topic;
 - otherwise, the parent is the first `In-Reply-To` id, or, when there is none, the last `References` id; when that is the message's own id, or the parent is not held or not in the chat → no card;
-- the account owner's own message without an ES part → a card when it has a `quoted` part: its fragment (section 9.3) of the parent, else the first 140 characters of `unquote(quoted)`; Email Social quotes only on a deliberate reply, and in a chat without ES parts the quote is the only record of one;
+- the account owner's own message without an ES part → a card when it has a `quoted` part: its fragment (section 9.3) of the parent, else `unquote(quoted)` cut to 140 characters as in section 9.3 (139 characters, cut back to a word boundary, then `…`); Email Social quotes only on a deliberate reply, and in a chat without ES parts the quote is the only record of one;
 - anyone else's message without an ES part → a card when it quotes a fragment of the parent; the excerpt is the fragment.
 
 ### 9.6 Subject notes

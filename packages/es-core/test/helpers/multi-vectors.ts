@@ -135,8 +135,6 @@ const quote = (text: string): string =>
 
 const LONG_LINE_1 = "Let us meet at the station at half past seven, take the slow train to the lake, walk around it in the morning";
 const LONG_LINE_2 = "and have lunch in the small restaurant by the pier before we go back.";
-/** unquote() of the whole quote of lq1: its two lines joined with a space. */
-const LONG_QUOTE = `${LONG_LINE_1} ${LONG_LINE_2}`;
 
 export const MULTI_SOURCES: Record<string, MultiSource> = {
   "threading-canonical-order.json": {
@@ -572,23 +570,10 @@ export const MULTI_SOURCES: Record<string, MultiSource> = {
 
   "reply-cards-own-long-quote.json": {
     description:
-      "Section 9.5: the owner's own reply quoting the whole of a long message gets a card whose excerpt is the first 140 characters of unquote(quoted).",
+      "Section 9.5: the owner's own reply quoting the whole of a long message gets a card whose excerpt is unquote(quoted) cut to 140 characters as in section 9.3 (139 characters, back to a word boundary, then \"…\").",
     covers: ["QT-6"],
     owner: OWNER,
     keys: ["replyCards"],
-    divergences: [
-      {
-        key: "replyCards",
-        statement: "QT-6",
-        note: "The fourth bullet of section 9.5 says \"the first 140 characters of unquote(quoted)\"; es-core cuts that text as in section 9.3 instead (139 characters, back to a word boundary, then \"…\"). The vector holds the first 140 characters.",
-        spec: (computed) => {
-          const cards = structuredClone(computed) as Record<string, { excerpt: string } | null>;
-          const card = cards["<lq2@example.com>"];
-          if (card) card.excerpt = LONG_QUOTE.slice(0, 140);
-          return cards;
-        },
-      },
-    ],
     messages: [
       mail({ id: "<lq1@example.org>", from: BOB, to: ALICE, date: at(16, 9), subject: "Plan", body: `${LONG_LINE_1}\n${LONG_LINE_2}\n` }),
       mail({
