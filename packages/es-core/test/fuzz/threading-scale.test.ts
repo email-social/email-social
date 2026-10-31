@@ -73,7 +73,7 @@ describe("threading scales as O(N log N) in practice", () => {
     expect(tLarge / Math.max(tSmall, 5)).toBeLessThan(50);
   });
 
-  // Same subject from thousands of distinct senders is quadratic: see the it.fails in test/hostile-input.test.ts.
+  // Same subject from thousands of distinct senders: see test/hostile-input.test.ts.
 });
 
 describe("chats, topics and contacts scale as O(N log N) in practice", () => {

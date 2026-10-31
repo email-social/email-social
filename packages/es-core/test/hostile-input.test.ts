@@ -102,13 +102,25 @@ describe("hostile input: cost stays linear", () => {
     expect(threadMessages(pair)).toHaveLength(1);
   });
 
-  // Same-subject groups are matched by a linear scan of every conversation with that subject
-  // (thread.ts `candidates.find(fits)`); an index for "subset either way" is not a local fix.
-  it.fails("threading 8 000 unrelated messages that share one subject (bulk mail) in under 1 s", { timeout: 60_000 }, () => {
-    // Measured: 2 000 → 0.16 s, 4 000 → 0.7 s, 20 000 → 11.5 s.
+  // Same-subject groups were matched by a linear scan of every conversation with that subject:
+  // 2 000 → 0.16 s, 4 000 → 0.7 s, 20 000 → 11.5 s. thread.ts now indexes them by participants.
+  it("threading 8 000 unrelated messages that share one subject (bulk mail) in under 1 s (thread.ts)", { timeout: 60_000 }, () => {
     const messages: EsMessage[] = Array.from({ length: 8_000 }, (_, i) => msg({ id: `<h${i}@example.com>`, from: `s${i}@example.com`, to: [`r${i}@example.org`], subject: "Hello" }));
-    const { ms } = timed(() => threadMessages(messages));
+    const { value, ms } = timed(() => threadMessages(messages));
     expect(ms).toBeLessThan(1000);
+    expect(value).toHaveLength(8_000);
+  });
+
+  it("threading 8 000 messages with one subject from distinct senders to the same account in under 1 s (thread.ts)", { timeout: 60_000 }, () => {
+    // Every message shares the account's address, so an index by address alone would still scan them all.
+    const messages: EsMessage[] = Array.from({ length: 8_000 }, (_, i) => msg({ id: `<o${i}@example.com>`, from: `s${i}@example.com`, to: ["me@example.org"], subject: "Hello" }));
+    const { value, ms } = timed(() => threadMessages(messages));
+    expect(ms).toBeLessThan(1000);
+    expect(value).toHaveLength(8_000);
+    // A reply without thread headers from one of them still joins that sender's conversation.
+    const reply = msg({ id: "<o-reply@example.com>", from: "me@example.org", to: ["s42@example.com"], subject: "Re: Hello", date: "2027-01-01T00:00:00.000Z" });
+    const joined = threadMessages([...messages, reply]).find((c) => c.messageIds.includes("<o-reply@example.com>"))!;
+    expect([...joined.messageIds].sort()).toEqual(["<o-reply@example.com>", "<o42@example.com>"]);
   });
 
   it("topicsOf: one chat of 80 000 messages with distinct subjects (topics.ts)", () => {

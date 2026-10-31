@@ -53,15 +53,16 @@ export function threadMessages(messages: readonly EsMessage[]): Conversation[] {
   const groups = collectGroups(items, parents);
 
   const drafts: Draft[] = [];
-  // Conversations by subject key, in creation order ("the first existing conversation" wins).
-  const byKey = new Map<string, Draft[]>();
+  // Conversations by subject key ("the first existing conversation" wins), indexed by participants.
+  const byKey = new Map<string, SubjectIndex>();
   // Without a subject a group joins only the first draft with the same participants, and that
   // draft's participants never change: looked up by the sorted addresses instead of a scan.
   const bySet = new Map<string, Draft>();
   const setKey = (participants: ReadonlySet<string>): string => [...participants].sort(compareCodeUnits).join("\n");
   for (const group of groups) {
-    const candidates = byKey.get(group.key) ?? [];
-    const target = group.key === "" ? bySet.get(setKey(group.participants)) : candidates.find((draft) => fits(draft, group));
+    let index = byKey.get(group.key);
+    if (index === undefined && group.key !== "") byKey.set(group.key, (index = new SubjectIndex()));
+    const target = group.key === "" ? bySet.get(setKey(group.participants)) : index!.first(group);
     if (target === undefined) {
       const draft: Draft = {
         rootId: group.rootId,
@@ -71,13 +72,13 @@ export function threadMessages(messages: readonly EsMessage[]): Conversation[] {
         items: [...group.items],
       };
       drafts.push(draft);
-      candidates.push(draft);
-      byKey.set(group.key, candidates);
       if (group.key === "") bySet.set(setKey(group.participants), draft);
+      else index!.add(draft);
       continue;
     }
     target.items.push(...group.items);
-    for (const address of group.participants) target.participants.add(address);
+    const added = [...group.participants].filter((address) => !target.participants.has(address));
+    if (added.length > 0) index?.grow(target, added);
     if (!group.prefixed) target.hasUnprefixed = true;
   }
 
@@ -97,6 +98,85 @@ function fits(draft: Draft, group: Group): boolean {
   if (!isSubset(draft.participants, group.participants) && !isSubset(group.participants, draft.participants)) return false;
   // Two separate originals with the same subject (e.g. a weekly report) stay apart.
   return group.prefixed || !draft.hasUnprefixed;
+}
+
+/** Groups with at most this many participants find the conversations they contain through their subsets; larger ones scan. */
+const SUBSET_LOOKUP_MAX = 8;
+
+const setKeyOf = (addresses: Iterable<string>): string => [...addresses].sort(compareCodeUnits).join("\n");
+
+/**
+ * The conversations of one subject key, in creation order, indexed so that
+ * `first` finds the first one a group fits without comparing it with every
+ * conversation of that subject (bulk mail: thousands of unrelated senders
+ * writing "Hello"). A conversation fits only when one participant set
+ * contains the other: either it holds every address of the group (it is on
+ * the shortest of their address lists), or its set is one of the group's
+ * subsets (looked up by the exact set). The answer is the same as a scan in
+ * creation order.
+ */
+class SubjectIndex {
+  private readonly drafts: Draft[] = [];
+  private readonly order = new Map<Draft, number>();
+  /** Address → the conversations whose participants include it. */
+  private readonly byAddress = new Map<string, Draft[]>();
+  /** Sorted participant set → the conversations with exactly that set. */
+  private readonly bySet = new Map<string, Set<Draft>>();
+
+  add(draft: Draft): void {
+    this.order.set(draft, this.drafts.length);
+    this.drafts.push(draft);
+    this.index(draft, [...draft.participants]);
+  }
+
+  /** Adds addresses to a conversation's participants, keeping the index current. */
+  grow(draft: Draft, addresses: readonly string[]): void {
+    this.bySet.get(setKeyOf(draft.participants))?.delete(draft);
+    for (const address of addresses) draft.participants.add(address);
+    this.index(draft, addresses);
+  }
+
+  private index(draft: Draft, addresses: readonly string[]): void {
+    for (const address of addresses) {
+      const list = this.byAddress.get(address);
+      if (list === undefined) this.byAddress.set(address, [draft]);
+      else list.push(draft);
+    }
+    const key = setKeyOf(draft.participants);
+    const same = this.bySet.get(key);
+    if (same === undefined) this.bySet.set(key, new Set([draft]));
+    else same.add(draft);
+  }
+
+  /** The first conversation, in creation order, that the group fits (see `fits`). */
+  first(group: Group): Draft | undefined {
+    let best: Draft | undefined;
+    const consider = (draft: Draft): void => {
+      if ((best === undefined || this.order.get(draft)! < this.order.get(best)!) && fits(draft, group)) best = draft;
+    };
+    const addresses = [...group.participants].sort(compareCodeUnits);
+    // Conversations that contain the group: all of them are on each address's list, so the shortest will do.
+    if (addresses.length === 0) {
+      for (const draft of this.drafts) consider(draft);
+      return best;
+    }
+    let shortest: Draft[] | undefined;
+    for (const address of addresses) {
+      const list = this.byAddress.get(address) ?? [];
+      if (shortest === undefined || list.length < shortest.length) shortest = list;
+    }
+    for (const draft of shortest!) consider(draft);
+    // Conversations the group contains: their sets are subsets of the group's.
+    if (addresses.length > SUBSET_LOOKUP_MAX) {
+      for (const draft of this.drafts) consider(draft);
+      return best;
+    }
+    for (let mask = 0; mask < 1 << addresses.length; mask++) {
+      const subset = addresses.filter((_, i) => (mask & (1 << i)) !== 0);
+      for (const draft of this.bySet.get(subset.join("\n")) ?? []) consider(draft);
+    }
+    return best;
+  }
 }
 
 /**
