@@ -106,6 +106,27 @@ export function attachmentDisposition(filename: string): string {
   return `attachment; filename="${fallback}"; filename*=UTF-8''${encoded}`;
 }
 
+/**
+ * The policy of the web client's page. A story's frame (srcdoc) inherits it
+ * on top of its own, so it also allows the frame's style attributes and, once
+ * the reader asks, its https images (spec section 12.5); the page itself uses
+ * neither.
+ */
+export function pagePolicy(port: number): string {
+  return [
+    "default-src 'self'",
+    "script-src 'self'",
+    "style-src 'self'",
+    "style-src-attr 'unsafe-inline'",
+    "img-src 'self' data: https:",
+    `connect-src 'self' ws://127.0.0.1:${port} ws://localhost:${port}`,
+    "object-src 'none'",
+    "base-uri 'none'",
+    "form-action 'self'",
+    "frame-ancestors 'none'",
+  ].join("; ");
+}
+
 function sameToken(a: string, b: string): boolean {
   const x = Buffer.from(a);
   const y = Buffer.from(b);
@@ -339,20 +360,7 @@ export async function startBridge(options: BridgeOptions): Promise<RunningBridge
       "cache-control": "no-cache",
     };
     if (relative === "index.html") {
-      headers["content-security-policy"] = [
-        "default-src 'self'",
-        "script-src 'self'",
-        "style-src 'self'",
-        // A story's frame (srcdoc) inherits this policy on top of its own: its style attributes, and its
-        // images once the reader asks for them (spec section 12.5). This page itself sets neither.
-        "style-src-attr 'unsafe-inline'",
-        "img-src 'self' data: https:",
-        `connect-src 'self' ws://127.0.0.1:${port} ws://localhost:${port}`,
-        "object-src 'none'",
-        "base-uri 'none'",
-        "form-action 'self'",
-        "frame-ancestors 'none'",
-      ].join("; ");
+      headers["content-security-policy"] = pagePolicy(port);
       headers["x-frame-options"] = "DENY";
     }
     res.writeHead(200, headers);
