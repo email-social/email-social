@@ -28,13 +28,24 @@ afterEach(async () => {
   while (servers.length > 0) await servers.pop()!.close();
 });
 
-async function setUp(prepare?: (server: FakeImapServer) => void, options: { maxMessages?: number; pollMs?: number } = {}) {
-  const server = new FakeImapServer();
+async function setUp(
+  prepare?: (server: FakeImapServer) => void,
+  options: { maxMessages?: number; pollMs?: number; maxMessageBytes?: number; commandTimeoutMs?: number; delayPerMessageMs?: number } = {},
+) {
+  const server = new FakeImapServer(options.delayPerMessageMs === undefined ? {} : { delayPerMessageMs: options.delayPerMessageMs });
   servers.push(server);
   prepare?.(server);
   await server.start();
   const smtp = new FakeSmtp();
-  const adapter = new ImapSmtpAdapter(CONFIG, { imap: imapTo(server), smtp: () => smtp, maxMessages: options.maxMessages ?? 500, pollMs: options.pollMs ?? 60_000, backoffMs: [50, 100] });
+  const adapter = new ImapSmtpAdapter(CONFIG, {
+    imap: imapTo(server),
+    smtp: () => smtp,
+    maxMessages: options.maxMessages ?? 500,
+    pollMs: options.pollMs ?? 60_000,
+    backoffMs: [50, 100],
+    ...(options.maxMessageBytes !== undefined ? { maxMessageBytes: options.maxMessageBytes } : {}),
+    ...(options.commandTimeoutMs !== undefined ? { commandTimeoutMs: options.commandTimeoutMs } : {}),
+  });
   adapters.push(adapter);
   return { server, smtp, adapter };
 }
@@ -252,13 +263,47 @@ describe("live updates and lost connections", () => {
 });
 
 describe("a hostile or broken IMAP server", () => {
-  // imapflow buffers a literal of up to 1 GB by default and imapOptions sets no lower limit, so one FETCH can hold gigabytes.
-  it.fails("caps the size of one fetched message", () => {
+  // imapflow buffers a literal of up to 1 GB by default; imapOptions lowers that to one message of at most 100 MiB.
+  it("caps the size of one fetched message", () => {
     expect((imapOptions(CONFIG) as { maxLiteralSize?: number }).maxLiteralSize).toBeLessThanOrEqual(100 * 2 ** 20);
+    expect(imapOptions(CONFIG).maxResponseSize).toBeGreaterThan(imapOptions(CONFIG).maxLiteralSize);
   });
 
-  // Only the session's sync watchdog calls reconnect(); a download outside a sync waits for imapflow's 5-minute socket timeout, which a trickling server never triggers.
-  it.fails("gives up on a command by itself when the server stops answering", async () => {
+  it("leaves a message over the size limit in the mailbox and downloads the others, without dropping the connection", async () => {
+    const { adapter, server } = await setUp((s) => {
+      seed(s);
+      s.deliver("INBOX", message(4) + "x".repeat(5000) + "\r\n", { date: new Date("2026-03-05T09:00:00Z") });
+    }, { maxMessageBytes: 2000 });
+    await adapter.open();
+    const statuses: string[] = [];
+    adapter.watch(() => undefined, (status) => statuses.push(status.state));
+    const { entries } = await adapter.listSince(null);
+    expect(entries.filter((e) => e.folder === "inbox")).toHaveLength(4);
+    const got: string[] = [];
+    await adapter.fetchMany(entries, (ref) => got.push(ref.uid));
+    expect(got.sort()).toEqual(entries.filter((e) => !e.uid.endsWith(".4")).map((e) => e.uid).sort());
+    const big = entries.find((e) => e.folder === "inbox" && e.uid.endsWith(".4"))!;
+    await expect(adapter.fetchRaw(big)).rejects.toThrow("The message is larger than");
+    expect(statuses).toEqual(["online"]);
+    expect(new TextDecoder().decode(await adapter.fetchRaw({ folder: "inbox", uid: entries[1]!.uid }))).toContain("body 2");
+    expect(server.port).toBeGreaterThan(0);
+  });
+
+  it("keeps waiting while a slow server keeps answering: each message moves the deadline", async () => {
+    const { adapter } = await setUp((s) => {
+      seed(s);
+      for (let i = 4; i <= 8; i++) s.deliver("INBOX", message(i), { date: new Date(`2026-03-0${i}T09:00:00Z`) });
+    }, { commandTimeoutMs: 400, delayPerMessageMs: 150 });
+    await adapter.open();
+    const { entries } = await adapter.listSince(null);
+    const got: string[] = [];
+    // Eight messages at 150 ms each take 1.2 s, three times the timeout, but no gap reaches it.
+    await adapter.fetchMany(entries.filter((e) => e.folder === "inbox"), (ref) => got.push(ref.uid));
+    expect(got).toHaveLength(8);
+  });
+
+  // Only the session's sync watchdog called reconnect(); a download outside a sync waited for imapflow's 5-minute socket timeout, which a trickling server never triggers.
+  it("gives up on a command by itself when the server stops answering", async () => {
     const { adapter, server } = await setUp(seed);
     await adapter.open();
     server.stall();

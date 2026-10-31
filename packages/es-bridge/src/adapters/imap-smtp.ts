@@ -12,6 +12,11 @@
  *   a timer, for servers without IDLE and for the sent folder.
  * - A lost connection is re-established with growing pauses (1 s up to
  *   60 s), and the watcher is told ("Reconnecting…").
+ * - A server cannot make the bridge hold more than one message of at most
+ *   100 MiB at a time (larger messages are left in the mailbox and not
+ *   shown), nor keep a command waiting: without an answer for 60 seconds
+ *   (more for a large message, at 32 KiB/s), the connection is dropped and
+ *   made again.
  */
 
 import { ImapFlow } from "imapflow";
@@ -39,6 +44,8 @@ interface FetchedMessage {
   uid: number;
   flags?: Set<string> | undefined;
   internalDate?: Date | string | undefined;
+  /** RFC822.SIZE (RFC 9051 §7.5.2). */
+  size?: number | undefined;
   source?: Buffer | undefined;
 }
 
@@ -53,7 +60,7 @@ export interface ImapClient {
   search(query: { all: true }, options: { uid: true }): Promise<number[] | false | undefined | object>;
   fetch(
     range: string,
-    query: { uid: true; flags?: true; internalDate?: true; source?: true },
+    query: { uid: true; flags?: true; internalDate?: true; size?: true; source?: true },
     options: { uid: true },
   ): AsyncIterable<FetchedMessage>;
   messageFlagsAdd(uid: string, flags: string[], options: { uid: true }): Promise<boolean>;
@@ -81,7 +88,18 @@ export interface ImapSmtpOptions {
   pollMs?: number;
   /** Pauses between reconnection attempts, in ms (the last one repeats). */
   backoffMs?: readonly number[];
+  /** Messages larger than this are not downloaded. Default MAX_MESSAGE_BYTES. */
+  maxMessageBytes?: number;
+  /** A command without an answer for this long drops the connection. Default COMMAND_TIMEOUT_MS. */
+  commandTimeoutMs?: number;
 }
+
+/** The largest message downloaded (imapflow would otherwise buffer a literal of up to 1 GiB). */
+export const MAX_MESSAGE_BYTES = 100 * 2 ** 20;
+/** How long a command may go without an answer before the connection is dropped. */
+export const COMMAND_TIMEOUT_MS = 60_000;
+/** The slowest transfer still waited for: a large message gets this much more time. */
+const MIN_BYTES_PER_SECOND = 32 * 1024;
 
 /** Messages fetched per UID FETCH when downloading many. */
 const FETCH_BATCH = 25;
@@ -91,7 +109,7 @@ function login(config: AccountConfig): { user: string; pass: string } {
   return { user: config.username === "" ? config.address : config.username, pass: config.password };
 }
 
-export function imapOptions(config: AccountConfig) {
+export function imapOptions(config: AccountConfig, maxMessageBytes: number = MAX_MESSAGE_BYTES) {
   return {
     host: config.imap.host,
     port: config.imap.port,
@@ -103,6 +121,9 @@ export function imapOptions(config: AccountConfig) {
     // A server that does not answer is reported within a minute (the page shows the error).
     connectionTimeout: 30_000,
     greetingTimeout: 15_000,
+    // One message is one literal; a response carries it plus a little framing.
+    maxLiteralSize: maxMessageBytes,
+    maxResponseSize: maxMessageBytes + 2 ** 20,
     logger: false as const,
   };
 }
@@ -169,12 +190,21 @@ export class ImapSmtpAdapter implements MailboxAdapter {
   private reconnectTimer: ReturnType<typeof setTimeout> | null = null;
   private attempt = 0;
   private lastError: string | null = null;
+  private readonly maxMessageBytes: number;
+  private readonly commandTimeoutMs: number;
+  /** RFC822.SIZE of listed messages, by "folder:UIDVALIDITY.UID". */
+  private readonly sizes = new Map<string, number>();
+  /** The watchdog of the command running now: resets its deadline. */
+  private kick: (extraMs?: number) => void = () => undefined;
 
   constructor(
     private readonly config: AccountConfig,
     options: ImapSmtpOptions = {},
   ) {
-    this.makeClient = () => options.imap?.(imapOptions(config)) ?? (new ImapFlow(imapOptions(config)) as unknown as ImapClient);
+    this.maxMessageBytes = options.maxMessageBytes ?? MAX_MESSAGE_BYTES;
+    this.commandTimeoutMs = options.commandTimeoutMs ?? COMMAND_TIMEOUT_MS;
+    const imap = imapOptions(config, this.maxMessageBytes);
+    this.makeClient = () => options.imap?.(imap) ?? (new ImapFlow(imap) as unknown as ImapClient);
     this.client = this.makeClient();
     this.smtp = options.smtp?.(smtpOptions(config)) ?? (nodemailer.createTransport(smtpOptions(config)) as unknown as SmtpTransport);
     this.maxMessages = options.maxMessages ?? 500;
@@ -183,13 +213,44 @@ export class ImapSmtpAdapter implements MailboxAdapter {
   }
 
   /** Runs mailbox operations one at a time, so the selected mailbox is always known. */
-  private exclusive<T>(task: () => Promise<T>): Promise<T> {
-    const run = this.queue.then(task, task);
+  private exclusive<T>(task: () => Promise<T>, extraMs = 0): Promise<T> {
+    const watched = (): Promise<T> => this.watched(task, extraMs);
+    const run = this.queue.then(watched, watched);
     this.queue = run.catch(() => undefined);
     return run;
   }
 
-  private withMailbox<T>(path: string, task: (box: MailboxInfo, client: ImapClient) => Promise<T>): Promise<T> {
+  /**
+   * Runs one command with a deadline: without an answer for commandTimeoutMs
+   * (plus `extraMs`, the time a large transfer needs at MIN_BYTES_PER_SECOND),
+   * the connection is dropped, which fails the command and reconnects.
+   * Each answer (a fetched message) moves the deadline, see `kick`.
+   */
+  private async watched<T>(task: () => Promise<T>, extraMs: number): Promise<T> {
+    let timer: ReturnType<typeof setTimeout> | null = null;
+    const arm = (more = 0): void => {
+      if (timer !== null) clearTimeout(timer);
+      const ms = this.commandTimeoutMs + more;
+      timer = setTimeout(() => this.reconnect(`No answer from ${this.config.imap.host} for ${Math.round(ms / 1000)} seconds`), ms);
+      timer.unref?.();
+    };
+    arm(extraMs);
+    this.kick = arm;
+    try {
+      return await task();
+    } finally {
+      if (timer !== null) clearTimeout(timer);
+      // A command dropped by reconnect() settles late, after the next one may have started.
+      if (this.kick === arm) this.kick = () => undefined;
+    }
+  }
+
+  /** The extra time a transfer of `bytes` gets beyond the command timeout. */
+  private transferMs(bytes: number): number {
+    return Math.ceil((bytes / MIN_BYTES_PER_SECOND) * 1000);
+  }
+
+  private withMailbox<T>(path: string, task: (box: MailboxInfo, client: ImapClient) => Promise<T>, extraMs = 0): Promise<T> {
     return this.exclusive(async () => {
       if (!this.online) throw new Error(`Not connected to ${this.config.imap.host}${this.lastError === null ? "" : `: ${this.lastError}`}`);
       const client = this.client;
@@ -200,7 +261,7 @@ export class ImapSmtpAdapter implements MailboxAdapter {
         lock.release();
         if (path !== "INBOX") await client.mailboxOpen("INBOX").catch(() => undefined);
       }
-    });
+    }, extraMs);
   }
 
   private readonly onExists = (): void => {
@@ -354,10 +415,12 @@ export class ImapSmtpAdapter implements MailboxAdapter {
         let highest = Math.max(from - 1, 0);
         if (range !== null) {
           const found: MailEntry[] = [];
-          for await (const m of client.fetch(range, { uid: true, flags: true, internalDate: true }, { uid: true })) {
+          for await (const m of client.fetch(range, { uid: true, flags: true, internalDate: true, size: true }, { uid: true })) {
+            this.kick();
             // "n:*" also matches the highest message when every uid is below n (RFC 9051 §6.4.8).
             if (m.uid < from) continue;
             highest = Math.max(highest, m.uid);
+            if (typeof m.size === "number") this.sizes.set(`${folder}:${v}.${m.uid}`, m.size);
             const date = isoDate(m.internalDate);
             found.push({ folder, uid: `${v}.${m.uid}`, flags: [...(m.flags ?? [])], ...(date === undefined ? {} : { date }) });
           }
@@ -375,7 +438,13 @@ export class ImapSmtpAdapter implements MailboxAdapter {
     return [match[1]!, match[2]!];
   }
 
+  /** Whether the listing said this message is larger than maxMessageBytes (it is then never downloaded). */
+  private tooLarge(ref: MailRef): boolean {
+    return (this.sizes.get(`${ref.folder}:${ref.uid}`) ?? 0) > this.maxMessageBytes;
+  }
+
   async fetchRaw(ref: MailRef): Promise<Uint8Array> {
+    if (this.tooLarge(ref)) throw new Error(`The message is larger than ${Math.round(this.maxMessageBytes / 2 ** 20)} MB; open it in your provider's webmail`);
     let found: Uint8Array | null = null;
     await this.fetchMany([ref], (_, raw) => {
       found = raw;
@@ -384,9 +453,14 @@ export class ImapSmtpAdapter implements MailboxAdapter {
     return found;
   }
 
+  /**
+   * Downloads messages, FETCH_BATCH at a time. A message the listing showed
+   * to be larger than maxMessageBytes is skipped: it stays in the mailbox
+   * and `each` is not called for it.
+   */
   async fetchMany(refs: readonly MailRef[], each: (ref: MailRef, raw: Uint8Array) => void): Promise<void> {
     for (const folder of ["inbox", "sent"] as const) {
-      const wanted = refs.filter((r) => r.folder === folder);
+      const wanted = refs.filter((r) => r.folder === folder && !this.tooLarge(r));
       if (wanted.length === 0) continue;
       const byUid = new Map<number, MailRef>();
       let validity: string | null = null;
@@ -397,16 +471,26 @@ export class ImapSmtpAdapter implements MailboxAdapter {
         byUid.set(Number(uid), ref);
       }
       const uids = [...byUid.keys()].sort((a, b) => a - b);
+      const sizeOf = (uid: number): number => this.sizes.get(`${folder}:${validity}.${uid}`) ?? 0;
       for (let i = 0; i < uids.length; i += FETCH_BATCH) {
         const batch = uids.slice(i, i + FETCH_BATCH);
+        // The deadline allows for the largest message still to come.
+        const waiting = new Set(batch);
+        const largest = (): number => Math.max(0, ...[...waiting].map(sizeOf));
         // One batch per lock, so sending or flagging is not held up by a long download.
-        await this.withMailbox(this.path(folder), async (box, client) => {
-          if (box.uidValidity.toString() !== validity) throw new Error("The mailbox was renumbered (UIDVALIDITY changed)");
-          for await (const m of client.fetch(uidSet(batch), { uid: true, source: true }, { uid: true })) {
-            const ref = byUid.get(m.uid);
-            if (ref !== undefined && m.source !== undefined) each(ref, new Uint8Array(m.source));
-          }
-        });
+        await this.withMailbox(
+          this.path(folder),
+          async (box, client) => {
+            if (box.uidValidity.toString() !== validity) throw new Error("The mailbox was renumbered (UIDVALIDITY changed)");
+            for await (const m of client.fetch(uidSet(batch), { uid: true, source: true }, { uid: true })) {
+              waiting.delete(m.uid);
+              this.kick(this.transferMs(largest()));
+              const ref = byUid.get(m.uid);
+              if (ref !== undefined && m.source !== undefined) each(ref, new Uint8Array(m.source));
+            }
+          },
+          this.transferMs(largest()),
+        );
       }
     }
   }
@@ -421,7 +505,7 @@ export class ImapSmtpAdapter implements MailboxAdapter {
 
   async appendToSent(raw: Uint8Array): Promise<MailEntry | null> {
     const path = this.path("sent");
-    const result = await this.exclusive(() => this.client.append(path, Buffer.from(raw), [SEEN]));
+    const result = await this.exclusive(() => this.client.append(path, Buffer.from(raw), [SEEN]), this.transferMs(raw.length));
     // RFC 4315 (UIDPLUS) returns the new uid; without it the copy is found at the next sync.
     if (result === false || result.uid === undefined || result.uidValidity === undefined) return null;
     return { folder: "sent", uid: `${result.uidValidity}.${result.uid}`, flags: [SEEN] };
