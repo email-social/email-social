@@ -3,7 +3,7 @@
  * identifier such as [WR-1] and uses an RFC 2119 key word, and the table of
  * section 16 names, for each identifier, tests and vectors that exist.
  */
-import { existsSync, readFileSync } from "node:fs";
+import { existsSync, readdirSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { describe, expect, it } from "vitest";
@@ -141,5 +141,25 @@ describe("spec/es-protocol.md: the table of section 16", () => {
       expect(titles.length, `${path} names no test`).toBeGreaterThan(0);
       for (const title of titles) expect(testTitles(path).some((t) => t.includes(title)), `${path} › "${title}"`).toBe(true);
     }
+  });
+});
+
+describe("spec/es-protocol.md: section 14", () => {
+  it("gives the numbers of vectors that packages/es-core/vectors holds, so a new vector cannot make them stale", () => {
+    const dir = join(REPO, "packages/es-core/vectors");
+    const sources = readdirSync(dir)
+      .filter((f) => f.endsWith(".json"))
+      .map((f) => (JSON.parse(readFileSync(join(dir, f), "utf8")) as { source: string }).source);
+    const count = (pattern: RegExp): number => Number(pattern.exec(SPEC)?.[1]);
+    const replies = sources.filter((s) => s.startsWith("fixtures/replies/")).length;
+    const stories = sources.filter((s) => s.startsWith("fixtures/stories/")).length;
+    const generated = sources.filter((s) => s === "generated").length;
+    expect({
+      fixtures: count(/The (\d+) fixture vectors come from/),
+      corpus: count(/: (\d+) messages reconstructed from the published output formats/),
+      replies: count(/(\d+) reply formats from `fixtures\/replies\/`/),
+      stories: count(/(\d+) newsletters and automated messages from `fixtures\/stories\/`/),
+      generated: count(/the (\d+) generated vectors cover/),
+    }).toEqual({ fixtures: sources.length - generated, corpus: sources.length - generated - replies - stories, replies, stories, generated });
   });
 });

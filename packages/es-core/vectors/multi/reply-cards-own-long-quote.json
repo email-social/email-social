@@ -1,5 +1,5 @@
 {
-  "description": "Section 9.5: the owner's own reply quoting the whole of a long message gets a card whose excerpt is the first 140 characters of unquote(quoted).",
+  "description": "Section 9.5: the owner's own reply quoting the whole of a long message gets a card whose excerpt is unquote(quoted) cut to 140 characters as in section 9.3 (139 characters, back to a word boundary, then \"…\").",
   "covers": [
     "QT-6"
   ],
@@ -23,17 +23,10 @@
       "<lq2@example.com>": {
         "messageId": "<lq1@example.org>",
         "from": "Bob Svoboda",
-        "excerpt": "Let us meet at the station at half past seven, take the slow train to the lake, walk around it in the morning and have lunch in the small re",
+        "excerpt": "Let us meet at the station at half past seven, take the slow train to the lake, walk around it in the morning and have lunch in the small…",
         "attachment": null,
         "clickable": true
       }
     }
-  },
-  "divergences": [
-    {
-      "key": "replyCards",
-      "statement": "QT-6",
-      "note": "The fourth bullet of section 9.5 says \"the first 140 characters of unquote(quoted)\"; es-core cuts that text as in section 9.3 instead (139 characters, back to a word boundary, then \"…\"). The vector holds the first 140 characters."
-    }
-  ]
+  }
 }

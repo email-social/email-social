@@ -108,7 +108,7 @@ message. Each file in `multi/` is one mailbox:
   "owner": { "name": "Alice Example", "addresses": ["alice@example.com"] },
   "messages": [{ "raw": "…" }, { "rawBase64": "…" }],
   "expected": { "conversations": [], "chats": [], "topics": {}, "…": "some of the views below" },
-  "divergences": [{ "key": "replyCards", "statement": "QT-6", "note": "…" }]
+  "divergences": [{ "key": "…", "statement": "…", "note": "…" }]
 }
 ```
 
@@ -152,7 +152,9 @@ message. Each file in `multi/` is one mailbox:
 - **`divergences`** (optional) lists the views where es-core does not do
   what the spec says. The file holds what the spec says; the note says
   where es-core differs, and `test/vectors-multi.test.ts` expects that
-  check to fail until es-core or the spec changes.
+  check to fail until es-core or the spec changes. No file has one at
+  present: the one QT-6 case was settled by making the spec follow the code
+  (`reply-cards-own-long-quote.json`).
 
 The messages are written in `test/helpers/multi-vectors.ts`: plain
 messages as an ordinary client writes them, Email Social posts by es-core's

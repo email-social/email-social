@@ -238,7 +238,7 @@ A forward made by an ordinary client can carry another message's ES part along (
 
 ## 6. Reading a message
 
-A reader turns the raw bytes of a message into the model below. The test vectors (section 14) give the expected model for 58 messages in real client formats and 9 messages written by es-core. A reader MUST produce, for each vector, a model equal to `expected` (field order does not matter, array order does). [RD-1]
+A reader turns the raw bytes of a message into the model below. The test vectors (section 14) give the expected model for every message in `packages/es-core/vectors/*.json`, messages in the formats of real clients and messages written by es-core; section 14 gives their numbers. A reader MUST produce, for each vector, a model equal to `expected` (field order does not matter, array order does). [RD-1]
 
 The model, in TypeScript notation (`?:` is not used: every field is always present):
 
@@ -546,7 +546,7 @@ A chat view shows a quote card above a **deliberate reply**, a message that answ
 - an Email Social post whose ES part carries `email.replyTo` → a card from the carried sender and excerpt (cut to 140 characters), whether or not the target is held;
 - an Email Social post without `email.replyTo` → no card, whatever its `In-Reply-To` says: it continues its topic;
 - otherwise, the parent is the first `In-Reply-To` id, or, when there is none, the last `References` id; when that is the message's own id, or the parent is not held or not in the chat → no card;
-- the account owner's own message without an ES part → a card when it has a `quoted` part: its fragment (section 9.3) of the parent, else the first 140 characters of `unquote(quoted)`; Email Social quotes only on a deliberate reply, and in a chat without ES parts the quote is the only record of one;
+- the account owner's own message without an ES part → a card when it has a `quoted` part: its fragment (section 9.3) of the parent, else `unquote(quoted)` cut to 140 characters as in section 9.3 (139 characters, cut back to a word boundary, then `…`); Email Social quotes only on a deliberate reply, and in a chat without ES parts the quote is the only record of one;
 - anyone else's message without an ES part → a card when it quotes a fragment of the parent; the excerpt is the fragment.
 
 ### 9.6 Subject notes
@@ -770,7 +770,7 @@ The draft's §2.1–§2.2 (repositories and record URIs), §2.3.2–§2.3.4 (rea
 - **Generated vectors** were written by es-core from `input` with a fixed date and Message-ID. A conforming writer need not produce the same bytes, but it MUST produce messages that a conforming reader reads to the same model fields (subject, addresses, threading headers, text, ES record). [VE-4]
 - **`story`.** A client that implements section 12 MUST give `story` for `expected` (with an account owner who is none of the vector's senders). [VE-5]
 
-The 58 fixture vectors come from `packages/es-core/fixtures/`: 22 messages reconstructed from the published output formats of Gmail, Outlook, Apple Mail, iOS Mail, Thunderbird, mutt, Seznam.cz, Mailman, a newsletter sender and the draft's own layout, 29 reply formats from `fixtures/replies/`, and 7 newsletters and automated messages from `fixtures/stories/`; the 9 generated vectors cover new messages, replies, a 20 kB text, a plain message, both receipts, a named topic with a deliberate reply in it, and a story record. Every domain in them is `example.com`, `example.org` or `example.net`.
+The 113 fixture vectors come from `packages/es-core/fixtures/`: 22 messages reconstructed from the published output formats of Gmail, Outlook, Apple Mail, iOS Mail, Thunderbird, mutt, Seznam.cz, Mailman, a newsletter sender and the draft's own layout, 84 reply formats from `fixtures/replies/`, and 7 newsletters and automated messages from `fixtures/stories/`; the 9 generated vectors cover new messages, replies, a 20 kB text, a plain message, both receipts, a named topic with a deliberate reply in it, and a story record. Every domain in them is `example.com`, `example.org` or `example.net`.
 
 Sections 7 to 9 need more than one message. `packages/es-core/vectors/multi/*.json` hold, each, a list of raw messages, the account owner (name and addresses), the statements the file exists for, and some of these expected views: conversations (7.1), contacts (7.3), the kind of each message (8.3), chats of the `person` messages (8.1), the topics of each chat (8.2), the carrier subject the owner would write into each chat (8.2), subject notes (9.6), each quote unquoted (9.2), fragments (9.3), the quote below a reply to each message (9.4) and reply cards (9.5). [`vectors/README.md`](../packages/es-core/vectors/README.md) says how each view is computed. A view listed under `divergences` is one where es-core does not do what this document says; the file holds what this document says.
 
