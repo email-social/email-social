@@ -364,6 +364,7 @@ export class FakeImapServer {
       const items = [`UID ${uid}`];
       if (/FLAGS/i.test(query)) items.push(`FLAGS (${message.flags.join(" ")})`);
       if (/INTERNALDATE/i.test(query)) items.push(`INTERNALDATE "${imapDate(message.internalDate)}"`);
+      if (/RFC822\.SIZE/i.test(query)) items.push(`RFC822.SIZE ${message.raw.length}`);
       if (wantsBody) {
         if (this.options.delayPerMessageMs > 0) await new Promise((resolve) => setTimeout(resolve, this.options.delayPerMessageMs));
         if (this.stalled || client.socket.destroyed) return new Promise(() => undefined);
